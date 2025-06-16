@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+		<!-- 칼럼의 값이 null오면 mybatis에서 칼럼의 타입으로 null처리  -->
+	    <setting name="jdbcTypeForNull" value="NULL" /> 
+	</settings>
+
+</configuration>
