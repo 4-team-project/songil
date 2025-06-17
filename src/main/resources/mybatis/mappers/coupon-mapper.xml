@@ -8,10 +8,10 @@
 	<!-- 쿠폰 발급 (insert) -->
 	<insert id="insertCoupon" parameterType="CouponDTO">
 		INSERT INTO coupon (
-		coupon_id, funding_id, user_id, store_id, coupon_code,
+		funding_id, user_id, store_id, coupon_code,
 		use_status, reviewed, created_at, expired_at
 		) VALUES (
-		coupon_seq.NEXTVAL, #{fundingId}, #{userId}, #{storeId}, #{couponCode},
+		#{fundingId}, #{userId}, #{storeId}, #{couponCode},
 		#{useStatus}, #{reviewed}, #{createdAt}, #{expiredAt}
 		)
 	</insert>
