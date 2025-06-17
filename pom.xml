@@ -16,6 +16,16 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<!-- root-context.xml, use tx:annotation-driven -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.22.1</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!--openAI API 사용할 때 필요한 라이브러리 -->
 		<!-- HTTP 통신용 -->
 		<dependency>
@@ -48,7 +58,7 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
 		<!--파싱(parse) 하거나, 직렬화(객체 → JSON 문자열) 하는 데 사용 -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -130,8 +140,6 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-
-
 
 		<!-- Spring(기존) -->
 		<dependency>

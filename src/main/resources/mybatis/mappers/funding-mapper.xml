@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.takku.project.mapper.FundingMapper">
+
+	<!-- 펀딩 전체 조회 -->
+	<select id="selectAllFunding" resultType="FundingDTO">
+		SELECT
+		funding_id, 
+		funding_name,
+		funding_type,
+		sale_price,
+		current_qty,
+		target_qty,
+		status,
+		end_date
+		FROM funding
+	</select>
+
+	<!-- 펀딩번호로 상세 조회 -->
+	<select id="selectByFundingId" parameterType="int"
+		resultType="FundingDTO">
+		SELECT *
+		FROM funding
+		WHERE funding_id = #{fundingId}
+	</select>
+
+	<!-- 등록 -->
+	<insert id="insertFunding" parameterType="FundingDTO">
+		INSERT INTO funding (
+		product_id, store_id,
+		funding_type, funding_name, funding_desc, start_date,
+		end_date, sale_price, target_qty, max_qty, per_qty,
+		status,created_at
+		) VALUES (
+		#{productId},
+		#{storeId},
+		#{fundingType},
+		#{fundingName},
+		#{fundingDesc},
+		#{startDate},
+		#{endDate},
+		#{salePrice},
+		#{targetQty},
+		#{maxQty},
+		#{perQty},
+		#{status},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateFunding" parameterType="FundingDTO">
+		UPDATE funding
+		SET
+		funding_type =#{fundingType},
+		funding_name = #{fundingName},
+		funding_desc =#{fundingDesc},
+		start_date = #{startDate},
+		end_date = #{endDate},
+		sale_price = #{salePrice},
+		target_qty = #{targetQty},
+		max_qty =#{maxQty},
+		per_qty = #{perQty},
+		status =#{status}
+		WHERE
+		funding_id = #{fundingId}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteFunding" parameterType="int">
+		DELETE FROM funding
+		WHERE funding_id = #{fundingId}
+	</delete>
+</mapper>

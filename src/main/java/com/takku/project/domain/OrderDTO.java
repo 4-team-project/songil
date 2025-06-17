@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDTO {
    
-	private Integer order_id;
-	private Integer user_id;
-	private Integer funding_id;
+	private Integer orderId;
+	private Integer userId;
+	private Integer fundingId;
 	private Integer qty;
 	private Integer amount;
-	private Integer use_point;
-	private Integer discount_amount;
+	private Integer usePoint;
+	private Integer discountAmount;
 	private String status;
-	private String funding_status;
-	private Date purchased_at;
-	private Date refund_at;
+	private String fundingStatus;
+	private Date purchasedAt;
+	private Date refundAt;
 }

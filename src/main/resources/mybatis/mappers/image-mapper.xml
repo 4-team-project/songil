@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.takku.project.mapper.ImageMapper">
+
+	<!-- 이미지 등록 -->
+	<insert id="insertImageUrl" parameterType="ImageDTO">
+		INSERT INTO image(
+		product_id, funding_id, review_id, image_url
+		) VALUES (
+		#{productId}, #{fundingId}, #{reviewId},#{imageUrl}
+		)
+	</insert>
+
+	<!-- 이미지 삭제 -->
+	<delete id="deleteImageUrl" parameterType="String">
+		DELETE FROM image WHERE image_url = #{imageUrl}
+	</delete>
+</mapper>

@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewDTO {
 
-	private Integer review_id;
-	private Integer user_id;
-	private Integer product_id;
+	private Integer reviewId;
+	private Integer userId;
+	private Integer productId;
 	private Integer rating;
 	private String content;
-	private Date created_at;
+	private Date createdAt;
 }
