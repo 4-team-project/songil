@@ -8,13 +8,13 @@ import com.takku.project.domain.SettlementDTO;
 public interface SettlementMapper {
 
 	// 1. ���� ���
-	int insertSettlement(SettlementDTO vo);
+	int insertSettlement(SettlementDTO settlement);
 
     // 2. ���� ID�� ���� ���� ��ȸ
     List<SettlementDTO> getSettlementByStoreId(Integer storeId);
 
     // 3. ���� ���� ����
-    int updateSettlementStatus(Map<String, Object> params);
+    int updateSettlementStatus(Map<String, Object> map);
 
     // 4. ���� �� ��ȸ
     SettlementDTO getSettlementById(Integer settlementId);
