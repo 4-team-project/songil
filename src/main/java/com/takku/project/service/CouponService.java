@@ -51,5 +51,4 @@ public class CouponService implements CouponMapper {
 		CouponDTO coupon = sqlSession.selectOne(namespace + "selectByCouponCode", couponCode);
 		return null;
 	}
-
 }
