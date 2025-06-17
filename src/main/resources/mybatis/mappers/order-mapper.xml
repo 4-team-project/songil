@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.takku.project.mapper.OrderMapper">
+
+	<!-- 구매자 ID로 주문 조회 -->
+	<select id="selectByUserId" resultType="OrderDTO">
+		SELECT order_id, funding_id, qty, amount, use_point, discount_amount, status,
+		funding_status, purchased_at, refund_at
+		FROM ORDER
+		WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 주문 생성 -->
+	<insert id="insertOrder" parameterType="OrderDTO">
+		INSERT INTO ORDER (
+		user_id, funding_id, qty, amount, use_point, discount_amount,
+		status, funding_status, purchased_at, refund_at
+		) VALUES (
+		#{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discounAmount},
+		#{status}, #{fundingStatus}, #{purchasedAt}, null
+		)
+	</insert>
+	
+	<!-- 주문 수정 -->
+	<update id="updateOrder" parameterType="OrderDTO">
+		UPDATE order
+		SET status = #{status},
+		fundingStatus = #{fundinStatus},
+		refundAt = #{refundAt}
+		WHERE order_id = #{orderId}
+	</update>
+
+</mapper>
