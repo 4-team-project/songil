@@ -10,7 +10,9 @@ public interface OrderMapper {
 	//주문 생성
 	int insertOrder(OrderDTO order);
 	
-	//주문 수정
-	int updateOrder(OrderDTO order);
+	//주문 펀딩 상태 수정
+	int updateOrderFundingStatus(OrderDTO order);
 	
+	//주문 결제 상태 및 환불일 수정 
+	int updateOrderRefundAtStatus(OrderDTO order);
 }
