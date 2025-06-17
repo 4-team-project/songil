@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SettlementDTO {
 
-    private Integer settlement_id;
-    private Integer funding_id;
-    private Integer store_id;
+    private Integer settlementId;
+    private Integer fundingId;
+    private Integer storeId;
     private Integer fee;
     private Integer amount;
     private String status;
-    private Date settled_at;
+    private Date settledAt;
 }
