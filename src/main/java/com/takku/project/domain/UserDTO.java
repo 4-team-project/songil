@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-	private Integer userId;
+	private Integer user_id;
     private String user_type;
     private String phone;
     private String password;
