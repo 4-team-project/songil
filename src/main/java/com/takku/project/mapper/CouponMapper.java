@@ -7,7 +7,6 @@ import com.takku.project.domain.CouponDTO;
 
 public interface CouponMapper {
 
-
     // 쿠폰 발급 (insert)
     void insertCoupon(CouponDTO coupon);
 
@@ -20,7 +19,6 @@ public interface CouponMapper {
     // 리뷰 여부 업데이트
     void updateCouponReviewed(Integer coupon_id, Integer reviewed);
     
-    // 특정 쿠폰 상세 조회 (예: QR코드로 쿠폰 확인 등)
-    CouponDTO selectCouponByCouponCode(String coupon_code);
+    // 특정 쿠폰 상세 조회 (예: QR 코드로 쿠폰 확인 등)
+    CouponDTO selectByCouponCode(String coupon_code);
 }
-
