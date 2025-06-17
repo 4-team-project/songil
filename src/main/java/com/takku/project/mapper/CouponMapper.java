@@ -7,18 +7,18 @@ import com.takku.project.domain.CouponDTO;
 
 public interface CouponMapper {
 
-    // 荑좏룿 諛쒓툒 (insert)
+    // 쿠폰 발급 (insert)
     void insertCoupon(CouponDTO coupon);
 
-    // �듅�젙 �궗�슜�옄�쓽 荑좏룿 紐⑸줉 議고쉶
-    List<CouponDTO> selectCouponsByUserId(Integer userId);
+    // 특정 사용자의 쿠폰 목록 조회
+    List<CouponDTO> selectCouponsByUserId(Integer user_id);
 
-    // 荑좏룿 �궗�슜 �긽�깭 �뾽�뜲�씠�듃
-    void updateCouponUseStatus(Integer couponId, String useStatus);
+    // 쿠폰 사용 상태 업데이트
+    void updateCouponUseStatus(Integer coupon_id, String use_status);
 
-    // 由щ럭 �뿬遺� �뾽�뜲�씠�듃
-    void updateCouponReviewed(Integer couponId, Integer reviewed);
+    // 리뷰 여부 업데이트
+    void updateCouponReviewed(Integer coupon_id, Integer reviewed);
     
-    // �듅�젙 荑좏룿 �긽�꽭 議고쉶 (�삁: QR 肄붾뱶濡� 荑좏룿 �솗�씤 �벑)
-    CouponDTO selectByCouponCode(String couponCode);
+    // 특정 쿠폰 상세 조회 (예: QR 코드로 쿠폰 확인 등)
+    CouponDTO selectByCouponCode(String coupon_code);
 }
