@@ -6,17 +6,17 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.CouponDTO;
 import com.takku.project.mapper.CouponMapper;
 
-@Repository
+@Service
 public class CouponService implements CouponMapper {
 
 	@Autowired
 	SqlSession sqlSession;
-	String namespace = "com.takku.project.";
+	String namespace = "com.takku.project.mapper.CouponMapper.";
 	
 	@Override
 	public int insertCoupon(CouponDTO coupon) {
