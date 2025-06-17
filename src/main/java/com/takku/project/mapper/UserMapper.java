@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserMapper {
 
     // 회원가입
-    int insertUser(UserDTO user);
+    void insertUser(UserDTO user);
 
     // 로그인용 사용자 조회
     UserDTO selectByPhone(String phone);
@@ -19,5 +19,5 @@ public interface UserMapper {
     UserDTO selectByUserId(Integer userId);
 
     // 내 정보 수정
-    int updateUser(UserDTO user);
+    void updateUser(UserDTO user);
 }
