@@ -14,6 +14,9 @@ public interface ReviewMapper {
 //리뷰 수정
 	int updateReview(ReviewDTO review);
 	
-//리뷰 조회
-	List<ReviewDTO> selectAllReview();
+//메뉴 id 리뷰보기
+	List<ReviewDTO> reviewByProductId(Integer productId);
+	
+//내 리뷰 보기
+	List<ReviewDTO> reviewByUserID(Integer userId);
 }
