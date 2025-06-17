@@ -9,9 +9,9 @@
 	<!-- 리뷰 등록 -->
 	<insert id="insertReview" parameterType="ReviewDTO">
 		INSERT INTO review (
-		review_id, user_id, product_id, rating, content, created_at
+		user_id, product_id, rating, content, created_at
 		) VALUES (
-		review_seq.NEXTVAL, #{userId}, #{productId}, #{rating}, #{content}, SYSDATE
+		#{userId}, #{productId}, #{rating}, #{content}, SYSDATE
 		)
 	</insert>
 
