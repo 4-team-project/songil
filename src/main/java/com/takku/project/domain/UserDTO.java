@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-	private Integer user_id;
-    private String user_type;
+	private Integer userId;
+    private String userType;
     private String phone;
     private String password;
     private String name;
@@ -22,6 +22,6 @@ public class UserDTO {
     private String nickname;
     private String sido;
     private String sigungu;
-    private Character is_partner;
-    private Date created_at;
+    private Character isPartner;
+    private Date createdAt;
 }

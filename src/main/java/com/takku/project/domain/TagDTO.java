@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageDTO {
+public class TagDTO {
+  
+	private Integer tagId;
+	private String tagName;
 
-	private Integer imageId;
-	private Integer productId;
-	private Integer fundingId;
-	private Integer reviewId;
-	private String imageUrl;
 }
