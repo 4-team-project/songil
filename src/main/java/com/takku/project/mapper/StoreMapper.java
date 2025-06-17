@@ -5,15 +5,15 @@ import com.takku.project.domain.UserDTO;
 
 public interface StoreMapper {
 
-	//»óÁ¡ µî·Ï
-	void insertStore(StoreDTO store);
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	int insertStore(StoreDTO store);
 
-    // 2. »óÁ¡ »ó¼¼ Á¶È¸
+    // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¸
 	StoreDTO selectStoreById(Integer storeId);
 
-    // 3. »óÁ¡ Á¤º¸ ¼öÁ¤
-    void updateStore(StoreDTO store);
+    // 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int updateStore(StoreDTO store);
 
-    // 4. »óÁ¡ »èÁ¦
-    void deleteStore(Integer storeId);
+    // 4. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int deleteStore(Integer storeId);
 }
