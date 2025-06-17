@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.CouponDTO;
 import com.takku.project.mapper.CouponMapper;
 
-@Repository
+@Service
 public class CouponService implements CouponMapper {
 
 	@Autowired
@@ -25,7 +25,7 @@ public class CouponService implements CouponMapper {
 	}
 
 	@Override
-	public List<CouponDTO> selectCouponsByUserId(Integer userId) {
+	public List<CouponDTO> selectCouponByUserId(Integer userId) {
 		List<CouponDTO> couponlist = sqlSession.selectList(namespace + "selectCouponByUserId", userId);
 		return couponlist;
 	}
