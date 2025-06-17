@@ -25,7 +25,7 @@ public class CouponService implements CouponMapper {
 	}
 
 	@Override
-	public List<CouponDTO> selectCouponsByUserId(Integer userId) {
+	public List<CouponDTO> selectCouponByUserId(Integer userId) {
 		List<CouponDTO> couponlist = sqlSession.selectList(namespace + "selectCouponByUserId", userId);
 		return couponlist;
 	}
