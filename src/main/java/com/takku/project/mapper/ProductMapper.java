@@ -6,15 +6,15 @@ import com.takku.project.domain.ProductDTO;
 
 public interface ProductMapper {
 
-	// 1. »óÇ° µî·Ï
-    void insertProduct(ProductDTO productVO);
+	// 1. ï¿½ï¿½Ç° ï¿½ï¿½ï¿½
+	int insertProduct(ProductDTO productVO);
 
-    // 2. »óÁ¡ ID·Î »óÇ° ¸ñ·Ï Á¶È¸
+    // 2. ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
     List<ProductDTO> getProductsByStoreId(Integer storeId);
 
-    // 3. »óÇ° ¼öÁ¤
-    void updateProduct(ProductDTO productVO);
+    // 3. ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
+    int updateProduct(ProductDTO productVO);
 
-    // 4. »óÇ° »èÁ¦
-    void deleteProduct(Integer productId);
+    // 4. ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
+    int deleteProduct(Integer productId);
 }

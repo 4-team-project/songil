@@ -7,15 +7,15 @@ import com.takku.project.domain.SettlementDTO;
 
 public interface SettlementMapper {
 
-	// 1. Á¤»ê µî·Ï
-    void insertSettlement(SettlementDTO vo);
+	// 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	int insertSettlement(SettlementDTO vo);
 
-    // 2. »óÁ¡ ID·Î Á¤»ê ³»¿ª Á¶È¸
+    // 2. ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
     List<SettlementDTO> getSettlementsByStoreId(Integer storeId);
 
-    // 3. Á¤»ê »óÅÂ º¯°æ
-    void updateSettlementStatus(Map<String, Object> params);
+    // 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    int updateSettlementStatus(Map<String, Object> params);
 
-    // 4. Á¤»ê »ó¼¼ Á¶È¸
+    // 4. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¸
     SettlementDTO getSettlementById(Integer settlementId);
 }
