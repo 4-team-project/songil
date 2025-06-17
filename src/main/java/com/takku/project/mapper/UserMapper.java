@@ -16,7 +16,7 @@ public interface UserMapper {
     UserDTO selectByPhone(String phone);
 
     // 내 정보 보기
-    UserDTO selectByUserId(Integer user_id);
+    UserDTO selectByUserId(Integer userId);
 
     // 내 정보 수정
     int updateUser(UserDTO user);
