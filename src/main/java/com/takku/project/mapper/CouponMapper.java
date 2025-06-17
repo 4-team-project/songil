@@ -7,18 +7,18 @@ import com.takku.project.domain.CouponDTO;
 
 public interface CouponMapper {
 
-    // ÄíÆù ¹ß±Ş (insert)
+    // í•œê¸€ê¹¨ì§
     void insertCoupon(CouponDTO coupon);
 
-    // Æ¯Á¤ »ç¿ëÀÚÀÇ ÄíÆù ¸ñ·Ï Á¶È¸
+    // ì—¬ê¸°ë„ í•œê¸€ê¹¨ì§
     List<CouponDTO> selectCouponsByUserId(Integer user_id);
 
-    // ÄíÆù »ç¿ë »óÅÂ ¾÷µ¥ÀÌÆ®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     void updateCouponUseStatus(Integer coupon_id, String use_status);
 
-    // ¸®ºä ¿©ºÎ ¾÷µ¥ÀÌÆ®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     void updateCouponReviewed(Integer coupon_id, Integer reviewed);
     
-    // Æ¯Á¤ ÄíÆù »ó¼¼ Á¶È¸ (¿¹: QRÄÚµå·Î ÄíÆù È®ÀÎ µî)
+    // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¸ (ï¿½ï¿½: QRï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½)
     CouponDTO selectByCouponCode(String coupon_code);
 }
