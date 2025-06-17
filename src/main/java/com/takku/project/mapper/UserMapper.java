@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface UserMapper {
 
-    // È¸¿ø°¡ÀÔ
+    // íšŒì›ê°€ì…
     void insertUser(UserDTO user);
 
-    // ·Î±×ÀÎ¿ë »ç¿ëÀÚ Á¶È¸
+    // æ¿¡Âœæ´¹ëª„Âëª„Âš Â‚ÑŠÂšâ‘¹ÂÂ è­°ê³ ÂšÂŒ
     UserDTO selectByPhone(String phone);
 
-    // ³» Á¤º¸ º¸±â
+    // ë‚´ ì •ë³´ ë³´ê¸°
     UserDTO selectByUserId(Integer userId);
 
-    // ³» Á¤º¸ ¼öÁ¤
+    // ë‚´ ì •ë³´ ìˆ˜ì •
     void updateUser(UserDTO user);
 }

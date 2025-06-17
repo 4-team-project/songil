@@ -8,12 +8,11 @@ import com.takku.project.domain.CouponDTO;
 public interface CouponMapper {
 
     // 쿠폰 발급 (insert)
-    void insertCoupon(CouponDTO coupon);
+    int insertCoupon(CouponDTO coupon);
 
     // 특정 사용자의 쿠폰 목록 조회
     List<CouponDTO> selectCouponsByUserId(Integer userId);
 
-    // 쿠폰 사용 상태 업데이트
     void updateCouponUseStatus(Integer couponId, String useStatus);
 
     // 리뷰 여부 업데이트
