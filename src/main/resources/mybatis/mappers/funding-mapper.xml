@@ -31,12 +31,11 @@
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
 		INSERT INTO funding (
-		funding_id, product_id, store_id,
+		product_id, store_id,
 		funding_type, funding_name, funding_desc, start_date,
 		end_date, sale_price, target_qty, max_qty, per_qty,
 		status,created_at
 		) VALUES (
-		funding_seq.NEXTVAL,
 		#{productId},
 		#{storeId},
 		#{fundingType},
