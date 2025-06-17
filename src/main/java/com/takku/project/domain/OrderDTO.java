@@ -1,4 +1,4 @@
-package com.yourname.project.domain;
+package com.takku.project.domain;
 
 import java.sql.Date;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrdersDTO {
+public class OrderDTO {
    
 	private Integer order_id;
 	private Integer user_id;

@@ -1,4 +1,4 @@
-package com.yourname.project;
+package com.takku.project;
 
 import java.text.DateFormat;
 import java.util.Date;

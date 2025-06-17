@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+  
+    <!-- sqlSession를 만들기위한 환경이다.  -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"
+			value="classpath:mybatis/sqlMapConfig.xml" />
+		<property name="mapperLocations"
+			value="classpath:mybatis/mappers/*mapper.xml" />
+	</bean>
+     <!-- Mapper의 SQL구문을 실행할수있다.(SQL문은 session단위로 실행함)  -->
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- spring jdbc를 이용해서 DB사용 -->
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location"
+			value="/WEB-INF/spring/oracleDB.properties" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean> -->
+
+	<!-- transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- transaction 적용범위 지정 (advice) -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- transaction pointcut지정 -->
+	<aop:config>
+	    <aop:advisor advice-ref="txAdvice" pointcut="execution(* aa(..))" />
+	</aop:config>
+	
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceOriginal" />
+		<property name="logFormatter" >
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="SINGLE_LINE"></property>
+				<property name="sqlPrefix" value="[ SQL문장 ] "></property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Connection Pooling: 미리 생성된 Connection을 얻어서 처리가능  -->
+	<!-- 같은 타입의 빈이 여러 개인 경우 @Autowired 시 선택되는 빈: primary="true" -->
+	<!-- primary="true": 주 DB로 사용한다는 선언 -->
+	<bean id="dataSourceOriginal"
+		primary="true" 
+		class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="hr" />
+		<property name="password" value="hr" />
+	</bean>
+
+
+	<!-- <bean id="dataSource2" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="${oracle.driverClassName}"/> <property 
+		name="url" value="${oracle.url}"/> <property name="username" value="${oracle.username}"/> 
+		<property name="password" value="${oracle.pwd}"/> </bean> -->
+</beans>
+
+
+
+
+

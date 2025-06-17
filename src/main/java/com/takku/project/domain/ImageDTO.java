@@ -1,4 +1,4 @@
-package com.yourname.project.domain;
+package com.takku.project.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
