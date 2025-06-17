@@ -3,36 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.yourname.project.mapper.UserMapper">
+<mapper namespace="com.takku.project.mapper.UserMapper">
 	<!-- 회원가입 -->
     <insert id="insertUser" parameterType="UserDTO">
-        INSERT INTO Users (
+        INSERT INTO User (
             user_id, user_type, phone, password, name, gender, birth,
             nickname, sido, sigungu, is_partner, created_at
         ) VALUES (
-            user_seq.NEXTVAL, #{user_type}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
-            #{nickname}, #{sido}, #{sigungu}, #{is_partner}, SYSDATE
+            user_seq.NEXTVAL, #{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
+            #{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE
         )
     </insert>
 
     <!-- 로그인용 사용자 조회 -->
     <select id="selectByPhone" parameterType="string" resultType="UserDTO">
-        SELECT * FROM Users WHERE phone = #{phone}
+        SELECT * FROM User WHERE phone = #{phone}
     </select>
 
     <!-- 내 정보 보기 -->
     <select id="selectByUserId" parameterType="int" resultType="UserDTO">
-        SELECT * FROM Users WHERE user_id = #{user_id}
+        SELECT * FROM User WHERE user_id = #{userId}
     </select>
 
     <!-- 내 정보 수정 -->
     <update id="updateUser" parameterType="UserDTO">
-        UPDATE Users
+        UPDATE User
         SET
         	password = #{password},
             nickname = #{nickname},
             sido = #{sido},
             sigungu = #{sigungu}
-        WHERE user_id = #{user_id}
+        WHERE user_id = #{userId}
     </update>
 </mapper>
