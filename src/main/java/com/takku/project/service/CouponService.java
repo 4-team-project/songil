@@ -1,4 +1,4 @@
-package com.takku.project.repository;
+package com.takku.project.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.takku.project.domain.CouponDTO;
 import com.takku.project.mapper.CouponMapper;
 
 @Repository
-public class CouponDAO implements CouponMapper {
+public class CouponService implements CouponMapper {
 
 	@Autowired
 	SqlSession sqlSession;
