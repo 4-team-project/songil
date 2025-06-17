@@ -7,10 +7,10 @@
 	<!-- 회원가입 -->
     <insert id="insertUser" parameterType="UserDTO">
         INSERT INTO User (
-            user_id, user_type, phone, password, name, gender, birth,
+            user_type, phone, password, name, gender, birth,
             nickname, sido, sigungu, is_partner, created_at
         ) VALUES (
-            user_seq.NEXTVAL, #{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
+            #{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
             #{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE
         )
     </insert>
