@@ -11,7 +11,7 @@ public interface SettlementMapper {
 	int insertSettlement(SettlementDTO vo);
 
     // 2. ���� ID�� ���� ���� ��ȸ
-    List<SettlementDTO> getSettlementsByStoreId(Integer storeId);
+    List<SettlementDTO> getSettlementByStoreId(Integer storeId);
 
     // 3. ���� ���� ����
     int updateSettlementStatus(Map<String, Object> params);

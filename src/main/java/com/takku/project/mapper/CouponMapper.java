@@ -11,7 +11,7 @@ public interface CouponMapper {
     int insertCoupon(CouponDTO coupon);
 
     // 특정 사용자의 쿠폰 목록 조회
-    List<CouponDTO> selectCouponsByUserId(Integer userId);
+    List<CouponDTO> selectCouponByUserId(Integer userId);
 
     int updateCouponUseStatus(Integer couponId, String useStatus);
 
