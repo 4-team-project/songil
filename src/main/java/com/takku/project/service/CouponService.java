@@ -16,7 +16,7 @@ public class CouponService implements CouponMapper {
 
 	@Autowired
 	SqlSession sqlSession;
-	String namespace = "com.takku.project.";
+	String namespace = "com.takku.project.mapper.CouponMapper.";
 	
 	@Override
 	public int insertCoupon(CouponDTO coupon) {
