@@ -11,11 +11,11 @@ public interface SettlementMapper {
 	int insertSettlement(SettlementDTO settlement);
 
     // 2. ���� ID�� ���� ���� ��ȸ
-    List<SettlementDTO> getSettlementByStoreId(Integer storeId);
+    List<SettlementDTO> selectSettlementByStoreId(Integer storeId);
 
     // 3. ���� ���� ����
     int updateSettlementStatus(Map<String, Object> map);
 
     // 4. ���� �� ��ȸ
-    SettlementDTO getSettlementById(Integer settlementId);
+    SettlementDTO selectSettlementById(Integer settlementId);
 }
