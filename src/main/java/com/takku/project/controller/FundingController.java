@@ -42,13 +42,13 @@ public class FundingController {
 	}
 	
 	@GetMapping("/{fundingId}")
-    public String getFundingDetail(@PathVariable("fundingId") int fundingId, Model model) {
-        FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-        if (funding == null) {
-            return "error/error";
-        }
+   	public String getFundingDetail(@PathVariable("fundingId") int fundingId, Model model) {
+		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+        	if (funding == null) {
+        		return "error/error";
+           	}
 
-        model.addAttribute("funding", funding);
-        return "user/main_detail";
-    }
+        	model.addAttribute("funding", funding);
+        	return "user/main_detail";
+    	}
 }
