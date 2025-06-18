@@ -46,9 +46,18 @@
         WHERE product_id = #{productId}
     </update>
 
+
     <!-- 4. 상품 삭제 -->
     <delete id="deleteProduct" parameterType="int">
-        DELETE FROM takku_product
-        WHERE product_id = #{productId}
+      DELETE FROM product
+      WHERE product_id = #{productId}
     </delete>
+
+    <!-- 5. 상품id로 상품 조회 -->
+    <select id = "selectByProductId" parameterType="int">
+      SELECT *
+      FROM takku_product
+      WHERE product_id = #{productId}
+    </select>
 </mapper>
+

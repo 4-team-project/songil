@@ -15,6 +15,7 @@ public class ProductService implements ProductMapper{
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.ProductMapper.";
+	
 	@Override
 	public int insertProduct(ProductDTO productVO) {
 		int result = sqlSession.insert(namespace+"insertProduct", productVO);
@@ -35,4 +36,11 @@ public class ProductService implements ProductMapper{
 		int result = sqlSession.delete(namespace+"deleteProduct", productId);
 		return result;
 	}
+	
+	@Override
+	public ProductDTO selectByProductId(Integer productId) {
+		ProductDTO product = sqlSession.selectOne(namespace+"selectByProductId", productId);
+		return product;
+	}
+
 }
