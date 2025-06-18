@@ -20,5 +20,4 @@ public interface FundingMapper {
 	
 	//삭제
 	int deleteFunding(Integer fundingId);
-	
 }
