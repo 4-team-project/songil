@@ -4,9 +4,10 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takku.project.mapper.UserMapper">
-	<!-- 회원가입 -->
+
+    <!-- 회원가입 -->
     <insert id="insertUser" parameterType="UserDTO">
-        INSERT INTO User (
+        INSERT INTO takku_user (
             user_type, phone, password, name, gender, birth,
             nickname, sido, sigungu, is_partner, created_at
         ) VALUES (
@@ -17,27 +18,36 @@
 
     <!-- 로그인용 사용자 조회 -->
     <select id="selectByPhone" parameterType="string" resultType="UserDTO">
-        SELECT * FROM User WHERE phone = #{phone}
+        SELECT *
+        FROM takku_user
+        WHERE phone = #{phone}
     </select>
 
     <!-- 내 정보 보기 -->
     <select id="selectByUserId" parameterType="int" resultType="UserDTO">
-        SELECT * FROM User WHERE user_id = #{userId}
+        SELECT *
+        FROM takku_user
+        WHERE user_id = #{userId}
     </select>
 
     <!-- 내 정보 수정 -->
     <update id="updateUser" parameterType="UserDTO">
-        UPDATE User
+        UPDATE takku_user
         SET
-        	password = #{password},
+            password = #{password},
             nickname = #{nickname},
             sido = #{sido},
             sigungu = #{sigungu}
         WHERE user_id = #{userId}
     </update>
+<<<<<<< feature/validationController
     
     <!-- 이메일 확인 -->
     <select id = "countByEmail" resultType="int">
     	SELECT COUNT(*) FROM user WHERE email = #{email}
     </select>
 </mapper>
+=======
+
+</mapper>
+>>>>>>> develop
