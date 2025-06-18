@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takku.project.mapper.CouponMapper">
-	<!-- 쿠폰 발급 (insert) -->
-	<insert id="insertCoupon" parameterType="CouponDTO">
-		INSERT INTO coupon (
-		funding_id, user_id, store_id, coupon_code,
-		use_status, reviewed, created_at, expired_at
-		) VALUES (
-		#{fundingId}, #{userId}, #{storeId}, #{couponCode},
-		#{useStatus}, #{reviewed}, #{createdAt}, #{expiredAt}
-		)
-	</insert>
-	
-	<!-- 특정 사용자의 쿠폰 목록 조회 -->
-    <select id="selectCouponsByUserId" resultType="CouponDTO">
-        SELECT *
-        FROM coupon
+
+    <!-- 쿠폰 발급 (insert) -->
+    <insert id="insertCoupon" parameterType="CouponDTO">
+        INSERT INTO takku_coupon (
+            funding_id, user_id, store_id, coupon_code,
+            use_status, reviewed, created_at, expired_at
+        ) VALUES (
+            #{fundingId}, #{userId}, #{storeId}, #{couponCode},
+            #{useStatus}, #{reviewed}, #{createdAt}, #{expiredAt}
+        )
+    </insert>
+
+    <!-- 특정 사용자의 쿠폰 목록 조회 -->
+    <select id="selectCouponsByUserId" parameterType="int" resultType="CouponDTO">
+        SELECT coupon_id, funding_id, user_id, store_id, coupon_code,
+               use_status, reviewed, created_at, expired_at
+        FROM takku_coupon
         WHERE user_id = #{userId}
     </select>
 
-	<!-- use_status 수정 (쿠폰 사용 시 or 선물 시) -->
-	<update id="updateCouponUseStatus" parameterType="map">
-		UPDATE coupon
-		SET use_status = #{useStatus}
-		WHERE coupon_id = #{couponId}
-	</update>
+    <!-- use_status 수정 (쿠폰 사용 시 or 선물 시) -->
+    <update id="updateCouponUseStatus" parameterType="map">
+        UPDATE takku_coupon
+        SET use_status = #{useStatus}
+        WHERE coupon_id = #{couponId}
+    </update>
 
-	<!-- 리뷰 작성 후 reviewed 변경 -->
-	<update id="updateCouponReviewed" parameterType="map">
-		UPDATE coupon
-		SET reviewed = 1
-		WHERE coupon_id = #{couponId}
-	</update>
+    <!-- 리뷰 작성 후 reviewed 변경 -->
+    <update id="updateCouponReviewed" parameterType="int">
+        UPDATE takku_coupon
+        SET reviewed = 1
+        WHERE coupon_id = #{couponId}
+    </update>
 
-	<!-- 쿠폰 코드로 쿠폰 조회 (결제 시 코드 보여주기) -->
-	<select id="selectByCouponCode" parameterType="String"
-		resultType="CouponDTO">
-		SELECT coupon_id, funding_id, user_id, store_id, coupon_code,
-		use_status, reviewed, created_at, expired_at
-		FROM coupon
-		WHERE coupon_code = #{couponCode}
-	</select>
+    <!-- 쿠폰 코드로 쿠폰 조회 (결제 시 코드 보여주기) -->
+    <select id="selectByCouponCode" parameterType="String" resultType="CouponDTO">
+        SELECT coupon_id, funding_id, user_id, store_id, coupon_code,
+               use_status, reviewed, created_at, expired_at
+        FROM takku_coupon
+        WHERE coupon_code = #{couponCode}
+    </select>
+
 </mapper>
