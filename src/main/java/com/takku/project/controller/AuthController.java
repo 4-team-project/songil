@@ -26,13 +26,7 @@ public class AuthController {
 	
 		return "auth/signup";
 	}
-	
-	@GetMapping("/main")
-	public String main() {
-	
-		return "auth/main";
-	}
-	
+
 	//회원가입 처리
 	@PostMapping("/signup")
 	public String signup(UserDTO userDTO, RedirectAttributes redirectAttributes) {
@@ -53,7 +47,7 @@ public class AuthController {
 	public String login(String phone, String password, HttpSession session, RedirectAttributes redirectAttributes) {
 		UserDTO user = userService.selectByPhone(phone, password);
 		redirectAttributes.addFlashAttribute("resultMessage", user!=null? "로그인 성공" : "로그인 실패");
-		return "redirect:/auth/main";
+		return "redirect:main";
 	}
 	
 	//로그아웃
