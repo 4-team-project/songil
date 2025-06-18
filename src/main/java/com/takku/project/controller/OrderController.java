@@ -24,7 +24,7 @@ public class OrderController {
 	//주문 폼
 	@GetMapping("/{fundindId}")
 	public String orderForm(Integer fundingId, Model model) {
-		FundingDTO fundingDTO = fundingService.selectByFundingId(fundingId);
+		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
 		return "orderForm"; //orderForm.jsp
 	}
