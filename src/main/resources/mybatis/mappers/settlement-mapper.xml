@@ -6,63 +6,60 @@
 
 <mapper namespace="com.takku.project.mapper.SettlementMapper">
 
-	<!-- 1. 정산 등록 -->
-	<insert id="insertSettlement"
-		parameterType="SettlementDTO">
-		INSERT INTO settlement (
-		funding_id,
-		store_id,
-		fee,
-		amount,
-		status,
-		settled_at
-		) VALUES (
-		#{fundingId},
-		#{storeId},
-		#{fee},
-		#{amount},
-		#{status},
-		#{settledAt}
-		)
-	</insert>
+    <!-- 1. 정산 등록 -->
+    <insert id="insertSettlement" parameterType="SettlementDTO">
+        INSERT INTO takku_settlement (
+            funding_id,
+            store_id,
+            fee,
+            amount,
+            status,
+            settled_at
+        ) VALUES (
+            #{fundingId},
+            #{storeId},
+            #{fee},
+            #{amount},
+            #{status},
+            #{settledAt}
+        )
+    </insert>
 
-	<!-- 2. 상점 ID로 정산 내역 조회 -->
-	<select id="selectSettlementByStoreId" parameterType="int"
-		resultType="SettlementDTO">
-		SELECT
-		settlement_id,
-		funding_id,
-		store_id,
-		fee,
-		amount,
-		status,
-		settled_at
-		FROM settlement
-		WHERE store_id = #{storeId}
-		ORDER BY settled_at DESC
-	</select>
+    <!-- 2. 상점 ID로 정산 내역 조회 -->
+    <select id="selectSettlementByStoreId" parameterType="int" resultType="SettlementDTO">
+        SELECT
+            settlement_id,
+            funding_id,
+            store_id,
+            fee,
+            amount,
+            status,
+            settled_at
+        FROM takku_settlement
+        WHERE store_id = #{storeId}
+        ORDER BY settled_at DESC
+    </select>
 
-	<!-- 3. 정산 상태 변경 -->
-	<update id="updateSettlementStatus" parameterType="map">
-		UPDATE settlement
-		SET status = #{status},
-		settled_at = SYSDATE
-		WHERE settlement_id = #{settlementId}
-	</update>
+    <!-- 3. 정산 상태 변경 -->
+    <update id="updateSettlementStatus" parameterType="map">
+        UPDATE takku_settlement
+        SET status = #{status},
+            settled_at = SYSDATE
+        WHERE settlement_id = #{settlementId}
+    </update>
 
-	<!-- 4. 정산 상세 조회 -->
-	<select id="selectSettlementById" parameterType="int"
-		resultType="SettlementDTO">
-		SELECT
-		settlement_id,
-		funding_id,
-		store_id,
-		fee,
-		amount,
-		status,
-		settled_at
-		FROM settlement
-		WHERE settlement_id = #{settlementId}
-	</select>
+    <!-- 4. 정산 상세 조회 -->
+    <select id="selectSettlementById" parameterType="int" resultType="SettlementDTO">
+        SELECT
+            settlement_id,
+            funding_id,
+            store_id,
+            fee,
+            amount,
+            status,
+            settled_at
+        FROM takku_settlement
+        WHERE settlement_id = #{settlementId}
+    </select>
 
 </mapper>
