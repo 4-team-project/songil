@@ -22,7 +22,7 @@ public class OrderController {
 	private OrderService orderService;
 
 	//주문 폼
-	@GetMapping("/{fundindId}")
+	@GetMapping("/{fundingId}")
 	public String orderForm(Integer fundingId, Model model) {
 		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
