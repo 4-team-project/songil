@@ -19,6 +19,6 @@ public class UserController {
     public String getUser(@RequestParam("id") int id, Model model) {
         UserDTO user = userService.selectByUserId(id);
         model.addAttribute("user", user);
-        return "user/userDetail";
+        return "user/userdetail";
     }
 }
