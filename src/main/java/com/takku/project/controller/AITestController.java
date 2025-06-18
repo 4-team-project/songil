@@ -1,7 +1,6 @@
 package com.takku.project.controller;
 
 import com.takku.project.service.AIService;
-import com.takku.project.service.AIServiceImpl;
 import com.takku.project.domain.AIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
