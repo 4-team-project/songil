@@ -24,7 +24,7 @@ public class SettlementService implements SettlementMapper{
 	}
 	
 	@Override
-	public List<SettlementDTO> getSettlementByStoreId(Integer storeId) {
+	public List<SettlementDTO> selectSettlementByStoreId(Integer storeId) {
 		List<SettlementDTO> settList = sqlSession.selectList(namespace + "getSettlementByStoreId", storeId);
 		return settList;
 	}
@@ -36,7 +36,7 @@ public class SettlementService implements SettlementMapper{
 	}
 	
 	@Override
-	public SettlementDTO getSettlementById(Integer settlementId) {
+	public SettlementDTO selectSettlementById(Integer settlementId) {
 		SettlementDTO sett = sqlSession.selectOne(namespace + "getSettlementById", settlementId);
 		return sett;
 	}
