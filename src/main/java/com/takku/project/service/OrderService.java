@@ -1,5 +1,7 @@
 package com.takku.project.service;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,9 @@ public class OrderService implements OrderMapper{
 	String namespace = "com.takku.project.mapper.OrderMapper.";
 	
 	@Override
-	public OrderDTO selectByUserId(Integer userId) {
-		OrderDTO order = sqlSession.selectOne(namespace + "selectByUserId", userId);
-		return order;
+	public List<OrderDTO> selectByUserId(Integer userId) {
+		List<OrderDTO> orderList = sqlSession.selectList(namespace + "selectByUserId", userId);
+		return orderList;
 	}
 	
 	@Override	
