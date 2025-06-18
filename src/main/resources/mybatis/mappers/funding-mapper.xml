@@ -28,6 +28,14 @@
 		WHERE funding_id = #{fundingId}
 	</select>
 
+	<!-- 상점 ID로 펀딩 목록 조회 -->
+	<select id="selectFundingsByStoreId"
+		resultType="FundingDTO" parameterType="int">
+		SELECT *
+		FROM takku_funding
+		WHERE store_id = #{storeId}	
+	</select>
+
 	<!-- 펀딩 검색 -->
 	<select id="selectFundingByCondition" parameterType="map"
 		resultType="FundingDTO">

@@ -6,21 +6,24 @@ import com.takku.project.domain.FundingDTO;
 
 public interface FundingMapper {
 
-	//ÆÝµù ÀüÃ¼º¸±â
+	//ï¿½Ýµï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½
 	List<FundingDTO> selectAllFunding();
 	
-	//ÆÝµù »ó¼¼º¸±â
+	//ï¿½Ýµï¿½ ï¿½ó¼¼ºï¿½ï¿½ï¿½
 	FundingDTO selectFundingByFundingId(Integer fundingId);
 	
-	//ÆÝµù »ó¼¼°Ë»ö
+	//ï¿½Ýµï¿½ ï¿½ó¼¼°Ë»ï¿½
 	List<FundingDTO> selectFundingByCondition(String keyword, Integer categoryId, String sido, String sigungu);
 	
-	//ÆÝµù ÀÔ·Â
+	//ï¿½Ýµï¿½ ï¿½Ô·ï¿½
 	int insertFunding(FundingDTO funding);
 	
-	//ÆÝµù ¼öÁ¤
+	//ï¿½Ýµï¿½ ï¿½ï¿½ï¿½ï¿½
 	int updateFunding(FundingDTO funding);
 	
-	//ÆÝµù »èÁ¦
+	//ï¿½Ýµï¿½ ï¿½ï¿½ï¿½ï¿½
 	int deleteFunding(Integer fundingId);
+	
+	//ìŠ¤í† ì–´ idë¡œ íŽ€ë”©ì°¾ê¸°
+	List<FundingDTO> findFundingByStoreId(int storeId);
 }

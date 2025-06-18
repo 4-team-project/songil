@@ -29,6 +29,11 @@ public class FundingService implements FundingMapper {
 		FundingDTO funding = sqlSession.selectOne(namespace + "selectByFundingId", fundingId);
 		return funding;
 	}
+	
+	@Override
+    public List<FundingDTO> findFundingByStoreId(int storeId) {
+        return sqlSession.selectList(namespace + "selectFundingByStoreId", storeId);
+    }
 
 	@Override
 	public List<FundingDTO> selectFundingByCondition(String keyword, Integer categoryId, String sido, String sigungu) {
