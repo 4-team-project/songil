@@ -1,4 +1,15 @@
 eclipse.preferences.version=1
+<<<<<<< refactor/mapper-table-name-update
+<<<<<<< Updated upstream
+=======
+encoding//src/main/java/com/takku/project/mapper/SettlementMapper.java=UTF-8
 encoding//src/main/java/com/takku/project/mapper/StoreMapper.java=UTF-8
 encoding//src/main/java/com/takku/project/mapper/UserMapper.java=UTF-8
 encoding//src/main/java/com/takku/project/service/AIServiceImpl.java=UTF-8
+>>>>>>> Stashed changes
+encoding/<project>=UTF-8
+=======
+encoding//src/main/java/com/takku/project/mapper/StoreMapper.java=UTF-8
+encoding//src/main/java/com/takku/project/mapper/UserMapper.java=UTF-8
+encoding//src/main/java/com/takku/project/service/AIServiceImpl.java=UTF-8
+>>>>>>> develop
