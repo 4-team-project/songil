@@ -19,20 +19,20 @@ public class OrderService implements OrderMapper{
 		OrderDTO order = sqlSession.selectOne(namespace + "selectByUserId", userId);
 		return order;
 	}
-	@Override
 	
+	@Override	
 	public int insertOrder(OrderDTO order) {
 		int result = sqlSession.insert(namespace + "insertOrder", order);
 		return result;
 	}
-	@Override
 	
+	@Override
 	public int updateOrderFundingStatus(OrderDTO order) {
 		int result = sqlSession.update(namespace + "updateOrderFundingStatus", order);
 		return result;
 	}
-	@Override
 	
+	@Override
 	public int updateOrderRefundAtStatus(OrderDTO order) {
 		int result = sqlSession.update(namespace + "updateOrderRefundAtStatus", order);
 		return result;
