@@ -1,11 +1,7 @@
 package com.takku.project.mapper;
 
-import com.takku.project.domain.CouponDTO;
-import com.takku.project.domain.OrderDTO;
-import com.takku.project.domain.ReviewDTO;
 import com.takku.project.domain.UserDTO;
 
-import java.util.List;
 
 public interface UserMapper {
 
@@ -20,4 +16,7 @@ public interface UserMapper {
 
     // 내 정보 수정
     int updateUser(UserDTO user);
+    
+    //이메일 중복 검사, validationcontroller에서 중복검사
+    int countByEmail(String email);
 }

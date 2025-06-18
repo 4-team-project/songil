@@ -2,10 +2,12 @@ package com.takku.project.service;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.mapper.StoreMapper;
 
+@Service
 public class StoreService implements StoreMapper{
 
 	@Autowired
@@ -33,6 +35,12 @@ public class StoreService implements StoreMapper{
 	@Override
 	public int deleteStore(Integer storeId) {
 		int result = sqlSession.delete(namespace + "deleteStore", storeId);
+		return result;
+	}
+
+	@Override
+	public int countByBusinessNumber(String businessNumber) {
+		int result = sqlSession.selectOne(namespace+"countByBusinessNumber", businessNumber);
 		return result;
 	}
 

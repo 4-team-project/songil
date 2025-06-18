@@ -16,4 +16,8 @@ public interface StoreMapper {
 
     // 4. ���� ����
 	int deleteStore(Integer storeId);
+	
+	// 5. 사업자등록번호 중복 검사
+	int countByBusinessNumber(String businessNumber);
+	
 }
