@@ -13,7 +13,7 @@ import com.takku.project.service.StoreService;
 import com.takku.project.service.UserService;
 
 @RestController
-@RequestMapping("/api/v1/validations/")
+@RequestMapping("/api/v1/validations")
 public class ValidationController {
 	
 	@Autowired
