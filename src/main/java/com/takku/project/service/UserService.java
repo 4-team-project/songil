@@ -38,5 +38,13 @@ public class UserService implements UserMapper{
 		return result;
 	}
 
+	@Override
+	public int countByEmail(String email) {
+		int result = sqlSession.selectOne(namespace+"countByEmail", email);
+		return result;
+	}
+
+	
+
 	
 }

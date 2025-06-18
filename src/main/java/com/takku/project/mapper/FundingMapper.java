@@ -23,5 +23,4 @@ public interface FundingMapper {
 	
 	//ÆÝµù »èÁ¦
 	int deleteFunding(Integer fundingId);
-	
 }

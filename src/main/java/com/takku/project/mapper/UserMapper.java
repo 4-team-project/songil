@@ -12,4 +12,7 @@ public interface UserMapper {
     UserDTO selectByUserId(Integer userId);
 
     int updateUser(UserDTO user);
+    
+    //이메일 중복 검사, validationcontroller에서 중복검사
+    int countByEmail(String email);
 }

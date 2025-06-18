@@ -39,4 +39,10 @@ public class StoreService implements StoreMapper{
 		return result;
 	}
 
+	@Override
+	public int countByBusinessNumber(String businessNumber) {
+		int result = sqlSession.selectOne(namespace+"countByBusinessNumber", businessNumber);
+		return result;
+	}
+
 }
