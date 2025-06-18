@@ -20,7 +20,7 @@ public class SettlementController {
 
 	@GetMapping("/settlement")
 	public String getSettlement(Model model, Integer storeId) {
-		List<SettlementDTO> settlementList = settlementService.getSettlementByStoreId(storeId);
+		List<SettlementDTO> settlementList = settlementService.selectSettlementByStoreId(storeId);
 		model.addAttribute("settlementList", settlementList);
 		return "seller_settlement";
 	}
