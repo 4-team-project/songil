@@ -25,7 +25,7 @@ public class ProductManagementController {
 
 	@GetMapping
 	public String productList(Integer storeId, Model model) {
-		List<ProductDTO> list = productService.getProductByStoreId(storeId);
+	List<ProductDTO> list = productService.selectProductByStoreId(storeId);
 		model.addAttribute("productList", list);
 		return "seller_product";
 	}
