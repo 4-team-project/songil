@@ -22,7 +22,7 @@ public class OrderController {
 	private OrderService orderService;
 
 	//주문 폼
-	@GetMapping("/{fundgindId}")
+	@GetMapping("/{fundindId}")
 	public String orderForm(Integer fundingId, Model model) {
 		FundingDTO fundingDTO = fundingService.selectByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
@@ -38,7 +38,7 @@ public class OrderController {
 		}else {
 			model.addAttribute("resultMessage", "주문 처리에 실패했습니다.");
 		}
-		return "redirect:/mypage/order";
+		return "redirect:/songil/order";
 	}
 	
 }
