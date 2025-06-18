@@ -22,7 +22,7 @@ public class ProductService implements ProductMapper{
 		return result;
 	}
 	@Override
-	public List<ProductDTO> getProductByStoreId(Integer storeId) {
+	public List<ProductDTO> selectProductByStoreId(Integer storeId) {
 		List<ProductDTO> proList = sqlSession.selectList(namespace + "getProductByStoreId", storeId);
 		return proList;
 	}

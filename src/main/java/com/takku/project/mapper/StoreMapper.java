@@ -19,4 +19,5 @@ public interface StoreMapper {
 	// 5. 사업자등록번호 중복 검사
 	int countByBusinessNumber(String businessNumber);
 	
+	Integer findStoreIdByUserId(int userId);
 }

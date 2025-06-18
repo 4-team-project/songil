@@ -45,4 +45,8 @@ public class StoreService implements StoreMapper{
 		return result;
 	}
 
+	@Override
+    public Integer findStoreIdByUserId(int userId) {
+        return sqlSession.selectOne(namespace + "selectStoreIdByUserId", userId);
+    }
 }

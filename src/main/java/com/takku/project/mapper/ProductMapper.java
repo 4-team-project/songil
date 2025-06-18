@@ -10,7 +10,7 @@ public interface ProductMapper {
 	int insertProduct(ProductDTO product);
 
     // 2. ���� ID�� ��ǰ ��� ��ȸ
-    List<ProductDTO> getProductByStoreId(Integer storeId);
+    List<ProductDTO> selectProductByStoreId(Integer storeId);
 
     // 3. ��ǰ ����
     int updateProduct(ProductDTO product);
