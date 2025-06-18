@@ -49,6 +49,6 @@ public class CouponService implements CouponMapper {
 	@Override
 	public CouponDTO selectByCouponCode(String couponCode) {
 		CouponDTO coupon = sqlSession.selectOne(namespace + "selectByCouponCode", couponCode);
-		return null;
+		return coupon;
 	}
 }
