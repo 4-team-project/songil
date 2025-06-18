@@ -12,7 +12,7 @@ import com.takku.project.service.FundingService;
 import com.takku.project.service.OrderService;
 
 @Controller
-@RequestMapping("/order/")
+@RequestMapping("/order")
 public class OrderController {
 	
 	@Autowired
@@ -24,7 +24,7 @@ public class OrderController {
 	//주문 폼
 	@GetMapping("/{fundindId}")
 	public String orderForm(Integer fundingId, Model model) {
-		FundingDTO fundingDTO = fundingService.selectByFundingId(fundingId);
+		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
 		return "orderForm"; //orderForm.jsp
 	}
@@ -38,7 +38,7 @@ public class OrderController {
 		}else {
 			model.addAttribute("resultMessage", "주문 처리에 실패했습니다.");
 		}
-		return "redirect:/songil/order";
+		return "redirect:/mypage/order";
 	}
 	
 }

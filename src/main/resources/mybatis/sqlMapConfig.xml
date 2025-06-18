@@ -8,10 +8,10 @@
 		<!-- 칼럼의 값이 null오면 mybatis에서 칼럼의 타입으로 null처리 -->
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
+</configuration>
 
-	<configuration>
-		<settings>
-			<setting name="mapUnderscoreToCamelCase" value="true" />
-		</settings>
-	</configuration>
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
 </configuration>

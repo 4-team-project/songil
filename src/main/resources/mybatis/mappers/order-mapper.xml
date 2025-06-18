@@ -6,38 +6,38 @@
 
 <mapper namespace="com.takku.project.mapper.OrderMapper">
 
-	<!-- 구매자 ID로 주문 조회 -->
-	<select id="selectByUserId" resultType="OrderDTO">
-		SELECT order_id, funding_id, qty, amount, use_point, discount_amount, status,
-		funding_status, purchased_at, refund_at
-		FROM ORDER
-		WHERE user_id = #{userId}
-	</select>
-	
-	<!-- 주문 생성 -->
-	<insert id="insertOrder" parameterType="OrderDTO">
-		INSERT INTO ORDER (
-		user_id, funding_id, qty, amount, use_point, discount_amount,
-		status, funding_status, purchased_at, refund_at
-		) VALUES (
-		#{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
-		#{status}, #{fundingStatus}, SYSDATE, null
-		)
-	</insert>
-	
-	<!-- 주문 펀딩 상태 수정 -->
-	<update id="updateOrderFundingStatus" parameterType="OrderDTO">
-		UPDATE order
-		SET funding_status = #{fundingStatus}
-		WHERE order_id = #{orderId}
-	</update>
-	
-	<!-- 주문 결제 상태 및 환불일 수정 -->
-	<update id="updateOrderRefundAtStatus" parameterType="OrderDTO">
-		UPDATE order
-		SET status = #{status},
-		refund_at = #{refundAt}
-		WHERE order_id = #{orderId}
-	</update>
+    <!-- 구매자 ID로 주문 조회 -->
+    <select id="selectByUserId" resultType="OrderDTO" parameterType="int">
+        SELECT order_id, funding_id, qty, amount, use_point, discount_amount,
+               status, funding_status, purchased_at, refund_at
+        FROM takku_order
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 주문 생성 -->
+    <insert id="insertOrder" parameterType="OrderDTO">
+        INSERT INTO takku_order (
+            user_id, funding_id, qty, amount, use_point, discount_amount,
+            status, funding_status, purchased_at, refund_at
+        ) VALUES (
+            #{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
+            #{status}, #{fundingStatus}, SYSDATE, NULL
+        )
+    </insert>
+    
+    <!-- 주문 펀딩 상태 수정 -->
+    <update id="updateOrderFundingStatus" parameterType="OrderDTO">
+        UPDATE takku_order
+        SET funding_status = #{fundingStatus}
+        WHERE order_id = #{orderId}
+    </update>
+    
+    <!-- 주문 결제 상태 및 환불일 수정 -->
+    <update id="updateOrderRefundAtStatus" parameterType="OrderDTO">
+        UPDATE takku_order
+        SET status = #{status},
+            refund_at = #{refundAt}
+        WHERE order_id = #{orderId}
+    </update>
 
 </mapper>
