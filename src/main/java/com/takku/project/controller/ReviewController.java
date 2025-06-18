@@ -42,7 +42,7 @@ public class ReviewController {
 		}else {
 			ra.addFlashAttribute("resultMessage", "리뷰 등록을 실패하였습니다.");
 		}
-		return "redirect:/songil/review";
+		return "redirect:mypage/review";
 	}
 	
 	//상품 리뷰 조회
