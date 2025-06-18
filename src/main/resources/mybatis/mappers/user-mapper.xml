@@ -40,14 +40,10 @@
             sigungu = #{sigungu}
         WHERE user_id = #{userId}
     </update>
-<<<<<<< feature/validationController
     
     <!-- 이메일 확인 -->
     <select id = "countByEmail" resultType="int">
-    	SELECT COUNT(*) FROM user WHERE email = #{email}
+    	SELECT COUNT(*) FROM takku_user WHERE email = #{email}
     </select>
 </mapper>
-=======
 
-</mapper>
->>>>>>> develop
