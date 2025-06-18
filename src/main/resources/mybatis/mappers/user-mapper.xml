@@ -45,5 +45,14 @@
     <select id = "countByEmail" resultType="int">
     	SELECT COUNT(*) FROM takku_user WHERE email = #{email}
     </select>
+    
+    <!-- 휴대폰 번호 및 사용자 타입 중복 체크 -->
+    <select id="countByPhone" resultType="int">
+    	SELECT COUNT(*) AS cnt
+		FROM takku_user
+		WHERE user_type = #{userType}
+  		AND phone = #{phone}
+	</select>
+    
 </mapper>
 
