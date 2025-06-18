@@ -17,4 +17,7 @@ public interface ProductMapper {
 
     // 4. ��ǰ ����
     int deleteProduct(Integer productId);
+    
+    // 5. selectByProductId
+    ProductDTO selectByProductId(Integer productId);
 }
