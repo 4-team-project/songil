@@ -12,7 +12,7 @@ import com.takku.project.service.FundingService;
 import com.takku.project.service.OrderService;
 
 @Controller
-@RequestMapping("/order/")
+@RequestMapping("/order")
 public class OrderController {
 	
 	@Autowired
@@ -22,7 +22,7 @@ public class OrderController {
 	private OrderService orderService;
 
 	//주문 폼
-	@GetMapping("/{fundgindId}")
+	@GetMapping("/{fundindId}")
 	public String orderForm(Integer fundingId, Model model) {
 		FundingDTO fundingDTO = fundingService.selectByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
