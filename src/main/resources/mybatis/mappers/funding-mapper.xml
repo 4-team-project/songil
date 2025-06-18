@@ -9,7 +9,7 @@
 	<!-- 펀딩 전체 조회 -->
 	<select id="selectAllFunding" resultType="FundingDTO">
 		SELECT
-		funding_id, 
+		funding_id,
 		funding_name,
 		funding_type,
 		sale_price,
@@ -17,22 +17,43 @@
 		target_qty,
 		status,
 		end_date
-		FROM funding
+		FROM takku_funding
 	</select>
 
 	<!-- 펀딩번호로 상세 조회 -->
 	<select id="selectByFundingId" parameterType="int"
 		resultType="FundingDTO">
 		SELECT *
-		FROM funding
+		FROM takku_funding
 		WHERE funding_id = #{fundingId}
+	</select>
+
+	<!-- 펀딩 검색 -->
+	<select id="selectFundingByCondition" parameterType="map"
+		resultType="FundingDTO">
+		SELECT *
+		FROM takku_funding
+		WHERE 1=1
+		<if test="keyword != null and keyword != ''">
+			AND title LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="categoryId != null">
+			AND category_id = #{categoryId}
+		</if>
+		<if test="sido != null and sido != ''">
+			AND sido = #{sido}
+		</if>
+		<if test="sigungu != null and sigungu != ''">
+			AND sigungu = #{sigungu}
+		</if>
 	</select>
 
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
-		INSERT INTO funding (
+		INSERT INTO takku_funding (
 		product_id, store_id,
-		funding_type, funding_name, funding_desc, start_date,
+		funding_type, funding_name, funding_desc,
+		start_date,
 		end_date, sale_price, target_qty, max_qty, per_qty,
 		status,created_at
 		) VALUES (
@@ -54,13 +75,14 @@
 
 	<!-- 수정 -->
 	<update id="updateFunding" parameterType="FundingDTO">
-		UPDATE funding
+		UPDATE takku_funding
 		SET
 		funding_type =#{fundingType},
 		funding_name = #{fundingName},
 		funding_desc =#{fundingDesc},
 		start_date = #{startDate},
-		end_date = #{endDate},
+		end_date =
+		#{endDate},
 		sale_price = #{salePrice},
 		target_qty = #{targetQty},
 		max_qty =#{maxQty},
@@ -72,7 +94,7 @@
 
 	<!-- 삭제 -->
 	<delete id="deleteFunding" parameterType="int">
-		DELETE FROM funding
+		DELETE FROM takku_funding
 		WHERE funding_id = #{fundingId}
 	</delete>
 </mapper>
