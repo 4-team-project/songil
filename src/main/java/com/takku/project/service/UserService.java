@@ -21,9 +21,14 @@ public class UserService implements UserMapper{
 	}
 
 	@Override
-	public UserDTO selectByPhone(String phone) {
+	public UserDTO selectByPhone(String phone, String password) {
 		UserDTO user = sqlSession.selectOne(namespace + "selectByPhone", phone);
+		boolean isUser = user.getPassword().equals(password);
+		if(isUser == false || user == null) {
+			return null;
+		} else {
 		return user;
+		}
 	}
 
 	@Override

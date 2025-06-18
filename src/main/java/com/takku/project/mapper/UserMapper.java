@@ -7,7 +7,7 @@ public interface UserMapper {
 
 	int insertUser(UserDTO user);
 
-    UserDTO selectByPhone(String phone);
+	UserDTO selectByPhone(String phone, String password);
 
     UserDTO selectByUserId(Integer userId);
 
