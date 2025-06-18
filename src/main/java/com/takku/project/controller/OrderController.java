@@ -38,7 +38,7 @@ public class OrderController {
 		}else {
 			model.addAttribute("resultMessage", "주문 처리에 실패했습니다.");
 		}
-		return "redirect:/songil/order";
+		return "redirect:/mypage/order";
 	}
 	
 }
