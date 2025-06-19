@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,7 +34,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void insertProduct_shouldReturnSuccess() {
+    @DisplayName("상품 등록")
+    void insertProduct() {
         ProductDTO product = new ProductDTO();
         when(sqlSession.insert(namespace + "insertProduct", product)).thenReturn(1);
 
@@ -44,7 +46,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void selectProductByStoreId_shouldReturnProductList() {
+    @DisplayName("상점ID로 상품 조회")
+    void selectProductByStoreId() {
         Integer storeId = 1;
         List<ProductDTO> mockList = Arrays.asList(new ProductDTO(), new ProductDTO());
 
@@ -60,7 +63,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void updateProduct_shouldReturnSuccess() {
+    @DisplayName("상품 수정")
+    void updateProduct(){
         ProductDTO product = new ProductDTO();
         when(sqlSession.update(namespace + "updateProduct", product)).thenReturn(1);
 
@@ -71,7 +75,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void deleteProduct_shouldReturnSuccess() {
+    @DisplayName("상품 삭제")
+    void deleteProduct() {
         Integer productId = 10;
         when(sqlSession.delete(namespace + "deleteProduct", productId)).thenReturn(1);
 
@@ -82,7 +87,8 @@ public class ProductServiceTest {
     }
 
     @Test
-    void selectByProductId_shouldReturnProduct() {
+    @DisplayName("상품ID로 상품 조회")
+    void selectByProductId() {
         Integer productId = 10;
         ProductDTO product = new ProductDTO();
         product.setProductId(productId);
