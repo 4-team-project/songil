@@ -1,5 +1,7 @@
 package com.takku.project.mapper;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.takku.project.domain.ImageDTO;
 
 public interface ImageMapper {
@@ -9,5 +11,5 @@ public interface ImageMapper {
 	
 	// 삭제
 	int deleteImageUrl(String imageUrl);
-	
+
 }
