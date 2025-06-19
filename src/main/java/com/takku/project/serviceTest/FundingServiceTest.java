@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +36,8 @@ public class FundingServiceTest {
     }
 
     @Test
-    void selectAllFunding_shouldReturnList() {
+    @DisplayName("펀딩 모두 조회")
+    void selectAllFunding() {
         List<FundingDTO> mockList = Arrays.asList(new FundingDTO(), new FundingDTO());
 
         doReturn(mockList).when(sqlSession).selectList(namespace + "selectAllFunding");
@@ -48,7 +50,8 @@ public class FundingServiceTest {
     }
 
     @Test
-    void selectFundingByFundingId_shouldReturnFunding() {
+    @DisplayName("펀딩iD로 조회")
+    void selectFundingByFundingId() {
         Integer fundingId = 1;
         FundingDTO mockFunding = new FundingDTO();
         mockFunding.setFundingId(fundingId);
@@ -63,7 +66,8 @@ public class FundingServiceTest {
     }
 
     @Test
-    void selectFundingByCondition_shouldReturnFilteredList() {
+    @DisplayName("펀딩 상태로 조회")
+    void selectFundingByCondition() {
         String keyword = "test";
         Integer categoryId = 1;
         String sido = "서울";
@@ -83,7 +87,8 @@ public class FundingServiceTest {
     }
 
     @Test
-    void insertFunding_shouldReturnInsertResult() {
+    @DisplayName("펀딩 등록")
+    void insertFunding() {
         FundingDTO funding = new FundingDTO();
 
         when(sqlSession.insert(namespace + "insertFunding", funding)).thenReturn(1);
@@ -96,7 +101,8 @@ public class FundingServiceTest {
 
    
     @Test
-    void updateFunding_shouldReturnUpdateResult() {
+    @DisplayName("펀딩 수정")
+    void updateFunding() {
         FundingDTO funding = new FundingDTO();
 
         when(sqlSession.insert(namespace + "updateFunding", funding)).thenReturn(1); // 주의: insert로 되어 있음
@@ -108,6 +114,7 @@ public class FundingServiceTest {
     }
     
     @Test
+    @DisplayName("펀딩 삭제")
     void deleteFunding_shouldReturnDeleteResult() {
         Integer fundingId = 1;
 
