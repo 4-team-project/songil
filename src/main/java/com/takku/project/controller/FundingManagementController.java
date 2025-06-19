@@ -1,7 +1,11 @@
 package com.takku.project.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +17,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
 import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
+import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
 
@@ -35,6 +43,9 @@ public class FundingManagementController {
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	ImageService imageService;
+	
 	// 내 펀딩 목록
 	@GetMapping
 	public String sellerFundings(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
@@ -63,17 +74,36 @@ public class FundingManagementController {
 	// 펀딩 등록 처리
 	@PostMapping
 	public String registerFunding(@ModelAttribute FundingDTO fundingDTO, @ModelAttribute("loginUser") UserDTO loginUser,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam("images") List<MultipartFile> images, RedirectAttributes redirectAttributes) {
 
 		Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
-
 		fundingDTO.setStoreId(storeId);
 
 		int result = fundingService.insertFunding(fundingDTO);
+		
+		String uploadDir = "C:\\sinhan5\\install\\springFramework\\workSpace\\songil\\src\\main\\webapp\\resources\\images";
+		
 		if (result > 0) {
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 성공!");
-		} else {
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 실패");
+			for (MultipartFile file : images) {
+				if(!file.isEmpty()) {
+					try {
+	                    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+	                    String fullPath = uploadDir + File.separator + fileName;
+	                    file.transferTo(new File(fullPath));
+
+	                    ImageDTO imageDTO = ImageDTO.builder()
+	                        .fundingId(fundingDTO.getFundingId())
+	                        .imageUrl("/resources/images/" + fileName) // 웹 기준 경로
+	                        .build();
+
+	                    imageService.insertImageUrl(imageDTO); // insert into image ...
+	                } catch (IOException e) {
+	                    e.printStackTrace(); // 로그 출력
+	                    redirectAttributes.addFlashAttribute("resultMessage", "펀딩은 등록됐지만 이미지 업로드 중 오류 발생");
+	                    return "redirect:/seller/fundings";
+	                }
+				}
+			}
 		}
 		return "redirect:/seller/fundings";
 	}
