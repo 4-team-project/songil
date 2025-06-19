@@ -14,7 +14,7 @@ public class ReviewService implements ReviewMapper{
 	
 	@Autowired
 	SqlSession sqlSession;
-	String namespace = "com.takku.project.mapper.CouponMapper.";
+	String namespace = "com.takku.project.mapper.ReviewMapper.";
 	
 	@Override
 	public int insertReview(ReviewDTO review) {
