@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,13 +34,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void insertUser_shouldInsertIfPhoneNotExist() {
+    @DisplayName("사용자 등록")
+    void insertUser() {
         UserDTO user = new UserDTO();
         user.setPhone("01012345678");
         user.setUserType("BUYER");
 
         when(sqlSession.selectOne(eq(namespace + "countByPhone"), any(Map.class))).thenReturn(0);
-        //when(sqlSession.insert(namespace + "insertUser", user)).thenReturn(1);
 
         int result = userService.insertUser(user);
 
@@ -48,7 +49,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void insertUser_shouldThrowExceptionIfPhoneExists() {
+    @DisplayName("사용자 등록2")
+    void insertUser2() {
         UserDTO user = new UserDTO();
         user.setPhone("01012345678");
         user.setUserType("SELLER");
@@ -63,7 +65,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void selectByPhone_shouldReturnUserIfPasswordMatches() {
+    @DisplayName("전화번호 조회")
+    void selectByPhone() {
         UserDTO user = new UserDTO();
         user.setPhone("01012345678");
         user.setPassword("pass123");
@@ -77,7 +80,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void selectByPhone_shouldReturnNullIfPasswordDoesNotMatch() {
+    @DisplayName("전화번호 조회2")
+    void selectByPhone2() {
         UserDTO user = new UserDTO();
         user.setPhone("01012345678");
         user.setPassword("pass123");
@@ -90,7 +94,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void selectByUserId_shouldReturnUser() {
+    @DisplayName("사용자ID로 조회")
+    void selectByUserId() {
         UserDTO user = new UserDTO();
         user.setUserId(1);
 
@@ -103,7 +108,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser_shouldReturnUpdateResult() {
+    @DisplayName("사용자 수정")
+    void updateUser() {
         UserDTO user = new UserDTO();
         when(sqlSession.update(namespace + "updateUser", user)).thenReturn(1);
 
@@ -113,7 +119,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void countByEmail_shouldReturnCount() {
+    @DisplayName("이메일 중복 확인")
+    void countByEmail() {
         when(sqlSession.selectOne(namespace + "countByEmail", "test@example.com")).thenReturn(2);
 
         int result = userService.countByEmail("test@example.com");
@@ -122,7 +129,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void countByPhone_shouldReturnCount() {
+    @DisplayName("전화번호 중복 확인")
+    void countByPhone() {
         Map<String, Object> expectedMap = new HashMap<>();
         expectedMap.put("phone", "01012345678");
         expectedMap.put("userType", "BUYER");
