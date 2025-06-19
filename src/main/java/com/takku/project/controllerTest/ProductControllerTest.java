@@ -16,6 +16,8 @@ import static org.mockito.ArgumentMatchers.any;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -53,6 +55,7 @@ public class ProductControllerTest {
 	}
 	
 	@Test
+	@DisplayName("상품목록")
 	void productList_test() throws Exception {
 		ProductDTO product = new ProductDTO();
 		product.setProductId(1);
@@ -67,6 +70,14 @@ public class ProductControllerTest {
 	}
 	
 	@Test
+	@DisplayName("상품입력폼")
+	void showForm_test() throws Exception {
+		mockMvc.perform(get("/seller/product/new"))
+		.andExpect(view().name("seller_product_add"));
+	}
+	
+	 @Test
+	 @DisplayName("상품입력")
 	void showForm_test() throws Exception {
 		mockMvc.perform(get("/seller/product/new"))
 		.andExpect(status().isOk())
@@ -79,6 +90,11 @@ public class ProductControllerTest {
 	        when(productService.insertProduct(any(ProductDTO.class))).thenReturn(1);
 
 	        mockMvc.perform(post("/seller/product"))
+	                .andExpect(redirectedUrl("/seller/product"));
+	    }
+	 
+	 @Test
+	 @DisplayName("상품수정폼")
 	                .andExpect(status().is3xxRedirection())
 	                .andExpect(redirectedUrl("/seller/product"))
 	                .andExpect(flash().attribute("resultMessage", "등록을 성공하였습니다."));
@@ -99,6 +115,7 @@ public class ProductControllerTest {
 	 }
 	 
 	 @Test
+	 @DisplayName("상품 수정")
 	 void updateProduct_test() throws Exception {
 		 ProductDTO product = new ProductDTO();
 	     product.setProductId(1);
@@ -112,6 +129,7 @@ public class ProductControllerTest {
 	 }
 	 
 	 @Test
+	 @DisplayName("상품삭제")
 	 void deleteProduct_test() throws Exception {
 		 when(productService.deleteProduct(1)).thenReturn(1);
 		 

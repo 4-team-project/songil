@@ -89,3 +89,6 @@ public class FundingListControllerTest {
                 .andExpect(jsonPath("$[0].fundingName").value("API 펀딩"));
     }
 }
+
+}
+

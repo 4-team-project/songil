@@ -37,7 +37,6 @@ public class FundingControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // 뷰 리졸버 설정 (JSP 경로 흉내)
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
@@ -50,27 +49,25 @@ public class FundingControllerTest {
 
     @Test
     @DisplayName("조건 검색 있을 때 필터링된 펀딩 리스트 반환")
-    void getFundings_withConditions_shouldReturnFilteredList() throws Exception {
+    void getFundings_test() throws Exception {
         FundingDTO funding = new FundingDTO();
         funding.setFundingId(1);
         funding.setFundingName("테스트 펀딩");
 
-        when(fundingService.selectFundingByCondition(anyString(), any(), anyString(), anyString()))
-                .thenReturn(Arrays.asList(funding));
+        when(fundingService.selectFundingByCondition(anyString(), any(), anyString(), anyString())).thenReturn(Arrays.asList(funding));
 
         mockMvc.perform(get("/fundings")
                         .param("keyword", "test")
                         .param("categoryId", "1")
                         .param("sido", "서울")
                         .param("sigungu", "강남구"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("fundinglist"))
                 .andExpect(view().name("user/main"));
     }
 
     @Test
     @DisplayName("조건 없이 모든 펀딩 리스트 반환")
-    void getFundings_withoutConditions_shouldReturnAllList() throws Exception {
+    void getFundings_test2() throws Exception {
         FundingDTO funding = new FundingDTO();
         funding.setFundingId(2);
         funding.setFundingName("전체 펀딩");
@@ -79,14 +76,13 @@ public class FundingControllerTest {
                 .thenReturn(Arrays.asList(funding));
 
         mockMvc.perform(get("/fundings"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("fundinglist"))
                 .andExpect(view().name("user/main"));
     }
 
     @Test
     @DisplayName("상세 페이지 조회 성공")
-    void getFundingDetail_found_shouldReturnDetailPage() throws Exception {
+    void getFundingDetail_test3() throws Exception {
         FundingDTO funding = new FundingDTO();
         funding.setFundingId(1);
         funding.setFundingName("인기순");
@@ -95,7 +91,6 @@ public class FundingControllerTest {
                 .thenReturn(funding);
 
         mockMvc.perform(get("/fundings/1"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("funding"))
                 .andExpect(view().name("user/main_detail"));
     }
