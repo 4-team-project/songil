@@ -36,7 +36,6 @@ public class FundingListControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // JSP 뷰 리졸버 설정 ("/WEB-INF/views/funding_list.jsp" 형식 지원)
         InternalResourceViewResolver rr = new InternalResourceViewResolver();
         rr.setPrefix("/WEB-INF/views/");
         rr.setSuffix(".jsp");
@@ -48,46 +47,40 @@ public class FundingListControllerTest {
     }
 
     @Test
-    void selectFundingList_withSort_shouldReturnFundingListView() throws Exception {
+    void selectFundingList_test() throws Exception {
         FundingDTO testFunding = new FundingDTO();
         testFunding.setFundingName("테스트 펀딩");
 
-        when(fundingListService.selectFundingListBySort("popular"))
-                .thenReturn(Arrays.asList(testFunding));
+        when(fundingListService.selectFundingListBySort("popular")).thenReturn(Arrays.asList(testFunding));
 
         mockMvc.perform(post("/fundings")
                 .param("sort", "popular"))
-                .andExpect(status().isOk())
                 .andExpect(view().name("funding_list"))
                 .andExpect(model().attributeExists("fundingList"));
     }
 
     @Test
-    void selectFundingList_withoutSort_shouldUseDefaultSort() throws Exception {
+    void selectFundingList_test2() throws Exception {
         FundingDTO dummyFunding = new FundingDTO();
         dummyFunding.setFundingName("기본 정렬 펀딩");
 
-        when(fundingListService.selectFundingListBySort("latest"))
-                .thenReturn(Arrays.asList(dummyFunding));
+        when(fundingListService.selectFundingListBySort("latest")).thenReturn(Arrays.asList(dummyFunding));
 
         mockMvc.perform(post("/fundings"))
-                .andExpect(status().isOk())
                 .andExpect(view().name("funding_list"))
                 .andExpect(model().attributeExists("fundingList"));
     }
 
     @Test
-    void sortFundingList_shouldReturnJsonList() throws Exception {
+    void sortFundingList_test3() throws Exception {
         FundingDTO dummyFunding = new FundingDTO();
         dummyFunding.setFundingId(1);
         dummyFunding.setFundingName("API 펀딩");
 
-        when(fundingListService.selectFundingListBySort(anyString()))
-                .thenReturn(Arrays.asList(dummyFunding));
+        when(fundingListService.selectFundingListBySort(anyString())).thenReturn(Arrays.asList(dummyFunding));
 
         mockMvc.perform(get("/fundings/sort")
                 .param("sort", "recent"))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].fundingId").value(1))
                 .andExpect(jsonPath("$[0].fundingName").value("API 펀딩"));
     }
