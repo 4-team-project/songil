@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,6 +48,7 @@ public class FundingListControllerTest {
     }
 
     @Test
+    @DisplayName("펀딩리스트 출력")
     void selectFundingList_test() throws Exception {
         FundingDTO testFunding = new FundingDTO();
         testFunding.setFundingName("테스트 펀딩");
@@ -60,11 +62,12 @@ public class FundingListControllerTest {
     }
 
     @Test
+    @DisplayName("기본 정렬(latest)로 출력")
     void selectFundingList_test2() throws Exception {
-        FundingDTO dummyFunding = new FundingDTO();
-        dummyFunding.setFundingName("기본 정렬 펀딩");
+        FundingDTO testFunding = new FundingDTO();
+        testFunding.setFundingName("기본 정렬 펀딩");
 
-        when(fundingListService.selectFundingListBySort("latest")).thenReturn(Arrays.asList(dummyFunding));
+        when(fundingListService.selectFundingListBySort("latest")).thenReturn(Arrays.asList(testFunding));
 
         mockMvc.perform(post("/fundings"))
                 .andExpect(view().name("funding_list"))
@@ -72,12 +75,13 @@ public class FundingListControllerTest {
     }
 
     @Test
+    @DisplayName("api 펀딩")
     void sortFundingList_test3() throws Exception {
-        FundingDTO dummyFunding = new FundingDTO();
-        dummyFunding.setFundingId(1);
-        dummyFunding.setFundingName("API 펀딩");
+        FundingDTO testFunding = new FundingDTO();
+        testFunding.setFundingId(1);
+        testFunding.setFundingName("API 펀딩");
 
-        when(fundingListService.selectFundingListBySort(anyString())).thenReturn(Arrays.asList(dummyFunding));
+        when(fundingListService.selectFundingListBySort(anyString())).thenReturn(Arrays.asList(testFunding));
 
         mockMvc.perform(get("/fundings/sort")
                 .param("sort", "recent"))
