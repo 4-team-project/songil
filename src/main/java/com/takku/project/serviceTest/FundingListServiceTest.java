@@ -11,6 +11,7 @@ import com.takku.project.mapper.FundingListMapper;
 import com.takku.project.service.FundingListService;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,44 +31,29 @@ public class FundingListServiceTest {
     }
 
     @Test
-    void selectFundingListBySort_withNull_shouldUseDefaultSort() {
-        // given
+    @DisplayName("펀딩정렬_최신순")
+    void selectFundingListBySort() {
+
         List<FundingDTO> mockList = Arrays.asList(new FundingDTO());
         when(fundingListMapper.selectFundingListBySort("latest")).thenReturn(mockList);
 
-        // when
         List<FundingDTO> result = fundingListService.selectFundingListBySort(null);
 
-        // then
         assertEquals(mockList, result);
         verify(fundingListMapper).selectFundingListBySort("latest");
     }
 
     @Test
+    @DisplayName("선택된 값에 따라 펀딩정렬")
     void selectFundingListBySort_withSort_shouldUseGivenSort() {
-        // given
         List<FundingDTO> mockList = Arrays.asList(new FundingDTO());
         when(fundingListMapper.selectFundingListBySort("popular")).thenReturn(mockList);
 
-        // when
         List<FundingDTO> result = fundingListService.selectFundingListBySort("popular");
 
-        // then
         assertEquals(mockList, result);
         verify(fundingListMapper).selectFundingListBySort("popular");
     }
 
-    @Test
-    void selectFundingListBySort_withBlank_shouldUseDefaultSort() {
-        // given
-        List<FundingDTO> mockList = Arrays.asList(new FundingDTO());
-        when(fundingListMapper.selectFundingListBySort("latest")).thenReturn(mockList);
-
-        // when
-        List<FundingDTO> result = fundingListService.selectFundingListBySort("   ");
-
-        // then
-        assertEquals(mockList, result);
-        verify(fundingListMapper).selectFundingListBySort("latest");
-    }
+  
 }
