@@ -17,6 +17,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -63,6 +64,7 @@ public class ProductControllerTest {
 		when(productService.selectProductByStoreId(1)).thenReturn(Arrays.asList(product));
 
 		mockMvc.perform(get("/seller/product").param("storeId", "1"))
+				.andExpect(status().isOk())
 				.andExpect(view().name("seller_product"))
 				.andExpect(model().attributeExists("productList"));
 	}
@@ -76,6 +78,14 @@ public class ProductControllerTest {
 	
 	 @Test
 	 @DisplayName("상품입력")
+	void showForm_test() throws Exception {
+		mockMvc.perform(get("/seller/product/new"))
+		.andExpect(status().isOk())
+		.andExpect(view().name("seller_product_add"));
+		
+	}
+	
+	 @Test
 	    void insertForm_test() throws Exception {
 	        when(productService.insertProduct(any(ProductDTO.class))).thenReturn(1);
 
@@ -85,6 +95,12 @@ public class ProductControllerTest {
 	 
 	 @Test
 	 @DisplayName("상품수정폼")
+	                .andExpect(status().is3xxRedirection())
+	                .andExpect(redirectedUrl("/seller/product"))
+	                .andExpect(flash().attribute("resultMessage", "등록을 성공하였습니다."));
+	    }
+	 
+	 @Test
 	 void showEditForm_test() throws Exception {
 	     ProductDTO product = new ProductDTO();
 	     product.setProductId(1);
@@ -93,6 +109,7 @@ public class ProductControllerTest {
 	     when(productService.selectByProductId(1)).thenReturn(product);
 
 	     mockMvc.perform(get("/seller/product/1/edit"))
+	         .andExpect(status().isOk())
 	         .andExpect(view().name("seller_product_edit"))
 	         .andExpect(model().attributeExists("productDTO"));
 	 }
