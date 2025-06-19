@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +36,8 @@ public class CouponServiceTest {
     }
 
     @Test
-    void insertCoupon_shouldReturn1() {
+    @DisplayName("쿠폰 입력")
+    void insertCoupon() {
         CouponDTO coupon = CouponDTO.builder()
             .couponId(1)
             .couponCode("TEST")
@@ -54,7 +56,8 @@ public class CouponServiceTest {
     }
 
     @Test
-    void selectCouponByUserId_shouldReturnList() {
+    @DisplayName("사용자ID로 쿠폰 조회")
+    void selectCouponByUserId() {
         Integer userId = 100;
         List<Object> mockList = Arrays.asList(
             CouponDTO.builder().couponId(1).userId(userId).build(),
@@ -71,7 +74,8 @@ public class CouponServiceTest {
     }
 
     @Test
-    void updateCouponUseStatus_shouldReturn1() {
+    @DisplayName("쿠폰 상태 수정")
+    void updateCouponUseStatus() {
         Integer couponId = 1;
         String useStatus = "USED";
 
@@ -84,7 +88,8 @@ public class CouponServiceTest {
     }
 
     @Test
-    void updateCouponReviewed_shouldReturn1() {
+    @DisplayName("쿠폰 리뷰 수정")
+    void updateCouponReviewed() {
         Integer couponId = 1;
         Integer reviewed = 1;
 
@@ -97,7 +102,8 @@ public class CouponServiceTest {
     }
 
     @Test
-    void selectByCouponCode_shouldReturnCoupon() {
+    @DisplayName("쿠폰코드 조회")
+    void selectByCouponCode() {
         String couponCode = "TESTCODE";
         CouponDTO coupon = CouponDTO.builder()
             .couponId(1)
