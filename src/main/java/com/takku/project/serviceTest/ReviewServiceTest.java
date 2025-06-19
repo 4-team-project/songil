@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,7 +34,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void insertReview_shouldReturnSuccess() {
+    @DisplayName("리뷰 등록")
+    void insertReview() {
         ReviewDTO review = new ReviewDTO();
         when(sqlSession.insert(namespace + "insertReview", review)).thenReturn(1);
 
@@ -44,7 +46,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void deleteReview_shouldReturnSuccess() {
+    @DisplayName("리뷰 삭제")
+    void deleteReview() {
         Integer reviewId = 1;
         when(sqlSession.delete(namespace + "deleteReview", reviewId)).thenReturn(1);
 
@@ -55,7 +58,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void updateReview_shouldReturnSuccess() {
+    @DisplayName("리뷰 수정")
+    void updateReview() {
         ReviewDTO review = new ReviewDTO();
         when(sqlSession.update(namespace + "updateReview", review)).thenReturn(1);
 
@@ -66,7 +70,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void reviewByProductId_shouldReturnList() {
+    @DisplayName("상품ID로 리뷰 조회")
+    void reviewByProductId() {
         Integer productId = 1;
         List<ReviewDTO> mockList = Arrays.asList(new ReviewDTO(), new ReviewDTO());
 
@@ -81,7 +86,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void reviewByUserID_shouldReturnList() {
+    @DisplayName("사용자ID로 리뷰 조회")
+    void reviewByUserID() {
         Integer userId = 1;
         List<ReviewDTO> mockList = Arrays.asList(new ReviewDTO());
 
