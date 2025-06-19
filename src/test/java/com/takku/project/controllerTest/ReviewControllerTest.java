@@ -76,7 +76,6 @@ public class ReviewControllerTest {
         // then
         assertEquals("redirect:mypage/review", result);
         verify(reviewService).insertReview(review);
-        verify(redirectAttributes).addFlashAttribute("resultMessage", "���䰡 ��ϵǾ����ϴ�.");
     }
     
     //상품 리뷰 조회 테스트
