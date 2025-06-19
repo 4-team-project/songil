@@ -13,7 +13,7 @@ public interface CouponMapper {
     // 특정 사용자의 쿠폰 목록 조회
     List<CouponDTO> selectCouponByUserId(Integer userId);
 
-    int updateCouponUseStatus(Integer couponId, String useStatus);
+    int updateCouponUseStatus(String couponId, String useStatus);
 
     // 리뷰 여부 업데이트
     int updateCouponReviewed(Integer couponId, Integer reviewed);

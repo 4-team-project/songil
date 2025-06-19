@@ -28,7 +28,7 @@
     <update id="updateCouponUseStatus" parameterType="map">
         UPDATE takku_coupon
         SET use_status = #{useStatus}
-        WHERE coupon_id = #{couponId}
+        WHERE couponCode = #{couponCode}
     </update>
 
     <!-- 리뷰 작성 후 reviewed 변경 -->
