@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +30,8 @@ public class ImageServiceTest {
     }
 
     @Test
-    void insertImageUrl_insert() {
+    @DisplayName("이미지등록")
+    void insertImageUrl() {
         ImageDTO image = new ImageDTO();
         image.setImageUrl("https://example.com/test.jpg");
 
@@ -42,7 +44,8 @@ public class ImageServiceTest {
     }
 
     @Test
-    void deleteImageUrl_delete() {
+    @DisplayName("이미지 삭제")
+    void deleteImageUrl() {
         String imageUrl = "https://example.com/test.jpg";
 
         when(sqlSession.delete(namespace + "deleteImageUrl", imageUrl)).thenReturn(1);
