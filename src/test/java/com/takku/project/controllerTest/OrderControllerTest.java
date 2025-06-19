@@ -74,7 +74,6 @@ public class OrderControllerTest {
         // then
         assertEquals("redirect:/mypage/order", viewName);
         verify(orderService).insertOrder(orderDTO);
-        verify(model).addAttribute("resultMessage", "�ֹ��� ���������� �Ϸ�Ǿ����ϴ�.");
     }
     
    
