@@ -22,7 +22,6 @@ import com.takku.project.service.CouponService;
 import com.takku.project.service.FundingService;
 
 @Controller
-@RequestMapping("/mypage/coupon")
 public class CouponController {
 
 	@Autowired
@@ -69,6 +68,11 @@ public class CouponController {
 		    model.addAttribute("coupon", coupon);
 		  return "coupon/sellerCheck";
 	  }
+  
+  @GetMapping("/user/coupon")
+    public String homePage() {
+        return "pages/user/coupon"; 
+    }
 
 	// 쿠폰 사용 처리
 	@PostMapping("/{couponCode}/use")

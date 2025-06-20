@@ -8,6 +8,11 @@
            http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
 
+	<!-- Mapper 인터페이스 자동 스캔 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="com.takku.project.mapper" />
+	</bean>
+	
 	<!-- properties 읽기 -->
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
@@ -44,8 +49,15 @@
 	<!-- MyBatis -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 	<property name="dataSource" ref="dataSource" />
+
 	<property name="mapperLocations" value="${mybatis.mapper-locations}" />
 	<property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" />
+
+	<property name="mapperLocations" value="${mybatis.mapper-locations}" 
+		/>
+	<property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" 
+		/>
+
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

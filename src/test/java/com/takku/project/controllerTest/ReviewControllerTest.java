@@ -71,7 +71,7 @@ public class ReviewControllerTest {
         when(reviewService.insertReview(review)).thenReturn(1);
 
         // when
-        String result = reviewController.submitReview(review, redirectAttributes);
+        String result = reviewController.submitReview(review, null, null, null, redirectAttributes);
 
         // then
         assertEquals("redirect:mypage/review", result);

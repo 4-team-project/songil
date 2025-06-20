@@ -5,20 +5,49 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takku.project.mapper.FundingMapper">
+	
+	<!-- FundingDTO 대신 사용 할 resultMap -->
+	<resultMap id="FundingResultMap" type="FundingDTO">
+		<result property="fundingId" column="FUNDING_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="storeId" column="STORE_ID" />
+		<result property="fundingType" column="FUNDING_TYPE" />
+		<result property="fundingName" column="FUNDING_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="fundingDesc" column="FUNDING_DESC" />
+		<result property="startDate" column="START_DATE" />
+		<result property="endDate" column="END_DATE" />
+		<result property="salePrice" column="SALE_PRICE" />
+		<result property="targetQty" column="TARGET_QTY" />
+		<result property="maxQty" column="MAX_QTY" />
+		<result property="currentQty" column="CURRENT_QTY" />
+		<result property="perQty" column="PER_QTY" />
+		<result property="status" column="STATUS" />
+		<result property="createdAt" column="CREATED_AT" />
+	</resultMap>
 
 	<!-- 펀딩 전체 조회 -->
 	<select id="selectAllFunding" resultType="FundingDTO">
 		SELECT
-		funding_id,
-		funding_name,
-		funding_type,
-		sale_price,
-		current_qty,
-		target_qty,
-		status,
-		end_date
-		FROM takku_funding
-		ORDER By created_at DESC
+		f.funding_id,
+		f.funding_name,
+		f.funding_type,
+		f.sale_price,
+		f.current_qty,
+		f.target_qty,
+		f.status,
+		f.end_date
+		FROM takku_funding f
+		LEFT JOIN (
+		SELECT funding_id,
+		MIN(image_url) AS image_url
+		FROM takku_image
+		WHERE funding_id IS NOT
+		NULL
+		GROUP BY funding_id
+		) i ON f.funding_id = i.funding_id
+		ORDER BY
+		f.created_at DESC
 	</select>
 
 	<!-- 펀딩번호로 상세 조회 -->
@@ -115,5 +144,19 @@
 	<select id="selectEndDateByFundingId" parameterType="int"
 		resultType="date">
 		SELECT end_date FROM funding WHERE funding_id = #{fundingId}
+	</select>
+
+	<!-- 스케줄러에 따른 펀딩 마감 -->
+	<update id="updateFundingStatus" parameterType="map">
+		UPDATE
+		takku_funding SET status = #{status}
+		WHERE end_date &lt; SYSDATE
+		AND funding_id = #{fundingId}
+	</update>
+
+	<!-- 펀딩 상태에 따른 조회 -->
+	<select id="selectByFundingStatus" parameterType="String"
+		resultMap="FundingResultMap">
+		Select * from takku_funding WHERE status = #{status}
 	</select>
 </mapper>

@@ -6,18 +6,42 @@
 
 <mapper namespace="com.takku.project.mapper.ImageMapper">
 
-    <!-- 이미지 등록 -->
-    <insert id="insertImageUrl" parameterType="ImageDTO">
-        INSERT INTO takku_image (
-            product_id, funding_id, review_id, image_url
-        ) VALUES (
-            #{productId}, #{fundingId}, #{reviewId}, #{imageUrl}
-        )
-    </insert>
+	<!-- 이미지 등록 -->
+	<insert id="insertImageUrl" parameterType="ImageDTO">
+		INSERT INTO
+		takku_image (
+		product_id, funding_id, review_id, image_url
+		) VALUES (
+		#{productId}, #{fundingId}, #{reviewId}, #{imageUrl}
+		)
+	</insert>
 
-    <!-- 이미지 삭제 -->
-    <delete id="deleteImageUrl" parameterType="String">
-        DELETE FROM takku_image
-        WHERE image_url = #{imageUrl}
-    </delete>
+	<!-- 이미지 삭제 -->
+	<delete id="deleteImageUrl" parameterType="String">
+		DELETE FROM
+		takku_image
+		WHERE image_url = #{imageUrl}
+	</delete>
+
+	<!-- 펀딩 id로 이미지 조회 -->
+	<select id="selectImagesByFundingId" parameterType="int"
+		resultType="ImageDTO">
+		SELECT *
+		FROM takku_image
+		WHERE funding_id = #{fundingId}
+	</select>
+
+	<!-- 리뷰 id로 이미지 조회 -->
+	<select id="selectImagesByReviewId" parameterType="int"
+		resultType="ImageDTO">
+		SELECT *
+		FROM takku_image
+		WHERE review_id = #{reviewId}
+	</select>
+
+	<!-- 상품 id로 이미지 조회 -->
+	<select id="selectImagesByProductId" parameterType="int"
+		resultType="ImageDTO">
+		SELECT * FROM takku_image WHERE product_id = #{productId}
+	</select>
 </mapper>
