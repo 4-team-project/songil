@@ -29,14 +29,14 @@
 	<!-- 펀딩 전체 조회 -->
 	<select id="selectAllFunding" resultType="FundingDTO">
 		SELECT
-		funding_id,
-		funding_name,
-		funding_type,
-		sale_price,
-		current_qty,
-		target_qty,
-		status,
-		end_date
+		f.funding_id,
+		f.funding_name,
+		f.funding_type,
+		f.sale_price,
+		f.current_qty,
+		f.target_qty,
+		f.status,
+		f.end_date
 		FROM takku_funding f
 		LEFT JOIN (
 		SELECT funding_id,

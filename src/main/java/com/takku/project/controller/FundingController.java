@@ -45,7 +45,7 @@ public class FundingController {
 		}
 
 		model.addAttribute("fundinglist", fundinglist);
-		return "user/home";
+		return "pages/user/home";
 	}
 
 	@GetMapping("/{fundingId}")
