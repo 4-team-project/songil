@@ -19,6 +19,7 @@ public class FundingService implements FundingMapper {
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.FundingMapper.";
+	String namespace2 = "com.takku.project.mapper.ImageMapper.";
 	
 	@Autowired
 	private FundingService fundingService;
@@ -30,9 +31,9 @@ public class FundingService implements FundingMapper {
 	}
 
 	@Override
-	public FundingDTO selectFundingByFundingId(Integer fundingId) {
-		FundingDTO funding = sqlSession.selectOne(namespace + "selectByFundingId", fundingId);
-		List<ImageDTO> images = sqlSession.selectList(namespace + "selectImagesByFundingId", fundingId);
+	public FundingDTO selectFundingByFundingId(Integer fundingId) {	
+		FundingDTO funding = sqlSession.selectOne(namespace + "selectFundingByFundingId", fundingId);
+		List<ImageDTO> images = sqlSession.selectList(namespace2 + "selectImagesByFundingId", fundingId);
 		funding.setImages(images);
 		return funding;
 	}
@@ -74,7 +75,8 @@ public class FundingService implements FundingMapper {
 	@Override
 	public Date selectEndDateByFundingId(int fundingId) {
 		 return fundingService.selectEndDateByFundingId(fundingId);
-
+	}
+	
 	public List<FundingDTO> selectByFundingStatus(String status) {
 		List<FundingDTO> fundingList = sqlSession.selectList(namespace + "selectByFundingStatus", status);
 		return fundingList;
