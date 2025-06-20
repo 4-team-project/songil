@@ -16,7 +16,7 @@ public class AITestController {
 
 	@GetMapping("/ai-form")
 	public String showForm() {
-		return "funding_ai_form";
+		return "pages/seller/funding_ai_form";
 	}
 
 	@PostMapping("/ai-generate")
@@ -25,7 +25,8 @@ public class AITestController {
 		AIResponse aiResponse = aiService.generateText(keyword, target);
 
 		model.addAttribute("aiResponse", aiResponse);
-		return "funding_ai_form";
+		return "pages/seller/funding_ai_form";
+
 	}
 
 }
