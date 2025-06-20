@@ -1,0 +1,60 @@
+@import url('../fonts.css');
+
+.upBox {
+	background-color: #ffffff;
+	height: 24px;
+	position: fixed;
+	width: 100%;
+}
+
+.downBox {
+	background-color: #ffffff;
+	height: 32px;
+	width: 100%;
+}
+
+.footer-box {
+	background-color: #F3EEEA;
+	width: 1280px;
+	height: 294px;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	margin-top: 24px;
+}
+
+.contents-box {
+	margin-top: 40px;
+	margin-left: 40px;
+}
+
+.header-text {
+	font-family: 'Spoqa Han Sans Neo';
+	font-weight: 700;
+	font-size: 12px;
+	color: #828282;
+	margin-bottom: 12px;
+}
+
+.contents-text {
+	font-family: 'Spoqa Han Sans Neo';
+	font-weight: 400;
+	font-size: 12px;
+	color: #828282;
+	margin-bottom: 8px;
+}
+
+.contents-lineBox {
+	width: 1200px;
+	height: 1px;
+	background-color: #D9D9D9;
+	margin-top: 36px;	
+}
+
+.contents-text2 {
+	font-family: 'Spoqa Han Sans Neo';
+	font-weight: 400;
+	font-size: 12px;
+	color: #2E2E3A;
+	margin-top: 16px;
+}
