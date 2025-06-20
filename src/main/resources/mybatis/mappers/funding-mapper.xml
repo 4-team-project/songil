@@ -140,6 +140,12 @@
 		WHERE funding_id = #{fundingId}
 	</delete>
 
+	<!-- 만료일 가져오기 -->
+	<select id="selectEndDateByFundingId" parameterType="int"
+		resultType="date">
+		SELECT end_date FROM funding WHERE funding_id = #{fundingId}
+	</select>
+
 	<!-- 스케줄러에 따른 펀딩 마감 -->
 	<update id="updateFundingStatus" parameterType="map">
 		UPDATE
@@ -153,5 +159,4 @@
 		resultMap="FundingResultMap">
 		Select * from takku_funding WHERE status = #{status}
 	</select>
-
 </mapper>

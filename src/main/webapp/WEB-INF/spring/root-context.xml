@@ -49,10 +49,15 @@
 	<!-- MyBatis -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 	<property name="dataSource" ref="dataSource" />
+
+	<property name="mapperLocations" value="${mybatis.mapper-locations}" />
+	<property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" />
+
 	<property name="mapperLocations" value="${mybatis.mapper-locations}" 
 		/>
 	<property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" 
 		/>
+
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
