@@ -16,6 +16,7 @@ public class ReviewService implements ReviewMapper{
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.ReviewMapper.";
+	String namespace2 = "com.takku.project.mapper.ImageMapper.";
 	
 	@Override
 	public int insertReview(ReviewDTO review) {
@@ -40,7 +41,7 @@ public class ReviewService implements ReviewMapper{
 		List<ReviewDTO> rewiewList = sqlSession.selectList(namespace + "reviewByProductId", productId);
 		
 		for (ReviewDTO review : rewiewList) {
-	        List<ImageDTO> images = sqlSession.selectList(namespace + "selectImagesByReviewId", review.getReviewId());
+	        List<ImageDTO> images = sqlSession.selectList(namespace2 + "selectImagesByReviewId", review.getReviewId());
 	        review.setImages(images);
 	    }
 		return rewiewList;
