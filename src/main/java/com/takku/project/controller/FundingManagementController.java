@@ -2,10 +2,13 @@ package com.takku.project.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,39 +76,65 @@ public class FundingManagementController {
 
 	// 펀딩 등록 처리
 	@PostMapping
-	public String registerFunding(@ModelAttribute FundingDTO fundingDTO, @ModelAttribute("loginUser") UserDTO loginUser,
-			@RequestParam("images") List<MultipartFile> images, RedirectAttributes redirectAttributes) {
+	public String registerFunding( @ModelAttribute FundingDTO fundingDTO,
+	        @ModelAttribute("loginUser") UserDTO loginUser,
+	        @RequestParam("images") List<MultipartFile> images,
+	        HttpSession session,
+	        RedirectAttributes redirectAttributes) {
 
-		Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
-		fundingDTO.setStoreId(storeId);
+		// 1. 로그인 유저로부터 storeId 조회
+	    Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
+	    fundingDTO.setStoreId(storeId);
 
-		int result = fundingService.insertFunding(fundingDTO);
-		
-		String uploadDir = "C:\\sinhan5\\install\\springFramework\\workSpace\\songil\\src\\main\\webapp\\resources\\images";
-		
-		if (result > 0) {
-			for (MultipartFile file : images) {
-				if(!file.isEmpty()) {
-					try {
+	    // 2. 기본값 설정 (status: 준비중, currentQty: 0)
+	    fundingDTO.setStatus("준비중");
+	    fundingDTO.setCurrentQty(0);
+
+	    // 3. 펀딩 등록
+	    int result = fundingService.insertFunding(fundingDTO); // keyProperty로 fundingId 생성
+
+	    // 4. 파일 업로드 처리
+	    String uploadPath = session.getServletContext().getRealPath("/resources/images");
+
+	    if (result > 0) {
+	        List<ImageDTO> imageDTOList = new ArrayList<>();
+
+	        for (MultipartFile file : images) {
+	            if (!file.isEmpty()) {
+	                try {
+	                    // 고유 파일 이름 생성
 	                    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-	                    String fullPath = uploadDir + File.separator + fileName;
+	                    String fullPath = uploadPath + File.separator + fileName;
+
+	                    // 서버에 저장
 	                    file.transferTo(new File(fullPath));
 
-	                    ImageDTO imageDTO = ImageDTO.builder()
-	                        .fundingId(fundingDTO.getFundingId())
-	                        .imageUrl("/resources/images/" + fileName) // 웹 기준 경로
-	                        .build();
+	                    // 이미지 DTO 생성
+	                    ImageDTO imageDTO = new ImageDTO();
+	                    imageDTO.setFundingId(fundingDTO.getFundingId()); // FK 연결
+	                    imageDTO.setImageUrl("/resources/images/" + fileName);
 
-	                    imageService.insertImageUrl(imageDTO); // insert into image ...
+	                    // DB 저장
+	                    imageService.insertImageUrl(imageDTO);
+
+	                    imageDTOList.add(imageDTO);
+
 	                } catch (IOException e) {
-	                    e.printStackTrace(); // 로그 출력
+	                    e.printStackTrace();
 	                    redirectAttributes.addFlashAttribute("resultMessage", "펀딩은 등록됐지만 이미지 업로드 중 오류 발생");
 	                    return "redirect:/seller/fundings";
 	                }
-				}
-			}
-		}
-		return "redirect:/seller/fundings";
+	            }
+	        }
+
+	        // 5. DTO에 이미지 목록 추가 (필요시 뷰에서 활용)
+	        fundingDTO.setImages(imageDTOList);
+	        redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 성공!");
+	    } else {
+	        redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 실패");
+	    }
+
+	    return "redirect:/seller/fundings";
 	}
 
 	// 펀딩 상세 조회

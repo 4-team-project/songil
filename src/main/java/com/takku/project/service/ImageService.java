@@ -2,6 +2,7 @@ package com.takku.project.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
@@ -29,5 +30,23 @@ public class ImageService implements ImageMapper{
 	public int deleteImageUrl(String imageUrl) {
 		int result = sqlSession.delete(namespace + "deleteImageUrl", imageUrl);
 		return result;
+	}
+
+	@Override
+	public List<ImageDTO> selectImagesByFundingId(int fundingId) {
+		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByFundingId", fundingId);
+		return imagelist;
+	}
+
+	@Override
+	public List<ImageDTO> selectImagesByReviewId(int reviewId) {
+		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByReviewId", reviewId);
+		return imagelist;
+	}
+
+	@Override
+	public List<ImageDTO> selectImagesByProductId(int productId) {
+		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByProductId", productId);
+		return imagelist;
 	}
 }

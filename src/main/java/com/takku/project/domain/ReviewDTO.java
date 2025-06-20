@@ -1,6 +1,7 @@
 package com.takku.project.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +20,6 @@ public class ReviewDTO {
 	private Integer rating;
 	private String content;
 	private Date createdAt;
+	private List<ImageDTO> images;
+	
 }

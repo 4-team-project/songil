@@ -1,6 +1,7 @@
 package com.takku.project.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,7 @@ public class ProductDTO {
 	private Integer price;
 	private String description;
 	private Date createdAt;
+	private List<ImageDTO> images;
+	private String thumbnailImageUrl;
 
 }
