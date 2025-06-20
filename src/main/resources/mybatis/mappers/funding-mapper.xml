@@ -5,6 +5,26 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takku.project.mapper.FundingMapper">
+	
+	<!-- FundingDTO 대신 사용 할 resultMap -->
+	<resultMap id="FundingResultMap" type="FundingDTO">
+		<result property="fundingId" column="FUNDING_ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="storeId" column="STORE_ID" />
+		<result property="fundingType" column="FUNDING_TYPE" />
+		<result property="fundingName" column="FUNDING_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="fundingDesc" column="FUNDING_DESC" />
+		<result property="startDate" column="START_DATE" />
+		<result property="endDate" column="END_DATE" />
+		<result property="salePrice" column="SALE_PRICE" />
+		<result property="targetQty" column="TARGET_QTY" />
+		<result property="maxQty" column="MAX_QTY" />
+		<result property="currentQty" column="CURRENT_QTY" />
+		<result property="perQty" column="PER_QTY" />
+		<result property="status" column="STATUS" />
+		<result property="createdAt" column="CREATED_AT" />
+	</resultMap>
 
 	<!-- 펀딩 전체 조회 -->
 	<select id="selectAllFunding" resultType="FundingDTO">
@@ -30,11 +50,11 @@
 	</select>
 
 	<!-- 상점 ID로 펀딩 목록 조회 -->
-	<select id="selectFundingsByStoreId"
-		resultType="FundingDTO" parameterType="int">
+	<select id="selectFundingsByStoreId" resultType="FundingDTO"
+		parameterType="int">
 		SELECT *
 		FROM takku_funding
-		WHERE store_id = #{storeId}	
+		WHERE store_id = #{storeId}
 	</select>
 
 	<!-- 펀딩 검색 -->
@@ -59,11 +79,14 @@
 
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
-		INSERT INTO takku_funding (
+		INSERT INTO
+		takku_funding (
 		product_id, store_id,
-		funding_type, funding_name, funding_desc,
+		funding_type, funding_name,
+		funding_desc,
 		start_date,
-		end_date, sale_price, target_qty, max_qty, per_qty,
+		end_date, sale_price, target_qty, max_qty,
+		per_qty,
 		status,created_at
 		) VALUES (
 		#{productId},
@@ -103,7 +126,23 @@
 
 	<!-- 삭제 -->
 	<delete id="deleteFunding" parameterType="int">
-		DELETE FROM takku_funding
+		DELETE FROM
+		takku_funding
 		WHERE funding_id = #{fundingId}
 	</delete>
+
+	<!-- 스케줄러에 따른 펀딩 마감 -->
+	<update id="updateFundingStatus" parameterType="map">
+		UPDATE
+		takku_funding SET status = #{status}
+		WHERE end_date &lt; SYSDATE
+		AND funding_id = #{fundingId}
+	</update>
+
+	<!-- 펀딩 상태에 따른 조회 -->
+	<select id="selectByFundingStatus" parameterType="String"
+		resultMap="FundingResultMap">
+		Select * from takku_funding WHERE status = #{status}
+	</select>
+
 </mapper>

@@ -63,4 +63,19 @@ public class FundingService implements FundingMapper {
 		int result = sqlSession.delete(namespace + "deleteFunding", fundingId);
 		return result;
 	}
+
+	@Override
+	public List<FundingDTO> selectByFundingStatus(String status) {
+		List<FundingDTO> fundingList = sqlSession.selectList(namespace + "selectByFundingStatus", status);
+		return fundingList;
+	}
+
+	@Override
+	public int updateFundingStatus(Integer fundingId, String status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("fundingId", fundingId);
+		map.put("status", status);
+		int result = sqlSession.update(namespace + "updateFundingStatus", map);
+		return result;
+	}
 }
