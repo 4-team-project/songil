@@ -37,8 +37,17 @@
 		target_qty,
 		status,
 		end_date
-		FROM takku_funding
-		ORDER By created_at DESC
+		FROM takku_funding f
+		LEFT JOIN (
+		SELECT funding_id,
+		MIN(image_url) AS image_url
+		FROM takku_image
+		WHERE funding_id IS NOT
+		NULL
+		GROUP BY funding_id
+		) i ON f.funding_id = i.funding_id
+		ORDER BY
+		f.created_at DESC
 	</select>
 
 	<!-- 펀딩번호로 상세 조회 -->

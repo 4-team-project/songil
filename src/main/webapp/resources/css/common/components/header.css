@@ -1,0 +1,52 @@
+@import url('../fonts.css');
+
+
+.box{
+  background-color: #ffffff;
+  height: 32px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.header-box {
+  margin-top: 32px;
+  background-color: white;
+  width: 100%;
+  height: 188px;
+  color: #2E2E3A;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid #FF9670;
+  box-sizing: border-box;
+  padding-left: 320px;
+  padding-right: 320px;
+}
+
+.logo {
+  width: 110px;
+  height: 100px;
+  margin-top: 16px;
+}
+
+.lower-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.nav-box {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-text {
+  font-family: 'Spoqa Han Sans Neo';
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
