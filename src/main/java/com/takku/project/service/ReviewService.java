@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ReviewDTO;
 import com.takku.project.mapper.ReviewMapper;
 
@@ -37,12 +38,22 @@ public class ReviewService implements ReviewMapper{
 	@Override
 	public List<ReviewDTO> reviewByProductId(Integer productId) {
 		List<ReviewDTO> rewiewList = sqlSession.selectList(namespace + "reviewByProductId", productId);
+		
+		for (ReviewDTO review : rewiewList) {
+	        List<ImageDTO> images = sqlSession.selectList(namespace + "selectImagesByReviewId", review.getReviewId());
+	        review.setImages(images);
+	    }
 		return rewiewList;
 	}
 	
 	@Override
 	public List<ReviewDTO> reviewByUserID(Integer userId) {
 		List<ReviewDTO> rewiewList = sqlSession.selectList(namespace + "reviewByUserID", userId);
+		
+		for (ReviewDTO review : rewiewList) {
+	        List<ImageDTO> images = sqlSession.selectList(namespace + "selectImagesByReviewId", review.getReviewId());
+	        review.setImages(images);
+	    }
 		return rewiewList;
 	}
 

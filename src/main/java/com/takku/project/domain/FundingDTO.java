@@ -31,5 +31,6 @@ public class FundingDTO {
 	private Date createdAt;
 	private List<String> tagList;
 	private List<ImageDTO> images;
-
+	private String thumbnailImageUrl;
+	
 }

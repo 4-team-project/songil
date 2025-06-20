@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.mapper.FundingMapper;
 
 @Service
@@ -27,6 +28,8 @@ public class FundingService implements FundingMapper {
 	@Override
 	public FundingDTO selectFundingByFundingId(Integer fundingId) {
 		FundingDTO funding = sqlSession.selectOne(namespace + "selectByFundingId", fundingId);
+		List<ImageDTO> images = sqlSession.selectList(namespace + "selectImagesByFundingId", fundingId);
+		funding.setImages(images);
 		return funding;
 	}
 	
