@@ -5,7 +5,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takku.project.mapper.FundingMapper">
-	
+
 	<!-- FundingDTO 대신 사용 할 resultMap -->
 	<resultMap id="FundingResultMap" type="FundingDTO">
 		<result property="fundingId" column="FUNDING_ID" />
@@ -13,8 +13,7 @@
 		<result property="storeId" column="STORE_ID" />
 		<result property="fundingType" column="FUNDING_TYPE" />
 		<result property="fundingName" column="FUNDING_NAME" />
-		<result property="status" column="STATUS" />
-		<result property="fundingDesc" column="FUNDING_DESC" />
+		<result property="fundingDesc" column="FUNDING_DESC" />		
 		<result property="startDate" column="START_DATE" />
 		<result property="endDate" column="END_DATE" />
 		<result property="salePrice" column="SALE_PRICE" />
@@ -24,29 +23,28 @@
 		<result property="perQty" column="PER_QTY" />
 		<result property="status" column="STATUS" />
 		<result property="createdAt" column="CREATED_AT" />
+		<result property="thumbnailImageUrl" column="THUMBNAIL_IMAGE_URL" />
 	</resultMap>
 
 	<!-- 펀딩 전체 조회 -->
 	<select id="selectAllFunding" resultType="FundingDTO">
 		SELECT
-		f.funding_id,
-		f.funding_name,
-		f.funding_type,
-		f.sale_price,
-		f.current_qty,
-		f.target_qty,
-		f.status,
-		f.end_date
+		f.*,
+		NVL(i.image_url, '')
+		AS thumbnail_image_url
 		FROM takku_funding f
 		LEFT JOIN (
-		SELECT funding_id,
+		SELECT
+		funding_id,
 		MIN(image_url) AS image_url
 		FROM takku_image
-		WHERE funding_id IS NOT
+		WHERE funding_id
+		IS NOT
 		NULL
 		GROUP BY funding_id
 		) i ON f.funding_id = i.funding_id
-		ORDER BY
+		ORDER
+		BY
 		f.created_at DESC
 	</select>
 
@@ -145,7 +143,8 @@
 		UPDATE
 		takku_funding SET status = #{status}
 		WHERE end_date &lt; SYSDATE
-		AND funding_id = #{fundingId}
+		AND
+		funding_id = #{fundingId}
 	</update>
 
 	<!-- 펀딩 상태에 따른 조회 -->

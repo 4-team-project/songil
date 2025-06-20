@@ -43,7 +43,7 @@ public class FundingController {
 		} else {
 			fundinglist = fundingService.selectAllFunding();
 		}
-
+		System.out.println(fundinglist);
 		model.addAttribute("fundinglist", fundinglist);
 		return "pages/user/home";
 	}
