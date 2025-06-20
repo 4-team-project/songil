@@ -76,12 +76,12 @@ public class CouponServiceTest {
     @Test
     @DisplayName("쿠폰 상태 수정")
     void updateCouponUseStatus() {
-        Integer couponId = 1;
-        String useStatus = "USED";
+        String couponCode = "ABC123";
+        String useStatus = "사용됨";
 
         when(sqlSession.update(eq(namespace + "updateCouponUseStatus"), any(Map.class))).thenReturn(1);
 
-        int result = couponService.updateCouponUseStatus(couponId, useStatus);
+        int result = couponService.updateCouponUseStatus(couponCode, useStatus);
 
         assertEquals(1, result);
         verify(sqlSession).update(eq(namespace + "updateCouponUseStatus"), any(Map.class));
