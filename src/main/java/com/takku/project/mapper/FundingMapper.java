@@ -26,4 +26,10 @@ public interface FundingMapper {
 	
 	//스토어 id로 펀딩찾기
 	List<FundingDTO> findFundingByStoreId(int storeId);
+	
+	//펀딩 상태로 펀딩 찾기(진행중, 준비중... etc)
+	List<FundingDTO> selectByFundingStatus(String status);
+	
+	//종료일 된 펀딩 마감하기
+	int updateFundingStatus(Integer fundingId, String status);
 }
