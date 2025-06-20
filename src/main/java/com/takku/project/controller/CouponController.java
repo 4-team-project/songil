@@ -6,15 +6,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.takku.project.service.CouponService;
-
 @Controller
-@RequestMapping("/mypage/coupon")
 public class CouponController {
 
     @Autowired
     private CouponService couponService;
-
+  
+    @GetMapping("/user/coupon")
+    public String homePage() {
+        return "pages/user/coupon"; 
+    }
+  
     //쿠폰 사용 처리
     @PostMapping("/{couponCode}/use")
     public String useCoupon(@PathVariable("couponCode") String couponCode) {
