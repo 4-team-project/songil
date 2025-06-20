@@ -1,5 +1,6 @@
 package com.takku.project.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,9 @@ public class FundingService implements FundingMapper {
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.FundingMapper.";
+	
+	@Autowired
+	private FundingService fundingService;
 
 	@Override
 	public List<FundingDTO> selectAllFunding() {
@@ -62,5 +66,10 @@ public class FundingService implements FundingMapper {
 	public int deleteFunding(Integer fundingId) {
 		int result = sqlSession.delete(namespace + "deleteFunding", fundingId);
 		return result;
+	}
+
+	@Override
+	public Date selectEndDateByFundingId(int fundingId) {
+		 return fundingService.selectEndDateByFundingId(fundingId);
 	}
 }

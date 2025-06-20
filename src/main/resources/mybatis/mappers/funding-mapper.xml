@@ -30,11 +30,11 @@
 	</select>
 
 	<!-- 상점 ID로 펀딩 목록 조회 -->
-	<select id="selectFundingsByStoreId"
-		resultType="FundingDTO" parameterType="int">
+	<select id="selectFundingsByStoreId" resultType="FundingDTO"
+		parameterType="int">
 		SELECT *
 		FROM takku_funding
-		WHERE store_id = #{storeId}	
+		WHERE store_id = #{storeId}
 	</select>
 
 	<!-- 펀딩 검색 -->
@@ -59,11 +59,14 @@
 
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
-		INSERT INTO takku_funding (
+		INSERT INTO
+		takku_funding (
 		product_id, store_id,
-		funding_type, funding_name, funding_desc,
+		funding_type, funding_name,
+		funding_desc,
 		start_date,
-		end_date, sale_price, target_qty, max_qty, per_qty,
+		end_date, sale_price, target_qty, max_qty,
+		per_qty,
 		status,created_at
 		) VALUES (
 		#{productId},
@@ -103,7 +106,14 @@
 
 	<!-- 삭제 -->
 	<delete id="deleteFunding" parameterType="int">
-		DELETE FROM takku_funding
+		DELETE FROM
+		takku_funding
 		WHERE funding_id = #{fundingId}
 	</delete>
+
+	<!-- 만료일 가져오기 -->
+	<select id="selectEndDateByFundingId" parameterType="int"
+		resultType="date">
+		SELECT end_date FROM funding WHERE funding_id = #{fundingId}
+	</select>
 </mapper>

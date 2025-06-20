@@ -23,41 +23,39 @@
 
 
 	<!-- DB Connection Pool -->
-	<!-- <bean id="dataSourceOriginal" class="org.apache.commons.dbcp2.BasicDataSource"> -->
-	<!-- <property name="driverClassName" value="${db.driverClassName}" /> -->
-	<!-- <property name="url" value="${db.url}" /> -->
-	<!-- <property name="username" value="${db.username}" /> -->
-	<!-- <property name="password" value="${db.password}" /> -->
-	<!-- </bean> -->
+	<bean id="dataSourceOriginal" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="${db.driverClassName}" />
+	<property name="url" value="${db.url}" />
+	<property name="username" value="${db.username}" />
+	<property name="password" value="${db.password}" />
+	</bean>
 
 	<!-- log4jdbc (선택) -->
-	<!-- <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> -->
-	<!-- <constructor-arg ref="dataSourceOriginal" /> -->
-	<!-- <property name="logFormatter"> -->
-	<!-- <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter"> -->
-	<!-- <property name="loggingType" value="SINGLE_LINE" /> -->
-	<!-- <property name="sqlPrefix" value="[ SQL문장 ] " /> -->
-	<!-- </bean> -->
-	<!-- </property> -->
-	<!-- </bean> -->
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+	<constructor-arg ref="dataSourceOriginal" />
+	<property name="logFormatter">
+	<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+	<property name="loggingType" value="SINGLE_LINE" />
+	<property name="sqlPrefix" value="[ SQL문장 ] " />
+	</bean>
+	</property>
+	</bean>
 
 	<!-- MyBatis -->
-	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
-	<!-- <property name="dataSource" ref="dataSource" /> -->
-	<!-- <property name="mapperLocations" value="${mybatis.mapper-locations}" 
-		/> -->
-	<!-- <property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" 
-		/> -->
-	<!-- </bean> -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<property name="dataSource" ref="dataSource" />
+	<property name="mapperLocations" value="${mybatis.mapper-locations}" />
+	<property name="typeAliasesPackage" value="${mybatis.type-aliases-package}" />
+	</bean>
 
-	<!-- <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"> -->
-	<!-- <constructor-arg ref="sqlSessionFactory" /> -->
-	<!-- </bean> -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	<constructor-arg ref="sqlSessionFactory" />
+	</bean>
 
 	<!-- 트랜잭션 -->
-	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
-	<!-- <property name="dataSource" ref="dataSource" /> -->
-	<!-- </bean> -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource" />
+	</bean>
 
-	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
 </beans>
