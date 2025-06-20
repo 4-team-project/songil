@@ -1,10 +1,5 @@
 =\=\=\=\=\=\=
-<<<<<<<=Updated upstream
->>>>>>>=develop
+
 eclipse.preferences.version=1
-encoding//src/main/java/com/takku/project/mapper/SettlementMapper.java=UTF-8
-encoding//src/main/java/com/takku/project/mapper/StoreMapper.java=UTF-8
-encoding//src/main/java/com/takku/project/mapper/UserMapper.java=UTF-8
-encoding//src/main/java/com/takku/project/service/AIServiceImpl.java=UTF-8
-encoding//src/main/webapp/WEB-INF/views/main.jsp=UTF-8
+
 encoding/<project>=UTF-8

@@ -31,9 +31,9 @@ public class CouponService implements CouponMapper {
 	}
 
 	@Override
-	public int updateCouponUseStatus(Integer couponId, String useStatus) {
+	public int updateCouponUseStatus(String couponCode, String useStatus) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("couponId", couponId);
+		map.put("couponCode", couponCode);
 		map.put("useStatus", useStatus);
 		return sqlSession.update(namespace + "updateCouponUseStatus", map); 
 	}
