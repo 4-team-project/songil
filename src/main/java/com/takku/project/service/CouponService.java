@@ -17,7 +17,7 @@ public class CouponService implements CouponMapper {
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.CouponMapper.";
-	
+
 	@Override
 	public int insertCoupon(CouponDTO coupon) {
 		int result = sqlSession.insert(namespace + "insertCoupon", coupon);
@@ -35,12 +35,12 @@ public class CouponService implements CouponMapper {
 		Map<String, Object> map = new HashMap<>();
 		map.put("couponCode", couponCode);
 		map.put("useStatus", useStatus);
-		return sqlSession.update(namespace + "updateCouponUseStatus", map); 
+		return sqlSession.update(namespace + "updateCouponUseStatus", map);
 	}
 
 	@Override
 	public int updateCouponReviewed(Integer couponId, Integer reviewed) {
-		Map<String,Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("couponId", couponId);
 		map.put("reviewed", reviewed);
 		return sqlSession.update(namespace + "updateCouponReviewed", map);
@@ -51,4 +51,10 @@ public class CouponService implements CouponMapper {
 		CouponDTO coupon = sqlSession.selectOne(namespace + "selectByCouponCode", couponCode);
 		return coupon;
 	}
+
+	@Override
+	public CouponDTO selectByCouponId(Integer couponId) {
+		return sqlSession.selectOne(namespace + "selectByCouponId", couponId);
+	}
+
 }

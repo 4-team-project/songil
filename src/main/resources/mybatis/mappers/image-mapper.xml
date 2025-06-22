@@ -8,13 +8,16 @@
 
 	<!-- 이미지 등록 -->
 	<insert id="insertImageUrl" parameterType="ImageDTO">
-		INSERT INTO
-		takku_image (
-		product_id, funding_id, review_id, image_url
-		) VALUES (
-		#{productId}, #{fundingId}, #{reviewId}, #{imageUrl}
+		INSERT INTO takku_image (review_id, image_url, product_id, funding_id)
+		VALUES (
+		#{reviewId, jdbcType=INTEGER},
+		#{imageUrl, jdbcType=VARCHAR},
+		#{productId, jdbcType=INTEGER},
+		#{fundingId, jdbcType=INTEGER}
 		)
 	</insert>
+
+
 
 	<!-- 이미지 삭제 -->
 	<delete id="deleteImageUrl" parameterType="String">
