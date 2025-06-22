@@ -1,91 +1,82 @@
 package com.takku.project.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.CouponDTO;
+import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ReviewDTO;
-import com.takku.project.domain.UserDTO;
 import com.takku.project.service.CouponService;
+import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ReviewService;
 
 @Controller
+@RequestMapping("/review")
 public class ReviewController {
 
 	@Autowired
 	private CouponService couponService;
-
 	@Autowired
 	private ReviewService reviewService;
-
+	@Autowired
+	private FundingService fundingService;
 	@Autowired
 	private ImageService imageService;
 
 	// 리뷰 작성폼
-	@GetMapping("/review/write/{couponId}")
-	public String reviewForm(@PathVariable("couponId") String couponId, Model model) {
-		CouponDTO coupon = couponService.selectByCouponCode(couponId);
+	@GetMapping("/write/{couponId}")
+	public String reviewForm(@PathVariable("couponId") int couponId, Model model) {
+		CouponDTO coupon = couponService.selectByCouponId(couponId);
+		FundingDTO funding = fundingService.selectFundingByFundingId(coupon.getFundingId());
+
 		model.addAttribute("couponDTO", coupon);
-		return "review_write";
+		model.addAttribute("fundingDTO", funding);
+		return "pages/user/review";
 	}
 
-	// 리뷰 등록 처리
-	@PostMapping("/review")
-	public String submitReview(@ModelAttribute ReviewDTO reviewDTO, @RequestParam("images") List<MultipartFile> images,
-			@ModelAttribute("loginUser") UserDTO loginUser, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		reviewDTO.setUserId(loginUser.getUserId());
+	// 리뷰 등록 처리 - JSON 응답
+	@PostMapping(value = "/submit", consumes = "application/json")
+	@ResponseBody
+	public ResponseEntity<String> submitReview(@RequestBody ReviewDTO reviewDTO) {
 
+// 로그인 구현하면 사용
+//		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+//		if (loginUser == null) {
+//			redirectAttributes.addFlashAttribute("error", "로그인이 필요합니다.");
+//			return "redirect:/login";
+//		}
+//		reviewDTO.setUserId(loginUser.getUserId());
 		int result = reviewService.insertReview(reviewDTO);
-
-		String uploadDir = session.getServletContext().getRealPath("/resources/images");
-
-		if (result > 0) {
-			for (MultipartFile file : images) {
-				if (!file.isEmpty()) {
-					try {
-						String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-						String fullPath = uploadDir + File.separator + fileName;
-						file.transferTo(new File(fullPath));
-
-						ImageDTO image = ImageDTO.builder().reviewId(reviewDTO.getReviewId())
-								.imageUrl("/resources/images/" + fileName).build();
-
-						imageService.insertImageUrl(image);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-						redirectAttributes.addFlashAttribute("resultMessage", "리뷰는 저장되었으나 이미지 업로드에 실패했습니다.");
-					}
-				}
+		if (result > 0 && reviewDTO.getImageUrls() != null) {
+			for (String url : reviewDTO.getImageUrls()) {
+				ImageDTO image = ImageDTO.builder().reviewId(reviewDTO.getReviewId()).imageUrl(url).build();
+				imageService.insertImageUrl(image);
 			}
 		}
-		return "redirect:/mypage/review";
+		return ResponseEntity.ok("등록 성공");
 	}
 
-	// 상품 리뷰 조회
+	// 리뷰 목록 보기
 	@GetMapping("/product/{productId}/review")
 	public String productReviewList(@PathVariable("productId") Integer productId, Model model) {
 		List<ReviewDTO> reviewList = reviewService.reviewByProductId(productId);
+		for (ReviewDTO review : reviewList) {
+			List<ImageDTO> imageList = imageService.selectImagesByReviewId(review.getReviewId());
+			review.setImages(imageList);
+		}
 		model.addAttribute("reviewList", reviewList);
-		return "review_list";
+		return "pages/user/review";
 	}
 }

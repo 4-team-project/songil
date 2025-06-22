@@ -6,7 +6,8 @@
 	<!-- 한글깨짐 방지 인코딩 필터 -->
 	<filter>
 		<filter-name>encoding-filter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -25,23 +26,34 @@
 
 	<!-- ContextLoaderListener 등록 -->
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
 	</listener>
 
 	<!-- DispatcherServlet 등록 -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml
+			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+
+		<multipart-config>
+			<location>C:/tmp</location>
+			<max-file-size>5242880</max-file-size> <!-- 5MB -->
+			<max-request-size>20971520</max-request-size> <!-- 20MB -->
+			<file-size-threshold>0</file-size-threshold>
+		</multipart-config>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
 
 </web-app>
