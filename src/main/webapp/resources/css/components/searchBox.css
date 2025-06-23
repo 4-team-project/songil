@@ -1,6 +1,6 @@
-@import url('../fonts.css');
+@import url('../base/fonts.css');
 
-.searchBox {
+.search-box {
   width: 290px;
   height: 48px;
   border-radius: 18px;
@@ -14,7 +14,7 @@
   padding-right: 14px;
 }
 
-.searchText {
+.search-text {
   font-family: 'Spoqa Han Sans Neo';
   font-weight: 500; 
   font-size: 14px;
@@ -25,11 +25,11 @@
   background-color: transparent;
 }
 
-.searchText::placeholder {
+.search-text::placeholder {
   color: #AFAFAF;
 }
 
-.searchButton {
+.search-button {
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@
   cursor: pointer;
 }
 
-.searchButtonCircle {
+.search-button-circle {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -48,7 +48,7 @@
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.04));
 }
 
-.searchIcon {
+.search-icon {
   width: 14px;
   height: 14px;
 }

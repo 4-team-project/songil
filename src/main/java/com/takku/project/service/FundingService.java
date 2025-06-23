@@ -76,7 +76,7 @@ public class FundingService implements FundingMapper {
 	public Date selectEndDateByFundingId(int fundingId) {
 		 return fundingService.selectEndDateByFundingId(fundingId);
 	}
-	
+
 	public List<FundingDTO> selectByFundingStatus(String status) {
 		List<FundingDTO> fundingList = sqlSession.selectList(namespace + "selectByFundingStatus", status);
 		return fundingList;

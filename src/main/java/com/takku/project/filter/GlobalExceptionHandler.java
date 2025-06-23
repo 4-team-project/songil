@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BusinessException.class)
 	public ModelAndView handleBusinessException(BusinessException ex) {
 		ErrorResponse response = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-		ModelAndView mav = new ModelAndView("error/error");
+		ModelAndView mav = new ModelAndView("error.error");
 		mav.addObject("error", response);
 		return mav;
 	}
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleException(Exception ex) {
 		ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_ERROR, ex.getMessage());
-		ModelAndView mav = new ModelAndView("error/error");
+		ModelAndView mav = new ModelAndView("error.error");
 		mav.addObject("error", response);
 		return mav;
 	}
