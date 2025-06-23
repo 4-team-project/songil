@@ -1,21 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Home Page</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/common/style.css">
-</head>
-<body>
-	<%@ include file="/WEB-INF/views/common/components/header.jsp"%>
-	<div class="container">
-		<div class="content">
-		<label>Home / ${store.categoryName}</label>
-		</div>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
-		<%@ include file="/WEB-INF/views/common/components/footer.jsp"%>
-	</div>
-</body>
-</html>
+<div class="div-wrapper">
+      <div class="text-wrapper">Home / ${store.categoryName}</div>
+</div>

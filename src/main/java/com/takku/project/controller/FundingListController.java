@@ -15,7 +15,7 @@ import com.takku.project.domain.FundingDTO;
 import com.takku.project.service.FundingListService;
 
 @Controller
-@RequestMapping("fundings")
+@RequestMapping("/fundings")
 public class FundingListController {
 	
 	@Autowired

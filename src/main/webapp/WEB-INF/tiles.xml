@@ -28,6 +28,11 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/home.jsp" />
 	</definition>
+	<definition name="user.funding_detail" extends="subLayout">
+		<put-attribute name="title" value="홈" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/funding_detail.jsp" />
+	</definition>
 
 	<!-- 내 쿠폰함 -->
 	<definition name="user.coupon" extends="subLayout">

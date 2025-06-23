@@ -49,7 +49,7 @@ public class FundingController {
 			fundinglist = fundingService.selectAllFunding();
 		}
 		model.addAttribute("fundinglist", fundinglist);
-		return "pages/user/home";
+		return "user.home";
 	}
 
 	@GetMapping("/{fundingId}")
@@ -66,7 +66,7 @@ public class FundingController {
 		model.addAttribute("product", product);
 
 		model.addAttribute("productImages", productImages);
-		return "pages/user/funding_detail";
+		return "user.funding_detail";
 	}
 
 }
