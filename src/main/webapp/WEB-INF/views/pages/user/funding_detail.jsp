@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <link rel="stylesheet" type="text/css"
-	href="${cpath}/resources/css/pages/user/fundign_detail.css">
+	href="${cpath}/resources/css/pages/user/funding_detail.css">
 
 <!-- Swiper 스타일과 JS -->
 <link rel="stylesheet"
@@ -20,7 +20,7 @@
 			clickable : true,
 		},
 	});
-
+	//구매 개수, 총 가격 증가 감소
 	$(function () {
 		const salePrice = parseInt("${funding.salePrice}");
 	    const perQty = parseInt("${funding.perQty}");
@@ -52,17 +52,15 @@
 	      updateTotal(qty);
 	    });
 	  });
-	
+	//펀딩 상세보기, 리뷰 버튼 
 	$(function () {
 	    $(".tab-btn").click(function () {
 	      const tab = $(this).data("tab");
 
-	      // 버튼 스타일 초기화 및 현재 탭 강조
 	      $(".tab-btn").removeClass("active-tab");
 	      $(this).addClass("active-tab");
 
 	      if (tab === "desc") {
-	        // 상세설명 내용 복원
 	        const descHtml = `
 	          <pre class="funding-desc">${funding.fundingDesc}</pre>
 	          <div class="image-placeholder"></div>
@@ -74,6 +72,38 @@
 	        const reviewHtml = $(".review-list").html();
 	        $("#tab-content").html(reviewHtml);
 	      }
+	    });
+	  });
+	//리뷰 10개씩 페이지 처리
+	$(function () {
+	    const reviewsPerPage = 10;
+	    const $reviews = $("#review-list .review-card");
+	    const totalReviews = $reviews.length;
+	    const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+
+	    function showPage(page) {
+	      const start = (page - 1) * reviewsPerPage;
+	      const end = start + reviewsPerPage;
+
+	      $reviews.hide().slice(start, end).show();
+
+	      // 현재 페이지 스타일 적용
+	      $(".page-btn").removeClass("active-page");
+	      $(`.page-btn[data-page=${page}]`).addClass("active-page");
+	    }
+
+	    // 페이지 버튼 생성
+	    for (let i = 1; i <= totalPages; i++) {
+	      $("#pagination").append(`<button class="page-btn" data-page="${i}">${i}</button>`);
+	    }
+
+	    // 첫 페이지 보여주기
+	    showPage(1);
+
+	    // 버튼 클릭 이벤트
+	    $("#pagination").on("click", ".page-btn", function () {
+	      const page = $(this).data("page");
+	      showPage(page);
 	    });
 	  });
 </script>
@@ -177,35 +207,38 @@
 <div id="tab-content">
 	<!-- 기본: 펀딩 상세설명 표시 -->
 	<pre class="funding-desc">${funding.fundingDesc}</pre>
-	<div class="image-placeholder"></div>
+	<div class="image-placeholder">
+		<img src="${product.images}" alt="상품 이미지" />
+	</div>
 	<div class="hashtags">#남대문맛집 #곰탕추천 #건강한한식 #직장인간식 #한밤늦은히든</div>
 </div>
 
 <!-- 숨겨진 리뷰 HTML (JSTL 반복문 활용) -->
-<div class="review-list" style="display: none;">
-	<c:forEach var="review" items="${reviewlist}">
-		<div class="review-card">
-			<div class="review-body">
-				<div class="review-left">
-					<div class="review-user">
-						<span class="user-icon">👤</span> <strong>${review.name}</strong>
-						<span class="review-date">${review.createdAt}</span>
+<div id="review-wrapper">
+	<div class="review-list" style="display: none;">
+		<c:forEach var="review" items="${reviewlist}" varStatus="status">
+			<div class="review-card" data-index="${status.index}">
+				<div class="review-body">
+					<div class="review-left">
+						<div class="review-user">
+							<span class="user-icon">👤</span> <strong>${review.name}</strong>
+							<span class="review-date">${review.createdAt}</span>
+						</div>
+
+						<div class="review-rating">
+							<c:forEach begin="1" end="5" var="i">
+								<span
+									class="star <c:if test='${i <= review.rating}'>filled</c:if>">★</span>
+							</c:forEach>
+						</div>
+
+						<div class="review-content">${review.content}</div>
 					</div>
-
-					<div class="review-rating">
-						<c:forEach begin="1" end="5" var="i">
-							<span
-								class="star <c:if test='${i <= review.rating}'>filled</c:if>">★</span>
-						</c:forEach>
+					<div class="review-image">
+						<img src="${review.images}" alt="리뷰 이미지" />
 					</div>
-
-					<div class="review-content">${review.content}</div>
-				</div>
-
-				<div class="review-image">
-					<img src="${review.images}" alt="리뷰 이미지" />
 				</div>
 			</div>
-		</div>
-	</c:forEach>
+		</c:forEach>
+	</div>
 </div>
