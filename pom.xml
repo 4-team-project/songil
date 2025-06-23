@@ -17,7 +17,21 @@
 	</properties>
 	<dependencies>
 
-<!--  json-path 의존성 추가 : 내부적으로 json을 파싱하고 필드를 추출하는데 사용됨 -->
+		<!-- Tiles core -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
+		<!-- Tiles JSP support -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
+		<!-- json-path 의존성 추가 : 내부적으로 json을 파싱하고 필드를 추출하는데 사용됨 -->
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>

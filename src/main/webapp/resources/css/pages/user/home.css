@@ -1,0 +1,73 @@
+@import url('../../base/fonts.css');
+
+.content-box {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.main-contents {
+  flex-grow: 1;
+  padding-left: 48px;
+  padding-top: 30px;
+}
+
+.funding-list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 1076px;
+  gap: 20px;
+}
+
+.funding-recommend-box {
+  width: 254px;
+  border: 1px solid #DDE1E6;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.funding-recommend-image {
+	width: 100%;
+	height: 140px;
+	object-fit: cover;
+	background-color: #f0f0f0;
+}
+
+.funding-contents {
+	padding: 12px;
+	font-family: 'Spoqa Han Sans Neo';
+}
+
+.funding-title {
+	font-weight: 700;
+	font-size: 14px;
+	color: #2E2E3A;
+	margin-bottom: 8px;
+	line-height: 1.4;
+}
+
+.funding-progress-box {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+	align-items: center;
+	font-size: 13px;
+	color: #FF9670;
+	font-weight: bold;
+}
+
+.funding-bar {
+	margin-top: 5px;
+	height: 8px;
+	background: #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.funding-bar-inner {
+	height: 100%;
+	background: #FF9670;
+	width: 0%; /* 동적으로 설정 */
+}

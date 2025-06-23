@@ -1,5 +1,7 @@
 package com.takku.project.mapper;
 
+import java.util.List;
+
 import com.takku.project.domain.StoreDTO;
 
 public interface StoreMapper {
@@ -20,4 +22,5 @@ public interface StoreMapper {
 	int countByBusinessNumber(String businessNumber);
 	
 	Integer findStoreIdByUserId(int userId);
+	
 }

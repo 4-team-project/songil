@@ -25,10 +25,10 @@ public class FundingController {
 
 	@Autowired
 	FundingService fundingService;
-	
+
 	@Autowired
 	ProductService productService;
-	
+
 	@Autowired
 	ImageService imageService;
 
@@ -52,16 +52,17 @@ public class FundingController {
 	public String getFundingDetail(@PathVariable("fundingId") int fundingId, Model model) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		if (funding == null) {
-			return "error/error";
+			return "error.error";
 		}
 
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
 
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 
-		model.addAttribute("funding", funding); 
-		model.addAttribute("product", product); 
+		model.addAttribute("funding", funding);
+		model.addAttribute("product", product);
 		model.addAttribute("productImages", productImages);
 		return "user/main_detail";
 	}
+
 }

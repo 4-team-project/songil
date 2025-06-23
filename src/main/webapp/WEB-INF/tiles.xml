@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- 기본 레이아웃 정의 -->
+	<definition name="defaultLayout"
+		template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/layout/main-header.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
+	<!-- 마이페이지, 내 쿠폰함 레이아웃 정의 -->
+	<definition name="subLayout"
+		template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/layout/sub-header.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
+	<!-- 홈 -->
+	<definition name="user.home" extends="defaultLayout">
+		<put-attribute name="title" value="홈" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/home.jsp" />
+	</definition>
+
+	<!-- 내 쿠폰함 -->
+	<definition name="user.coupon" extends="subLayout">
+		<put-attribute name="title" value="내 쿠폰함" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/coupon.jsp" />
+	</definition>
+
+	<!-- 마이페이지 -->
+	<definition name="user.mypage" extends="subLayout">
+		<put-attribute name="title" value="마이페이지" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/mypage.jsp" />
+	</definition>
+
+	<!-- 에러 -->
+	<definition name="error.error" extends="defaultLayout">
+		<put-attribute name="title" value="에러 페이지" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/error/error.jsp" />
+	</definition>
+
+</tiles-definitions>
