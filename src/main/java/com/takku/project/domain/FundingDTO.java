@@ -32,5 +32,7 @@ public class FundingDTO {
 	private List<String> tagList;
 	private List<ImageDTO> images;
 	private String thumbnailImageUrl;
+	private String storeName;
+	private Integer price;
 	
 }
