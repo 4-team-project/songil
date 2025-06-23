@@ -13,7 +13,6 @@
 
 </head>
 <body>
-
 	<div class="mypage-container">
 
 		<!-- 사이드바 -->
@@ -28,6 +27,15 @@
 				<div class="menulist">
 					<a href="#" class="buylist">구매 내역</a> <a href="#"
 						class="activeFunding">내가참여한펀딩</a> <a href="#" class="logout">로그아웃</a>
+	<%@ include file="/WEB-INF/views/layout/main-header.jsp"%>
+	<div class="container">
+
+		<div class="mypage-container">
+			<aside class="sidebar">
+				<div class="profile-section">
+					<div class="profile-image"></div>
+					<div class="username">닉네임</div>
+					<div class="editMypage">내 정보 수정하기</div>
 				</div>
 			</nav>
 		</aside>
@@ -99,6 +107,7 @@
 				</c:forEach>
 			</div>
 		</section>
+		<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
 	</div>
 
 	<!-- 결제상세보기 > 모달 -->

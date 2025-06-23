@@ -35,7 +35,7 @@ public class ImageService implements ImageMapper {
 			file.transferTo(dest);
 
 			return ImageDTO.builder().productId(productId).fundingId(fundingId).reviewId(reviewId)
-					.imageUrl("/resources/images/" + fileName).build();
+					.imageUrl("/image/" + fileName).build();
 
 		} catch (IOException e) {
 			e.printStackTrace();

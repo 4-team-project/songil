@@ -43,7 +43,7 @@ public class ReviewController {
 
 		model.addAttribute("couponDTO", coupon);
 		model.addAttribute("fundingDTO", funding);
-		return "pages/user/review";
+		return "user.review";
 	}
 
 	// 리뷰 등록 처리 - JSON 응답

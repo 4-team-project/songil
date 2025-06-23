@@ -3,7 +3,6 @@ package com.takku.project.filter;
 import com.takku.project.errorcode.ErrorCode;
 import com.takku.project.exception.BusinessException;
 import com.takku.project.util.ErrorResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 

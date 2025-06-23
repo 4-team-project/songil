@@ -28,6 +28,11 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/home.jsp" />
 	</definition>
+	<definition name="user.funding_detail" extends="defaultLayout">
+		<put-attribute name="title" value="홈" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/funding_detail.jsp" />
+	</definition>
 
 	<!-- 내 쿠폰함 -->
 	<definition name="user.coupon" extends="subLayout">
@@ -42,6 +47,12 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
+
+	<!-- 리뷰 작성 페이지 -->
+	<definition name="user.review"
+		template="/WEB-INF/views/pages/user/review.jsp" />
+
+
 
 	<!-- 에러 -->
 	<definition name="error.error" extends="defaultLayout">

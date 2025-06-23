@@ -1,6 +1,5 @@
 package com.takku.project.service;
 
-import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 

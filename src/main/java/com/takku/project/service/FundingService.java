@@ -11,83 +11,125 @@ import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
-import com.takku.project.mapper.FundingMapper;
 
 @Service
-public class FundingService implements FundingMapper {
+public class FundingService {
 
 	@Autowired
-	SqlSession sqlSession;
-	String namespace = "com.takku.project.mapper.FundingMapper.";
-	String namespace2 = "com.takku.project.mapper.ImageMapper.";
-	
-	@Autowired
-	private FundingService fundingService;
+	private SqlSession sqlSession;
 
-	@Override
-	public List<FundingDTO> selectAllFunding() {
-		List<FundingDTO> fundinglist = sqlSession.selectList(namespace + "selectAllFunding");
-		return fundinglist;
+	private final String namespace = "com.takku.project.mapper.FundingMapper.";
+	private final String imageNamespace = "com.takku.project.mapper.ImageMapper.";
+
+	/**
+	 * 조건 + 정렬 + 페이징을 포함한 펀딩 조회
+	 */
+	public List<FundingDTO> getFundingsByConditionWithPaging(String keyword, Integer categoryId, String sido,
+			String sigungu, String sort, int page, int size) {
+
+		int startRow = (page - 1) * size + 1;
+		int endRow = page * size;
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("keyword", keyword);
+		param.put("categoryId", categoryId);
+		param.put("sido", sido);
+		param.put("sigungu", sigungu);
+		param.put("sort", sort);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+
+		List<FundingDTO> list = sqlSession.selectList(namespace + "selectFundingByConditionWithPaging", param);
+
+		for (FundingDTO funding : list) {
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
+					funding.getFundingId());
+			funding.setImages(images);
+		}
+
+		return list;
 	}
 
-	@Override
-	public FundingDTO selectFundingByFundingId(Integer fundingId) {	
+	/**
+	 * 페이징 기반 조건 검색용 전체 개수
+	 */
+	public int getFundingCountByCondition(String keyword, Integer categoryId, String sido, String sigungu) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("keyword", keyword);
+		param.put("categoryId", categoryId);
+		param.put("sido", sido);
+		param.put("sigungu", sigungu);
+		return sqlSession.selectOne(namespace + "countFundingByCondition", param);
+	}
+
+	/**
+	 * 전체 펀딩 목록 조회 (썸네일 포함)
+	 */
+	public List<FundingDTO> selectAllFunding() {
+		return sqlSession.selectList(namespace + "selectAllFunding");
+	}
+
+	/**
+	 * 펀딩 상세 조회 (이미지 포함)
+	 */
+	public FundingDTO selectFundingByFundingId(Integer fundingId) {
 		FundingDTO funding = sqlSession.selectOne(namespace + "selectFundingByFundingId", fundingId);
-		List<ImageDTO> images = sqlSession.selectList(namespace2 + "selectImagesByFundingId", fundingId);
-		funding.setImages(images);
+		if (funding != null) {
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", fundingId);
+			funding.setImages(images);
+		}
 		return funding;
 	}
-	
-	@Override
-    public List<FundingDTO> findFundingByStoreId(int storeId) {
-        return sqlSession.selectList(namespace + "selectFundingByStoreId", storeId);
-    }
 
-	@Override
-	public List<FundingDTO> selectFundingByCondition(String keyword, Integer categoryId, String sido, String sigungu) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("keyword", keyword);
-		map.put("categoryId", categoryId);
-		map.put("sido", sido);
-		map.put("sigungu", sigungu);
-
-	    return sqlSession.selectList(namespace + "selectFundingByCondition", map);
+	/**
+	 * 상점 ID로 펀딩 목록 조회
+	 */
+	public List<FundingDTO> findFundingByStoreId(int storeId) {
+		return sqlSession.selectList(namespace + "findFundingByStoreId", storeId);
 	}
-	
-	@Override
+
+	/**
+	 * 신규 펀딩 등록
+	 */
 	public int insertFunding(FundingDTO funding) {
-		int result = sqlSession.insert(namespace + "insertFunding", funding);
-		return result;
+		return sqlSession.insert(namespace + "insertFunding", funding);
 	}
 
-	@Override
+	/**
+	 * 펀딩 정보 수정
+	 */
 	public int updateFunding(FundingDTO funding) {
-		int result = sqlSession.insert(namespace + "updateFunding", funding);
-		return result;
+		return sqlSession.update(namespace + "updateFunding", funding);
 	}
 
-	@Override
+	/**
+	 * 펀딩 삭제
+	 */
 	public int deleteFunding(Integer fundingId) {
-		int result = sqlSession.delete(namespace + "deleteFunding", fundingId);
-		return result;
+		return sqlSession.delete(namespace + "deleteFunding", fundingId);
 	}
 
-	@Override
+	/**
+	 * 펀딩 종료일 조회
+	 */
 	public Date selectEndDateByFundingId(int fundingId) {
-		 return fundingService.selectEndDateByFundingId(fundingId);
+		return sqlSession.selectOne(namespace + "selectEndDateByFundingId", fundingId);
 	}
 
+	/**
+	 * 특정 상태의 펀딩 목록 조회
+	 */
 	public List<FundingDTO> selectByFundingStatus(String status) {
-		List<FundingDTO> fundingList = sqlSession.selectList(namespace + "selectByFundingStatus", status);
-		return fundingList;
+		return sqlSession.selectList(namespace + "selectByFundingStatus", status);
 	}
 
-	@Override
+	/**
+	 * 펀딩 상태 변경
+	 */
 	public int updateFundingStatus(Integer fundingId, String status) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("fundingId", fundingId);
-		map.put("status", status);
-		int result = sqlSession.update(namespace + "updateFundingStatus", map);
-		return result;
+		Map<String, Object> param = new HashMap<>();
+		param.put("fundingId", fundingId);
+		param.put("status", status);
+		return sqlSession.update(namespace + "updateFundingStatus", param);
 	}
 }

@@ -13,7 +13,7 @@
 
 	<!-- 1. 컨트롤러 컴포넌트 스캔 -->
 	<context:component-scan
-		base-package="com.takku.project.controller" />
+		base-package="com.takku.project.controller,com.takku.project.config" />
 
 	<!-- 2. 스케줄러 설정 -->
 	<task:annotation-driven scheduler="myScheduler" />
@@ -42,5 +42,20 @@
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.tiles3.TilesView" />
 	</bean>
+
+	<!-- 7. 스웨거 기본 설정 -->
+	<mvc:resources mapping="swagger-ui.html"
+		location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/webjars/**"
+		location="classpath:/META-INF/resources/webjars/" />
+
+	<!-- 8. properties 읽기 -->
+	<bean
+		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<property name="location"
+			value="classpath:application.properties" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+
 
 </beans>
