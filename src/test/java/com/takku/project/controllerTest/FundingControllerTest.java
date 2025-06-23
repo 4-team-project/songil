@@ -7,14 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -23,7 +19,7 @@ import com.takku.project.controller.FundingController;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.service.FundingService;
 
-public class FundingControllerTest {
+class FundingControllerTest {
 
     private MockMvc mockMvc;
 
@@ -48,56 +44,61 @@ public class FundingControllerTest {
     }
 
     @Test
-    @DisplayName("조건 검색 있을 때 필터링된 펀딩 리스트 반환")
-    void getFundings_test() throws Exception {
+    @DisplayName("펀딩 검색 결과 반환")
+    void searchFunding_shouldReturnFilteredList() throws Exception {
         FundingDTO funding = new FundingDTO();
         funding.setFundingId(1);
-        funding.setFundingName("테스트 펀딩");
+        funding.setFundingName("테스트");
 
-        when(fundingService.selectFundingByCondition(anyString(), any(), anyString(), anyString())).thenReturn(Arrays.asList(funding));
+        when(fundingService.getFundingsByConditionWithPaging(any(), any(), any(), any(), any(), anyInt(), anyInt()))
+                .thenReturn(Arrays.asList(funding));
+        when(fundingService.getFundingCountByCondition(any(), any(), any(), any()))
+                .thenReturn(1);
 
-        mockMvc.perform(get("/fundings")
-                        .param("keyword", "test")
-                        .param("categoryId", "1")
-                        .param("sido", "서울")
-                        .param("sigungu", "강남구"))
+        mockMvc.perform(get("/fundings/search")
+                .param("keyword", "테스트")
+                .param("page", "1")
+                .param("size", "10"))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("fundinglist"))
-                .andExpect(view().name("user/main"));
+                .andExpect(model().attributeExists("currentPage"))
+                .andExpect(view().name("pages/user/funding_search"));
     }
 
     @Test
-    @DisplayName("조건 없이 모든 펀딩 리스트 반환")
-    void getFundings_test2() throws Exception {
+    @DisplayName("전체 펀딩 목록 조회")
+    void getAllFundings_shouldReturnList() throws Exception {
         FundingDTO funding = new FundingDTO();
-        funding.setFundingId(2);
-        funding.setFundingName("전체 펀딩");
+        funding.setFundingId(1);
 
-        when(fundingService.selectAllFunding())
+        when(fundingService.getFundingsByConditionWithPaging(any(), any(), any(), any(), any(), anyInt(), anyInt()))
                 .thenReturn(Arrays.asList(funding));
+        when(fundingService.getFundingCountByCondition(any(), any(), any(), any()))
+                .thenReturn(1);
 
         mockMvc.perform(get("/fundings"))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("fundinglist"))
-                .andExpect(view().name("user/main"));
+                .andExpect(view().name("pages/user/home"));
     }
 
     @Test
-    @DisplayName("상세 페이지 조회 성공")
-    void getFundingDetail_test3() throws Exception {
+    @DisplayName("펀딩 상세 조회 성공")
+    void getFundingDetail_shouldReturnPage() throws Exception {
         FundingDTO funding = new FundingDTO();
         funding.setFundingId(1);
-        funding.setFundingName("인기순");
 
-        when(fundingService.selectFundingByFundingId(1))
-                .thenReturn(funding);
+        when(fundingService.selectFundingByFundingId(1)).thenReturn(funding);
 
         mockMvc.perform(get("/fundings/1"))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("funding"))
-                .andExpect(view().name("user/main_detail"));
+                .andExpect(view().name("pages/user/funding_detail"));
     }
 
     @Test
-    @DisplayName("상세 페이지 조회 실패 (펀딩 없음)")
-    void getFundingDetail_notFound_shouldReturnErrorPage() throws Exception {
+    @DisplayName("펀딩 상세 조회 실패 - 없는 ID")
+    void getFundingDetail_shouldReturnErrorPageWhenNull() throws Exception {
         when(fundingService.selectFundingByFundingId(99)).thenReturn(null);
 
         mockMvc.perform(get("/fundings/99"))

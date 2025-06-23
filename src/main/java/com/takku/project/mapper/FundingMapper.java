@@ -2,38 +2,41 @@ package com.takku.project.mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import com.takku.project.domain.FundingDTO;
 
 public interface FundingMapper {
 
-	//�ݵ� ��ü����
+	// 전체 펀딩 조회 (썸네일 포함)
 	List<FundingDTO> selectAllFunding();
-	
-	//�ݵ� �󼼺���
-	FundingDTO selectFundingByFundingId(Integer fundingId);
-	
-	//�ݵ� �󼼰˻�
-	List<FundingDTO> selectFundingByCondition(String keyword, Integer categoryId, String sido, String sigungu);
-	
-	//�ݵ� �Է�
-	int insertFunding(FundingDTO funding);
-	
-	//�ݵ� ����
-	int updateFunding(FundingDTO funding);
-	
-	//�ݵ� ����
-	int deleteFunding(Integer fundingId);
-	
-	//스토어 id로 펀딩찾기
-	List<FundingDTO> findFundingByStoreId(int storeId);
-	
-	//만료일 가져오기
-	Date selectEndDateByFundingId(int fundingId);
 
-	//펀딩 상태로 펀딩 찾기(진행중, 준비중... etc)
-	List<FundingDTO> selectByFundingStatus(String status);
-	
-	//종료일 된 펀딩 마감하기
-	int updateFundingStatus(Integer fundingId, String status);
+	// 조건 + 정렬 + 페이징
+	List<FundingDTO> selectFundingByConditionWithPaging(Map<String, Object> param);
+
+	// 조건별 전체 개수
+	int countFundingByCondition(Map<String, Object> param);
+
+	// 상세 조회
+	FundingDTO selectFundingByFundingId(@Param("fundingId") Integer fundingId);
+
+	// 등록/수정/삭제
+	int insertFunding(FundingDTO funding);
+
+	int updateFunding(FundingDTO funding);
+
+	int deleteFunding(@Param("fundingId") Integer fundingId);
+
+	// 상점별 조회
+	List<FundingDTO> findFundingByStoreId(@Param("storeId") int storeId);
+
+	// 종료일 조회
+	Date selectEndDateByFundingId(@Param("fundingId") int fundingId);
+
+	// 상태별 조회
+	List<FundingDTO> selectByFundingStatus(@Param("status") String status);
+
+	// 펀딩 상태 갱신
+	int updateFundingStatus(@Param("fundingId") Integer fundingId, @Param("status") String status);
 }
