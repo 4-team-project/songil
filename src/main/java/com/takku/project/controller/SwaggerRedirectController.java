@@ -10,4 +10,5 @@ public class SwaggerRedirectController {
 	public String redirectSwagger() {
 		return "redirect:/swagger-ui.html?url=/project/v2/api-docs";
 	}
+
 }
