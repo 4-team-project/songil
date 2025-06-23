@@ -22,5 +22,5 @@ public class ReviewDTO {
 	private Date createdAt;
 	private List<ImageDTO> images;
     private List<String> imageUrls;
-	
+	private String name;
 }

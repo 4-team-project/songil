@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.ReviewDTO;
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.ReviewService;
+import com.takku.project.service.StoreService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +37,12 @@ public class FundingController {
 	@Autowired
 	private ImageService imageService;
 
+	@Autowired
+	StoreService storeService;
+
+	@Autowired
+	ReviewService reviewService;
+	
 	@ApiOperation(value = "펀딩 검색 (페이징)", notes = "검색 조건에 따라 펀딩을 필터링하고 페이징된 목록을 조회합니다.")
 	@GetMapping("/search")
 	public String searchFundingWithPaging(@RequestParam(required = false) String keyword,
@@ -98,18 +108,29 @@ public class FundingController {
 	@ApiOperation(value = "펀딩 상세 조회", notes = "특정 펀딩의 상세 정보를 조회합니다.")
 	@GetMapping("/{fundingId}")
 	public String getFundingDetail(@PathVariable("fundingId") int fundingId, Model model) {
-
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		if (funding == null)
 			return "error/error";
 
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
-
+		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
+		
+		double avgRating = reviewlist.stream()
+			    .mapToInt(ReviewDTO::getRating)
+			    .average()
+			    .orElse(0.0);		
+		int reviewCount = reviewlist.size();
+		
 		model.addAttribute("funding", funding);
+		model.addAttribute("store", store); 
 		model.addAttribute("product", product);
 		model.addAttribute("productImages", productImages);
-
-		return "pages/user/funding_detail";
+		model.addAttribute("reviewlist", reviewlist);
+		model.addAttribute("avgRating", avgRating);
+		model.addAttribute("reviewCount", reviewCount);
+		
+		return "user.funding_detail";
 	}
 }
