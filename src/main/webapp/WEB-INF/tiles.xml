@@ -43,6 +43,12 @@
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
 
+	<!-- 리뷰 작성 페이지 -->
+	<definition name="user.review"
+		template="/WEB-INF/views/pages/user/review.jsp" />
+
+
+
 	<!-- 에러 -->
 	<definition name="error.error" extends="defaultLayout">
 		<put-attribute name="title" value="에러 페이지" />

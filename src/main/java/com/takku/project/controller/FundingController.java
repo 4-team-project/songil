@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
-import com.takku.project.domain.StoreDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
