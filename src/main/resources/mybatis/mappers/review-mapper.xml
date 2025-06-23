@@ -52,10 +52,12 @@
 	<!-- 상품 ID로 리뷰 보기 -->
 	<select id="reviewByProductId" parameterType="int"
 		resultType="ReviewDTO">
-		SELECT *
-		FROM takku_review
-		WHERE product_id = #{productId}
-		ORDER BY created_at DESC
+		SELECT r.*, u.name
+		FROM takku_review r
+		JOIN takku_user u
+		ON r.user_id = u.user_id
+		WHERE r.product_id = #{productId}
+		ORDER BY r.created_at DESC
 	</select>
 
 	<!-- 유저 ID로 내 리뷰 조회 -->
@@ -67,5 +69,6 @@
 		ORDER BY
 		created_at DESC
 	</select>
+
 
 </mapper>
