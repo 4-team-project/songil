@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.ReviewDTO;
 import com.takku.project.domain.StoreDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.ReviewService;
 import com.takku.project.service.StoreService;
+import com.takku.project.service.UserService;
 
 @Controller
 @RequestMapping("/fundings")
@@ -27,16 +31,19 @@ public class FundingController {
 
 	@Autowired
 	FundingService fundingService;
-
+	
 	@Autowired
 	ProductService productService;
-
+	
 	@Autowired
 	ImageService imageService;
 	
 	@Autowired
 	StoreService storeService;
 
+	@Autowired
+	ReviewService reviewService;
+	
 	@GetMapping
 	public String getFundings(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
@@ -58,15 +65,25 @@ public class FundingController {
 		if (funding == null) {
 			return "error.error";
 		}
-
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
+		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
+		System.out.println(reviewlist);
+		double avgRating = reviewlist.stream()
+			    .mapToInt(ReviewDTO::getRating)
+			    .average()
+			    .orElse(0.0);		
+		int reviewCount = reviewlist.size();
 
-		model.addAttribute("funding", funding);
-		model.addAttribute("product", product);
-
+		model.addAttribute("funding", funding); 
+		model.addAttribute("store", store); 
+		model.addAttribute("product", product); 
 		model.addAttribute("productImages", productImages);
+		model.addAttribute("reviewlist", reviewlist);
+		model.addAttribute("avgRating", avgRating);
+		model.addAttribute("reviewCount", reviewCount);
+		
 		return "user.funding_detail";
 	}
-
 }
