@@ -1,0 +1,90 @@
+.mypage-container {
+	display: flex;
+}
+
+.sidebar {
+	width: 220px;
+	background-color: #fff2ec;
+	padding: 20px;
+	height: 60vh;
+	box-sizing: border-box;
+}
+
+.profile-section {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.profile-image {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background-color: white;
+	margin: 0 auto 10px;
+}
+
+.username {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.menu ul {
+	list-style: none;
+	padding: 0;
+}
+
+.menu li {
+	padding: 10px;
+	margin: 5px 0;
+	cursor: pointer;
+}
+
+.menu li.active {
+	color: #ff8040;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.logout {
+	display: block;
+	text-align: center;
+	color: #555;
+}
+
+.tab-menu {
+	width: 100%;
+	border-bottom: 2px solid #ffe0d1; /* 전체 하단 기본 줄 */
+	margin-top: 0;
+	padding-bottom: 0; /* 줄과 글자 사이 간격 제거 */
+}
+
+.tab-menu ul {
+	list-style: none;
+	display: flex;
+	padding: 20px 20px 0px 30px; /* 아래 여백 줄임 */
+	gap: 60px;
+	margin: 0;
+}
+
+.tab-menu li {
+	cursor: pointer;
+	padding: 10px 0;
+	color: #ff8a65;
+	font-weight: 500;
+	position: relative;
+}
+
+.tab-menu li.active {
+	font-weight: 700;
+	color: #ff7043;
+}
+
+.tab-menu li.active::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background-color: #ff7043;
+}

@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.StoreService;
 
 @Controller
 @RequestMapping("/fundings")
@@ -31,6 +33,9 @@ public class FundingController {
 
 	@Autowired
 	ImageService imageService;
+	
+	@Autowired
+	StoreService storeService;
 
 	@GetMapping
 	public String getFundings(@RequestParam(required = false) String keyword,
@@ -43,7 +48,6 @@ public class FundingController {
 		} else {
 			fundinglist = fundingService.selectAllFunding();
 		}
-		System.out.println(fundinglist);
 		model.addAttribute("fundinglist", fundinglist);
 		return "pages/user/home";
 	}
@@ -56,13 +60,13 @@ public class FundingController {
 		}
 
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
-
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 
 		model.addAttribute("funding", funding);
 		model.addAttribute("product", product);
+
 		model.addAttribute("productImages", productImages);
-		return "user/main_detail";
+		return "pages/user/funding_detail";
 	}
 
 }

@@ -22,4 +22,5 @@ public class CouponDTO {
 	private Integer reviewed;
 	private Date createdAt;
 	private Date expiredAt;
+	private Date usedAt;
 }

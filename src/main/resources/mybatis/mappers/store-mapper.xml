@@ -39,19 +39,10 @@
 	<select id="selectStoreById" parameterType="int"
 		resultType="StoreDTO">
 		SELECT
-		store_id,
-		user_id,
-		business_number,
-		bank_account,
-		store_name,
-		sido,
-		sigungu,
-		dong,
-		address_detail,
-		category_id,
-		description,
-		created_at
-		FROM takku_store
+		f.*, j.category_name
+		FROM takku_store f
+		LEFT JOIN takku_store_category j
+		ON f.category_id = j.category_id
 		WHERE store_id = #{storeId}
 	</select>
 

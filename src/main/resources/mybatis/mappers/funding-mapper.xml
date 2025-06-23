@@ -49,7 +49,7 @@
 	</select>
 
 	<!-- 펀딩번호로 상세 조회 -->
-	<select id="selectByFundingId" parameterType="int"
+	<select id="selectFundingByFundingId" parameterType="int"
 		resultType="FundingDTO">
 		SELECT *
 		FROM takku_funding

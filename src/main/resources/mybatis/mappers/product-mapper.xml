@@ -54,7 +54,7 @@
     </delete>
 
     <!-- 5. 상품id로 상품 조회 -->
-    <select id = "selectByProductId" parameterType="int">
+    <select id = "selectByProductId" parameterType="int" resultType="ProductDTO">
       SELECT *
       FROM takku_product
       WHERE product_id = #{productId}
