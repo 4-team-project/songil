@@ -9,13 +9,13 @@
 	href="${pageContext.request.contextPath}/resources/css/common/style.css">
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/components/header.jsp"%>
+	<%@ include file="/WEB-INF/views/layout/main-header.jsp"%>
 	<div class="container">
 		<div class="content">
 		<label>Home / ${store.categoryName}</label>
 		</div>
 
-		<%@ include file="/WEB-INF/views/common/components/footer.jsp"%>
+		<%@ include file="/WEB-INF/views/layout/footer.jsp"%>
 	</div>
 </body>
 </html>
