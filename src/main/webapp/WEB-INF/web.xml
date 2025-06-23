@@ -54,10 +54,4 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<!-- ✅ 정적 리소스 처리를 위한 default 서블릿 매핑 -->
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>/upload/takku/*</url-pattern>
-	</servlet-mapping>
 </web-app>
