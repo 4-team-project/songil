@@ -43,4 +43,19 @@
 			value="org.springframework.web.servlet.view.tiles3.TilesView" />
 	</bean>
 
+	<!-- 7. 스웨거 기본 설정 -->
+	<mvc:resources mapping="swagger-ui.html"
+		location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/webjars/**"
+		location="classpath:/META-INF/resources/webjars/" />
+
+	<!-- 8. properties 읽기 -->
+	<bean
+		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<property name="location"
+			value="classpath:application.properties" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+
+
 </beans>
