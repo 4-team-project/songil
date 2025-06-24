@@ -1,7 +1,10 @@
 .mypage-container {
 	display: flex;
-	border-bottom: 1px solid gray;
-	border-right: 1px solid gray;
+	position: relative;
+	max-width: 1280px; 
+	margin: 0 auto; 
+	width: 100%; 
+	box-sizing: border-box;
 }
 
 .sidebar {
@@ -30,7 +33,7 @@
 
 .editMypage {
 	color: #555;
-	font-size: 15px;
+	font-size: 14px;
 }
 
 .menu {
@@ -50,7 +53,7 @@
 }
 
 .menu .buylist {
-	color:#ff5b1e;
+	color: #ff5b1e;
 }
 
 /* 마우스 올렸을 때 효과 (비활성 메뉴만 적용) */
@@ -61,7 +64,7 @@
 /* 공통 메뉴 스타일 */
 .menu a {
 	text-decoration: none;
-	font-size: 18px;
+	font-size: 20px;
 	font-weight: 500;
 	color: #333;
 }
@@ -107,6 +110,7 @@
 	font-size: 16px;
 	font-weight: bold;
 }
+
 .tab-menu .allbuylist {
 	color: #ff5b1e;
 }
@@ -237,27 +241,15 @@
 /* 상단 행을 grid로 나누어 메뉴명은 가변, 나머지는 고정 */
 .top-row {
 	display: grid;
-	grid-template-columns: 1fr 100px 100px 120px;
+	grid-template-columns: 1fr 90px 155px 140px;
 	align-items: center;
-	font-weight: 600;
 	font-size: 17px;
-	color: #2E2E3A;
-	gap: 20px;
-	padding-right: 30px;
 }
 
 .menu-name {
-	white-space: normal; /* 줄바꿈 허용 */
-	overflow-wrap: break-word; /* 단어 중간 줄바꿈 허용 */
+	white-space: normal;
+	overflow-wrap: break-word;
 	font-size: 17px;
-}
-
-.payment-amount {
-	font-size: 17px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding-right: 35px;
 }
 
 .payment-status {
@@ -273,53 +265,102 @@
 	background-color: #FF9670;
 	border-radius: 8px;
 	cursor: pointer;
-	white-space: nowrap;
 	color: #fff;
 	font-weight: 500;
 	font-size: 17px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	
 }
 
 .payment-qty {
-	margin-top: 8px;
-	font-size: 13px;
+	font-size: 15px;
 	color: #555;
 	font-weight: 500;
 	text-align: left;
-	padding-left: 4px;
 }
 
 /*******************************************/
-/*모달*/
+/* 모달 본문 */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
 }
 
+/* 모달 본문 */
 .modal-content {
-  background-color: #fff;
-  margin: 10% auto;
-  padding: 20px 30px;
-  border-radius: 8px;
-  width: 400px;
-  position: relative;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	width: 420px;
+	max-width: 90%;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+	position: relative;
 }
 
+/* 닫기 버튼 */
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  cursor: pointer;
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+h2 {
+	text-align: center;
+}
+
+.modal-info {
+	background-color: fff2ec;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+/* 텍스트 영역 */
+.modal-info p {
+	font-size: 16px;
+	color: #ff9670;
+}
+
+.modal-info p span {
+	color: #333;
+	font-weight: 500;
+}
+
+/* 버튼 영역 */
+.modal-buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.modal-btn {
+	padding: 10px 20px;
+	border-radius: 6px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.modal-btn.cancel {
+	background-color: #fff;
+	border: 1.5px solid #f37041;
+	color: #f37041;
+}
+
+.modal-btn.confirm {
+	background-color: #f37041;
+	border: none;
+	color: white;
+}
+
+.modal-btn.cancel:hover {
+	background-color: #fff0ea;
+}
+
+.modal-btn.confirm:hover {
+	background-color: #e95f30;
 }

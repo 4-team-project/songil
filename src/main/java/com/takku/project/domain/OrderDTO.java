@@ -20,8 +20,11 @@ public class OrderDTO {
 	private Integer amount;
 	private Integer usePoint;
 	private Integer discountAmount;
+	private String paymentMethod; //결제수단
 	private String status;
 	private String fundingStatus;
 	private Date purchasedAt;
 	private Date refundAt;
+	private String productName;
+	private String fundingName;
 }

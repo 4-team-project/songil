@@ -1,10 +1,15 @@
 package com.takku.project.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.OrderDTO;
@@ -26,8 +31,10 @@ public class OrderController {
 	public String orderForm(Integer fundingId, Model model) {
 		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
 		model.addAttribute("fundingDTO", fundingDTO);
-		return "orderForm"; //orderForm.jsp
+		return "orderForm"; 
 	}
+	
+	
 	
 	//주문 처리
 	@GetMapping
@@ -40,5 +47,21 @@ public class OrderController {
 		}
 		return "redirect:/mypage/order";
 	}
+	
+	 @GetMapping("/detail")
+	    @ResponseBody
+	    public Map<String, Object> getOrderDetail(@RequestParam("orderId") int orderId) {
+		 OrderDTO order = orderService.selectOrderByOrderId(orderId);  
+		    String fundingName = orderService.getFundingNameByOrderId(orderId);
+
+		    Map<String, Object> result = new HashMap<>();
+		    result.put("fundingName", fundingName);           // ✅ 이 부분이 중요
+		    result.put("qty", order.getQty());
+		    result.put("purchasedAt", order.getPurchasedAt());
+		    result.put("paymentMethod", order.getPaymentMethod());
+		    result.put("status", order.getStatus());
+
+		    return result;
+	    }
 	
 }

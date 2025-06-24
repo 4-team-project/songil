@@ -10,33 +10,51 @@ import com.takku.project.domain.OrderDTO;
 import com.takku.project.mapper.OrderMapper;
 
 @Service
-public class OrderService implements OrderMapper{
+public class OrderService implements OrderMapper {
 
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.OrderMapper.";
-	
+
 	@Override
 	public List<OrderDTO> selectByUserId(Integer userId) {
 		List<OrderDTO> orderList = sqlSession.selectList(namespace + "selectByUserId", userId);
 		return orderList;
 	}
-	
-	@Override	
+
+	@Override
 	public int insertOrder(OrderDTO order) {
 		int result = sqlSession.insert(namespace + "insertOrder", order);
 		return result;
 	}
-	
+
 	@Override
 	public int updateOrderFundingStatus(OrderDTO order) {
 		int result = sqlSession.update(namespace + "updateOrderFundingStatus", order);
 		return result;
 	}
-	
+
 	@Override
 	public int updateOrderRefundAtStatus(OrderDTO order) {
 		int result = sqlSession.update(namespace + "updateOrderRefundAtStatus", order);
 		return result;
 	}
+
+	@Override
+	public String getProductNameByOrderId(int orderId) {
+		String result = sqlSession.selectOne(namespace + "getProductNameByOrderId", orderId);
+		return result;
+	}
+
+	@Override
+	public OrderDTO selectOrderByOrderId(int orderId) {
+		return sqlSession.selectOne(namespace + "selectOrderByOrderId", orderId);
+	}
+
+	@Override
+	public String getFundingNameByOrderId(int orderId) {
+		String result = sqlSession.selectOne(namespace + "getFundingNameByOrderId", orderId);
+		return result;
+	}
+
 }
