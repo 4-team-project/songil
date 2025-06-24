@@ -7,53 +7,70 @@
 
 <link rel="stylesheet" type="text/css"
 	href="${cpath}/resources/css/pages/user/order.css">
-	
+
 <script>
-  $(function () {
-    const fundingId = ${funding.fundingId};
-    const quantity = ${quantity};
-    const totalPrice = ${totalPrice};
+	$(function() {
+		const fundingId = ${funding.fundingId};
+		const quantity = ${quantity};
+		const totalPrice = 10;
 
-    const IMP = window.IMP;
-    IMP.init("imp22234788"); // 본인의 가맹점 식별코드로 바꾸세요
+		const IMP = window.IMP;
+		IMP.init("imp22234788"); // 본인의 가맹점 식별코드로 바꾸세요
 
-    $(".buy-button").click(function (e) {
-      e.preventDefault();
+		$(".buy-button").click(function(e) {
+			e.preventDefault();
 
-      IMP.request_pay(
-        {
-          pg: "html5_inicis", // PG사
-          pay_method: "card",
-          merchant_uid: "order_" + new Date().getTime(),
-          name: "펀딩 상품",
-          amount: totalPrice,
-          buyer_email: "test@example.com",
-          buyer_name: "홍길동",
-          buyer_tel: "010-1234-5678"
-        },
-        function (rsp) {
-          if (rsp.success) {
-            // POST 방식으로 결제 정보 서버로 전송
-            const form = $('<form>', {
-              method: 'post',
-              action: '${cpath}/order/payment'
-            });
+			IMP.request_pay({
+				pg : "html5_inicis", // PG사
+				pay_method : "card",
+				merchant_uid : "order_" + new Date().getTime(),
+				name : "funding.fundingName",
+				amount : totalPrice,
+				buyer_email : "shinhan@takku.com",
+				buyer_name : "${loginUser.name}",
+				buyer_tel : "${loginUser.phone}"
+			}, function(rsp) {
+				if (rsp.success) {
+					// POST 방식으로 결제 정보 서버로 전송
+					const form = $('<form>', {
+						method : 'post',
+						action : '${cpath}/order/payment'
+					});
 
-            form.append($('<input>', {type: 'hidden', name: 'fundingId', value: fundingId}));
-            form.append($('<input>', {type: 'hidden', name: 'quantity', value: quantity}));
-            form.append($('<input>', {type: 'hidden', name: 'totalPrice', value: totalPrice}));
-            form.append($('<input>', {type: 'hidden', name: 'imp_uid', value: rsp.imp_uid}));
-            form.append($('<input>', {type: 'hidden', name: 'merchant_uid', value: rsp.merchant_uid}));
+					form.append($('<input>', {
+						type : 'hidden',
+						name : 'fundingId',
+						value : fundingId
+					}));
+					form.append($('<input>', {
+						type : 'hidden',
+						name : 'quantity',
+						value : quantity
+					}));
+					form.append($('<input>', {
+						type : 'hidden',
+						name : 'totalPrice',
+						value : totalPrice
+					}));
+					form.append($('<input>', {
+						type : 'hidden',
+						name : 'imp_uid',
+						value : rsp.imp_uid
+					}));
+					form.append($('<input>', {
+						type : 'hidden',
+						name : 'merchant_uid',
+						value : rsp.merchant_uid
+					}));
 
-            $('body').append(form);
-            form.submit();
-          } else {
-            alert("결제에 실패했습니다: " + rsp.error_msg);
-          }
-        }
-      );
-    });
-  });
+					$('body').append(form);
+					form.submit();
+				} else {
+					alert("결제에 실패했습니다: " + rsp.error_msg);
+				}
+			});
+		});
+	});
 </script>
 
 <div class="order-container">
@@ -95,12 +112,7 @@
 				펀딩이 정해진 기간 내 100% 달성되면, 쿠폰이 발급되어 사용하실 수 있습니다.<br> 펀딩이 무산되거나 중단될
 				경우, 결제 금액은 자동으로 전액 환불됩니다.
 			</p>
-			<form action="${cpath}/order/payment" method="post">
-				<input type="hidden" name="fundingId" value="${funding.fundingId}" />
-				<input type="hidden" name="quantity" value="${quantity}" /> <input
-					type="hidden" name="totalPrice" value="${totalPrice}" />
-				<button type="submit" class="buy-button">결제하기</button>
-			</form>
+			<button type="submit" class="buy-button">결제하기</button>
 		</div>
 	</div>
 </div>
