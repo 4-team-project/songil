@@ -22,8 +22,10 @@
 		o.refund_at,
 		p.product_name
 		FROM takku_order o
-		JOIN takku_funding f ON o.funding_id = f.funding_id
-		JOIN takku_product p ON f.product_id = p.product_id
+		JOIN
+		takku_funding f ON o.funding_id = f.funding_id
+		JOIN takku_product p ON
+		f.product_id = p.product_id
 		WHERE o.user_id = #{userId}
 	</select>
 
@@ -86,4 +88,15 @@
 		WHERE o.order_id = #{orderId}
 	</select>
 
+	<!-- status 가져올거야 = -->
+	<select id="getOrdersByUserAndStatus" parameterType="map"
+		resultType="OrderDTO">
+		SELECT o.*, p.product_name
+		FROM takku_order o
+		JOIN takku_funding f ON o.funding_id = f.funding_id
+		JOIN takku_product p ON f.product_id = p.product_id
+		WHERE o.user_id = #{userId}
+		AND o.status = #{status}
+		ORDER BY o.purchased_at DESC
+	</select>
 </mapper>
