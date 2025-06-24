@@ -38,14 +38,14 @@
 	
 	<!-- 펀딩 상세보기 -->
 	<definition name="user.funding_detail" extends="defaultLayout">
-		<put-attribute name="title" value="홈" />
+		<put-attribute name="title" value="펀딩 상세보기" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/funding_detail.jsp" />
 	</definition>
 	
 	<!-- 결제 완료/실패 -->
 	<definition name="user.payment" extends="defaultLayout">
-		<put-attribute name="title" value="홈" />
+		<put-attribute name="title" value="결제 결과" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/payment.jsp" />
 	</definition>
