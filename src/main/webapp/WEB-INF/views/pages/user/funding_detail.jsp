@@ -52,6 +52,18 @@
 	      updateTotal(qty);
 	    });
 	  });
+	//구매하기 결제 창 이동
+	$(function () {
+		  $(".buy-button").click(function () {
+		    const quantity = $("#quantity").val();
+		    const totalPrice = $("#totalPrice").text().replace(/,/g, ""); // 쉼표 제거
+
+		    $("#hiddenQuantity").val(quantity);
+		    $("#hiddenTotalPrice").val(totalPrice);
+
+		    $("#paymentForm").submit();
+		  });
+		});
 	//펀딩 상세보기, 리뷰 버튼 
 	$(function () {
 	    $(".tab-btn").click(function () {
@@ -68,7 +80,6 @@
 	        `;
 	        $("#tab-content").html(descHtml);
 	      } else if (tab === "review") {
-	        // review-content의 내용을 가져와서 붙이기
 	        const reviewHtml = $(".review-list").html();
 	        $("#tab-content").html(reviewHtml);
 	      }
@@ -87,25 +98,22 @@
 
 	      $reviews.hide().slice(start, end).show();
 
-	      // 현재 페이지 스타일 적용
 	      $(".page-btn").removeClass("active-page");
 	      $(`.page-btn[data-page=${page}]`).addClass("active-page");
 	    }
 
-	    // 페이지 버튼 생성
 	    for (let i = 1; i <= totalPages; i++) {
 	      $("#pagination").append(`<button class="page-btn" data-page="${i}">${i}</button>`);
 	    }
 
-	    // 첫 페이지 보여주기
 	    showPage(1);
 
-	    // 버튼 클릭 이벤트
 	    $("#pagination").on("click", ".page-btn", function () {
 	      const page = $(this).data("page");
 	      showPage(page);
 	    });
 	  });
+	
 </script>
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
@@ -158,9 +166,17 @@
 				<c:set var="today" value="<%=new java.util.Date()%>" />
 				<c:set var="remaining"
 					value="${(funding.endDate.time - today.time) / (1000*60*60*24)}" />
-				<span class="remaining-day"> <fmt:formatNumber
-						value="${remaining}" type="number" maxFractionDigits="0" /> 일
-				</span><br> <span class="period">${funding.startDate}~${funding.endDate}</span>
+				<c:choose>
+					<c:when test="${remaining <= 0}">
+						<span class="remaining-day">종료됨</span>
+					</c:when>
+					<c:otherwise>
+						<span class="remaining-day"> <fmt:formatNumber
+								value="${remaining}" type="number" maxFractionDigits="0" /> 일
+						</span>
+					</c:otherwise>
+				</c:choose>
+				<br> <span class="period">${funding.startDate}~${funding.endDate}</span>
 			</p>
 		</div>
 
@@ -192,8 +208,12 @@
 				</span>
 			</p>
 		</div>
-
-		<button class="buy-button">구매하기</button>
+		<form id="paymentForm" action="${cpath}/order" method="get">
+			<input type="hidden" name="fundingId" value="${funding.fundingId}" />
+			<input type="hidden" name="quantity" id="hiddenQuantity" /> <input
+				type="hidden" name="totalPrice" id="hiddenTotalPrice" />
+			<button type="button" class="buy-button">구매하기</button>
+		</form>
 	</div>
 </div>
 
