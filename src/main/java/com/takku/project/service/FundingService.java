@@ -44,7 +44,10 @@ public class FundingService {
 		for (FundingDTO funding : list) {
 			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
 					funding.getFundingId());
+			List<String> tags = sqlSession.selectList(namespace + "selectTagsByFundingId", funding.getFundingId());
+
 			funding.setImages(images);
+			funding.setTagList(tags);
 		}
 
 		return list;
@@ -70,13 +73,15 @@ public class FundingService {
 	}
 
 	/**
-	 * 펀딩 상세 조회 (이미지 포함)
+	 * 펀딩 상세 조회 (이미지 + 태그 포함)
 	 */
 	public FundingDTO selectFundingByFundingId(Integer fundingId) {
 		FundingDTO funding = sqlSession.selectOne(namespace + "selectFundingByFundingId", fundingId);
 		if (funding != null) {
 			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", fundingId);
+			List<String> tags = sqlSession.selectList(namespace + "selectTagsByFundingId", fundingId);
 			funding.setImages(images);
+			funding.setTagList(tags);
 		}
 		return funding;
 	}
@@ -132,7 +137,10 @@ public class FundingService {
 		param.put("status", status);
 		return sqlSession.update(namespace + "updateFundingStatus", param);
 	}
-	
+
+	/**
+	 * 종료된 펀딩 상태 변경
+	 */
 	public int updateFundingStatusIfExpired(Integer fundingId, String status) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("fundingId", fundingId);

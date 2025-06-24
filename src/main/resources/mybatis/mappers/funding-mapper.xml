@@ -30,14 +30,17 @@
 
 	<!-- 전체 목록 -->
 	<select id="selectAllFunding" resultMap="FundingResultMap">
-		SELECT f.*, NVL(i.image_url, '') AS thumbnail_image_url
+		SELECT f.*,
+		NVL(i.image_url, '') AS thumbnail_image_url
 		FROM takku_funding f
-		LEFT JOIN (
+		LEFT
+		JOIN (
 		SELECT funding_id, MIN(image_url) AS image_url
 		FROM takku_image
 		WHERE funding_id IS NOT NULL
 		GROUP BY funding_id
-		) i ON f.funding_id = i.funding_id
+		) i ON f.funding_id =
+		i.funding_id
 		ORDER BY f.created_at DESC
 	</select>
 
@@ -51,16 +54,15 @@
 	<select id="selectFundingByConditionWithPaging"
 		parameterType="map" resultMap="FundingResultMap">
 		SELECT * FROM (
-		SELECT f.*, ROWNUM AS rn FROM (
-		SELECT f.*, NVL(i.image_url, '') AS thumbnail_image_url
+		SELECT inner_query.*, ROWNUM AS rn FROM (
+		SELECT f.*,
+		s.store_name,
+		p.price
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id = s.store_id
-		LEFT JOIN (
-		SELECT funding_id, MIN(image_url) AS image_url
-		FROM takku_image
-		WHERE funding_id IS NOT NULL
-		GROUP BY funding_id
-		) i ON f.funding_id = i.funding_id
+		JOIN takku_store s ON
+		f.store_id = s.store_id
+		JOIN takku_product p ON f.product_id =
+		p.product_id
 		WHERE f.status IN ('진행중', '준비중')
 		<if test="keyword != null and keyword != ''">
 			AND f.funding_name LIKE '%' || #{keyword} || '%'
@@ -79,8 +81,9 @@
 				ORDER BY (
 				SELECT AVG(r.rating)
 				FROM takku_review r
-				JOIN takku_product p ON r.product_id = p.product_id
-				WHERE p.product_id = f.product_id
+				JOIN takku_product p2 ON r.product_id = p2.product_id
+				WHERE
+				p2.product_id = f.product_id
 				) DESC NULLS LAST
 			</when>
 			<when test="sort == 'closing'">
@@ -90,7 +93,7 @@
 				ORDER BY f.created_at DESC
 			</otherwise>
 		</choose>
-		) f
+		) inner_query
 		WHERE ROWNUM &lt;= #{endRow}
 		)
 		WHERE rn &gt;= #{startRow}
@@ -101,7 +104,8 @@
 		parameterType="map">
 		SELECT COUNT(*)
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id = s.store_id
+		JOIN takku_store s ON f.store_id =
+		s.store_id
 		WHERE f.status IN ('진행중', '준비중')
 		<if test="keyword != null and keyword != ''">
 			AND f.funding_name LIKE '%' || #{keyword} || '%'
@@ -124,9 +128,10 @@
 	</select>
 
 	<!-- 상태별 조회 - 간단 -->
-	<select id="selectByFundingStatus"
+	<select id="selectByFundingStatusSimple"
 		resultMap="FundingResultMap" parameterType="String">
-		SELECT * FROM takku_funding WHERE status = #{status}
+		SELECT * FROM takku_funding
+		WHERE status = #{status}
 	</select>
 
 	<!-- 상태별 조회 - 상세 -->
@@ -135,39 +140,48 @@
 		SELECT f.*, s.store_name, p.price
 		FROM takku_funding f
 		JOIN takku_store s ON f.store_id = s.store_id
-		JOIN takku_product p ON f.product_id = p.product_id
-		WHERE f.status = #{status}
+		JOIN
+		takku_product p ON f.product_id = p.product_id
+		WHERE f.status =
+		#{status}
 	</select>
 
 	<!-- 만료일 조회 -->
 	<select id="selectEndDateByFundingId" parameterType="int"
 		resultType="date">
-		SELECT end_date FROM takku_funding WHERE funding_id = #{fundingId}
+		SELECT end_date FROM takku_funding WHERE funding_id =
+		#{fundingId}
 	</select>
 
 	<!-- 상태 갱신 -->
 	<update id="updateFundingStatus" parameterType="map">
-		UPDATE takku_funding SET status = #{status} WHERE funding_id = #{fundingId}
+		UPDATE
+		takku_funding SET status = #{status} WHERE funding_id = #{fundingId}
 	</update>
 
 	<!-- 상태 갱신 (마감용) -->
 	<update id="updateFundingStatusIfExpired" parameterType="map">
-		UPDATE takku_funding SET status = #{status} WHERE end_date &lt; SYSDATE AND
+		UPDATE
+		takku_funding SET status = #{status} WHERE end_date &lt; SYSDATE AND
 		funding_id = #{fundingId}
 	</update>
 
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
-		INSERT INTO takku_funding (
+		INSERT INTO
+		takku_funding (
 		product_id, store_id, funding_type, funding_name,
 		funding_desc, start_date, end_date,
 		sale_price, target_qty, max_qty,
 		per_qty, status, created_at
 		) VALUES (
-		#{productId}, #{storeId}, #{fundingType}, #{fundingName},
-		#{fundingDesc}, #{startDate}, #{endDate},
+		#{productId}, #{storeId},
+		#{fundingType}, #{fundingName},
+		#{fundingDesc}, #{startDate},
+		#{endDate},
 		#{salePrice}, #{targetQty}, #{maxQty},
-		#{perQty}, #{status}, SYSDATE
+		#{perQty}, #{status},
+		SYSDATE
 		)
 	</insert>
 
@@ -178,18 +192,31 @@
 		funding_name = #{fundingName},
 		funding_desc = #{fundingDesc},
 		start_date = #{startDate},
-		end_date = #{endDate},
+		end_date =
+		#{endDate},
 		sale_price = #{salePrice},
 		target_qty = #{targetQty},
 		max_qty = #{maxQty},
 		per_qty = #{perQty},
 		status = #{status}
-		WHERE funding_id = #{fundingId}
+		WHERE
+		funding_id = #{fundingId}
 	</update>
 
 	<!-- 삭제 -->
 	<delete id="deleteFunding" parameterType="int">
-		DELETE FROM takku_funding WHERE funding_id = #{fundingId}
+		DELETE FROM
+		takku_funding WHERE funding_id = #{fundingId}
 	</delete>
+
+	<!-- 펀딩 ID로 태그 목록 조회 -->
+	<select id="selectTagsByFundingId" parameterType="int"
+		resultType="string">
+		SELECT t.tag_name
+		FROM takku_funding_tag ft
+		JOIN takku_tag t
+		ON ft.tag_id = t.tag_id
+		WHERE ft.funding_id = #{fundingId}
+	</select>
 
 </mapper>
