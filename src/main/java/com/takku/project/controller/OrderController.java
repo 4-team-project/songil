@@ -3,6 +3,7 @@ package com.takku.project.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -88,11 +89,11 @@ public class OrderController {
 		order.setUsePoint(point);
 		order.setDiscountAmount(totalPrice-point);
 		order.setStatus("결제완료");
-		order.setFundingStatus(funding.getStatus());
+		order.setFundingStatus("펀딩 진행중");
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
 		
-		System.out.println(order);;
+		System.out.println(order);
 		int result = orderService.insertOrder(order);
 		model.addAttribute("isSuccess", result > 0);
 		return "user.payment";

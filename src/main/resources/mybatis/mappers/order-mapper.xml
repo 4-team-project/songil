@@ -30,10 +30,10 @@
 	<!-- 주문 생성 -->
     <insert id="insertOrder" parameterType="OrderDTO">
         INSERT INTO takku_order (
-            user_id, funding_id, qty, amount, use_point, discount_amount,
+            user_id, funding_id, qty, amount, use_point, discount_amount, payment_method,
             status, funding_status, purchased_at, refund_at, imp_uid, merchant_uid
         ) VALUES (
-            #{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
+            #{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount}, '기타',
             #{status}, #{fundingStatus}, SYSDATE, NULL, #{impUid}, #{merchantUid}
         )
     </insert>
