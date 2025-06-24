@@ -35,10 +35,19 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/home.jsp" />
 	</definition>
+	
+	<!-- 펀딩 상세보기 -->
 	<definition name="user.funding_detail" extends="defaultLayout">
 		<put-attribute name="title" value="홈" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/funding_detail.jsp" />
+	</definition>
+	
+	<!-- 결제 완료/실패 -->
+	<definition name="user.payment" extends="defaultLayout">
+		<put-attribute name="title" value="홈" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/payment.jsp" />
 	</definition>
 
 	<!-- 내 쿠폰함 -->
@@ -53,6 +62,13 @@
 		<put-attribute name="title" value="마이페이지" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
+	</definition>
+	
+	<!-- 결제하기 -->
+	<definition name="user.order" extends="subLayout">
+		<put-attribute name="title" value="결제하기" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/order.jsp" />
 	</definition>
 
 	<!-- 리뷰 작성 페이지 -->
