@@ -28,17 +28,15 @@
 	</select>
 
 	<!-- 주문 생성 -->
-	<insert id="insertOrder" parameterType="OrderDTO">
-		INSERT INTO takku_order (
-		user_id, funding_id, qty, amount, use_point, discount_amount,
-		status,
-		funding_status, purchased_at, refund_at
-		) VALUES (
-		#{userId},
-		#{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
-		#{status}, #{fundingStatus}, SYSDATE, NULL
-		)
-	</insert>
+    <insert id="insertOrder" parameterType="OrderDTO">
+        INSERT INTO takku_order (
+            user_id, funding_id, qty, amount, use_point, discount_amount,
+            status, funding_status, purchased_at, refund_at, imp_uid, merchant_uid
+        ) VALUES (
+            #{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
+            #{status}, #{fundingStatus}, SYSDATE, NULL, #{impUid}, #{merchantUid}
+        )
+    </insert>
 
 	<!-- 주문 펀딩 상태 수정 -->
 	<update id="updateOrderFundingStatus" parameterType="OrderDTO">
