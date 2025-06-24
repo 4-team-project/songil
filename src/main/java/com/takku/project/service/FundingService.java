@@ -132,4 +132,11 @@ public class FundingService {
 		param.put("status", status);
 		return sqlSession.update(namespace + "updateFundingStatus", param);
 	}
+	
+	public int updateFundingStatusIfExpired(Integer fundingId, String status) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("fundingId", fundingId);
+		param.put("status", status);
+		return sqlSession.update(namespace + "updateFundingStatusIfExpired", param);
+	}
 }
