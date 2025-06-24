@@ -24,4 +24,7 @@ public class OrderDTO {
 	private String fundingStatus;
 	private Date purchasedAt;
 	private Date refundAt;
-}
+	private String impUid;
+	private String merchantUid;
+	
+}	
