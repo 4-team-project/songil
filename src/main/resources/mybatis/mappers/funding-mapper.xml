@@ -78,13 +78,26 @@
 		</if>
 		<choose>
 			<when test="sort == 'popular'">
-				ORDER BY (
-				SELECT AVG(r.rating)
+				ORDER BY
+				CASE
+				WHEN (
+				SELECT COUNT(*)
 				FROM takku_review r
 				JOIN takku_product p2 ON r.product_id = p2.product_id
 				WHERE
 				p2.product_id = f.product_id
-				) DESC NULLS LAST
+				) = 0 THEN NULL
+				ELSE (
+				SELECT
+				AVG(r.rating)
+				FROM takku_review r
+				JOIN takku_product p2 ON
+				r.product_id = p2.product_id
+				WHERE p2.product_id = f.product_id
+				)
+				END
+				DESC NULLS LAST,
+				f.end_date ASC
 			</when>
 			<when test="sort == 'closing'">
 				ORDER BY f.end_date ASC
