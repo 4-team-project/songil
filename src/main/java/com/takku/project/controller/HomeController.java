@@ -15,6 +15,7 @@ import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
+import com.takku.project.service.StoreService;
 
 @Controller
 public class HomeController {
@@ -34,7 +35,6 @@ public class HomeController {
         for (FundingDTO funding : ongoingFundingList) {
             List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
             funding.setImages(images);
-
 
             long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
             fundingDaysLeftMap.put(funding.getFundingId(), daysLeft);

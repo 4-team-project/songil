@@ -49,6 +49,7 @@
 	<mvc:resources mapping="/webjars/**"
 		location="classpath:/META-INF/resources/webjars/" />
 
+
 	<!-- 8. properties 읽기 -->
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
@@ -56,6 +57,5 @@
 			value="classpath:application.properties" />
 		<property name="fileEncoding" value="UTF-8" />
 	</bean>
-
 
 </beans>
