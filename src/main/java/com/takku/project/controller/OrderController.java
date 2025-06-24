@@ -1,5 +1,7 @@
 package com.takku.project.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.OrderDTO;
@@ -35,6 +38,17 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
+	//주문 폼
+	@GetMapping("/{fundingId}")
+	public String orderForm(Integer fundingId, Model model) {
+		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
+		model.addAttribute("fundingDTO", fundingDTO);
+		return "orderForm"; 
+	}
+	
+	
+	
+	//주문 처리
 	@Autowired
 	private StoreService storeService;
 	
@@ -83,4 +97,21 @@ public class OrderController {
 		model.addAttribute("isSuccess", result > 0);
 		return "user.payment";
 	}
+	
+	 @GetMapping("/detail")
+	    @ResponseBody
+	    public Map<String, Object> getOrderDetail(@RequestParam("orderId") int orderId) {
+		 OrderDTO order = orderService.selectOrderByOrderId(orderId);  
+		    String fundingName = orderService.getFundingNameByOrderId(orderId);
+
+		    Map<String, Object> result = new HashMap<>();
+		    result.put("fundingName", fundingName);          
+		    result.put("qty", order.getQty());
+		    result.put("purchasedAt", order.getPurchasedAt());
+		    result.put("paymentMethod", order.getPaymentMethod());
+		    result.put("status", order.getStatus());
+
+		    return result;
+	    }
+
 }

@@ -17,4 +17,15 @@ public interface OrderMapper {
 	
 	//주문 결제 상태 및 환불일 수정 
 	int updateOrderRefundAtStatus(OrderDTO order);
+	
+	//메뉴이름 가져올거야
+	String getProductNameByOrderId(int orderId);
+	
+	
+	//orderId받기
+	OrderDTO selectOrderByOrderId(int orderId);
+
+	//펀딩 이름 가져올거야
+	String getFundingNameByOrderId(int orderId);
+	
 }

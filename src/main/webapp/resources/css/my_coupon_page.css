@@ -1,0 +1,171 @@
+@charset "UTF-8";
+
+body {
+  margin: 0;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  background-color: #fff;
+}
+
+.coupon-container {
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 16px;
+  border-right: 1px solid #eee;
+  color: #FF9670;
+}
+
+.menu-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.menu-sub {
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+}
+
+.main-content {
+  flex: 1;
+  padding: 0 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #FF9670;
+}
+
+.tab {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #999;
+}
+
+.tab.active {
+  color: #FF9670;
+  border-bottom: 3px solid #FF9670;
+}
+
+.search-bar {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.search-bar input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-bar button {
+  background-color: #FF9670;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.coupon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.coupon-card {
+  display: flex;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+
+.coupon-left {
+  color: #FF9670;
+  font-weight: bold;
+  width: 120px;
+  text-align: center;
+}
+
+.coupon-middle {
+  flex: 1;
+  padding: 0 16px;
+}
+
+.store {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.desc {
+  font-size: 13px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coupon-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.use-btn,
+.review-btn {
+  background-color: #FF9670;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.pagination {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.page {
+  margin: 0 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #FF9670;
+  font-weight: bold;
+}
+
+.page.current {
+  background-color: #FF9670;
+  color: white;
+}
+
+.coupon-date {
+  font-size: 8px;
+  color: #aaa;
+  margin-bottom: 4px;
+}
