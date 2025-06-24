@@ -27,4 +27,7 @@ public class OrderDTO {
 	private Date refundAt;
 	private String productName;
 	private String fundingName;
-}
+	private String impUid;
+	private String merchantUid;
+	
+}	

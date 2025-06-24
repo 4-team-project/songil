@@ -39,4 +39,7 @@ public interface FundingMapper {
 
 	// 펀딩 상태 갱신
 	int updateFundingStatus(@Param("fundingId") Integer fundingId, @Param("status") String status);
+	
+	int updateFundingStatusIfExpired(@Param("fundingId") Integer fundingId, @Param("status") String status);
+
 }
