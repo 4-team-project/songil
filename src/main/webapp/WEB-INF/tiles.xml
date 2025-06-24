@@ -56,6 +56,13 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/coupon.jsp" />
 	</definition>
+	
+	<!-- 쿠폰 상세 정보 -->
+	<definition name="user.coupon_detail" extends="subLayout">
+		<put-attribute name="title" value="쿠폰 상세보기" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/user/coupon_detail.jsp" />
+	</definition>
 
 	<!-- 마이페이지 -->
 	<definition name="user.mypage" extends="subLayout">

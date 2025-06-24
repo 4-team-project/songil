@@ -2,6 +2,9 @@ package com.takku.project.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,78 +13,121 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.takku.project.domain.CouponDTO;
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ProductDTO;
 import com.takku.project.service.CouponService;
 import com.takku.project.service.FundingService;
+import com.takku.project.service.ProductService;
 
 @Controller
 public class CouponController {
 
-    @GetMapping("/user/coupon")
-    public String couponPage(Model model) {
-        model.addAttribute("pageName", "ë‚´ ì¿ í°í•¨");
-        return "user.coupon";
-    }
-    
 	@Autowired
 	private CouponService couponService;
 
 	@Autowired
 	private FundingService fundingService;
-	
 
-	  @RequestMapping("/generateQr")
-	    public String generateQr(Model model) {
-	        // QR ì°ìœ¼ë©´ ì´ë™í•  URL
-		    
-		  //
-		 FundingDTO data = new FundingDTO();
-			 data.setFundingId(1);
-			 data.setFundingName("í…ŒìŠ¤íŠ¸");
-		  
-	        String targetUrl = "http://192.168.0.84:9999/mypage/coupon/sellerCheck/?couponCode=123&fundingId=1&fundingName=í…ŒìŠ¤íŠ¸";
-	        
-	        try {
-	            // URL Encoding (ì•ˆì „í•˜ê²Œ)
-	            String encodedUrl = URLEncoder.encode(targetUrl, "UTF-8");
+	@Autowired
+	private ProductService productService;
 
-	            // api.qrserver.com QR ì´ë¯¸ì§€ URL ìƒì„±
-	            String qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodedUrl;
+	@RequestMapping("/generateQr")
+	public String generateQr(Model model) {
+		// QR ÂïÀ¸¸é ÀÌµ¿ÇÒ URL
 
-	            // JSPë¡œ ì „ë‹¬
-	            model.addAttribute("qrImageUrl", qrImageUrl);
-	            model.addAttribute("fundingId", data.getFundingId()); 
-	            model.addAttribute("fundingName", data.getFundingName());
-	            
+		//
+		FundingDTO data = new FundingDTO();
+		data.setFundingId(1);
+		data.setFundingName("Å×½ºÆ®");
 
-	        } catch (UnsupportedEncodingException e) {
-	            e.printStackTrace();
-	        }
+		String targetUrl = "http://192.168.0.84:9999/mypage/coupon/sellerCheck/?couponCode=123&fundingId=1&fundingName=Å×½ºÆ®";
 
-	        return "coupon/createQR"; 
-	    }
-	  
-	  @GetMapping("/sellerCheck")
-	  public String sellerCheck(Model model, String couponCode) {
-		  	CouponDTO coupon = couponService.selectByCouponCode(couponCode);  // ì´ ë©”ì„œë“œëŠ” Service/Mapperì— êµ¬í˜„ë¼ ìˆì–´ì•¼ í•¨
-		    model.addAttribute("coupon", coupon);
-		  return "coupon/sellerCheck";
-	  }
+		try {
+			// URL Encoding (¾ÈÀüÇÏ°Ô)
+			String encodedUrl = URLEncoder.encode(targetUrl, "UTF-8");
 
-	// ì¿ í° ì‚¬ìš© ì²˜ë¦¬
+			// api.qrserver.com QR ÀÌ¹ÌÁö URL »ı¼º
+			String qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodedUrl;
+
+			// JSP·Î Àü´Ş
+			model.addAttribute("qrImageUrl", qrImageUrl);
+			model.addAttribute("fundingId", data.getFundingId());
+			model.addAttribute("fundingName", data.getFundingName());
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return "coupon/createQR";
+	}
+
+	@GetMapping("/sellerCheck")
+	public String sellerCheck(Model model, String couponCode) {
+		CouponDTO coupon = couponService.selectByCouponCode(couponCode);
+		model.addAttribute("coupon", coupon);
+		return "coupon/sellerCheck";
+	}
+
+	// ÄíÆù »ç¿ë Ã³¸®
 	@PostMapping("/{couponCode}/use")
 	public String useCoupon(@PathVariable("couponCode") String couponCode) {
-		System.out.println("*******************couponCode"+couponCode);
-		//couponService.updateCouponUseStatus(couponCode, "ì‚¬ìš©ë¨");
+		System.out.println("*******************couponCode" + couponCode);
+		// couponService.updateCouponUseStatus(couponCode, "»ç¿ëµÊ");
 		return "coupon/useCheck";
 	}
 
-	// ë¦¬ë·° ì‘ì„± í›„, í•´ë‹¹ ì¿ í° ë¦¬ë·° ìƒíƒœ ì—…ë°ì´íŠ¸
+	// ¸®ºä ÀÛ¼º ÈÄ, ÇØ´ç ÄíÆù ¸®ºä »óÅÂ ¾÷µ¥ÀÌÆ®
 	@PostMapping("/{couponId}/reviewed")
 	public String markReviewed(@PathVariable("couponId") Integer couponId) {
 		couponService.updateCouponReviewed(couponId, 1);
 		return "redirect:/mypage/coupon";
+	}
+
+	// ³» ÄíÆùÇÔ ÆäÀÌÁö
+	@GetMapping("/user/coupon")
+	public String couponPage(Model model) {
+		model.addAttribute("pageName", "³» ÄíÆùÇÔ");
+		List<CouponDTO> coupons = couponService.selectCouponByUserId(5); // userId ¹Ş¾Æ¼­ ÇØ¾ßµÊ
+		model.addAttribute("coupons", coupons);
+
+		Map<Integer, FundingDTO> fundingMap = new HashMap<>();
+		Map<Integer, ProductDTO> productMap = new HashMap<>();
+
+		for (CouponDTO coupon : coupons) {
+			int fundingId = coupon.getFundingId();
+
+			// 1. Funding °¡Á®¿À±â
+			if (!fundingMap.containsKey(fundingId)) {
+				FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+				fundingMap.put(fundingId, funding);
+
+				// 2. Product °¡Á®¿À±â
+				int productId = funding.getProductId(); // ¿©±â¼­ productId ²¨³¿
+				if (!productMap.containsKey(productId)) {
+					ProductDTO product = productService.selectByProductId(productId);
+					productMap.put(productId, product);
+				}
+			}
+		}
+		model.addAttribute("fundingMap", fundingMap);
+		model.addAttribute("productMap", productMap);
+		return "user.coupon";
+	}
+
+	// ÄíÆù »ó¼¼ º¸±â
+	@PostMapping("/user/coupon_detail")
+	public String couponDetailPage(Model model, @RequestParam("couponId") int couponId,
+			@RequestParam("discountRate") double discountRate) {
+		model.addAttribute("pageName", "³» ÄíÆùÇÔ");
+		CouponDTO coupon = couponService.selectByCouponId(couponId);
+		model.addAttribute("coupon", coupon);
+		FundingDTO funding = fundingService.selectFundingByFundingId(coupon.getFundingId());
+		model.addAttribute("funding", funding);
+		int intDiscountRate = (int) discountRate;
+		model.addAttribute("intDiscountRate", intDiscountRate);
+		return "user.coupon_detail";
 	}
 }
