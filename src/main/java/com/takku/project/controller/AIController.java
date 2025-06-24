@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/test")
-public class AITestController {
+@RequestMapping("/ai")
+public class AIController {
 
 	@Autowired
 	private AIService aiService;
