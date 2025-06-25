@@ -10,15 +10,62 @@
 <!-- Swiper 스타일과 JS -->
 <link rel="stylesheet"
 	href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-	const swiper = new Swiper('.swiper-container', {
-		loop : true,
-		pagination : {
-			el : '.swiper-pagination',
-			clickable : true,
-		},
+	//funding 이미지 배열
+	const fundingImages = [
+	  <c:forEach var="img" items="${funding.images}" varStatus="status">
+	    "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
+	  </c:forEach>
+	];
+	
+	// product 이미지 배열
+	const productImages = [
+	  <c:forEach var="img" items="${product.images}" varStatus="status">
+	    "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
+	  </c:forEach>
+	];
+	
+	// 범용 이미지 슬라이더 함수
+	function createImageSlider(images, imgSelector, prevBtnSelector, nextBtnSelector, dotSelector) {
+	  let currentIndex = 0;
+	
+	  function showImage(index) {
+	    if (index < 0) currentIndex = images.length - 1;
+	    else if (index >= images.length) currentIndex = 0;
+	    else currentIndex = index;
+	
+	    $(imgSelector).attr("src", images[currentIndex]);
+	    
+	    if(dotSelector) {
+	      $(dotSelector).css("color", "#ccc");
+	      $(dotSelector).eq(currentIndex).css("color", "#ff6600");
+	    }
+	  }
+	
+	  // 초기 표시
+	  showImage(0);
+	
+	  // 버튼 이벤트
+	  $(prevBtnSelector).on("click", () => showImage(currentIndex - 1));
+	  $(nextBtnSelector).on("click", () => showImage(currentIndex + 1));
+	
+	  // dot 클릭 이벤트(옵션)
+	  if(dotSelector) {
+	    $(dotSelector).on("click", function() {
+	      const idx = $(this).data("index");
+	      showImage(idx);
+	    });
+	  }
+	}
+	
+	$(document).ready(function() {
+	  createImageSlider(fundingImages, "#fundingMainImage", "#fundingPrevBtn", "#fundingNextBtn", ".funding-dot");
+	  createImageSlider(productImages, "#productMainImage", "#productPrevBtn", "#productNextBtn");
 	});
 	//구매 개수, 총 가격 증가 감소
 	$(function () {
@@ -118,21 +165,19 @@
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
 
-	<!-- 이미지 슬라이더 -->
+	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
-		<span class="category"></span>
-		<div class="swiper-container">
-			<div class="swiper-wrapper">
-				<c:forEach var="img" items="${funding.images}">
-					<div class="swiper-slide">
-						<img src="${img.imageUrl}" alt="펀딩 이미지" />
-					</div>
-				</c:forEach>
-			</div>
-			<div class="swiper-pagination"></div>
+		<img id="fundingMainImage" src="" alt="펀딩 이미지"
+			style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" />
+		<div id="fundingControls"
+			style="text-align: center; margin-top: 10px;">
+			<button id="fundingPrevBtn" class="nav-btn">&#x276E;</button>
+			<c:forEach var="img" items="${funding.images}" varStatus="status">
+				<span class="dot funding-dot" data-index="${status.index}">●</span>
+			</c:forEach>
+			<button id="fundingNextBtn" class="nav-btn">&#x276F;</button>
 		</div>
 	</div>
-
 
 	<!-- 상품 정보 -->
 	<div class="product-info">
@@ -224,13 +269,22 @@
 </div>
 
 <!-- 내용이 바뀔 영역 -->
+<!-- product 이미지 슬라이더 -->
 <div id="tab-content">
-	<!-- 기본: 펀딩 상세설명 표시 -->
 	<pre class="funding-desc">${funding.fundingDesc}</pre>
-	<div class="image-placeholder">
-		<img src="${product.images}" alt="상품 이미지" />
+
+	<div class="product-image-carousel"
+		style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
+		<img id="productMainImage" src="" alt="상품 이미지"
+			style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" />
+		<button id="productPrevBtn" class="nav-btn"
+			style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%);">&#x276E;</button>
+		<button id="productNextBtn" class="nav-btn"
+			style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);">&#x276F;</button>
 	</div>
-	<div class="hashtags">#남대문맛집 #곰탕추천 #건강한한식 #직장인간식 #한밤늦은히든</div>
+
+	<div class="hashtags" style="margin-top: 10px;">#남대문맛집 #곰탕추천
+		#건강한한식 #직장인간식 #한밤늦은히든</div>
 </div>
 
 <!-- 숨겨진 리뷰 HTML (JSTL 반복문 활용) -->

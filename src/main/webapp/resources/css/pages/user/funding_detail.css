@@ -11,11 +11,34 @@
 	gap: 20px;
 }
 
-.image-carousel {
-	width: 60%;
-	height: 550px;
-	background-color: #DDE1E6;
-	border-radius: 30px;
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 102, 0, 0.8);
+}
+
+.dot {
+	font-size: 24px;
+	margin: 0 5px;
+	color: #fff6f0;
+}
+
+.dot:hover {
+	color: #ff9670;
 }
 
 .product-info {
@@ -244,85 +267,86 @@
 	flex-direction: column;
 	gap: 20px;
 }
+
 .review-card {
-  border-top: 2px solid #ff9670;
-  border-bottom: 2px solid #ff9670;
-  padding: 15px;
-  border-radius: 8px;
+	border-top: 2px solid #ff9670;
+	border-bottom: 2px solid #ff9670;
+	padding: 15px;
+	border-radius: 8px;
 }
 
 .review-body {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 20px;
 }
 
 .review-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .review-user {
-  font-size: 14px;
-  color: #333;
+	font-size: 14px;
+	color: #333;
 }
 
 .review-date {
-  color: gray;
-  font-size: 12px;
-  margin-left: 5px;
+	color: gray;
+	font-size: 12px;
+	margin-left: 5px;
 }
 
 .review-rating .star {
-  font-size: 16px;
-  color: #ccc;
+	font-size: 16px;
+	color: #ccc;
 }
 
 .review-rating .star.filled {
-  color: #ff9670;
+	color: #ff9670;
 }
 
 .review-content {
-  font-size: 14px;
-  color: #444;
-  white-space: pre-wrap;
+	font-size: 14px;
+	color: #444;
+	white-space: pre-wrap;
 }
 
 .review-image {
-  flex-shrink: 0;
-  width: 100px;
-  max-width: 100px;
-  margin-left: auto;
+	flex-shrink: 0;
+	width: 100px;
+	max-width: 100px;
+	margin-left: auto;
 }
 
 .review-image img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 10px;
-  background-color: #e0e0e0;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1/1;
+	object-fit: cover;
+	border-radius: 10px;
+	background-color: #e0e0e0;
 }
 
 .pagination {
-  margin-top: 20px;
-  text-align: center;
+	margin-top: 20px;
+	text-align: center;
 }
 
 .page-btn {
-  margin: 0 5px;
-  padding: 5px 10px;
-  border: none;
-  background: #eee;
-  cursor: pointer;
-  border-radius: 5px;
+	margin: 0 5px;
+	padding: 5px 10px;
+	border: none;
+	background: #eee;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .page-btn.active-page {
-  background-color: #FF9670;
-  color: white;
-  font-weight: bold;
+	background-color: #FF9670;
+	color: white;
+	font-weight: bold;
 }

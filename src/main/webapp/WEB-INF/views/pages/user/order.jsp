@@ -79,7 +79,7 @@
 			<h3>펀딩 상품 정보</h3>
 			<div class="product-info">
 				<div class="product-image">
-					<img src="${funding.thumbnailImageUrl}" alt="펀딩 이미지" />
+					<img src="${cpath}${funding.images[0].imageUrl}" alt="펀딩 이미지" />
 				</div>
 				<div class="product-detail">
 					<span class="store-name">${store.storeName}</span><br>
