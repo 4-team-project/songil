@@ -18,6 +18,7 @@ import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.ReviewService;
 import com.takku.project.service.StoreService;
+import com.takku.project.service.TagService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,9 @@ public class FundingController {
 	@Autowired
 	private ReviewService reviewService;
 
+	@Autowired
+	private TagService tagService;
+	
 	private List<String> splitKeywords(String keyword) {
 		if (keyword == null || keyword.trim().isEmpty())
 			return Collections.emptyList();
@@ -129,10 +133,11 @@ public class FundingController {
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
 		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
-
+		List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
+		
 		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
 		int reviewCount = reviewlist.size();
-
+		
 		model.addAttribute("funding", funding);
 		model.addAttribute("store", store);
 		model.addAttribute("product", product);
@@ -140,7 +145,8 @@ public class FundingController {
 		model.addAttribute("reviewlist", reviewlist);
 		model.addAttribute("avgRating", avgRating);
 		model.addAttribute("reviewCount", reviewCount);
-
+		model.addAttribute("taglist", taglist);
+		
 		return "user.funding_detail";
 	}
 	
