@@ -1,6 +1,7 @@
 package com.takku.project.controller;
 
 import com.takku.project.domain.AIResponse;
+import com.takku.project.domain.FundingDTO;
 import com.takku.project.service.AIService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/ai")
@@ -23,10 +26,10 @@ public class AIController {
 	@GetMapping(value = "/api/recommend/{userId}", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	@ApiOperation(value = "추천 결과 조회 (JSON)", notes = "Flask 서버를 통해 유저 기반 추천 결과를 JSON으로 반환합니다.")
-	public ResponseEntity<String> getRecommendationsJson(@PathVariable int userId) {
+	public ResponseEntity<?> getRecommendationsJson(@PathVariable int userId) {
 		try {
-			String json = aiService.getRecommendationsFromFlask(userId);
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(json);
+			List<FundingDTO> recommendationList = aiService.getRecommendations(userId);
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(recommendationList);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).contentType(MediaType.APPLICATION_JSON)
 					.body("{\"error\":\"" + e.getMessage() + "\"}");
@@ -52,12 +55,14 @@ public class AIController {
 	@ApiOperation(value = "추천 결과 조회 (View)", notes = "추천 결과를 HTML 뷰에 표시합니다.")
 	public String getRecommendationsView(@PathVariable int userId, Model model) {
 		try {
-			String json = aiService.getRecommendationsFromFlask(userId);
-			model.addAttribute("recommendJson", json);
+			List<FundingDTO> recommendationList = aiService.getRecommendations(userId);
+			model.addAttribute("recommendList", recommendationList);
+			System.out.println("추천 펀딩 수: " + recommendationList.size());
 		} catch (Exception e) {
+			e.printStackTrace();
 			model.addAttribute("recommendError", e.getMessage());
 		}
-		return "pages/seller/funding_ai_form";
+		return "user.home";
 	}
 
 	// ======= [뷰 응답: 글 생성 폼] =======

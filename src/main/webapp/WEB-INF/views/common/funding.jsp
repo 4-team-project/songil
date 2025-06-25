@@ -4,25 +4,6 @@
 <link rel="stylesheet" type="text/css"
 	href="${cpath}/resources/css/pages/user/home.css">
 
-<div class="funding-filter-box">
-	<div class="funding-filter selected" data-sort-id="popular">
-		<div class="funding-filter-text">인기순</div>
-	</div>
-	<div class="funding-filter" data-sort-id="latest">
-		<div class="funding-filter-text">최신순</div>
-	</div>
-	<div class="funding-filter" data-sort-id="closing">
-		<div class="funding-filter-text">마감 임박 순</div>
-	</div>
-</div>
-<script>
-	document.querySelectorAll('.funding-filter').forEach((el) => {
-		el.addEventListener('click', () => {
-			document.querySelectorAll('.funding-filter').forEach(f => f.classList.remove('active'));
-			el.classList.add('active');
-		});
-	});
-</script>
 
 <div class="funding-list-wrapper">
 	<c:forEach var="funding" items="${fundinglist}" begin="0" end="7">

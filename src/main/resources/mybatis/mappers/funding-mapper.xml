@@ -98,7 +98,7 @@
 				END
 				DESC NULLS LAST,
 				f.end_date ASC
-				) DESC NULLS LAST
+				
 			</when>
 			<when test="sort == 'closing'">
 				ORDER BY f.end_date ASC
