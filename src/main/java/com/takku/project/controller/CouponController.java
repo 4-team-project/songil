@@ -142,6 +142,7 @@ public class CouponController {
 
 		model.addAttribute("fundingMap", fundingMap);
 		model.addAttribute("productMap", productMap);
+
 		return "user.coupon";
 	}
 
