@@ -2,27 +2,26 @@ package com.takku.project.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import javax.servlet.http.HttpServletRequest;
 
 import com.takku.project.domain.CouponDTO;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.service.CouponService;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.StoreService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/coupon")
 public class CouponController {
 
 	@Autowired
@@ -34,63 +33,94 @@ public class CouponController {
 	@Autowired
 	private ProductService productService;
 
-	@RequestMapping("/generateQr")
-	public String generateQr(Model model) {
-		// QR ÂïÀ¸¸é ÀÌµ¿ÇÒ URL
+	@Autowired
+	private StoreService storeService;
 
-		//
-		FundingDTO data = new FundingDTO();
-		data.setFundingId(1);
-		data.setFundingName("Å×½ºÆ®");
+	/**
+	 * [1] ì¿ í° ë°œê¸‰ + QR ì½”ë“œ ì¶œë ¥ í˜ì´ì§€
+	 */
+	//ì—¬ê¸° ì ‘ê·¼í• ë•Œ localhostë§ê³  ë³¸ì¸ IPë¡œ ë“¤ì–´ê°€ì•¼í•¨ -> baseurlë•Œë¬¸
+	@GetMapping("/issue")
+	public String issueCoupon(@RequestParam("fundingId") int fundingId, Model model, HttpServletRequest request) {
 
-		String targetUrl = "http://192.168.0.84:9999/mypage/coupon/sellerCheck/?couponCode=123&fundingId=1&fundingName=Å×½ºÆ®";
+		int userId = 5; // TODO: ë¡œê·¸ì¸ ìœ ì €ë¡œ êµì²´
 
+		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+		int storeId = funding.getStoreId();
+		Date fundingEndDate = funding.getEndDate();
+
+		String couponCode = couponService.createCouponAndReturnCode(fundingId, userId, storeId, fundingEndDate);
+
+		// âœ… í˜„ì¬ ì„œë²„ ì •ë³´ë¡œ QRì°ê³  ë“¤ì–´ê°ˆ URL ë™ì  ìƒì„±
+		String scheme = request.getScheme(); // http ë˜ëŠ” https
+		String serverName = request.getServerName(); // ex: 192.168.0.47 or ë³¸ì¸ IP
+		int serverPort = request.getServerPort(); // ex: 9999
+		String contextPath = request.getContextPath(); // ex: /project
+
+		String baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath
+				+ "/coupon/sellerCheck?couponCode=" + couponCode;
+
+		String qrImageUrl = "";
 		try {
-			// URL Encoding (¾ÈÀüÇÏ°Ô)
-			String encodedUrl = URLEncoder.encode(targetUrl, "UTF-8");
-
-			// api.qrserver.com QR ÀÌ¹ÌÁö URL »ı¼º
-			String qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodedUrl;
-
-			// JSP·Î Àü´Ş
-			model.addAttribute("qrImageUrl", qrImageUrl);
-			model.addAttribute("fundingId", data.getFundingId());
-			model.addAttribute("fundingName", data.getFundingName());
-
+			String encodedUrl = URLEncoder.encode(baseUrl, "UTF-8");
+			qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodedUrl;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
-		return "coupon/createQR";
+		model.addAttribute("qrImageUrl", qrImageUrl);
+		model.addAttribute("couponCode", couponCode);
+		return "coupon.issuedQR";
 	}
 
+	/**
+	 * [2] ê°€ë§¹ì ì—ì„œ QRë¡œ ì ‘ê·¼ ì‹œ ì¿ í° í™•ì¸
+	 */
 	@GetMapping("/sellerCheck")
-	public String sellerCheck(Model model, String couponCode) {
+	public String sellerCheck(Model model, @RequestParam("couponCode") String couponCode) {
 		CouponDTO coupon = couponService.selectByCouponCode(couponCode);
 		model.addAttribute("coupon", coupon);
-		return "coupon/sellerCheck";
+
+		if (coupon != null) {
+			FundingDTO funding = fundingService.selectFundingByFundingId(coupon.getFundingId());
+			ProductDTO product = productService.selectByProductId(funding.getProductId());
+			StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+
+			model.addAttribute("funding", funding);
+			model.addAttribute("product", product);
+			model.addAttribute("store", store); // â­ï¸ storeName ì „ë‹¬
+		}
+
+		return "coupon.sellerCheck";
 	}
 
-	// ÄíÆù »ç¿ë Ã³¸®
+	/**
+	 * [3] ì¿ í° ì‚¬ìš© ì²˜ë¦¬
+	 */
 	@PostMapping("/{couponCode}/use")
 	public String useCoupon(@PathVariable("couponCode") String couponCode) {
-		System.out.println("*******************couponCode" + couponCode);
-		// couponService.updateCouponUseStatus(couponCode, "»ç¿ëµÊ");
+		couponService.updateCouponUseStatus(couponCode, "ì‚¬ìš©");
 		return "coupon/useCheck";
 	}
 
-	// ¸®ºä ÀÛ¼º ÈÄ, ÇØ´ç ÄíÆù ¸®ºä »óÅÂ ¾÷µ¥ÀÌÆ®
+	/**
+	 * [4] ë¦¬ë·° ì‘ì„± ì²´í¬
+	 */
 	@PostMapping("/{couponId}/reviewed")
 	public String markReviewed(@PathVariable("couponId") Integer couponId) {
-		couponService.updateCouponReviewed(couponId, 1);
-		return "redirect:/mypage/coupon";
+		couponService.updateCouponReviewed(couponId);
+		return "redirect:/coupon/user/list";
 	}
 
-	// ³» ÄíÆùÇÔ ÆäÀÌÁö
-	@GetMapping("/user/coupon")
-	public String couponPage(Model model) {
-		model.addAttribute("pageName", "³» ÄíÆùÇÔ");
-		List<CouponDTO> coupons = couponService.selectCouponByUserId(5); // userId ¹Ş¾Æ¼­ ÇØ¾ßµÊ
+	/**
+	 * [5] ì‚¬ìš©ì ì¿ í° ëª©ë¡ ì¡°íšŒ
+	 */
+	@GetMapping("/user/list")
+	public String userCouponList(Model model) {
+		model.addAttribute("pageName", "ë‚´ ì¿ í°í•¨");
+
+		int userId = 5; // TODO: ì‹¤ì œ ë¡œê·¸ì¸ ì‚¬ìš©ì
+		List<CouponDTO> coupons = couponService.selectCouponByUserId(userId);
 		model.addAttribute("coupons", coupons);
 
 		Map<Integer, FundingDTO> fundingMap = new HashMap<>();
@@ -98,36 +128,39 @@ public class CouponController {
 
 		for (CouponDTO coupon : coupons) {
 			int fundingId = coupon.getFundingId();
-
-			// 1. Funding °¡Á®¿À±â
 			if (!fundingMap.containsKey(fundingId)) {
 				FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 				fundingMap.put(fundingId, funding);
 
-				// 2. Product °¡Á®¿À±â
-				int productId = funding.getProductId(); // ¿©±â¼­ productId ²¨³¿
+				int productId = funding.getProductId();
 				if (!productMap.containsKey(productId)) {
 					ProductDTO product = productService.selectByProductId(productId);
 					productMap.put(productId, product);
 				}
 			}
 		}
+
 		model.addAttribute("fundingMap", fundingMap);
 		model.addAttribute("productMap", productMap);
-		return "user.coupon";
+		return "user/coupon";
 	}
 
-	// ÄíÆù »ó¼¼ º¸±â
-	@PostMapping("/user/coupon_detail")
+	/**
+	 * [6] ì¿ í° ìƒì„¸ í˜ì´ì§€
+	 */
+	@PostMapping("/user/detail")
 	public String couponDetailPage(Model model, @RequestParam("couponId") int couponId,
 			@RequestParam("discountRate") double discountRate) {
-		model.addAttribute("pageName", "³» ÄíÆùÇÔ");
+
+		model.addAttribute("pageName", "ì¿ í° ìƒì„¸ì •ë³´");
+
 		CouponDTO coupon = couponService.selectByCouponId(couponId);
-		model.addAttribute("coupon", coupon);
 		FundingDTO funding = fundingService.selectFundingByFundingId(coupon.getFundingId());
+
+		model.addAttribute("coupon", coupon);
 		model.addAttribute("funding", funding);
-		int intDiscountRate = (int) discountRate;
-		model.addAttribute("intDiscountRate", intDiscountRate);
-		return "user.coupon_detail";
+		model.addAttribute("intDiscountRate", (int) discountRate);
+
+		return "user/coupon_detail";
 	}
 }
