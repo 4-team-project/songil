@@ -18,16 +18,30 @@
 <script>
 	//funding 이미지 배열
 	const fundingImages = [
-	  <c:forEach var="img" items="${funding.images}" varStatus="status">
-	    "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
-	  </c:forEach>
-	];
+	    <c:choose>
+	      <c:when test="${empty funding.images}">
+	         "${cpath}/resources/images/noimage.jpg"
+	      </c:when>
+	      <c:otherwise>
+	        <c:forEach var="img" items="${funding.images}" varStatus="status">
+	          "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
+	        </c:forEach>
+	      </c:otherwise>
+	    </c:choose>
+  		];
 	
 	// product 이미지 배열
 	const productImages = [
-	  <c:forEach var="img" items="${product.images}" varStatus="status">
-	    "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
-	  </c:forEach>
+		<c:choose>
+	      <c:when test="${empty product.images}">
+	         "${cpath}/resources/images/noimage.jpg"
+	      </c:when>
+	      <c:otherwise>
+	  	    <c:forEach var="img" items="${product.images}" varStatus="status">
+	   	  	 "${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
+	  	    </c:forEach>
+	   	  </c:otherwise>
+	    </c:choose>
 	];
 	
 	// 범용 이미지 슬라이더 함수
