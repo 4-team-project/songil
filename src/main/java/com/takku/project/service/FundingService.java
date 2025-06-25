@@ -22,16 +22,16 @@ public class FundingService {
 	private final String imageNamespace = "com.takku.project.mapper.ImageMapper.";
 
 	/**
-	 * 조건 + 정렬 + 페이징을 포함한 펀딩 조회
+	 * 조건 + 정렬 + 페이징을 포함한 펀딩 조회 (다중 키워드 검색 지원)
 	 */
-	public List<FundingDTO> getFundingsByConditionWithPaging(String keyword, Integer categoryId, String sido,
+	public List<FundingDTO> getFundingsByConditionWithPaging(List<String> keywordList, Integer categoryId, String sido,
 			String sigungu, String sort, int page, int size) {
 
 		int startRow = (page - 1) * size + 1;
 		int endRow = page * size;
 
 		Map<String, Object> param = new HashMap<>();
-		param.put("keyword", keyword);
+		param.put("keywordList", keywordList);
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
@@ -54,22 +54,15 @@ public class FundingService {
 	}
 
 	/**
-	 * 페이징 기반 조건 검색용 전체 개수
+	 * 페이징 기반 조건 검색용 전체 개수 (다중 키워드 지원)
 	 */
-	public int getFundingCountByCondition(String keyword, Integer categoryId, String sido, String sigungu) {
+	public int getFundingCountByCondition(List<String> keywordList, Integer categoryId, String sido, String sigungu) {
 		Map<String, Object> param = new HashMap<>();
-		param.put("keyword", keyword);
+		param.put("keywordList", keywordList);
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
 		return sqlSession.selectOne(namespace + "countFundingByCondition", param);
-	}
-
-	/**
-	 * 전체 펀딩 목록 조회 (썸네일 포함)
-	 */
-	public List<FundingDTO> selectAllFunding() {
-		return sqlSession.selectList(namespace + "selectAllFunding");
 	}
 
 	/**
