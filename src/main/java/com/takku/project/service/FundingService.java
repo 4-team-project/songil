@@ -127,6 +127,10 @@ public class FundingService {
 	public List<FundingDTO> selectByFundingStatus(String status) {
 		return sqlSession.selectList(namespace + "selectByFundingStatus", status);
 	}
+	
+	public List<FundingDTO> selectByFundingStatusWithJoin(String status) {
+	    return sqlSession.selectList(namespace + "selectByFundingStatusWithJoin", status);
+	}
 
 	/**
 	 * 펀딩 상태 변경
