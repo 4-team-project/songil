@@ -143,4 +143,45 @@ public class FundingController {
 
 		return "user.funding_detail";
 	}
+	
+	@GetMapping("/list")
+	public String selectFundingListByStatus(@RequestParam("status") String status, Model model) {
+		int userId = 5; //임시 userId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		  if ("allfundinglist".equals(status)) {
+		        status = null; // 전체 조회 - 조건에서 status 제외
+		    } else if ("progressing".equals(status)) {
+		        status = "진행중";
+		    } else if ("achieved".equals(status)) {
+		        status = "성공";
+		    } else if ("failed".equals(status)) {
+		        status = "미달성";
+		    }
+		
+		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
+		
+		/*
+		 * for (FundingDTO f : fundingList) { System.out.println("fundingName=" +
+		 * f.getFundingName()); System.out.println("storeName=" + f.getStoreName());
+		 * System.out.println("startDate=" + f.getStartDate());
+		 * System.out.println("endDate=" + f.getEndDate()); System.out.println("status="
+		 * + f.getStatus()); System.out.println("thumbnailImageUrl=" +
+		 * f.getThumbnailImageUrl()); }
+		
+		
+		  System.out.println("fundingList.size() = " + fundingList.size());
+		    for (FundingDTO f : fundingList) {
+		        System.out.println("fundingName = " + f.getFundingName());
+		    }
+		
+		for (FundingDTO dto : fundingList) {
+		    System.out.println("펀딩명: " + dto.getFundingName());
+		    System.out.println("결제일: " + dto.getPurchasedAt());
+		    System.out.println("펀딩기간: " + dto.getStartDate() + " ~ " + dto.getEndDate());
+		    System.out.println("주소: " + dto.getStoreAddress());
+		}*/
+		
+		model.addAttribute("fundingList", fundingList);
+		return "pages/user/myPage_fundingList";
+	}
 }

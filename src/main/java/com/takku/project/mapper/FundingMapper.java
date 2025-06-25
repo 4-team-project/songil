@@ -32,10 +32,13 @@ public interface FundingMapper {
 	Date selectEndDateByFundingId(@Param("fundingId") int fundingId);
 
 	// 상태별 조회
-	List<FundingDTO> selectByFundingStatus(@Param("status") String status);
+	//List<FundingDTO> selectByFundingStatus(@Param("status") String status);
 
 	// 펀딩 상태 갱신
 	int updateFundingStatus(@Param("fundingId") Integer fundingId, @Param("status") String status);
 
+	//사용자별 상태 조회 -> 상태별 조회랑 중복?? 상태별 조회 안 쓰면 추후 삭제
+	List<FundingDTO> selectFundingListByStatus(@Param("userId") int userId, @Param("status") String status);
+  
 	int updateFundingStatusIfExpired(@Param("fundingId") Integer fundingId, @Param("status") String status);
 }

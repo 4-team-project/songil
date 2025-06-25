@@ -250,4 +250,38 @@
 		WHERE ft.funding_id = #{fundingId}
 	</select>
 
+	<!-- 사용자별 펀딩 상태 조회 -->
+	<select id="selectFundingListByStatus" resultType="FundingDTO"
+		parameterType="map">
+		SELECT
+		f.funding_id,
+		f.product_id,
+		f.store_id,
+		f.funding_type,
+		f.funding_name,
+		f.funding_desc,
+		f.start_date,
+		f.end_date,
+		f.sale_price,
+		f.target_qty,
+		f.max_qty,
+		f.current_qty,
+		f.per_qty,
+		f.status,
+		f.created_at,
+		o.purchased_at AS purchasedAt,
+		s.sido,
+		s.sigungu,
+		s.store_name,
+		s.sido || ' ' || s.sigungu || ' ' || s.store_name AS store_address
+		FROM takku_order o
+		JOIN takku_funding f ON o.funding_id = f.funding_id
+		JOIN takku_store s ON f.store_id = s.store_id
+		WHERE o.user_id = #{userId}
+		<if test="status != null and status != ''">
+			AND f.status = #{status}
+		</if>
+		ORDER BY o.purchased_at DESC
+	</select>
+
 </mapper>
