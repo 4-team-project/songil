@@ -1,6 +1,7 @@
 package com.takku.project.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,8 +56,8 @@ public class OrderController {
 			Model model) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-		UserDTO user = userService.selectByUserId(5);
-		
+		UserDTO user = userService.selectByUserId(5); //test
+		user.setPoint(1000); //test
 		model.addAttribute("funding", funding);
 		model.addAttribute("store", store);
 		model.addAttribute("loginUser", user);
@@ -65,26 +69,33 @@ public class OrderController {
 	// 주문 처리
 	@PostMapping("/payment")
 	public String processOrder(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
-			@RequestParam String imp_uid, @RequestParam String merchant_uid, Model model) {
+			@RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid, Model model) {
 
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		UserDTO loginUser = userService.selectByUserId(5);
+		UserDTO loginUser = userService.selectByUserId(5); //test
+		
+		LocalDateTime ldt = LocalDateTime.now();
+		Instant instant = ldt.atZone(ZoneId.systemDefault()).toInstant();
+		java.sql.Date sqlDate = new java.sql.Date(instant.toEpochMilli());
+		
+		int finalPrice = totalPrice - usePoint;
 		
 		OrderDTO order = new OrderDTO();
 		order.setUserId(loginUser.getUserId());
 		order.setFundingId(fundingId);
 		order.setQty(quantity);
 		order.setAmount(totalPrice);
-		order.setUsePoint(loginUser.getPoint());
-		order.setDiscountAmount(totalPrice-loginUser.getPoint());
+		order.setUsePoint(usePoint);
+		order.setDiscountAmount(finalPrice);
 		order.setStatus("결제완료");
 		order.setFundingStatus("펀딩 진행중");
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
 		
 		int result = orderService.insertOrder(order);
-		OrderDTO saveOrder = orderService.selectOrderByOrderId(1);
-		model.addAttribute("saveOrder", saveOrder);
+		order.setPurchasedAt(sqlDate);
+		model.addAttribute("funding", funding);
+		model.addAttribute("order", order);
 		model.addAttribute("isSuccess", result > 0);
 		return "user.payment";
 	}

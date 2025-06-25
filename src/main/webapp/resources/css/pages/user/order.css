@@ -63,10 +63,21 @@
 	color: #FF9670;
 }
 
+.label-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .right-price {
-	float: right;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 	color: #ff9670;
 	font-size: 22px;
+	justify-content: flex-end;
+	align-items: center;
+	color: #ff9670;
 }
 
 .buy-button {
