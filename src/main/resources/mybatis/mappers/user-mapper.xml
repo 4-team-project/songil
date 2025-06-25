@@ -9,10 +9,10 @@
     <insert id="insertUser" parameterType="UserDTO">
         INSERT INTO takku_user (
             user_type, phone, password, name, gender, birth,
-            nickname, sido, sigungu, is_partner, created_at
+            nickname, sido, sigungu, is_partner, created_at, point
         ) VALUES (
             #{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
-            #{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE
+            #{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE, 0
         )
     </insert>
 

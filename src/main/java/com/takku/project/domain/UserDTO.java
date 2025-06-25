@@ -24,4 +24,5 @@ public class UserDTO {
     private String sigungu;
     private Character isPartner;
     private Date createdAt;
+    private Integer point;
 }
