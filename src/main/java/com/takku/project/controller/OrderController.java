@@ -1,6 +1,8 @@
 package com.takku.project.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,7 +10,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +46,6 @@ public class OrderController {
 		model.addAttribute("fundingDTO", fundingDTO);
 		return "orderForm"; 
 	}
-	
 	
 	
 	//주문 처리
@@ -113,5 +113,24 @@ public class OrderController {
 
 		    return result;
 	    }
+	 
+	 @GetMapping("/list")
+	 public String getOrdersByStatus(@RequestParam String status, Model model) {
+		 List<OrderDTO> orderList = new ArrayList<>();
+		 
+		 if ("allbuylist".equals(status)) {
+		        orderList = orderService.selectByUserId(5); // 전체 조회
+		    } else if ("complete".equals(status)) {
+		        orderList = orderService.getOrdersByUserAndStatus(5, "결제완료"); //임시 userid!!!!!!!!!!!!!
+		    } else if ("cancel".equals(status)) {
+		        orderList = orderService.getOrdersByUserAndStatus(5, "환불"); //임시 userid!!!!!!!!!!!!!
+		    } else if ("null".equals(status)) {
+		    	orderList = orderService.selectByUserId(5);
+		    }
+		 
+		 model.addAttribute("orderList", orderList);
+		 return "pages/user/orderList";
+	 }
+	
 
 }

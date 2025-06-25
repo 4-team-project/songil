@@ -1,6 +1,8 @@
 package com.takku.project.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,15 @@ public class OrderService implements OrderMapper {
 	public String getFundingNameByOrderId(int orderId) {
 		String result = sqlSession.selectOne(namespace + "getFundingNameByOrderId", orderId);
 		return result;
+	}
+
+	@Override
+	public List<OrderDTO> getOrdersByUserAndStatus(int userId, String status) {
+		 Map<String, Object> paramMap = new HashMap<>();
+		    paramMap.put("userId", userId);
+		    paramMap.put("status", status);
+
+		    return sqlSession.selectList(namespace + "getOrdersByUserAndStatus", paramMap);
 	}
 
 }
