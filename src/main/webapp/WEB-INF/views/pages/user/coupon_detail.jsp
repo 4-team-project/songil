@@ -5,68 +5,18 @@
 <head>
   <meta charset="UTF-8">
   <title>쿠폰 보기</title>
-  <style>
-    .coupon-card {
-      width: 300px;
-      background-color: #fff4ed;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px auto;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      font-family: 'Pretendard', sans-serif;
-      text-align: center;
-      position: relative;
-    }
-
-    .coupon-card h2 {
-      color: #ff6e40;
-      font-size: 20px;
-      margin-bottom: 16px;
-    }
-
-    .coupon-card img.qr {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto;
-      display: block;
-      border: 2px solid #eee;
-    }
-
-    .coupon-date {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .download-icon {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #ff6e40;
-    }
-
-    .coupon-info {
-      margin-top: 20px;
-      padding-top: 12px;
-      border-top: 1px dashed #aaa;
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #333;
-    }
-
-    .coupon-info strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-  </style>
+  <c:set var="qrBaseUrl" value="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F192.168.0.19%3A9999%2Fcoupon%2FsellerCheck%3FcouponCode%3D"/>
+  <c:url var="qrUrl" value="${qrBaseUrl}${coupon.couponCode}" />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/coupon_detail.css" />
 </head>
 <body>
 
 <div class="coupon-card">
   <h2>${intDiscountRate}%</h2>
   
-  <!-- QR 코드: DB에서 img src로 불러오기 -->
-  <img class="qr" src="${coupon.couponCode}" alt="QR 코드">
+  <!-- QR 코드: qr 생성하는 url을 변수로 선언 -> 쿠폰 코드를 그 옆에 붙여서 qr코드 url 완성 -> src에서 불러옴-->
+  <!-- c:set qrBaseUrl 부분에서 ip주소만 바꾸면 실행 가능할거 같습니다. -->
+  <img class="qr" src="${qrUrl}" alt="QR 코드">
 
   <div class="coupon-date">
     ${coupon.createdAt} ~ ${coupon.expiredAt}

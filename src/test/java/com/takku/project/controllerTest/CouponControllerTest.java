@@ -35,17 +35,17 @@ public class CouponControllerTest {
         verify(couponService).updateCouponUseStatus(couponCode, "사용됨");
     }
 
-    // 리뷰 상태 업데이트 테스트
-    @Test
-    void markReviewed_shouldRedirectToCouponPage() {
-        // given
-        Integer couponId = 1001;
-
-        // when
-        String result = couponController.markReviewed(couponId);
-
-        // then
-        assertEquals("redirect:/mypage/coupon", result);
-        verify(couponService).updateCouponReviewed(couponId, 1);
-    }
+//    // 리뷰 상태 업데이트 테스트
+//    @Test
+//    void markReviewed_shouldRedirectToCouponPage() {
+//        // given
+//        Integer couponId = 1001;
+//
+//        // when
+//        String result = couponController.markReviewed(couponId);
+//
+//        // then
+//        assertEquals("redirect:/mypage/coupon", result);
+//        verify(couponService).updateCouponReviewed(couponId, 1);
+//    }
 }

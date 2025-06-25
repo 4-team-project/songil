@@ -58,27 +58,7 @@ body {
   border-bottom: 3px solid #FF9670;
 }
 
-.search-bar {
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-}
 
-.search-bar input {
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-bar button {
-  background-color: #FF9670;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 .coupon-list {
   display: flex;
@@ -98,6 +78,7 @@ body {
 
 .coupon-left {
   color: #FF9670;
+  background-color: FFF6F0;
   font-weight: bold;
   width: 120px;
   text-align: center;
@@ -165,7 +146,55 @@ body {
 }
 
 .coupon-date {
-  font-size: 8px;
+  font-size: 10px;
   color: #aaa;
   margin-bottom: 4px;
+}
+
+.menu-title,
+.menu-sub {
+  cursor: pointer;
+  padding: 10px;
+  transition: background 0.2s;
+}
+
+.menu-title.active,
+.menu-sub.active {
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #ff9670;
+  border-radius: 5px;
+}
+
+.no-result-message {
+    padding: 40px;
+    text-align: center;
+    color: #999;
+    font-size: 16px;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+.page {
+    display: inline-block;
+    margin: 0 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: #555;
+    background-color: #eee;
+}
+.page.current {
+    background-color: #ff9670;
+    color: white;
+    font-weight: bold;
+}
+
+.page-arrow {
+    cursor: pointer;
+    margin: 0 5px;
+    font-weight: bold;
+    color: #333;
 }

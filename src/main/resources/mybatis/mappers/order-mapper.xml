@@ -30,15 +30,27 @@
 	</select>
 
 	<!-- 주문 생성 -->
-    <insert id="insertOrder" parameterType="OrderDTO">
-        INSERT INTO takku_order (
-            user_id, funding_id, qty, amount, use_point, discount_amount,
-            status, funding_status, purchased_at, refund_at, imp_uid, merchant_uid
-        ) VALUES (
-            #{userId}, #{fundingId}, #{qty}, #{amount}, #{usePoint}, #{discountAmount},
-            #{status}, #{fundingStatus}, SYSDATE, NULL, #{impUid}, #{merchantUid}
-        )
-    </insert>
+	<insert id="insertOrder" parameterType="OrderDTO">
+		<selectKey keyProperty="orderId" resultType="int"
+			order="BEFORE">
+			SELECT takku_order_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO takku_order (
+		user_id,
+		funding_id, qty, amount, use_point,
+		discount_amount, payment_method,
+		status, funding_status, purchased_at,
+		refund_at, imp_uid, merchant_uid
+		) VALUES (
+		#{userId}, #{fundingId},
+		#{qty}, #{amount}, #{usePoint},
+		#{discountAmount},
+		'카드',
+		#{status},
+		#{fundingStatus}, SYSDATE, NULL,
+		#{impUid}, #{merchantUid}
+		)
+	</insert>
 
 	<!-- 주문 펀딩 상태 수정 -->
 	<update id="updateOrderFundingStatus" parameterType="OrderDTO">
@@ -91,10 +103,14 @@
 		resultType="OrderDTO">
 		SELECT o.*, p.product_name
 		FROM takku_order o
-		JOIN takku_funding f ON o.funding_id = f.funding_id
-		JOIN takku_product p ON f.product_id = p.product_id
+		JOIN
+		takku_funding f ON o.funding_id = f.funding_id
+		JOIN takku_product p ON
+		f.product_id = p.product_id
 		WHERE o.user_id = #{userId}
-		AND o.status = #{status}
+		AND o.status =
+		#{status}
 		ORDER BY o.purchased_at DESC
 	</select>
+
 </mapper>

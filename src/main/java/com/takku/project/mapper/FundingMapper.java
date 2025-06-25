@@ -9,9 +9,6 @@ import com.takku.project.domain.FundingDTO;
 
 public interface FundingMapper {
 
-	// 전체 펀딩 조회 (썸네일 포함)
-	List<FundingDTO> selectAllFunding();
-
 	// 조건 + 정렬 + 페이징
 	List<FundingDTO> selectFundingByConditionWithPaging(Map<String, Object> param);
 
@@ -39,9 +36,9 @@ public interface FundingMapper {
 
 	// 펀딩 상태 갱신
 	int updateFundingStatus(@Param("fundingId") Integer fundingId, @Param("status") String status);
-	
-	int updateFundingStatusIfExpired(@Param("fundingId") Integer fundingId, @Param("status") String status);
 
 	//사용자별 상태 조회 -> 상태별 조회랑 중복?? 상태별 조회 안 쓰면 추후 삭제
 	List<FundingDTO> selectFundingListByStatus(@Param("userId") int userId, @Param("status") String status);
+  
+	int updateFundingStatusIfExpired(@Param("fundingId") Integer fundingId, @Param("status") String status);
 }

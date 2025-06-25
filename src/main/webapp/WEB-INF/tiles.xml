@@ -28,21 +28,22 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/main.jsp" />
 	</definition>
-	
+
 	<!-- 홈 -->
 	<definition name="user.home" extends="defaultLayout">
 		<put-attribute name="title" value="홈" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/home.jsp" />
 	</definition>
-	
+
 	<!-- 펀딩 상세보기 -->
-	<definition name="user.funding_detail" extends="defaultLayout">
+	<definition name="user.funding_detail"
+		extends="defaultLayout">
 		<put-attribute name="title" value="펀딩 상세보기" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/funding_detail.jsp" />
 	</definition>
-	
+
 	<!-- 결제 완료/실패 -->
 	<definition name="user.payment" extends="defaultLayout">
 		<put-attribute name="title" value="결제 결과" />
@@ -56,7 +57,7 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/coupon.jsp" />
 	</definition>
-	
+
 	<!-- 쿠폰 상세 정보 -->
 	<definition name="user.coupon_detail" extends="subLayout">
 		<put-attribute name="title" value="쿠폰 상세보기" />
@@ -70,7 +71,7 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
-	
+
 	<!-- 결제하기 -->
 	<definition name="user.order" extends="subLayout">
 		<put-attribute name="title" value="결제하기" />
@@ -82,7 +83,18 @@
 	<definition name="user.review"
 		template="/WEB-INF/views/pages/user/review.jsp" />
 
+	<!-- 쿠폰 발급 완료 QR 출력 -->
+	<definition name="coupon.issuedQR" extends="subLayout">
+		<put-attribute name="title" value="쿠폰 발급 완료" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/coupon/issuedQR.jsp" />
+	</definition>
 
+	<definition name="coupon.sellerCheck" extends="subLayout">
+		<put-attribute name="title" value="쿠폰 확인" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/coupon/sellerCheck.jsp" />
+	</definition>
 
 	<!-- 에러 -->
 	<definition name="error.error" extends="defaultLayout">

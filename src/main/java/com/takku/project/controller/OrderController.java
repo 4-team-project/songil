@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -39,16 +40,6 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-	//주문 폼
-	@GetMapping("/{fundingId}")
-	public String orderForm(Integer fundingId, Model model) {
-		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
-		model.addAttribute("fundingDTO", fundingDTO);
-		return "orderForm"; 
-	}
-	
-	
-	//주문 처리
 	@Autowired
 	private StoreService storeService;
 	
@@ -78,22 +69,22 @@ public class OrderController {
 
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		UserDTO loginUser = userService.selectByUserId(5);
-		int point = 0;
 		
 		OrderDTO order = new OrderDTO();
 		order.setUserId(loginUser.getUserId());
 		order.setFundingId(fundingId);
 		order.setQty(quantity);
 		order.setAmount(totalPrice);
-		order.setUsePoint(point);
-		order.setDiscountAmount(totalPrice-point);
+		order.setUsePoint(loginUser.getPoint());
+		order.setDiscountAmount(totalPrice-loginUser.getPoint());
 		order.setStatus("결제완료");
-		order.setFundingStatus(funding.getStatus());
+		order.setFundingStatus("펀딩 진행중");
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
 		
-		System.out.println(order);;
 		int result = orderService.insertOrder(order);
+		OrderDTO saveOrder = orderService.selectOrderByOrderId(1);
+		model.addAttribute("saveOrder", saveOrder);
 		model.addAttribute("isSuccess", result > 0);
 		return "user.payment";
 	}

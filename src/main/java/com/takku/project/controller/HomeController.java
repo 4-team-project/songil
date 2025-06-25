@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
@@ -28,7 +29,7 @@ public class HomeController {
 
     @GetMapping("/user/home")
     public String homePage(Model model) {
-        List<FundingDTO> ongoingFundingList = fundingService.selectByFundingStatus("진행중");
+        List<FundingDTO> ongoingFundingList = fundingService.selectByFundingStatusWithJoin("진행중");
 
         Map<Integer, Long> fundingDaysLeftMap = new HashMap<>();
 
@@ -44,6 +45,11 @@ public class HomeController {
         model.addAttribute("daysLeftMap", fundingDaysLeftMap); 
         return "user.home";
     }
+    
+
+
+
+
 
 }
 
