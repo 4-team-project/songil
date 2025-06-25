@@ -1,5 +1,7 @@
 package com.takku.project.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,25 +44,44 @@ public class FundingController {
 
 	@Autowired
 	ReviewService reviewService;
-	
+
 	@ApiOperation(value = "펀딩 검색 (페이징)", notes = "검색 조건에 따라 펀딩을 필터링하고 페이징된 목록을 조회합니다.")
-	@GetMapping("/search")
+	@GetMapping("/ajax")
 	public String searchFundingWithPaging(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, Model model) {
+
+		if (categoryId != null && categoryId == 0) {
+			categoryId = null;
+		}
+	    // 값 출력
+	    System.out.println("sido: " + sido);
+	    System.out.println("sigungu: " + sigungu);
 
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keyword, categoryId, sido,
 				sigungu, sort, page, size);
 		int total = fundingService.getFundingCountByCondition(keyword, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
+		Map<Integer, Long> daysLeftMap = new HashMap<>();
+		for (FundingDTO funding : fundingList) {
+			List<ImageDTO> images = funding.getImages();
+			if (images == null || images.isEmpty()) {
+				images = imageService.selectImagesByFundingId(funding.getFundingId());
+				funding.setImages(images);
+			}
+			long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+			daysLeftMap.put(funding.getFundingId(), daysLeft);
+		}
+
 		model.addAttribute("fundinglist", fundingList);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("sort", sort);
+		model.addAttribute("daysLeftMap", daysLeftMap);
 
-		return "user.home";
+		return "common/funding";
 	}
 
 	@ApiOperation(value = "펀딩 검색 (JSON 응답)", notes = "검색 조건에 따라 펀딩을 필터링하고 JSON 응답으로 반환합니다.")
@@ -97,12 +118,19 @@ public class FundingController {
 		int total = fundingService.getFundingCountByCondition(keyword, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
+		Map<Integer, Long> daysLeftMap = new HashMap<>();
+		for (FundingDTO funding : fundingList) {
+			long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+			daysLeftMap.put(funding.getFundingId(), daysLeft);
+		}
+
 		model.addAttribute("fundinglist", fundingList);
+		model.addAttribute("daysLeftMap", daysLeftMap);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("sort", "latest");
 
-		return "user.home";
+		return "user.funding-list";
 	}
 
 	@ApiOperation(value = "펀딩 상세 조회", notes = "특정 펀딩의 상세 정보를 조회합니다.")
@@ -122,15 +150,15 @@ public class FundingController {
 			    .average()
 			    .orElse(0.0);		
 		int reviewCount = reviewlist.size();
-		
+
 		model.addAttribute("funding", funding);
-		model.addAttribute("store", store); 
+		model.addAttribute("store", store);
 		model.addAttribute("product", product);
 		model.addAttribute("productImages", productImages);
 		model.addAttribute("reviewlist", reviewlist);
 		model.addAttribute("avgRating", avgRating);
 		model.addAttribute("reviewCount", reviewCount);
-		
+
 		return "user.funding_detail";
 	}
 }

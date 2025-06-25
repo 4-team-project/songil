@@ -38,7 +38,6 @@ public class ImageController {
 	@GetMapping("/{fileName:.+}")
 	public void viewImage(@PathVariable String fileName, HttpServletResponse response) throws IOException {
 		File file = new File(uploadPath + fileName);
-		System.out.println(uploadPath + fileName);
 		if (file.exists()) {
 			String contentType = Files.probeContentType(file.toPath());
 			response.setContentType(contentType != null ? contentType : "application/octet-stream");
