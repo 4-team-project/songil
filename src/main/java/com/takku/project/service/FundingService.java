@@ -147,4 +147,12 @@ public class FundingService {
 		param.put("status", status);
 		return sqlSession.update(namespace + "updateFundingStatusIfExpired", param);
 	}
+	
+	//사용자별 펀딩 상태 조회
+	public List<FundingDTO> selectFundingListByStatus(int userId, String status)  {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("status", status);
+		return sqlSession.selectList(namespace+"selectFundingListByStatus", param);
+	}
 }

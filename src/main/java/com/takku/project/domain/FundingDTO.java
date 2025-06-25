@@ -34,5 +34,7 @@ public class FundingDTO {
 	private String thumbnailImageUrl;
 	private String storeName;
 	private Integer price;
+	private Date purchasedAt;
+	private String storeAddress;
 	
 }
