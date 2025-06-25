@@ -111,7 +111,7 @@ public class FundingController {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		if (funding == null)
 			return "error/error";
-
+		
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
