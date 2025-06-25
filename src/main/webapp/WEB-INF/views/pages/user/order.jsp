@@ -9,68 +9,80 @@
 	href="${cpath}/resources/css/pages/user/order.css">
 
 <script>
-	$(function() {
-		const fundingId = ${funding.fundingId};
-		const quantity = ${quantity};
-		const totalPrice = 10;
+$(function() {
+	const userPoint = parseInt("${loginUser.point}");
+    const totalPrice = parseInt("${totalPrice}");
+    const fundingId = parseInt("${funding.fundingId}");
+    const quantity = parseInt("${quantity}");
+    
+    const IMP = window.IMP;
+    IMP.init("imp22234788"); // 본인의 가맹점 식별코드
 
-		const IMP = window.IMP;
-		IMP.init("imp22234788"); // 본인의 가맹점 식별코드로 바꾸세요
+    // 전액 사용 버튼 클릭 시
+    $("#useAllPointBtn").click(function () {
+        $("#usePoint").val(userPoint);
+        updateFinalAmount();
+    });
 
-		$(".buy-button").click(function(e) {
-			e.preventDefault();
+    // 포인트 입력값이 바뀔 때마다 실시간 계산
+    $("#usePoint").on("input", function () {
+        updateFinalAmount();
+    });
 
-			IMP.request_pay({
-				pg : "html5_inicis", // PG사
-				pay_method : "card",
-				merchant_uid : "order_" + new Date().getTime(),
-				name : "funding.fundingName",
-				amount : totalPrice,
-				buyer_email : "shinhan@takku.com",
-				buyer_name : "${loginUser.name}",
-				buyer_tel : "${loginUser.phone}"
-			}, function(rsp) {
-				if (rsp.success) {
-					// POST 방식으로 결제 정보 서버로 전송
-					const form = $('<form>', {
-						method : 'post',
-						action : '${cpath}/order/payment'
-					});
+    function updateFinalAmount() {
+        let usePoint = parseInt($("#usePoint").val()) || 0;
 
-					form.append($('<input>', {
-						type : 'hidden',
-						name : 'fundingId',
-						value : fundingId
-					}));
-					form.append($('<input>', {
-						type : 'hidden',
-						name : 'quantity',
-						value : quantity
-					}));
-					form.append($('<input>', {
-						type : 'hidden',
-						name : 'totalPrice',
-						value : totalPrice
-					}));
-					form.append($('<input>', {
-						type : 'hidden',
-						name : 'imp_uid',
-						value : rsp.imp_uid
-					}));
-					form.append($('<input>', {
-						type : 'hidden',
-						name : 'merchant_uid',
-						value : rsp.merchant_uid
-					}));
+        // 값 제한 처리
+        if (usePoint < 0) usePoint = 0;
+        if (usePoint > userPoint) usePoint = userPoint;
 
-					$('body').append(form);
-					form.submit();
-				} else {
-					alert("결제에 실패했습니다: " + rsp.error_msg);
-				}
-			});
-		});
-	});
+        // 최종 금액 계산
+        const final = totalPrice - usePoint;
+        const formatted = final.toLocaleString();
+        
+        // 화면 업데이트
+        $("#finalAmount").text(`\${formatted} 원`);
+    }
+
+    $(".buy-button").click(function(e) {
+        e.preventDefault();
+
+        const usePoint = parseInt($("#usePoint").val()) || 0;
+        const totalPrice = parseInt("${totalPrice}");
+        const finalPrice = Math.max(totalPrice - usePoint, 0); // 음수 방지
+        
+        IMP.request_pay({
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: "order_" + new Date().getTime(),
+            name: "${funding.fundingName}",
+            amount: 10, //test
+            buyer_email: "takku@songil.com",
+            buyer_name: "${loginUser.name}",
+            buyer_tel: "${loginUser.phone}"
+        }, function(rsp) {
+            if (rsp.success) {
+                // 서버에 결제 정보 POST 전송
+                const form = $('<form>', {
+                    method: 'post',
+                    action: '${cpath}/order/payment'
+                });
+
+                form.append($('<input>', { type: 'hidden', name: 'fundingId', value: fundingId }));
+                form.append($('<input>', { type: 'hidden', name: 'quantity', value: quantity }));
+                form.append($('<input>', { type: 'hidden', name: 'usePoint', value: usePoint }));
+                form.append($('<input>', { type: 'hidden', name: 'totalPrice', value: totalPrice }));
+                form.append($('<input>', { type: 'hidden', name: 'imp_uid', value: rsp.imp_uid }));
+                form.append($('<input>', { type: 'hidden', name: 'merchant_uid', value: rsp.merchant_uid }));
+
+                $('body').append(form);
+                form.submit();
+            } else {
+                alert("결제에 실패했습니다: " + rsp.error_msg);
+            }
+        });
+    });
+});
 </script>
 
 <div class="order-container">
@@ -103,9 +115,28 @@
 
 	<div class="order-right">
 		<div class="info">
-			<h3>
-				최종 결제 금액 <span class="right-price"> <fmt:formatNumber
-						value="${totalPrice}" type="number" /> 원
+			<h3 class="label-row">
+				보유 포인트 <span class="right-price"> <fmt:formatNumber
+						value="${loginUser.point}" type="number" /> 원
+				</span>
+			</h3>
+			<h3 class="label-row">
+				사용할 포인트
+				<div class="right-price">
+					<input type="number" id="usePoint" name="usePoint" placeholder="0"
+						min="0" max="${loginUser.point}" step="100"
+						style="width: 100px; height: 30px; font-size: 16px;" /><br>
+					<button id="useAllPointBtn"
+						style="background-color: #ff9670; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+						전액 사용</button>
+				</div>
+			</h3>
+		</div>
+
+		<div class="info">
+			<h3 class="label-row">
+				최종 결제 금액 <span class="right-price"> <span id="finalAmount"><fmt:formatNumber
+							value="${totalPrice}" type="number" /> 원</span>
 				</span>
 			</h3>
 			<p class="small-text">

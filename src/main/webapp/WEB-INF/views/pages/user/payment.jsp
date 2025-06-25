@@ -59,22 +59,22 @@
 
 			<div class="modal-info">
 				<p>
-					<strong>펀딩명</strong> <span>${saveOrder.fundingName}</span>
+					<strong>펀딩명</strong> <span>${funding.fundingName}</span>
 				</p>
 				<p>
-					<strong>구매 수량</strong> <span>${saveOrder.qty}</span>
+					<strong>구매 수량</strong> <span>${order.qty}</span>
 				</p>
 				<p>
-					<strong>결제 날짜</strong> <span>${saveOrder.purchasedAt}</span>
+					<strong>결제 날짜</strong> <span>${order.purchasedAt}</span>
 				</p>
 				<p>
-					<strong>결제 금액</strong> <span>${saveOrder.discountAmount} 원</span>
+					<strong>결제 금액</strong> <span>${order.discountAmount} 원</span>
 				</p>
 				<p>
-					<strong>결제 수단</strong> <span>${saveOrder.paymentMethod}</span>
+					<strong>결제 수단</strong> <span>카드</span>
 				</p>
 				<p>
-					<strong>결제 상태</strong> <span> 결제완료<br> <small
+					<strong>결제 상태</strong> <span> 결제 완료<br> <small
 						class="cancel-guide">(펀딩 성공 전까지 취소 가능)</small>
 					</span>
 				</p>
