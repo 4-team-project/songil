@@ -116,7 +116,7 @@ public class FundingController {
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
 		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
-		
+
 		double avgRating = reviewlist.stream()
 			    .mapToInt(ReviewDTO::getRating)
 			    .average()

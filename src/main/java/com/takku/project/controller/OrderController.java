@@ -40,16 +40,6 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-	//주문 폼
-	@GetMapping("/{fundingId}")
-	public String orderForm(Integer fundingId, Model model) {
-		FundingDTO fundingDTO = fundingService.selectFundingByFundingId(fundingId);
-		model.addAttribute("fundingDTO", fundingDTO);
-		return "orderForm"; 
-	}
-	
-	
-	//주문 처리
 	@Autowired
 	private StoreService storeService;
 	
@@ -93,8 +83,8 @@ public class OrderController {
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
 		
-		System.out.println(order);
 		int result = orderService.insertOrder(order);
+		model.addAttribute("order", order);
 		model.addAttribute("isSuccess", result > 0);
 		return "user.payment";
 	}
