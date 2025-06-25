@@ -3,8 +3,6 @@ package com.takku.project.serviceTest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.*;
-
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -29,18 +27,18 @@ class FundingServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
-	@Test
-	@DisplayName("전체 펀딩 조회 성공")
-	void selectAllFunding_shouldReturnList() {
-		List<Object> mockList = Arrays.asList(new FundingDTO(), new FundingDTO());
-		when(sqlSession.selectList(namespace + "selectAllFunding")).thenReturn(mockList);
-
-		List<FundingDTO> result = fundingService.selectAllFunding();
-
-		assertNotNull(result);
-		assertEquals(2, result.size());
-		verify(sqlSession).selectList(namespace + "selectAllFunding");
-	}
+//	@Test
+//	@DisplayName("전체 펀딩 조회 성공")
+//	void selectAllFunding_shouldReturnList() {
+//		List<Object> mockList = Arrays.asList(new FundingDTO(), new FundingDTO());
+//		when(sqlSession.selectList(namespace + "selectAllFunding")).thenReturn(mockList);
+//
+//		List<FundingDTO> result = fundingService.selectAllFunding();
+//
+//		assertNotNull(result);
+//		assertEquals(2, result.size());
+//		verify(sqlSession).selectList(namespace + "selectAllFunding");
+//	}
 
 	@Test
 	@DisplayName("펀딩 ID로 상세 조회 성공")

@@ -181,4 +181,5 @@ public class AIService {
                 + "상품: " + keyword + "\n"
                 + "타겟 고객: " + target;
     }
+
 }

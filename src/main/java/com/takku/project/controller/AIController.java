@@ -58,6 +58,7 @@ public class AIController {
 			List<FundingDTO> recommendationList = aiService.getRecommendations(userId);
 			model.addAttribute("recommendList", recommendationList);
 			System.out.println("추천 펀딩 수: " + recommendationList.size());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("recommendError", e.getMessage());

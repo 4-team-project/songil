@@ -3,6 +3,9 @@ package com.takku.project.domain;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FundingDTO {
-  
+
 	private Integer fundingId;
 	private Integer productId;
 	private Integer storeId;
@@ -34,5 +37,10 @@ public class FundingDTO {
 	private String thumbnailImageUrl;
 	private String storeName;
 	private Integer price;
-	
+	private Double avgRating;
+	private Integer reviewCnt;
+
+	// 추천 펀딩 list를 위한 추가 필드
+	private Double score;
+
 }

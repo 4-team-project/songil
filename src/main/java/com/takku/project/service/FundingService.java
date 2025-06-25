@@ -20,18 +20,19 @@ public class FundingService {
 
 	private final String namespace = "com.takku.project.mapper.FundingMapper.";
 	private final String imageNamespace = "com.takku.project.mapper.ImageMapper.";
+	private final String reviewNamespace = "com.takku.project.mapper.ReviewMapper.";
 
 	/**
-	 * 조건 + 정렬 + 페이징을 포함한 펀딩 조회
+	 * 조건 + 정렬 + 페이징을 포함한 펀딩 조회 (다중 키워드 검색 지원)
 	 */
-	public List<FundingDTO> getFundingsByConditionWithPaging(String keyword, Integer categoryId, String sido,
+	public List<FundingDTO> getFundingsByConditionWithPaging(List<String> keywordList, Integer categoryId, String sido,
 			String sigungu, String sort, int page, int size) {
 
 		int startRow = (page - 1) * size + 1;
 		int endRow = page * size;
 
 		Map<String, Object> param = new HashMap<>();
-		param.put("keyword", keyword);
+		param.put("keywordList", keywordList);
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
@@ -42,23 +43,18 @@ public class FundingService {
 		List<FundingDTO> list = sqlSession.selectList(namespace + "selectFundingByConditionWithPaging", param);
 
 		for (FundingDTO funding : list) {
-			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
-					funding.getFundingId());
-			List<String> tags = sqlSession.selectList(namespace + "selectTagsByFundingId", funding.getFundingId());
-
-			funding.setImages(images);
-			funding.setTagList(tags);
+			enrichFundingWithExtras(funding);
 		}
 
 		return list;
 	}
 
 	/**
-	 * 페이징 기반 조건 검색용 전체 개수
+	 * 페이징 기반 조건 검색용 전체 개수 (다중 키워드 지원)
 	 */
-	public int getFundingCountByCondition(String keyword, Integer categoryId, String sido, String sigungu) {
+	public int getFundingCountByCondition(List<String> keywordList, Integer categoryId, String sido, String sigungu) {
 		Map<String, Object> param = new HashMap<>();
-		param.put("keyword", keyword);
+		param.put("keywordList", keywordList);
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
@@ -66,22 +62,12 @@ public class FundingService {
 	}
 
 	/**
-	 * 전체 펀딩 목록 조회 (썸네일 포함)
-	 */
-	public List<FundingDTO> selectAllFunding() {
-		return sqlSession.selectList(namespace + "selectAllFunding");
-	}
-
-	/**
-	 * 펀딩 상세 조회 (이미지 + 태그 포함)
+	 * 펀딩 상세 조회 (이미지 + 태그 + 리뷰 포함)
 	 */
 	public FundingDTO selectFundingByFundingId(Integer fundingId) {
 		FundingDTO funding = sqlSession.selectOne(namespace + "selectFundingByFundingId", fundingId);
 		if (funding != null) {
-			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", fundingId);
-			List<String> tags = sqlSession.selectList(namespace + "selectTagsByFundingId", fundingId);
-			funding.setImages(images);
-			funding.setTagList(tags);
+			enrichFundingWithExtras(funding);
 		}
 		return funding;
 	}
@@ -90,7 +76,33 @@ public class FundingService {
 	 * 상점 ID로 펀딩 목록 조회
 	 */
 	public List<FundingDTO> findFundingByStoreId(int storeId) {
-		return sqlSession.selectList(namespace + "findFundingByStoreId", storeId);
+		List<FundingDTO> list = sqlSession.selectList(namespace + "findFundingByStoreId", storeId);
+		for (FundingDTO funding : list) {
+			enrichFundingWithExtras(funding);
+		}
+		return list;
+	}
+
+	/**
+	 * 특정 상태의 펀딩 목록 조회 (store_name, price 포함)
+	 */
+	public List<FundingDTO> selectByFundingStatusWithJoin(String status) {
+		List<FundingDTO> list = sqlSession.selectList(namespace + "selectByFundingStatusWithJoin", status);
+		for (FundingDTO funding : list) {
+			enrichFundingWithExtras(funding);
+		}
+		return list;
+	}
+
+	/**
+	 * 특정 상태의 펀딩 목록 조회 (기본 버전)
+	 */
+	public List<FundingDTO> selectByFundingStatus(String status) {
+		List<FundingDTO> list = sqlSession.selectList(namespace + "selectByFundingStatus", status);
+		for (FundingDTO funding : list) {
+			enrichFundingWithExtras(funding);
+		}
+		return list;
 	}
 
 	/**
@@ -122,17 +134,6 @@ public class FundingService {
 	}
 
 	/**
-	 * 특정 상태의 펀딩 목록 조회
-	 */
-	public List<FundingDTO> selectByFundingStatus(String status) {
-		return sqlSession.selectList(namespace + "selectByFundingStatus", status);
-	}
-	
-	public List<FundingDTO> selectByFundingStatusWithJoin(String status) {
-	    return sqlSession.selectList(namespace + "selectByFundingStatusWithJoin", status);
-	}
-
-	/**
 	 * 펀딩 상태 변경
 	 */
 	public int updateFundingStatus(Integer fundingId, String status) {
@@ -150,5 +151,21 @@ public class FundingService {
 		param.put("fundingId", fundingId);
 		param.put("status", status);
 		return sqlSession.update(namespace + "updateFundingStatusIfExpired", param);
+	}
+
+	/**
+	 * 펀딩에 이미지, 태그, 평균 평점, 리뷰 수 추가
+	 */
+	private void enrichFundingWithExtras(FundingDTO funding) {
+		Integer fundingId = funding.getFundingId();
+		List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", fundingId);
+		List<String> tags = sqlSession.selectList(namespace + "selectTagsByFundingId", fundingId);
+		Double avgRating = sqlSession.selectOne(reviewNamespace + "selectAvgRatingByFundingId", fundingId);
+		Integer reviewCnt = sqlSession.selectOne(reviewNamespace + "selectReviewCountByFundingId", fundingId);
+
+		funding.setImages(images);
+		funding.setTagList(tags);
+		funding.setAvgRating(avgRating != null ? avgRating : 0.0);
+		funding.setReviewCnt(reviewCnt != null ? reviewCnt : 0);
 	}
 }
