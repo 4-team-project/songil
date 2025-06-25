@@ -2,6 +2,8 @@ package com.takku.project.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.takku.project.domain.OrderDTO;
 
 public interface OrderMapper {
@@ -27,5 +29,8 @@ public interface OrderMapper {
 
 	//펀딩 이름 가져올거야
 	String getFundingNameByOrderId(int orderId);
+	
+	//userid랑 status 가져올거야
+	List<OrderDTO> getOrdersByUserAndStatus(@Param("userId") int userId, @Param("status") String status);
 	
 }

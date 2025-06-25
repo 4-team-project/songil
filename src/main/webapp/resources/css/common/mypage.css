@@ -1,16 +1,17 @@
 .mypage-container {
 	display: flex;
 	position: relative;
-	max-width: 1280px; 
-	margin: 0 auto; 
-	width: 100%; 
+	max-width: 1280px;
+	margin: 0 auto;
+	width: 100%;
 	box-sizing: border-box;
 }
 
 .sidebar {
 	background-color: #fff2ec;
 	padding: 40px;
-	height: 80vh;
+	min-height: 400px; /* 최소 높이 설정 (원하는 값으로 조정) */
+	height: auto; /* 높이를 내용에 맞춰 유동적으로 */
 }
 
 .profile-section {
@@ -81,11 +82,11 @@
 /*오른쪽 컨텐츠 - 탭 메뉴 */
 .tab-search-container {
 	display: flex;
-	justify-content: space-between; /* 탭 메뉴 왼쪽, 검색창 오른쪽 */
+	justify-content: space-between;
 	align-items: center;
 	padding-top: 10px;
 	height: 48px;
-	margin: 0 auto 30px; /* 좌우 자동 마진으로 가운데 정렬 */
+	margin: 0 auto 30px;
 	font-weight: 500;
 	gap: 60px;
 }
@@ -111,12 +112,13 @@
 	font-weight: bold;
 }
 
-.tab-menu .allbuylist {
-	color: #ff5b1e;
+.tab-menu li a.active {
+	color: #ff0080; /*색 바꿔주세요*/
+	font-weight: bold;
 }
 
-.tab-menu li a:hover {
-	color: #ff5b1e;
+.tab-menu .allbuylist {
+	color: #ff9670;
 }
 
 /*겁색*/
@@ -288,6 +290,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	display: none;
+	z-index: 1000;
 }
 
 /* 모달 본문 */
@@ -348,13 +351,16 @@ h2 {
 .modal-btn.cancel {
 	background-color: #fff;
 	border: 1.5px solid #f37041;
+	text-align: center;
 	color: #f37041;
 }
 
 .modal-btn.confirm {
-	background-color: #f37041;
+	margin-left: auto;
+	text-align: center; background-color : #f37041;
 	border: none;
 	color: white;
+	background-color: #f37041;
 }
 
 .modal-btn.cancel:hover {
