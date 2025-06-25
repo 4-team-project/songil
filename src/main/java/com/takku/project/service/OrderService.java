@@ -31,8 +31,8 @@ public class OrderService implements OrderMapper {
 	}
 
 	@Override
-	public int updateOrderFundingStatus(OrderDTO order) {
-		int result = sqlSession.update(namespace + "updateOrderFundingStatus", order);
+	public int updateOrderFundingStatus(int orderId) {
+		int result = sqlSession.update(namespace + "updateOrderFundingStatus", orderId);
 		return result;
 	}
 

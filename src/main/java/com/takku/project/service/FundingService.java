@@ -158,7 +158,8 @@ public class FundingService {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("status", status);
-		return sqlSession.selectList(namespace+"selectFundingListByStatus", param);
+		return sqlSession.selectList(namespace+"selectFundingListByStatus", param); 
+	}
 
 	/**
 	 * 펀딩에 이미지, 태그, 평균 평점, 리뷰 수 추가
