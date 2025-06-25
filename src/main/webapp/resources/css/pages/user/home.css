@@ -24,6 +24,14 @@
 	color: #FF9670
 }
 
+.recommend-funding-list-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	width: 1076px;
+	row-gap: 32px;
+	column-gap: 20px;
+}
+
 .funding-list-wrapper {
 	display: flex;
 	flex-wrap: wrap;
@@ -221,7 +229,7 @@
 	color: #FFFFFF;
 }
 
-.funding-filter.active {
+.funding-filter.selected {
 	background-color: #FF9670;
 }
 
@@ -280,7 +288,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: row;
-	justify-content: flex-end; 
+	justify-content: flex-end;
 	width: 100%;
 	gap: 4px;
 	margin-top: 8px;
@@ -296,14 +304,14 @@
 	font-size: 14px;
 	color: #828282;
 	font-weight: 500;
-	text-decoration: line-through; 
+	text-decoration: line-through;
 }
 
 .price-text {
 	font-size: 24px;
 	color: #000000;
 	font-weight: 700;
-	text-align:right;
+	text-align: right;
 }
 
 .head-box {
@@ -312,42 +320,3 @@
 	flex-direction: row;
 	justify-content: space-between;
 }
-
-.custom-dropdown {
-  width: 200px;
-  position: relative;
-  margin-right: 16px;
-}
-
-.dropbtn {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px 12px;
-  background-color: white;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  width: 100%;
-  max-height: 160px;
-  overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-top: none;
-  z-index: 99;
-}
-
-.dropdown-content div {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.dropdown-content div:hover {
-  background-color: #f0f0f0;
-}
-

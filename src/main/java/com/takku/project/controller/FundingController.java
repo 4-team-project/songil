@@ -1,8 +1,7 @@
 package com.takku.project.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,21 +37,31 @@ public class FundingController {
 	private ImageService imageService;
 
 	@Autowired
-	StoreService storeService;
+	private StoreService storeService;
 
 	@Autowired
-	ReviewService reviewService;
-	
+	private ReviewService reviewService;
+
+	private List<String> splitKeywords(String keyword) {
+		if (keyword == null || keyword.trim().isEmpty())
+			return Collections.emptyList();
+		return Arrays.stream(keyword.trim().split("\\s+")).filter(k -> !k.isBlank()).map(String::toLowerCase)
+				.collect(Collectors.toList());
+	}
+
 	@ApiOperation(value = "펀딩 검색 (페이징)", notes = "검색 조건에 따라 펀딩을 필터링하고 페이징된 목록을 조회합니다.")
 	@GetMapping("/search")
 	public String searchFundingWithPaging(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, Model model) {
+		
+		if (size <= 0) size = 10;
 
-		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keyword, categoryId, sido,
+		List<String> keywordList = splitKeywords(keyword);
+		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
-		int total = fundingService.getFundingCountByCondition(keyword, categoryId, sido, sigungu);
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
 		model.addAttribute("fundinglist", fundingList);
@@ -71,12 +80,15 @@ public class FundingController {
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
 
-		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keyword, categoryId, sido,
+		if (size <= 0) size = 10;
+
+		List<String> keywordList = splitKeywords(keyword);
+		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
-		int total = fundingService.getFundingCountByCondition(keyword, categoryId, sido, sigungu);
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		result.put("fundinglist", fundingList);
 		result.put("currentPage", page);
 		result.put("totalPages", totalPages);
@@ -92,9 +104,10 @@ public class FundingController {
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size, Model model) {
 
-		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keyword, categoryId, sido,
+		List<String> keywordList = splitKeywords(keyword);
+		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, "latest", page, size);
-		int total = fundingService.getFundingCountByCondition(keyword, categoryId, sido, sigungu);
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
 		model.addAttribute("fundinglist", fundingList);
@@ -111,26 +124,23 @@ public class FundingController {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		if (funding == null)
 			return "error/error";
-		
+
 		ProductDTO product = productService.selectByProductId(funding.getProductId());
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
 		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
 
-		double avgRating = reviewlist.stream()
-			    .mapToInt(ReviewDTO::getRating)
-			    .average()
-			    .orElse(0.0);		
+		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
 		int reviewCount = reviewlist.size();
-		
+
 		model.addAttribute("funding", funding);
-		model.addAttribute("store", store); 
+		model.addAttribute("store", store);
 		model.addAttribute("product", product);
 		model.addAttribute("productImages", productImages);
 		model.addAttribute("reviewlist", reviewlist);
 		model.addAttribute("avgRating", avgRating);
 		model.addAttribute("reviewCount", reviewCount);
-		
+
 		return "user.funding_detail";
 	}
 }

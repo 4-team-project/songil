@@ -28,22 +28,6 @@
 		<result property="price" column="PRICE" />
 	</resultMap>
 
-	<!-- 전체 목록 -->
-	<select id="selectAllFunding" resultMap="FundingResultMap">
-		SELECT f.*,
-		NVL(i.image_url, '') AS thumbnail_image_url
-		FROM takku_funding f
-		LEFT
-		JOIN (
-		SELECT funding_id, MIN(image_url) AS image_url
-		FROM takku_image
-		WHERE funding_id IS NOT NULL
-		GROUP BY funding_id
-		) i ON f.funding_id =
-		i.funding_id
-		ORDER BY f.created_at DESC
-	</select>
-
 	<!-- 상세 조회 -->
 	<select id="selectFundingByFundingId" parameterType="int"
 		resultMap="FundingResultMap">
@@ -53,9 +37,22 @@
 	<!-- 조건 + 정렬 + 페이징 -->
 	<select id="selectFundingByConditionWithPaging"
 		parameterType="map" resultMap="FundingResultMap">
-		SELECT * FROM (
-		SELECT inner_query.*, ROWNUM AS rn FROM (
-		SELECT f.*,
+		SELECT *
+		FROM (
+		SELECT inner_query.*, ROWNUM AS rn
+		FROM (
+		SELECT
+		f.funding_id,
+		f.funding_name,
+		f.start_date,
+		f.end_date,
+		f.sale_price,
+		f.target_qty,
+		f.max_qty,
+		f.current_qty,
+		f.per_qty,
+		f.status,
+		f.created_at,
 		s.store_name,
 		p.price
 		FROM takku_funding f
@@ -63,44 +60,41 @@
 		f.store_id = s.store_id
 		JOIN takku_product p ON f.product_id =
 		p.product_id
-		WHERE f.status IN ('진행중', '준비중')
-		<if test="keyword != null and keyword != ''">
-			AND f.funding_name LIKE '%' || #{keyword} || '%'
-		</if>
-		<if test="categoryId != null">
-			AND s.category_id = #{categoryId}
-		</if>
-		<if test="sido != null and sido != ''">
-			AND s.sido = #{sido}
-		</if>
-		<if test="sigungu != null and sigungu != ''">
-			AND s.sigungu = #{sigungu}
-		</if>
-		<choose>
-			<when test="sort == 'popular'">
-				ORDER BY
-				CASE
-				WHEN (
-				SELECT COUNT(*)
-				FROM takku_review r
-				JOIN takku_product p2 ON r.product_id = p2.product_id
-				WHERE
-				p2.product_id = f.product_id
-				) = 0 THEN NULL
-				ELSE (
-				SELECT
-				AVG(r.rating)
-				FROM takku_review r
-				JOIN takku_product p2 ON
-				r.product_id = p2.product_id
-				WHERE p2.product_id = f.product_id
+		LEFT JOIN takku_funding_tag ft ON f.funding_id =
+		ft.funding_id
+		LEFT JOIN takku_tag t ON ft.tag_id = t.tag_id
+		<where>
+			f.status IN ('진행중', '준비중')
+			<if test="keywordList != null and keywordList.size() > 0">
+				AND (
+				<foreach collection="keywordList" item="kw" separator="OR">
+					LOWER(f.funding_name) LIKE '%' || LOWER(#{kw}) || '%'
+					OR
+					INSTR(DBMS_LOB.SUBSTR(f.funding_desc, 4000, 1), #{kw}) > 0
+					OR
+					LOWER(t.tag_name) LIKE '%' || LOWER(#{kw}) || '%'
+				</foreach>
 				)
-				END
-				DESC NULLS LAST,
-				f.end_date ASC
+			</if>
+			<if test="categoryId != null">
+				AND p.category_id = #{categoryId}
+			</if>
+			<if test="sido != null and sido != ''">
+				AND s.sido = #{sido}
+			</if>
+			<if test="sigungu != null and sigungu != ''">
+				AND s.sigungu = #{sigungu}
+			</if>
+		</where>
+		<choose>
+			<when test="sort == 'latest'">
+				ORDER BY f.created_at DESC
 			</when>
-			<when test="sort == 'closing'">
-				ORDER BY f.end_date ASC
+			<when test="sort == 'price_asc'">
+				ORDER BY f.sale_price ASC
+			</when>
+			<when test="sort == 'price_desc'">
+				ORDER BY f.sale_price DESC
 			</when>
 			<otherwise>
 				ORDER BY f.created_at DESC
@@ -112,39 +106,42 @@
 		WHERE rn &gt;= #{startRow}
 	</select>
 
-	<!-- 조건 검색 총 개수 -->
-	<select id="countFundingByCondition" resultType="int"
-		parameterType="map">
-		SELECT COUNT(*)
+	<!-- 조건에 따른 펀딩 개수 조회 (진행중/준비중만 포함) -->
+	<select id="countFundingByCondition" parameterType="map"
+		resultType="int">
+		SELECT COUNT(DISTINCT f.funding_id)
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id =
-		s.store_id
-		WHERE f.status IN ('진행중', '준비중')
-		<if test="keyword != null and keyword != ''">
-			AND f.funding_name LIKE '%' || #{keyword} || '%'
-		</if>
-		<if test="categoryId != null">
-			AND s.category_id = #{categoryId}
-		</if>
-		<if test="sido != null and sido != ''">
-			AND s.sido = #{sido}
-		</if>
-		<if test="sigungu != null and sigungu != ''">
-			AND s.sigungu = #{sigungu}
-		</if>
+		JOIN takku_store s ON f.store_id = s.store_id
+		JOIN takku_product p ON f.product_id = p.product_id
+		LEFT JOIN takku_funding_tag ft ON f.funding_id = ft.funding_id
+		LEFT JOIN takku_tag t ON ft.tag_id = t.tag_id
+		<where>
+			f.status IN ('진행중', '준비중')
+			<if test="keywordList != null and keywordList.size() > 0">
+				AND (
+				<foreach collection="keywordList" item="kw" separator="OR">
+					LOWER(f.funding_name) LIKE '%' || LOWER(#{kw}) || '%'
+					OR INSTR(DBMS_LOB.SUBSTR(f.funding_desc, 4000, 1), #{kw}) > 0
+					OR LOWER(t.tag_name) LIKE '%' || LOWER(#{kw}) || '%'
+				</foreach>
+				)
+			</if>
+			<if test="categoryId != null">
+				AND p.category_id = #{categoryId}
+			</if>
+			<if test="sido != null and sido != ''">
+				AND s.sido = #{sido}
+			</if>
+			<if test="sigungu != null and sigungu != ''">
+				AND s.sigungu = #{sigungu}
+			</if>
+		</where>
 	</select>
 
 	<!-- 상점 ID로 조회 -->
 	<select id="findFundingByStoreId" resultMap="FundingResultMap"
 		parameterType="int">
 		SELECT * FROM takku_funding WHERE store_id = #{storeId}
-	</select>
-
-	<!-- 상태별 조회 - 간단 -->
-	<select id="selectByFundingStatusSimple"
-		resultMap="FundingResultMap" parameterType="String">
-		SELECT * FROM takku_funding
-		WHERE status = #{status}
 	</select>
 
 	<!-- 상태별 조회 - 상세 -->
