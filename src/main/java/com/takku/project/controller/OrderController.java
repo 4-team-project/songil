@@ -107,6 +107,7 @@ public class OrderController {
 		    String fundingName = orderService.getFundingNameByOrderId(orderId);
 
 		    Map<String, Object> result = new HashMap<>();
+		    result.put("orderId", orderId);    
 		    result.put("fundingName", fundingName);          
 		    result.put("qty", order.getQty());
 		    result.put("purchasedAt", order.getPurchasedAt());
@@ -133,6 +134,13 @@ public class OrderController {
 		 model.addAttribute("orderList", orderList);
 		 return "pages/user/orderList";
 	 }
+	 
+	 @PostMapping("/cancel")
+	    @ResponseBody
+	    public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
+	        int result = orderService.updateOrderFundingStatus(orderId);
+	       return result;
+	    }
 	
 
 }

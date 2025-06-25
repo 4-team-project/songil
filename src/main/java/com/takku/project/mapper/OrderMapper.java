@@ -15,7 +15,7 @@ public interface OrderMapper {
 	int insertOrder(OrderDTO order);
 	
 	//주문 펀딩 상태 수정
-	int updateOrderFundingStatus(OrderDTO order);
+	int updateOrderFundingStatus(int orderId);
 	
 	//주문 결제 상태 및 환불일 수정 
 	int updateOrderRefundAtStatus(OrderDTO order);

@@ -51,8 +51,7 @@ public class UserController {
 	public String editForm(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
 		UserDTO user = userService.selectByUserId(loginUser.getUserId());
 		model.addAttribute("user", user);
-
-		return "mypage_edit"; // mypage_edit.jsp
+		return "mypage"; 
 	}
 
 	// 3. 회원정보 수정 처리
@@ -60,6 +59,7 @@ public class UserController {
 	public String updateUser(@ModelAttribute("loginUser") UserDTO loginUser, @ModelAttribute UserDTO user,
 			RedirectAttributes redirectAttributes) {
 		user.setUserId(loginUser.getUserId()); // 세션 정보 기준으로 userId 고정
+
 
 		int result = userService.updateUser(user);
 
@@ -93,4 +93,5 @@ public class UserController {
 	    model.addAttribute("orderList", orderList);
 	    return "mypage_orders";
 	}
+
 }

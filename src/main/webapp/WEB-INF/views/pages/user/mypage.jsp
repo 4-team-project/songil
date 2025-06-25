@@ -41,8 +41,10 @@
 				<!-- 구매내역 -->
 				<div class="tab-wrapper buylist">
 					<ul class="tab-menu">
-						<li><a href="#" class="allbuylist active" data-status="allbuylist">모든 구매 내역</a></li>
-						<li><a href="#" class="complete" data-status="complete">결제 완료</a></li>
+						<li><a href="#" class="allbuylist active"
+							data-status="allbuylist">모든 구매 내역</a></li>
+						<li><a href="#" class="complete" data-status="complete">결제
+								완료</a></li>
 						<li><a href="#" class="cancel" data-status="cancel">결제 취소</a></li>
 					</ul>
 				</div>
@@ -50,31 +52,35 @@
 				<!-- 내가 참여한 펀딩 > nav-->
 				<div class="tab-wrapper fundinglist" style="display: none">
 					<ul class="funding_nav">
-						<li><a href="#" class="allfundinglist active" data-status="allfundinglist">내가 참여한 <br>모든 펀딩</a></li>
-						<li><a href="#" class="progressing" data-status="progressing"> 진행 중인 펀딩</a></li>
-						<li><a href="#" class="achieved" data-status="achieved">달성된 펀딩</a></li>
-						<li><a href="#" class="failed" data-status="failed">미달성된 펀딩</a></li>
+						<li><a href="#" class="allfundinglist active"
+							data-status="allfundinglist">내가 참여한 <br>모든 펀딩
+						</a></li>
+						<li><a href="#" class="progressing" data-status="progressing">
+								진행 중인 펀딩</a></li>
+						<li><a href="#" class="achieved" data-status="achieved">달성된
+								펀딩</a></li>
+						<li><a href="#" class="failed" data-status="failed">미달성된
+								펀딩</a></li>
 					</ul>
 				</div>
-				
+
 				<!-- 검색하기 -->
 				<div class="search-wrapper">
 					<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
+
 				</div>
+
 			</nav>
 
 			<!-- 구매내역 > 헤더 -->
 			<div class="table-header buylist-header">
-				<span class="col-title">결제명</span> 
-				<span class="col-amount">결제 금액</span> 
-				<span class="col-status">결제 여부</span> 
-				<span class="col-detail">결제상세</span>
+				<span class="col-title">결제명</span> <span class="col-amount">결제
+					금액</span> <span class="col-status">결제 여부</span> <span class="col-detail">결제상세</span>
 			</div>
 
 			<!-- 내가 참여한 펀딩 > 헤더 -->
 			<div class="table-header fundinglist-header" style="display: none;">
-				<span class="col-title">펀딩명</span> 
-				<span class="col-period">펀딩기간</span>
+				<span class="col-title">펀딩명</span> <span class="col-period">펀딩기간</span>
 				<span class="col-status">달성여부</span>
 			</div>
 
@@ -82,30 +88,46 @@
 			<div id="order-list-container" class="content">
 				<jsp:include page="/WEB-INF/views/pages/user/orderList.jsp" />
 			</div>
+			<div id="order-pagination" class="pagination"></div>
+			<!-- 구매내역 페이지네이션 -->
 
 			<!-- 내가 참여한 펀딩 리스트 -->
 			<div id="funding-list-container" class="content"
 				style="display: block;">
 				<jsp:include page="/WEB-INF/views/pages/user/myPage_fundingList.jsp" />
 			</div>
+			<div id="funding-pagination" class="pagination"></div>
+			<!-- 펀딩 페이지네이션 -->
 		</section>
 	</div>
 
-	<!-- 모달 -->
+	<!-- 결제상세 >>>> 모달 -->
 	<div id="modal" class="modal" style="display: none;">
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
 			<h2>결제 상세 정보</h2>
 			<hr>
 			<div class="modal-info">
-				<p>펀딩명: <span id="modal-fundingName"></span></p>
-				<p>수량: <span id="modal-qty"></span></p>
-				<p>결제날짜: <span id="modal-purchasedAt"></span></p>
-				<p>결제수단: <span id="modal-paymentMethod"></span></p>
-				<p>결제상태: <span id="modal-status"></span></p>
-				<p>펀딩 성공 여부: <span id="modal-success"></span></p>
+				<p>
+					펀딩명: <span id="modal-fundingName"></span>
+				</p>
+				<p>
+					수량: <span id="modal-qty"></span>
+				</p>
+				<p>
+					결제날짜: <span id="modal-purchasedAt"></span>
+				</p>
+				<p>
+					결제수단: <span id="modal-paymentMethod"></span>
+				</p>
+				<p>
+					결제상태: <span id="modal-status"></span>
+				</p>
+				<p>
+					펀딩 성공 여부: <span id="modal-success"></span>
+				</p>
 			</div>
-			
+
 			<div class="modal-buttons">
 				<button type="button" class="modal-btn cancel">취소하기</button>
 				<button class="modal-btn confirm">확인</button>
@@ -113,14 +135,23 @@
 		</div>
 	</div>
 
-<script>
+	
+
+
+
+	<script>
 	    // html 로딩 완료 후 실행되는 함수들
 	    window.addEventListener('DOMContentLoaded', () => {
 	    bindModalEvents(); //모달 열기/닫기
 	    bindBuyTabs(); // 구매 탭 클릭 시 데이터 불러오기
 		bindFundingTabs(); // 펀딩 탭 클릭 시 데이터 불러오기
 		bindMenuClickEvents(); // 사이드바 메뉴 클릭 시 탭 전환
+		
 	  });
+	    
+	    function closeUserInfoModal() {
+	    	  document.getElementById('user-info-modal').style.display = 'none';
+	    	}
 	 
 	// 모달 보여주는 함수
 	let currentTabStatus = 'allbuylist';
@@ -133,6 +164,8 @@
 		
 	 // 모달에 데이터 세팅하고 보여주는 함수
 	  function showModal(data) {
+		window.currentOrderId = data.orderId;
+		  
 	    document.getElementById('modal-fundingName').textContent = data.fundingName;
 	    document.getElementById('modal-qty').textContent = data.qty;
 	    document.getElementById('modal-purchasedAt').textContent = formatDate(data.purchasedAt);
@@ -142,14 +175,7 @@
 
 	    const cancelBtn = document.querySelector('.modal-btn.cancel');
 
-	    /* // 모든 구매내역 탭에서만 '결제 취소' 버튼 보이기
-	    if (currentTabStatus === 'allbuylist') {
-	      cancelBtn.style.display = 'inline-block';
-	    } else { // 결제완료, 결제 취소상태 > 취소버튼 숨기기
-	      cancelBtn.style.display = 'none';
-	    } */
-	    
-	    // ✅ 결제취소 상태가 아니면 버튼 보이기
+	    // 결제취소 상태가 아니면 버튼 보이기
 	    if (data.status === '환불') {
 	      cancelBtn.style.display = 'none';
 	    } else {
@@ -188,11 +214,49 @@
 	    	  btn.onclick = function(event) {
 	    	    event.preventDefault();
 	    	    event.stopPropagation();
+	    	    
+	    	    const orderId = window.currentOrderId;
 
-	    	    document.getElementById('modal').style.display = 'none';
-	    	    alert("결제가 취소되었습니다. 환불 진행 중입니다.");
+	    	    if (!orderId) {
+	    	      alert('주문 정보를 찾을 수 없습니다.');
+	    	      return;
+	    	    }
+
+	    	    fetch(`${contextPath}/order/cancel`, {
+	    	      method: 'POST',
+	    	      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	    	      body: `orderId=\${orderId}`
+	    	    })
+	    	    
+	    	    .then(response => response.text())
+		    	.then(result => {
+		      	if (parseInt(result) > 0) {
+		        	alert("결제가 취소되었습니다. 결제취소 탭에서 확인해주세요");
+		        	document.getElementById('modal').style.display = 'none';
+		            // 현재 화면에서 상태만 '환불'로 업데이트
+		            const statusEl = document.querySelector(`.payment-detail-btn[data-orderid="${orderId}"]`)
+		                                  .closest('.payment-item')
+		                                  .querySelector('.payment-status');
+		            if (statusEl) {
+		              statusEl.textContent = '환불';
+		            }
+
+		            // 모달 내 버튼도 숨기기
+		            const cancelBtn = document.querySelector('.modal-btn.cancel');
+		            if (cancelBtn) cancelBtn.style.display = 'none';
+		
+		        	/* fetch(`${contextPath}/order/list?status=${currentTabStatus}`)
+		         	 .then(response => response.text())
+		         	 .then(html => {
+		         	   document.getElementById('order-list-container').innerHTML = html;
+		          	  bindModalEvents();
+		        	  }); */
+		 	     } else {
+		       	   alert("환불 처리에 실패했습니다.");
+		      	  }
+		      })
 	      };
-	    });
+	    }); 
 	  }
 	  
 		// 사이드바 메뉴 클릭 이벤트 (구매내역/펀딩 전환)
@@ -219,6 +283,7 @@
 
 		    // 기본값으구매내역 탭에서 "모든 구매 내역" 활성화
 		    document.querySelector('.allbuylist').click();
+		   
 		  });
 
 		  fundingMenu.addEventListener('click', e => {
@@ -240,6 +305,8 @@
 
 		    // 기본값으로 펀딩탭에서 "내가 참여한 모든 펀딩" 활성화
 		    document.querySelector('.allfundinglist').click();
+		    
+		
 		  });
 		}
 
@@ -265,6 +332,7 @@
 	        .then(html => {
 	          document.getElementById('order-list-container').innerHTML = html;
 	          bindModalEvents(); 
+	      	
 	        })
 	        .catch(err => {
 	          alert('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -290,13 +358,14 @@
 				 .then(html => {
 					 document.getElementById('funding-list-container').innerHTML = html;
 					 bindModalEvents();
+					
 				 })
 			       .catch(err => {
 				         alert('데이터를 불러오는 중 오류가 발생했습니다.');
 				    });
-			 })
-		 })
-	 }
+			 });
+		 });
+	 } 
 </script>
 </body>
 </html>

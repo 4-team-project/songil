@@ -53,10 +53,10 @@
 	</insert>
 
 	<!-- 주문 펀딩 상태 수정 -->
-	<update id="updateOrderFundingStatus" parameterType="OrderDTO">
+	<update id="updateOrderFundingStatus" parameterType="int">
 		UPDATE
 		takku_order
-		SET funding_status = #{fundingStatus}
+		SET status = '환불'
 		WHERE order_id =
 		#{orderId}
 	</update>
