@@ -25,6 +25,13 @@
 	gap: 10px;
 }
 
+.cancel-box {
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
 .fail-icon {
 	font-size: 32px;
 	color: red;

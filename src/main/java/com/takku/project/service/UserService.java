@@ -66,7 +66,19 @@ public class UserService implements UserMapper{
 		return result;
 	}
 
-	
+	@Override
+	public int updatePointAfterPayment(int userId, int usePoint) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("usePoint", usePoint);
+		return sqlSession.update(namespace + "updatePointAfterPayment", map);
+	}
 
-	
+	@Override
+	public int restorePointAfterCancel(int userId, int usePoint) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("usePoint", usePoint);
+		return sqlSession.update(namespace + "restorePointAfterCancel", map);
+	}
 }

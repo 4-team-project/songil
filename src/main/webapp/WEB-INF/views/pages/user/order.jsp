@@ -66,7 +66,7 @@ $(function() {
             pay_method: "card",
             merchant_uid: "order_" + new Date().getTime(),
             name: "${funding.fundingName}",
-            amount: 10, //test
+            amount: 200-usePoint, //test
             buyer_email: "takku@songil.com",
             buyer_name: "${loginUser.name}",
             buyer_tel: "${loginUser.phone}"

@@ -66,7 +66,10 @@
 			<div class="success-box">
 				<c:choose>
 					<c:when test="${saveOrder.status eq '환불'}">
-						<h1 class="cancel">결제가 취소되었습니다.</h1>
+						<div class="cancel-box">
+							<div class="fail-icon">❗</div>
+							<h1 class="cancel">결제가 취소되었습니다.</h1>
+						</div>
 					</c:when>
 					<c:otherwise>
 						<h1 class="success">결제가 완료되었습니다!</h1>
@@ -78,7 +81,7 @@
 		<c:otherwise>
 			<div class="fail-box">
 				<div class="fail-icon">❗</div>
-				<h1 class="fail">결제를 실패했어요</h1>
+				<h1 class="fail">결제를 실패했습니다.</h1>
 			</div>
 			<p class="desc">결제 내역과 결제 수단을 확인 후 재시도 해보시기 바랍니다.</p>
 		</c:otherwise>
