@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.takku.project.mapper.StoreStatsMapper">
+
+	<!-- 1. 월별 주문 수 및 매출 -->
+	<select id="selectMonthlyOrderStats"
+		resultType="com.takku.project.domain.stats.OrderStatsDTO">
+		SELECT
+		TO_CHAR(o.purchased_at, 'YYYY-MM') AS month,
+		COUNT(*)
+		AS orderCount,
+		NVL(SUM(o.amount), 0) AS revenue
+		FROM takku_order o
+		INNER
+		JOIN takku_funding f ON o.funding_id = f.funding_id
+		WHERE f.store_id =
+		#{storeId}
+		AND o.status = '결제완료'
+		GROUP BY TO_CHAR(o.purchased_at,
+		'YYYY-MM')
+		ORDER BY month
+	</select>
+
+	<!-- 2. 인기 상품 TOP 5 -->
+	<select id="selectPopularProducts"
+		resultType="com.takku.project.domain.stats.PopularProductDTO">
+		SELECT *
+		FROM (
+		SELECT
+		p.product_name AS label,
+		COUNT(o.order_id) AS value
+		FROM takku_order o
+		INNER JOIN takku_funding f
+		ON o.funding_id = f.funding_id
+		INNER JOIN takku_product p ON
+		f.product_id = p.product_id
+		WHERE f.store_id = #{storeId}
+		AND o.status =
+		'결제완료'
+		GROUP BY p.product_name
+		ORDER BY COUNT(o.order_id) DESC
+		)
+		WHERE
+		ROWNUM &lt;= 5
+	</select>
+
+	<!-- 3. 재구매 상위 상품 TOP 5 (정확하게 유저당 상품별 2회 이상 구매 기준) -->
+	<select id="getTopRePurchasedProducts"
+		resultType="com.takku.project.domain.stats.ProductRePurchaseDTO">
+		SELECT *
+		FROM (
+		SELECT
+		p.product_name AS productName,
+		COUNT(*)
+		AS rePurchaseCount
+		FROM (
+		SELECT o.user_id, f.product_id
+		FROM takku_order
+		o
+		INNER JOIN takku_funding f ON o.funding_id = f.funding_id
+		WHERE
+		f.store_id = #{storeId}
+		AND o.status = '결제완료'
+		GROUP BY o.user_id,
+		f.product_id
+		HAVING COUNT(*) &gt; 1
+		) re
+		INNER JOIN takku_product p ON
+		re.product_id = p.product_id
+		GROUP BY p.product_name
+		ORDER BY
+		rePurchaseCount DESC
+		)
+		WHERE ROWNUM &lt;= 5
+	</select>
+
+
+	<!-- 4. 태그별 주문 수 -->
+	<select id="selectTagStats"
+		resultType="com.takku.project.domain.stats.TagStatsDTO">
+		SELECT
+		t.tag_name AS label,
+		COUNT(*) AS value
+		FROM takku_order
+		o
+		INNER JOIN takku_funding f ON o.funding_id = f.funding_id
+		INNER JOIN
+		takku_funding_tag ft ON f.funding_id = ft.funding_id
+		INNER JOIN
+		takku_tag t ON ft.tag_id = t.tag_id
+		WHERE f.store_id = #{storeId}
+		AND
+		o.status = '결제완료'
+		GROUP BY t.tag_name
+		ORDER BY COUNT(*) DESC
+	</select>
+
+
+	<!-- 1. 연령대 분포 -->
+	<select id="selectAgeDistribution"
+		resultType="com.takku.project.domain.stats.LabelValueDTO">
+		SELECT
+		CASE
+		WHEN age BETWEEN 10 AND 19 THEN '10대'
+		WHEN age BETWEEN 20 AND 29 THEN '20대'
+		WHEN age BETWEEN 30 AND 39 THEN '30대'
+		WHEN age BETWEEN 40 AND 49 THEN '40대'
+		ELSE '50대 이상'
+		END AS label,
+		COUNT(*) AS value
+		FROM (
+		SELECT u.user_id,
+		FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) / 12) AS age
+		FROM takku_user u
+		JOIN takku_order o ON u.user_id = o.user_id
+		WHERE o.status = '결제완료'
+		)
+		GROUP BY
+		CASE
+		WHEN age BETWEEN 10 AND 19 THEN '10대'
+		WHEN age BETWEEN 20 AND 29 THEN '20대'
+		WHEN age BETWEEN 30 AND 39 THEN '30대'
+		WHEN age BETWEEN 40 AND 49 THEN '40대'
+		ELSE '50대 이상'
+		END
+		ORDER BY label
+	</select>
+
+
+	<!-- 2. 성별 비율 -->
+	<select id="selectGenderRatio"
+		resultType="com.takku.project.domain.stats.LabelValueDTO">
+		SELECT
+		u.gender AS label,
+		COUNT(*) AS value
+		FROM takku_user u
+		JOIN takku_order o ON u.user_id = o.user_id
+		WHERE o.status = '결제완료'
+		GROUP BY u.gender
+	</select>
+
+	<!-- 3. 연령대·성별별 인기 태그 -->
+	<select id="selectTopTagsByAgeGender"
+		resultMap="AgeGenderTagMap">
+		SELECT age_group, gender, tag_name
+		FROM (
+		SELECT
+		inner_query.age_group,
+		inner_query.gender,
+		inner_query.tag_name,
+		ROW_NUMBER() OVER (PARTITION BY age_group, gender ORDER BY cnt DESC)
+		AS rn
+		FROM (
+		SELECT
+		CASE
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth)
+		/ 12) BETWEEN 10 AND 19
+		THEN '10대'
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE,
+		u.birth) / 12) BETWEEN 20 AND 29
+		THEN '20대'
+		WHEN
+		FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) / 12) BETWEEN 30 AND 39
+		THEN '30대'
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) / 12)
+		BETWEEN 40 AND 49
+		THEN '40대'
+		ELSE '50대 이상'
+		END AS age_group,
+		u.gender,
+		t.tag_name,
+		COUNT(*) AS cnt
+		FROM takku_user u
+		JOIN takku_order o ON
+		u.user_id = o.user_id
+		JOIN takku_funding f ON o.funding_id =
+		f.funding_id
+		JOIN takku_funding_tag ft ON f.funding_id = ft.funding_id
+		JOIN takku_tag t ON ft.tag_id = t.tag_id
+		WHERE o.status = '결제완료'
+		GROUP
+		BY
+		CASE
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) / 12) BETWEEN
+		10 AND 19
+		THEN '10대'
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) /
+		12) BETWEEN 20 AND 29
+		THEN '20대'
+		WHEN FLOOR(MONTHS_BETWEEN(SYSDATE,
+		u.birth) / 12) BETWEEN 30 AND 39
+		THEN '30대'
+		WHEN
+		FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth) / 12) BETWEEN 40 AND 49
+		THEN '40대'
+		ELSE '50대 이상'
+		END,
+		u.gender,
+		t.tag_name
+		) inner_query
+		)
+		WHERE rn
+		&lt;= 3
+		ORDER BY age_group, gender, rn
+	</select>
+
+	<resultMap id="AgeGenderTagMap"
+		type="com.takku.project.domain.stats.AgeGenderTagDTO">
+		<result property="ageGroup" column="age_group" />
+		<result property="gender" column="gender" />
+		<collection property="topTags" ofType="string">
+			<result column="tag_name" />
+		</collection>
+	</resultMap>
+
+</mapper>

@@ -110,4 +110,17 @@
 			value="/WEB-INF/views/error/error.jsp" />
 	</definition>
 
+	<!-- 통계 -->
+	<definition name="seller/stats" extends="defaultLayout">
+		<put-attribute name="title" value="상점 통계" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/stats.jsp" />
+	</definition>
+
+	<definition name="seller/platformStats"
+		extends="defaultLayout">
+		<put-attribute name="title" value="상점 통계" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
+	</definition>
 </tiles-definitions>
