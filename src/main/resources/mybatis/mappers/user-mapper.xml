@@ -5,54 +5,68 @@
 
 <mapper namespace="com.takku.project.mapper.UserMapper">
 
-    <!-- 회원가입 -->
-    <insert id="insertUser" parameterType="UserDTO">
-        INSERT INTO takku_user (
-            user_type, phone, password, name, gender, birth,
-            nickname, sido, sigungu, is_partner, created_at, point
-        ) VALUES (
-            #{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
-            #{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE, 0
-        )
-    </insert>
+	<!-- 회원가입 -->
+	<insert id="insertUser" parameterType="UserDTO">
+		INSERT INTO takku_user (
+		user_type, phone, password, name, gender, birth,
+		nickname, sido,
+		sigungu, is_partner, created_at, point
+		) VALUES (
+		#{userType}, #{phone},
+		#{password}, #{name}, #{gender}, #{birth},
+		#{nickname}, #{sido},
+		#{sigungu}, #{isPartner}, SYSDATE, 0
+		)
+	</insert>
 
-    <!-- 로그인용 사용자 조회 -->
-    <select id="selectByPhone" parameterType="string" resultType="UserDTO">
-        SELECT *
-        FROM takku_user
-        WHERE phone = #{phone}
-    </select>
-
-    <!-- 내 정보 보기 -->
-    <select id="selectByUserId" parameterType="int" resultType="UserDTO">
-        SELECT *
-        FROM takku_user
-        WHERE user_id = #{userId}
-    </select>
-
-    <!-- 내 정보 수정 -->
-    <update id="updateUser" parameterType="UserDTO">
-        UPDATE takku_user
-        SET
-            password = #{password},
-            nickname = #{nickname},
-            sido = #{sido},
-            sigungu = #{sigungu}
-        WHERE user_id = #{userId}
-    </update>
-    
-    <!-- 이메일 확인 -->
-    <select id = "countByEmail" resultType="int">
-    	SELECT COUNT(*) FROM takku_user WHERE email = #{email}
-    </select>
-    
-    <!-- 휴대폰 번호 및 사용자 타입 중복 체크 -->
-    <select id="countByPhone" resultType="int">
-    	SELECT COUNT(*) AS cnt
+	<!-- 로그인용 사용자 조회 -->
+	<select id="selectByPhone" parameterType="string"
+		resultType="UserDTO">
+		SELECT *
 		FROM takku_user
-		WHERE user_type = #{userType}
-  		AND phone = #{phone}
+		WHERE phone = #{phone}
 	</select>
-    
+
+	<!-- 내 정보 보기 -->
+	<select id="selectByUserId" parameterType="int"
+		resultType="UserDTO">
+		SELECT
+		user_id,
+		name,
+		phone,
+		gender,
+		birth,
+		sido,
+		sigungu,
+		nickname
+		FROM
+		takku_user
+		WHERE user_id = #{userId}
+	</select>
+
+	<!-- 내 정보 수정 -->
+	<update id="updateUser" parameterType="UserDTO">
+		UPDATE takku_user
+		SET
+		<if test="password != null">password = #{password, jdbcType=VARCHAR},</if>
+		<if test="nickname != null">nickname = #{nickname, jdbcType=VARCHAR}</if>
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- 이메일 확인 -->
+	<select id="countByEmail" resultType="int">
+		SELECT COUNT(*) FROM
+		takku_user WHERE email = #{email}
+	</select>
+
+	<!-- 휴대폰 번호 및 사용자 타입 중복 체크 -->
+	<select id="countByPhone" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM
+		takku_user
+		WHERE user_type = #{userType}
+		AND phone = #{phone}
+	</select>
+
 </mapper>
 

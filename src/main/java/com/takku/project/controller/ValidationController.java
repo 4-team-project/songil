@@ -33,7 +33,7 @@ public class ValidationController {
 	@PostMapping("/password-format")
 	public Map<String, Boolean> checkPasswordFormat(@RequestBody Map<String, String> map) {
 		String pwd = map.get("password");
-		boolean valid = pwd.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$"); // 영어+숫자 조합, 특수문자 없음, 6자 이상
+		boolean valid = pwd.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d\\W]{6,}$"); // 영어+숫자 조합, 특수문자 없음, 6자 이상
 		return Collections.singletonMap("valid", valid);
 	}
 	

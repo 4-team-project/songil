@@ -37,15 +37,15 @@ public class UserController {
 	@Autowired
 	OrderService orderService;
 
-	// 1. 마이페이지 메인 (내 정보 보기)
+	 //1. 마이페이지 메인 (내 정보 보기)
 	@GetMapping
 	public String myPage(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
-		UserDTO user = userService.selectByUserId(loginUser.getUserId());
+		//UserDTO user = userService.selectByUserId(loginUser.getUserId());
+		UserDTO user = userService.selectByUserId(5);
 		model.addAttribute("user", user);
 
-		return "mypage"; // mypage.jsp
+		return "pages/user/mypage"; // mypage.jsp
 	}
-
 	// 2. 회원정보 수정 폼
 	@GetMapping("/edit")
 	public String editForm(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {

@@ -158,8 +158,47 @@ public class FundingService {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("status", status);
-		return sqlSession.selectList(namespace+"selectFundingListByStatus", param); 
+		List<FundingDTO> list = sqlSession.selectList(namespace+"selectFundingListByStatus", param); 
+		
+		for (FundingDTO funding : list) {
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", funding.getFundingId());
+			funding.setImages(images);
+		} 
+		return list;
 	}
+	
+	//펀딩리스트 = 페이징 처리용
+	public Map<String, Object> selectFundingListByStatus(int userId, String status, int offset, int limit) {
+		  Map<String, Object> params = new HashMap<>();
+		    params.put("userId", userId);
+		    params.put("status", status);
+		    params.put("offset", offset);
+		    params.put("limit", limit);
+		    params.put("endRow", offset + limit);
+
+		    List<FundingDTO> fundingList = sqlSession.selectList(namespace + "selectFundingListByStatusWithPaging", params);
+		    int totalCount = sqlSession.selectOne(namespace + "countFundingByStatus", params);
+
+		    Map<String, Object> result = new HashMap<>();
+		    result.put("list", fundingList);
+		    result.put("totalCount", totalCount);
+
+		    return result;
+	}
+	
+	//펀딩리스트 = 페이징 처리용
+	public int countFundingByStatus(int userId, String status) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("userId", userId);
+	    params.put("status", status);
+
+	    return sqlSession.selectOne(namespace + "countFundingByStatus", params);
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * 펀딩에 이미지, 태그, 평균 평점, 리뷰 수 추가
