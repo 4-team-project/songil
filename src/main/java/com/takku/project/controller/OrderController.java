@@ -55,8 +55,7 @@ public class OrderController {
 			Model model) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-		UserDTO user = userService.selectByUserId(5); // test
-		user.setPoint(1000); // test
+		UserDTO user = userService.selectByUserId(7); // test
 
 		model.addAttribute("pageName", "결제하기");
 		model.addAttribute("funding", funding);
@@ -74,7 +73,7 @@ public class OrderController {
 			RedirectAttributes redirectAttributes) {
 
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		UserDTO loginUser = userService.selectByUserId(5); // test
+		UserDTO loginUser = userService.selectByUserId(7); // test
 
 		int finalPrice = totalPrice - usePoint;
 
@@ -90,6 +89,7 @@ public class OrderController {
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
 
+		userService.updatePointAfterPayment(loginUser.getUserId(), usePoint);
 		int result = orderService.insertOrder(order);
 		redirectAttributes.addAttribute("orderId", order.getOrderId());
 		redirectAttributes.addAttribute("success", result > 0);
@@ -146,7 +146,18 @@ public class OrderController {
 	@PostMapping("/cancel")
 	@ResponseBody
 	public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
+		OrderDTO order = orderService.selectOrderByOrderId(orderId);
+		if (order == null)
+			return 0;
+
+		// 1. 주문 상태 업데이트
 		int result = orderService.updateOrderFundingStatus(orderId);
+		
+		// 2. 포인트 복원 (결제에 포인트 사용한 경우만)
+	    if (result > 0 && order.getUsePoint() > 0) {
+	        userService.restorePointAfterCancel(order.getUserId(), order.getUsePoint());
+	    }
+
 		return result;
 	}
 }

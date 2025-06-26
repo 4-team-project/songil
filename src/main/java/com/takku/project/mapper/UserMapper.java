@@ -22,4 +22,11 @@ public interface UserMapper {
     
     //휴대폰 번호 중복 검사(회원 가입시 중복 검사)
     int countByPhone(String phone, String userType);
+    
+    //포인트 차감
+    int updatePointAfterPayment(int userId, int usePoint);
+    
+    //포인트 반환
+    int restorePointAfterCancel(int userId, int usePoint);
+
 }

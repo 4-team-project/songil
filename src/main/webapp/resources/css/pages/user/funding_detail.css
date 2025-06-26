@@ -267,9 +267,10 @@
 }
 
 .hashtags {
-	margin-top: 16px;
-	font-size: 12px;
-	color: #999;
+	margin-top: 10px;
+	font-size: 20px;
+	color: #ff9670;
+	font-weight: bold;
 }
 
 .review-list {
