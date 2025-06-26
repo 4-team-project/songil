@@ -42,5 +42,6 @@ public class FundingDTO {
 
 	// 추천 펀딩 list를 위한 추가 필드
 	private Double score;
+	private Integer daysLeft;
 
 }

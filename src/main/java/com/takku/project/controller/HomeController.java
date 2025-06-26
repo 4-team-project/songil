@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
+import com.takku.project.service.AIService;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.StoreService;
@@ -27,29 +28,33 @@ public class HomeController {
     @Autowired
     ImageService imageService;
 
-    @GetMapping("/user/home")
-    public String homePage(Model model) {
-        List<FundingDTO> ongoingFundingList = fundingService.selectByFundingStatusWithJoin("진행중");
+    @Autowired
+    AIService aiService; 
 
-        Map<Integer, Long> fundingDaysLeftMap = new HashMap<>();
+    @GetMapping("/user/home")
+    public String homePage(@RequestParam(defaultValue = "1") int userId, Model model) {
+
+        List<FundingDTO> recommendList = aiService.getRecommendations(userId); 
+        for (FundingDTO funding : recommendList) {
+            List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
+            funding.setImages(images);
+            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+            funding.setDaysLeft((int) Math.max(days, 0));  
+        }
+
+        List<FundingDTO> ongoingFundingList = fundingService.selectByFundingStatusWithJoin("진행중");
 
         for (FundingDTO funding : ongoingFundingList) {
             List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
             funding.setImages(images);
 
-            long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
-            fundingDaysLeftMap.put(funding.getFundingId(), daysLeft);
+            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+            funding.setDaysLeft((int) Math.max(days, 0));  
         }
 
-        model.addAttribute("fundinglist", ongoingFundingList);
-        model.addAttribute("daysLeftMap", fundingDaysLeftMap); 
+        model.addAttribute("recommendList", recommendList); 
+        model.addAttribute("fundinglist", ongoingFundingList); 
+
         return "user.home";
     }
-    
-
-
-
-
-
 }
-

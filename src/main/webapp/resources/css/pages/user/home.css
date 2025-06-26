@@ -1,5 +1,12 @@
 @import url('../../base/fonts.css');
 
+#filteredFundingList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px; /* 카드 사이 간격 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
 .content-box {
 	display: flex;
 	justify-content: flex-start;
@@ -256,6 +263,7 @@
 	font-size: 14px;
 	color: #828282;
 	font-weight: 400;
+	text-align: center;
 }
 
 .rating-box {
