@@ -45,7 +45,7 @@ public class FundingController {
 
 	@Autowired
 	private TagService tagService;
-	
+
 	private List<String> splitKeywords(String keyword) {
 		if (keyword == null || keyword.trim().isEmpty())
 			return Collections.emptyList();
@@ -59,8 +59,9 @@ public class FundingController {
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, Model model) {
-		
-		if (size <= 0) size = 10;
+
+		if (size <= 0)
+			size = 10;
 
 		List<String> keywordList = splitKeywords(keyword);
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
@@ -84,7 +85,8 @@ public class FundingController {
 			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
 
-		if (size <= 0) size = 10;
+		if (size <= 0)
+			size = 10;
 
 		List<String> keywordList = splitKeywords(keyword);
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
@@ -124,6 +126,31 @@ public class FundingController {
 
 	@ApiOperation(value = "펀딩 상세 조회", notes = "특정 펀딩의 상세 정보를 조회합니다.")
 	@GetMapping("/{fundingId}")
+	public String getFundingDetail(@PathVariable("fundingId") int fundingId, Model model) {
+		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+		if (funding == null)
+			return "error/error";
+
+		ProductDTO product = productService.selectByProductId(funding.getProductId());
+		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
+		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
+		List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
+
+		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
+		int reviewCount = reviewlist.size();
+
+		model.addAttribute("funding", funding);
+		model.addAttribute("store", store);
+		model.addAttribute("product", product);
+		model.addAttribute("productImages", productImages);
+		model.addAttribute("reviewlist", reviewlist);
+		model.addAttribute("avgRating", avgRating);
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("taglist", taglist);
+
+		return "user.funding_detail";
+    
 	public String getFundingDetail(@PathVariable("fundingId") int fundingId,
 	                               @RequestParam(defaultValue = "1") int page,
 	                               @RequestParam(defaultValue = "10") int size,
@@ -177,8 +204,10 @@ public class FundingController {
 	        "totalPages", totalPages,
 	        "currentPage", page
 	    );
+
 	}
-	
+
+	//기존 - 전체리스트
 	@GetMapping("/list")
 	public String selectFundingListByStatus(@RequestParam("status") String status, Model model) {
 		int userId = 5; //임시 userId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -192,9 +221,9 @@ public class FundingController {
 		    } else if ("failed".equals(status)) {
 		        status = "미달성";
 		    }
-		
+		  
 		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
-		
+		//System.out.println(fundingList);
 		/*
 		 * for (FundingDTO f : fundingList) { System.out.println("fundingName=" +
 		 * f.getFundingName()); System.out.println("storeName=" + f.getStoreName());
@@ -202,8 +231,7 @@ public class FundingController {
 		 * System.out.println("endDate=" + f.getEndDate()); System.out.println("status="
 		 * + f.getStatus()); System.out.println("thumbnailImageUrl=" +
 		 * f.getThumbnailImageUrl()); }
-		
-		
+			
 		  System.out.println("fundingList.size() = " + fundingList.size());
 		    for (FundingDTO f : fundingList) {
 		        System.out.println("fundingName = " + f.getFundingName());
@@ -217,6 +245,41 @@ public class FundingController {
 		}*/
 		
 		model.addAttribute("fundingList", fundingList);
+		return "pages/user/myPage_fundingList";
+	}
+	  
+	
+	//페이징처리용
+	@GetMapping("/paged")
+	public String selectFundingListByStatus(@RequestParam("status") String status,
+			@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+		int userId = 5; 
+		int pageSize = 10;
+		System.out.println("status = " + status + ", page = " + page);
+
+		if ("allfundinglist".equals(status)) {
+			status = null; // 전체 조회 - 조건에서 status 제외
+		} else if ("progressing".equals(status)) {
+			status = "진행중";
+		} else if ("achieved".equals(status)) {
+			status = "성공";
+		} else if ("failed".equals(status)) {
+			status = "미달성";
+		}
+
+		int offset = (page - 1) * pageSize;
+
+		Map<String, Object> pageData = fundingService.selectFundingListByStatus(userId, status, offset, pageSize);
+
+		List<FundingDTO> fundingList = (List<FundingDTO>) pageData.get("list");
+		
+		int totalCount = (Integer) pageData.get("totalCount");
+		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
+
+		model.addAttribute("fundingList", fundingList);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPage", totalPage);
+
 		return "pages/user/myPage_fundingList";
 	}
 }

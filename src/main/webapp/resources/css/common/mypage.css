@@ -379,7 +379,6 @@ padding-top: 20px;
 	border-radius: 8px;
 	overflow: hidden;
 	flex-shrink: 0;
-	padding-left: 10px;
 }
 
 .funding-image img {
@@ -441,7 +440,7 @@ padding-top: 20px;
 	background: white;
 	padding: 30px;
 	border-radius: 12px;
-	width: 420px;
+	width: 470px;
 	max-width: 90%;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 	position: relative;
@@ -460,8 +459,8 @@ h2 {
 	text-align: center;
 }
 
-.modal-info {
-	background-color: fff2ec;
+.modal-info, #user-info-form {
+	background-color: #fff7f2;
 	padding: 10px;
 	border-radius: 5px;
 }
@@ -516,3 +515,88 @@ h2 {
 }
 
 /*****************************************/
+/*내 정보 수정하기*/
+#user-info-form label {
+  font-weight: 600;
+  color: #f37041;
+  font-size: 17px;
+}
+
+
+/* 입력창 스타일 */
+#user-info-form input[type="text"],
+#user-info-form input[type="tel"],
+#user-info-form input[type="gender"],
+#user-info-form input[type="password"],
+#user-info-form select {
+  width: 60%;
+  padding: 8px 12px;
+  padding-top: 10px;
+  border: 1px solid #f37041;
+  border-radius: 6px;
+  font-size: 17px;
+  background-color: white;
+}
+
+/* 저장 버튼 */
+.modal-btn.Uedit {
+  background-color: #f37041;
+  color: white;
+  border: 1px solid #f37041;
+  margin-left: 15px;
+}
+.modal-btn.Uconfirm:hover {
+  background-color: #e95f30;
+}
+
+/* 확인 버튼 - 흰 배경 주황 테두리 */
+.modal-btn.Ucheck {
+  background-color: white;
+  border:1px solid #f37041;
+  color: #f37041;
+  margin-right: 15px;
+}
+.modal-btn.Ucheck:hover {
+  background-color: #fff0ea;
+}
+
+.input-no-border {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.select-row {
+  display: flex;
+  gap: 12px; /* 선택박스 사이 간격 */
+  margin-top: 8px;
+}
+.form-row {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.form-row label {
+  width: 120px; 
+  font-weight: 500;
+  color: #ff9670;
+}
+
+.form-row input {
+  flex: 1;
+  font-size: 16px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/************************/
+.condition {
+	font-size: 14px;
+	color: red;
+	margin-bottom: 5px;
+	align-content: center;
+	text-align: center;
+}

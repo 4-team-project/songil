@@ -273,15 +273,49 @@
 		s.sido,
 		s.sigungu,
 		s.store_name,
-		s.sido || ' ' || s.sigungu || ' ' || s.store_name AS store_address
-		FROM takku_order o
+		s.sido ||
+		' ' || s.sigungu || ' ' || s.store_name AS store_address
+		FROM
+		takku_order o
 		JOIN takku_funding f ON o.funding_id = f.funding_id
-		JOIN takku_store s ON f.store_id = s.store_id
+		JOIN
+		takku_store s ON f.store_id = s.store_id
 		WHERE o.user_id = #{userId}
 		<if test="status != null and status != ''">
 			AND f.status = #{status}
 		</if>
 		ORDER BY o.purchased_at DESC
+	</select>
+
+	<!-- 페이징 데이터 조회 -->
+	<select id="selectFundingListByStatusWithPaging"
+		parameterType="map" resultType="FundingDTO">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RNUM FROM (
+			SELECT f.*
+			FROM TAKKU_FUNDING f
+			JOIN TAKKU_ORDER o ON f.FUNDING_ID = o.FUNDING_ID
+			WHERE o.USER_ID = #{userId}
+			<if test="status != null">
+				AND f.STATUS = #{status}
+			</if>
+			ORDER BY o.PURCHASED_AT DESC
+		) A
+		WHERE ROWNUM &lt;= #{endRow}
+	)
+	WHERE RNUM &gt; #{offset}
+	</select>
+
+	<!-- 페이징 전체 개수 조회 -->
+	<select id="countFundingByStatus" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM TAKKU_FUNDING f
+		JOIN TAKKU_ORDER o ON f.FUNDING_ID = o.FUNDING_ID
+		WHERE o.USER_ID = #{userId}
+		<if test="status != null">
+			AND f.STATUS = #{status}
+		</if>
 	</select>
 
 </mapper>
