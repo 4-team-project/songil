@@ -101,7 +101,7 @@ public class OrderController {
 	public String paymentResult(@RequestParam int orderId, @RequestParam boolean success, Model model) {
 		OrderDTO saveOrder = orderService.selectOrderByOrderId(orderId);
 		FundingDTO funding = fundingService.selectFundingByFundingId(saveOrder.getFundingId());
-		System.out.println(saveOrder);
+
 		model.addAttribute("funding", funding);
 		model.addAttribute("saveOrder", saveOrder);
 		model.addAttribute("isSuccess", success);
