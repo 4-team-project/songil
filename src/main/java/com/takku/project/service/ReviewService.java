@@ -1,6 +1,8 @@
 package com.takku.project.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,31 @@ public class ReviewService implements ReviewMapper{
 	        review.setImages(images);
 	    }
 		return rewiewList;
+	}
+
+	@Override
+	public List<ReviewDTO> reviewByProductIdWithPaging(Integer productId, int page, int size) {
+		int startRow = (page - 1) * size + 1;
+		int endRow = page * size;
+		
+		Map<String, Object> param = new HashMap<>();
+	    param.put("productId", productId);
+	    param.put("startRow", startRow);
+	    param.put("endRow", endRow);
+
+		List<ReviewDTO> reviewList = sqlSession.selectList(namespace + "reviewByProductIdWithPaging", param);
+
+	    for (ReviewDTO review : reviewList) {
+	        List<ImageDTO> images = sqlSession.selectList(namespace2 + "selectImagesByReviewId", review.getReviewId());
+	        review.setImages(images);
+	    }
+
+	    return reviewList;
+	}
+
+	@Override
+	public int countByProductId(Integer productId) {
+		return sqlSession.selectOne(namespace + "countByProductId", productId);
 	}
 
 }

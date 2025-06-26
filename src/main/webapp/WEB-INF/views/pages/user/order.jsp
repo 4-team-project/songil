@@ -26,6 +26,16 @@ $(function() {
 
     // 포인트 입력값이 바뀔 때마다 실시간 계산
     $("#usePoint").on("input", function () {
+    	let val = parseInt($(this).val()) || 0;
+
+    	if (val > userPoint) {
+    		val = userPoint;
+    		$(this).val(userPoint); // 입력값을 보유 포인트로 자동 조정
+    	} else if (val < 0) {
+    		val = 0;
+    		$(this).val(0);
+    	}
+    	
         updateFinalAmount();
     });
 
@@ -56,7 +66,7 @@ $(function() {
             pay_method: "card",
             merchant_uid: "order_" + new Date().getTime(),
             name: "${funding.fundingName}",
-            amount: 10, //test
+            amount: 200-usePoint, //test
             buyer_email: "takku@songil.com",
             buyer_name: "${loginUser.name}",
             buyer_tel: "${loginUser.phone}"
@@ -125,7 +135,7 @@ $(function() {
 				<div class="right-price">
 					<input type="number" id="usePoint" name="usePoint" placeholder="0"
 						min="0" max="${loginUser.point}" step="100"
-						style="width: 100px; height: 30px; font-size: 16px;" /><br>
+						style="width: 100px; height: 30px; font-size: 16px; border: 2px solid #ff9670; background: #fff6f0" /><br>
 					<button id="useAllPointBtn"
 						style="background-color: #ff9670; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px;">
 						전액 사용</button>

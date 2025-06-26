@@ -150,6 +150,61 @@ public class FundingController {
 		model.addAttribute("taglist", taglist);
 
 		return "user.funding_detail";
+    
+	public String getFundingDetail(@PathVariable("fundingId") int fundingId,
+	                               @RequestParam(defaultValue = "1") int page,
+	                               @RequestParam(defaultValue = "10") int size,
+	                               Model model) {
+	    FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+	    if (funding == null) return "error/error";
+
+	    ProductDTO product = productService.selectByProductId(funding.getProductId());
+	    List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
+	    StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+	    List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
+
+	    int totalReviews = reviewService.countByProductId(funding.getProductId());
+	    int totalPages = (int) Math.ceil((double) totalReviews / size);
+
+	    List<ReviewDTO> reviewlist = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
+	    double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
+
+	    model.addAttribute("funding", funding);
+	    model.addAttribute("store", store);
+	    model.addAttribute("product", product);
+	    model.addAttribute("productImages", productImages);
+	    model.addAttribute("reviewlist", reviewlist);
+	    model.addAttribute("avgRating", avgRating);
+	    model.addAttribute("reviewCount", totalReviews);
+	    model.addAttribute("taglist", taglist);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+
+	    return "user.funding_detail";
+	}
+	
+	//리뷰 페이지 처리
+	@GetMapping("/{fundingId}/reviews")
+	@ResponseBody
+	public Map<String, Object> getReviews(@PathVariable("fundingId") int fundingId,
+	                                      @RequestParam(defaultValue = "1") int page,
+	                                      @RequestParam(defaultValue = "10") int size) {
+
+	    FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+	    if (funding == null) {
+	        return Map.of("error", "존재하지 않는 펀딩입니다.");
+	    }
+
+	    int totalReviews = reviewService.countByProductId(funding.getProductId());
+	    int totalPages = (int) Math.ceil((double) totalReviews / size);
+	    List<ReviewDTO> reviewList = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
+
+	    return Map.of(
+	        "reviewlist", reviewList,
+	        "totalPages", totalPages,
+	        "currentPage", page
+	    );
+
 	}
 
 	//기존 - 전체리스트
