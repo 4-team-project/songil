@@ -1,6 +1,7 @@
 package com.takku.project.controller;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.OrderDTO;
@@ -46,7 +45,7 @@ public class OrderController {
 
 	@Autowired
 	private StoreService storeService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -56,30 +55,29 @@ public class OrderController {
 			Model model) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-		UserDTO user = userService.selectByUserId(5); //test
-		user.setPoint(1000); //test
+		UserDTO user = userService.selectByUserId(5); // test
+		user.setPoint(1000); // test
+
+		model.addAttribute("pageName", "결제하기");
 		model.addAttribute("funding", funding);
 		model.addAttribute("store", store);
 		model.addAttribute("loginUser", user);
 		model.addAttribute("quantity", quantity);
 		model.addAttribute("totalPrice", totalPrice);
-		return "user.order"; 
+		return "user.order";
 	}
 
 	// 주문 처리
 	@PostMapping("/payment")
 	public String processOrder(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
-			@RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid, Model model) {
+			@RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid,
+			RedirectAttributes redirectAttributes) {
 
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		UserDTO loginUser = userService.selectByUserId(5); //test
-		
-		LocalDateTime ldt = LocalDateTime.now();
-		Instant instant = ldt.atZone(ZoneId.systemDefault()).toInstant();
-		java.sql.Date sqlDate = new java.sql.Date(instant.toEpochMilli());
-		
+		UserDTO loginUser = userService.selectByUserId(5); // test
+
 		int finalPrice = totalPrice - usePoint;
-		
+
 		OrderDTO order = new OrderDTO();
 		order.setUserId(loginUser.getUserId());
 		order.setFundingId(fundingId);
@@ -91,56 +89,64 @@ public class OrderController {
 		order.setFundingStatus("펀딩 진행중");
 		order.setImpUid(imp_uid);
 		order.setMerchantUid(merchant_uid);
-		
+
 		int result = orderService.insertOrder(order);
-		order.setPurchasedAt(sqlDate);
+		redirectAttributes.addAttribute("orderId", order.getOrderId());
+		redirectAttributes.addAttribute("success", result > 0);
+		return "redirect:payment/result";
+	}
+
+	// 주문 결과
+	@GetMapping("/payment/result")
+	public String paymentResult(@RequestParam int orderId, @RequestParam boolean success, Model model) {
+		OrderDTO saveOrder = orderService.selectOrderByOrderId(orderId);
+		FundingDTO funding = fundingService.selectFundingByFundingId(saveOrder.getFundingId());
+
 		model.addAttribute("funding", funding);
-		model.addAttribute("order", order);
-		model.addAttribute("isSuccess", result > 0);
+		model.addAttribute("saveOrder", saveOrder);
+		model.addAttribute("isSuccess", success);
 		return "user.payment";
 	}
-	
-	 @GetMapping("/detail")
-	    @ResponseBody
-	    public Map<String, Object> getOrderDetail(@RequestParam("orderId") int orderId) {
-		 OrderDTO order = orderService.selectOrderByOrderId(orderId);  
-		    String fundingName = orderService.getFundingNameByOrderId(orderId);
 
-		    Map<String, Object> result = new HashMap<>();
-		    result.put("orderId", orderId);    
-		    result.put("fundingName", fundingName);          
-		    result.put("qty", order.getQty());
-		    result.put("purchasedAt", order.getPurchasedAt());
-		    result.put("paymentMethod", order.getPaymentMethod());
-		    result.put("status", order.getStatus());
+	@GetMapping("/detail")
+	@ResponseBody
+	public Map<String, Object> getOrderDetail(@RequestParam("orderId") int orderId) {
+		OrderDTO order = orderService.selectOrderByOrderId(orderId);
+		String fundingName = orderService.getFundingNameByOrderId(orderId);
 
-		    return result;
-	    }
-	 
-	 @GetMapping("/list")
-	 public String getOrdersByStatus(@RequestParam String status, Model model) {
-		 List<OrderDTO> orderList = new ArrayList<>();
-		 
-		 if ("allbuylist".equals(status)) {
-		        orderList = orderService.selectByUserId(5); // 전체 조회
-		    } else if ("complete".equals(status)) {
-		        orderList = orderService.getOrdersByUserAndStatus(5, "결제완료"); //임시 userid!!!!!!!!!!!!!
-		    } else if ("cancel".equals(status)) {
-		        orderList = orderService.getOrdersByUserAndStatus(5, "환불"); //임시 userid!!!!!!!!!!!!!
-		    } else if ("null".equals(status)) {
-		    	orderList = orderService.selectByUserId(5);
-		    }
-		 
-		 model.addAttribute("orderList", orderList);
-		 return "pages/user/orderList";
-	 }
-	 
-	 @PostMapping("/cancel")
-	    @ResponseBody
-	    public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
-	        int result = orderService.updateOrderFundingStatus(orderId);
-	       return result;
-	    }
-	
+		Map<String, Object> result = new HashMap<>();
+		result.put("orderId", orderId);
+		result.put("fundingName", fundingName);
+		result.put("qty", order.getQty());
+		result.put("purchasedAt", order.getPurchasedAt());
+		result.put("paymentMethod", order.getPaymentMethod());
+		result.put("status", order.getStatus());
 
+		return result;
+	}
+
+	@GetMapping("/list")
+	public String getOrdersByStatus(@RequestParam String status, Model model) {
+		List<OrderDTO> orderList = new ArrayList<>();
+
+		if ("allbuylist".equals(status)) {
+			orderList = orderService.selectByUserId(5); // 전체 조회
+		} else if ("complete".equals(status)) {
+			orderList = orderService.getOrdersByUserAndStatus(5, "결제완료"); // 임시 userid!!!!!!!!!!!!!
+		} else if ("cancel".equals(status)) {
+			orderList = orderService.getOrdersByUserAndStatus(5, "환불"); // 임시 userid!!!!!!!!!!!!!
+		} else if ("null".equals(status)) {
+			orderList = orderService.selectByUserId(5);
+		}
+
+		model.addAttribute("orderList", orderList);
+		return "pages/user/orderList";
+	}
+
+	@PostMapping("/cancel")
+	@ResponseBody
+	public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
+		int result = orderService.updateOrderFundingStatus(orderId);
+		return result;
+	}
 }
