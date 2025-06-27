@@ -135,7 +135,7 @@ $(function() {
 				<div class="right-price">
 					<input type="number" id="usePoint" name="usePoint" placeholder="0"
 						min="0" max="${loginUser.point}" step="100"
-						style="width: 100px; height: 30px; font-size: 16px; border: 2px solid #ff9670; background: #fff6f0" /><br>
+						style="width: 70px; height: 30px; font-size: 16px; border: 2px solid #ff9670; background: #fff6f0; margin-right: 3px" />
 					<button id="useAllPointBtn"
 						style="background-color: #ff9670; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px;">
 						전액 사용</button>
