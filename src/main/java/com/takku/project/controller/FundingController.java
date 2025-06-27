@@ -157,6 +157,7 @@ public class FundingController {
 		model.addAttribute("taglist", taglist);
 
 		return "user.funding_detail";
+	}
     
 	public String getFundingDetail(@PathVariable("fundingId") int fundingId,
 	                               @RequestParam(defaultValue = "1") int page,

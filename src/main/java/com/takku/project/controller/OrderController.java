@@ -108,47 +108,6 @@ public class OrderController {
 		return "user.payment";
 	}
 	
-	 @GetMapping("/detail")
-	    @ResponseBody
-	    public Map<String, Object> getOrderDetail(@RequestParam("orderId") int orderId) {
-		 OrderDTO order = orderService.selectOrderByOrderId(orderId);  
-		    String fundingName = orderService.getFundingNameByOrderId(orderId);
-
-		    Map<String, Object> result = new HashMap<>();
-		    result.put("orderId", orderId);    
-		    result.put("fundingName", fundingName);          
-		    result.put("qty", order.getQty());
-		    result.put("purchasedAt", order.getPurchasedAt());
-		    result.put("paymentMethod", order.getPaymentMethod());
-		    result.put("status", order.getStatus());
-
-		    return result;
-	    }
-	 
-	 @GetMapping("/list")
-	 public String getOrdersByStatus(@RequestParam String status, Model model) {
-		 List<OrderDTO> orderList = new ArrayList<>();
-		 
-		 if ("allbuylist".equals(status)) {
-		        orderList = orderService.selectByUserId(5); // 전체 조회
-		    } else if ("complete".equals(status)) {
-		        orderList = orderService.getOrdersByUserAndStatus(5, "결제완료"); //임시 userid!!!!!!!!!!!!!
-		    } else if ("cancel".equals(status)) {
-		        orderList = orderService.getOrdersByUserAndStatus(5, "환불"); //임시 userid!!!!!!!!!!!!!
-		    } else if ("null".equals(status)) {
-		    	orderList = orderService.selectByUserId(5);
-		    }
-		 
-		 model.addAttribute("orderList", orderList);
-		 return "pages/user/mypage_orderList";
-	 }
-	 
-	 @PostMapping("/cancel")
-	    @ResponseBody
-	    public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
-	        int result = orderService.updateOrderFundingStatus(orderId);
-	       return result;
-
 
 	@GetMapping("/detail")
 	@ResponseBody
