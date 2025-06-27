@@ -32,9 +32,7 @@
 				<%@ include file="/WEB-INF/views/common/funding.jsp"%>
 			</div>
 
-			<div class="funding-list-wrapper">
-				<div id="filteredFundingList"></div>
-			</div>
+			<div id="filteredFundingList"></div>
 
 			<div class="add-button" id="moreButton">
 				<div class="add-button-text">더보기</div>

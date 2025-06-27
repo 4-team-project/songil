@@ -48,7 +48,7 @@
 											<div class="funding-progress-text">${percentInt}%</div>
 										</div>
 										<div class="funding-date-box">
-											<div class="funding-date">${daysLeft}일</div>
+											<div class="funding-date">${funding.daysLeft}일</div>
 											<div class="funding-date-text">남음</div>
 										</div>
 									</div>

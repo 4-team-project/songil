@@ -7,7 +7,7 @@ function hideInitialContent() {
   const filteredWrapper = document.getElementById('filteredFundingList');
   if (initialContent) initialContent.style.display = 'none';
   if (moreButton) moreButton.style.display = 'none';
-  if (filteredWrapper) filteredWrapper.style.display = 'block';
+  if (filteredWrapper) filteredWrapper.style.display = 'flex';
 }
 
 function showInitialContent() {
@@ -32,7 +32,7 @@ function renderFundingList(fundingList, append = false) {
     const discount = funding.price > 0 ? Math.round(((funding.price - funding.salePrice) * 100) / funding.price) : 0;
     const imageUrl = funding.images?.[0]?.imageUrl ? `${cpath}${funding.images[0].imageUrl}` : '';
     const imageHtml = imageUrl ? `<img class="funding-image" src="${imageUrl}" alt="펀딩 이미지" />` : '<div class="funding-image"></div>';
-    const daysLeft = funding.daysLeft ?? 0;
+    const daysLeft = funding.daysLeft;
 
     const html = `
       <div class="funding-box" onclick="location.href='${cpath}/fundings/${funding.fundingId}'">
@@ -65,7 +65,7 @@ function renderFundingList(fundingList, append = false) {
         </div>
       </div>
     `;
-    allFundingsHTML += `<div class="funding-list-wrapper">${html}</div>`;
+    allFundingsHTML += html;
   });
 
   filteredWrapper.insertAdjacentHTML('beforeend', allFundingsHTML);

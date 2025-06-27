@@ -1,5 +1,7 @@
 package com.takku.project.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,6 +88,10 @@ public class FundingController {
 		List<String> keywordList = splitKeywords(keyword);
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
+		for (FundingDTO funding : fundingList) {
+            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+            funding.setDaysLeft((int) Math.max(days, 0));  
+        }
 		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
