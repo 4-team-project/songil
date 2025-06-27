@@ -342,7 +342,7 @@
 <div id="tab-content">
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
-		<pre class="funding-desc">${funding.fundingDesc}</pre>
+		<pre class="product-desc">${funding.fundingDesc}</pre>
 
 
 		<div class="product-image-carousel"
