@@ -193,9 +193,9 @@
 		      let paginationHtml = '';
 		      for (let i = 1; i <= totalPages; i++) {
 		        if (i === currentPage) {
-		          paginationHtml += `<strong style="color: #ff7a52;">[\${i}]</strong>`;
+		          paginationHtml += `<strong style="color: #ff9670;">[\${i}]</strong>`;
 		        } else {
-		          paginationHtml += `<a href="#" class="page-link" data-page="\${i}">[\${i}]</a>`;
+		          paginationHtml += `<a href="#" class="page-link" data-page="\${i}" style="color: #999; text-decoration: none; margin: 0 5px;">[\${i}]</a>`;
 		        }
 		      }
 		      $("#review-tab").append(`<div class="pagination-container" style="text-align: center; margin-top: 20px;">\${paginationHtml}</div>`);
