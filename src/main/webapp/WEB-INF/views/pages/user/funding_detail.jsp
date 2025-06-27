@@ -246,7 +246,7 @@
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
-			style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" />
+			style="width: 90%; height: 90%; object-fit: cover; border-radius: 20px;" />
 		<div id="fundingControls"
 			style="text-align: center; margin-top: 10px;">
 			<div class="dot-wrapper">
@@ -349,12 +349,11 @@
 
 <!-- 콘텐츠 영역 -->
 <div id="tab-content">
-
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
 		<pre class="funding-desc">${funding.fundingDesc}</pre>
 		<div class="product-image-carousel"
-			style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
+			style="width: 45%; height: 300px; position: relative; margin-top: 20px;">
 			<img id="productMainImage" src="" alt="상품 이미지"
 				style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" />
 			<button id="productPrevBtn" class="nav-btn"
