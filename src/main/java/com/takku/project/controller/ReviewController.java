@@ -61,8 +61,8 @@ public class ReviewController {
 		int result = reviewService.insertReview(reviewDTO);
 		if (result > 0 && reviewDTO.getImageUrls() != null) {
 			for (String url : reviewDTO.getImageUrls()) {
-				String timestamp = String.valueOf(System.currentTimeMillis());
 				String ext = url.substring(url.lastIndexOf("."));
+				String timestamp = String.valueOf(System.currentTimeMillis());
 				String newFilename = timestamp + ext;
 				ImageDTO image = ImageDTO.builder().reviewId(reviewDTO.getReviewId()).imageUrl(newFilename).build();
 				imageService.insertImageUrl(image);

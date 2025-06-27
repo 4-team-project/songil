@@ -9,6 +9,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   font-family: 'Spoqa Han Sans Neo', sans-serif;
   text-align: center;
+  position: relative;
 }
 
 .coupon-card-store {
