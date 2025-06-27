@@ -1,5 +1,16 @@
 @import url('../../base/fonts.css');
 
+#filteredFundingList {
+	display: flex;
+	flex-wrap: wrap;
+	width: 1076px;
+	row-gap: 32px;
+	column-gap: 20px;
+}
+.funding-box {
+  width: 254px; 
+}
+
 .content-box {
 	display: flex;
 	justify-content: flex-start;
@@ -256,6 +267,7 @@
 	font-size: 14px;
 	color: #828282;
 	font-weight: 400;
+	text-align: center;
 }
 
 .rating-box {

@@ -21,9 +21,7 @@
 		</div>
 
 		<div class="category-box-list" id="categoryList">
-			<div
-				class="category-box ${param.categoryId == 0 || empty param.categoryId ? 'selected' : ''}"
-				data-category-id="0">
+			<div class="category-box" data-category-id="0">
 				<img src="${cpath}/resources/images/logo.svg" alt="전체">
 				<div class="category-text">전체</div>
 			</div>
@@ -71,19 +69,17 @@
 		</div>
 	</div>
 
-	<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const cpath = '${cpath}';
-  const categoryBoxes = document.querySelectorAll(".category-box");
-  const fundingListWrapper = document.querySelector(".main-contents");
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
   const toggleDiv = document.getElementById("toggleImg");
   const img = toggleDiv?.querySelector("img");
   const categoryList = document.getElementById("categoryList");
+
   const defaultSrc = `${cpath}/resources/images/icons/drop-down.svg`;
   const toggledSrc = `${cpath}/resources/images/icons/drop-up.svg`;
-
   let toggled = false;
+
   if (img && categoryList) {
     img.src = defaultSrc;
     categoryList.style.display = "none";
@@ -95,34 +91,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function handleCategoryClick(box) {
-    document.querySelectorAll(".category-box").forEach(b => b.classList.remove("selected"));
-    box.classList.add("selected");
-
-    const categoryId = parseInt(box.dataset.categoryId, 10);
-    if (isNaN(categoryId)) {
-      return;
-    }
-    
-    const url = cpath + "/fundings/ajax?categoryId=" + categoryId;
-
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error("서버 응답 오류");
-        return res.text();
-      })
-      .then(html => {
-        fundingListWrapper.innerHTML = html;
-      })
-      .catch(err => console.error("카테고리 펀딩 가져오기 실패:", err));
-  }
-
+  const categoryBoxes = document.querySelectorAll(".category-box");
   categoryBoxes.forEach(box => {
-    box.addEventListener("click", () => handleCategoryClick(box));
+    box.addEventListener("click", () => {
+      document.querySelectorAll(".category-box").forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      const categoryId = parseInt(box.dataset.categoryId, 10);
+      if (!isNaN(categoryId) && typeof window.loadFundings === 'function') {
+        window.currentPage = 1;
+        window.loadFundings({ categoryId });
+      }
+    });
   });
 });
 </script>
 
-
-</body>
-</html>

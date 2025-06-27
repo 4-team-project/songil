@@ -85,7 +85,7 @@ const regionData = {
   ]
 };
 
-function toggleDropdown(type) {
+	function toggleDropdown(type) {
   document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove("show"));
   const dropdown = document.getElementById(type + "Dropdown");
   dropdown.classList.toggle("show");
