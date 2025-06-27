@@ -1,3 +1,4 @@
+
 package com.takku.project.controller;
 
 import javax.servlet.http.HttpSession;
@@ -22,9 +23,9 @@ public class AuthController {
 
 	// 회원가입 폼
 	@GetMapping("/signup")
-	public String signup() {
-
-		return "auth/signup";
+	public String signup(Model model) {
+		model.addAttribute("pageName", "회원가입");
+		return "auth.signup";
 	}
 
 	// 회원가입 처리
@@ -38,19 +39,27 @@ public class AuthController {
 	// 로그인 폼
 	@GetMapping("/login")
 	public String login(Model model) {
-		model.addAttribute("pageName", "로그인/회원가입");
+		model.addAttribute("pageName", "로그인");
 		return "auth.login";
 	}
 
 	// 로그인 처리
 	@PostMapping("/login")
-	public String login(String phone, String password, HttpSession session, RedirectAttributes redirectAttributes) {
-		UserDTO user = userService.selectByPhone(phone, password);
-		
+	public String login(String phone, String password, String userType, HttpSession session, RedirectAttributes redirectAttributes) {
+		// 입력된 번호를 010-0000-0000 형식으로 포맷팅
+	    if (phone != null && phone.matches("^\\d{10,11}$")) {
+	        if (phone.length() == 11) {
+	            phone = phone.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
+	        } else if (phone.length() == 10) {
+	            phone = phone.replaceFirst("(\\d{3})(\\d{3})(\\d{4})", "$1-$2-$3");
+	        }
+	    }
+	
+		UserDTO user = userService.selectByPhone(phone, password, userType);
 		if (user != null) {
 	        session.setAttribute("loginUser", user);  // 전역에서 사용 가능
 	        redirectAttributes.addFlashAttribute("resultMessage", "로그인 성공");
-	        return "redirect:/main";  // 로그인 성공 후 이동할 페이지
+	        return "redirect:/user/home";  // 로그인 성공 후 이동할 페이지
 	    } else {
 	        redirectAttributes.addFlashAttribute("resultMessage", "로그인 실패: 정보를 확인해주세요");
 	        return "redirect:/auth/login";  // 로그인 폼으로 다시 이동
@@ -65,3 +74,4 @@ public class AuthController {
 	}
 
 }
+

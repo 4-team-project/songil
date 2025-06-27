@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -25,11 +26,13 @@
 	</insert>
 
 	<!-- 로그인용 사용자 조회 -->
-	<select id="selectByPhone" parameterType="string"
+	<select id="selectByPhone" parameterType="map"
 		resultType="UserDTO">
 		SELECT *
 		FROM takku_user
 		WHERE phone = #{phone}
+		and password = #{password}
+		and user_type = #{userType}
 	</select>
 
 	<!-- 내 정보 보기 -->
@@ -90,4 +93,5 @@
 		WHERE user_id = #{userId}
 	</update>
 </mapper>
+
 

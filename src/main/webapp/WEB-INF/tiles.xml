@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE tiles-definitions PUBLIC
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
@@ -34,6 +35,13 @@
 		<put-attribute name="title" value="로그인" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/auth.jsp" />
+	</definition>
+	
+	<!-- 회원가입 -->
+	<definition name="auth.signup" extends="subLayout">
+		<put-attribute name="title" value="회원가입" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/auth_signup.jsp" />
 	</definition>
 	
 	<!-- 홈 -->
@@ -124,3 +132,4 @@
 			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
 	</definition>
 </tiles-definitions>
+
