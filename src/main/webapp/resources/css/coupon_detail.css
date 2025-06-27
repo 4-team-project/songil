@@ -52,19 +52,3 @@
 	display: block;
 	margin-bottom: 4px;
 }
-
-.detail-close-btn {
-	position: absolute;
-	top: 16px;
-	right: 16px;
-	font-size: 20px;
-	font-weight: bold;
-	color: #aaa;
-	background: none;
-	border: none;
-	cursor: pointer;
-}
-
-.detail-close-btn:hover {
-	color: #ff6b6b;
-}
