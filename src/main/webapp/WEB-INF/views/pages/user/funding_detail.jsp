@@ -125,57 +125,103 @@
 		    $("#paymentForm").submit();
 		  });
 		});
-	//펀딩 상세보기, 리뷰 버튼 
-	$(function () {
-	    $(".tab-btn").click(function () {
-	      const tab = $(this).data("tab");
-
-	      $(".tab-btn").removeClass("active-tab");
-	      $(this).addClass("active-tab");
-
-	      if (tab === "desc") {
-	        const descHtml = `
-	          <pre class="funding-desc">${funding.fundingDesc}</pre>
-	          <div class="image-placeholder"></div>
-	          <div class="hashtags">#남대문맛집 #곰탕추천 #건강한한식 #직장인간식 #한밤늦은히든</div>
-	        `;
-	        $("#tab-content").html(descHtml);
-	      } else if (tab === "review") {
-	        const reviewHtml = $(".review-list").html();
-	        $("#tab-content").html(reviewHtml);
-	      }
-	    });
-	  });
-	//리뷰 10개씩 페이지 처리
-	$(function () {
-	    const reviewsPerPage = 10;
-	    const $reviews = $("#review-list .review-card");
-	    const totalReviews = $reviews.length;
-	    const totalPages = Math.ceil(totalReviews / reviewsPerPage);
-
-	    function showPage(page) {
-	      const start = (page - 1) * reviewsPerPage;
-	      const end = start + reviewsPerPage;
-
-	      $reviews.hide().slice(start, end).show();
-
-	      $(".page-btn").removeClass("active-page");
-	      $(`.page-btn[data-page=${page}]`).addClass("active-page");
-	    }
-
-	    for (let i = 1; i <= totalPages; i++) {
-	      $("#pagination").append(`<button class="page-btn" data-page="${i}">${i}</button>`);
-	    }
-
-	    showPage(1);
-
-	    $("#pagination").on("click", ".page-btn", function () {
-	      const page = $(this).data("page");
-	      showPage(page);
-	    });
-	  });
 	
+	  $(function () {
+		  $(".tab-btn").click(function () {
+		    const tab = $(this).data("tab");
+
+		    $(".tab-btn").removeClass("active-tab");
+		    $(this).addClass("active-tab");
+
+		    if (tab === "desc") {
+		      $("#desc-tab").show();
+		      $("#review-tab").hide();
+		    } else if (tab === "review") {
+		      $("#desc-tab").hide();
+		      $("#review-tab").show();
+		    }
+		  });
+
+		  // 페이지 로드시 초기 상태
+		  $("#desc-tab").show();
+		  $("#review-tab").hide();
+		});
+	  
+	  //페이지 처리
+	  function loadReviewPage(fundingId, page) {
+		  console.log("리뷰 로딩 중", fundingId, page);
+		  $.ajax({
+		    url: `${cpath}/fundings/${fundingId}/reviews`,
+		    method: "GET",
+		    data: { page: page },
+		    success: function (data) {
+		      const reviewList = data.reviewlist;
+		      const currentPage = data.currentPage;
+		      const totalPages = data.totalPages;
+
+		      let reviewHtml = '';
+		      reviewList.forEach((review, index) => {
+		        reviewHtml += `
+		          <div class="review-card" data-index="\${index}">
+		            <div class="review-body">
+		              <div class="review-left">
+		                <div class="review-user">
+		                  <span class="user-icon">👤</span>
+		                  <strong>\${review.name}</strong>
+		                  <span class="review-date">\${review.createdAt}</span>
+		                </div>
+		                <div class="review-rating">
+		                  \${[1, 2, 3, 4, 5].map(i =>
+		                    `<span class="star \${i <= review.rating ? 'filled' : ''}">★</span>`).join('')}
+		                </div>
+		                <div class="review-content">\${review.content}</div>
+		              </div>
+		              <c:if test="${not empty review.images}">
+		              <div class="review-image">
+		                <img src="${cpath}${review.images[0].imageUrl}" alt="리뷰 이미지" />
+		              </div>
+		            </c:if>
+		            </div>
+		          </div>
+		        `;
+		      });
+
+		      
+		      $("#review-tab").html(reviewHtml);
+
+		      // 페이징 HTML 다시 그리기
+		      let paginationHtml = '';
+		      for (let i = 1; i <= totalPages; i++) {
+		        if (i === currentPage) {
+		          paginationHtml += `<strong style="color: #ff7a52;">[\${i}]</strong>`;
+		        } else {
+		          paginationHtml += `<a href="#" class="page-link" data-page="\${i}">[\${i}]</a>`;
+		        }
+		      }
+		      $("#review-tab").append(`<div class="pagination-container" style="text-align: center; margin-top: 20px;">\${paginationHtml}</div>`);
+		    },
+		    error: function () {
+		      alert("리뷰 데이터를 불러오는데 실패했습니다.");
+		    }
+		  });
+		}
+
+		// 페이지 로딩 후 리뷰 탭 전환 시 첫 페이지 자동 로드
+		$(document).on("click", ".tab-btn[data-tab='review']", function () {
+		  const fundingId = "${funding.fundingId}";
+		  loadReviewPage(fundingId, 1);
+		});
+
+		// 동적으로 생성된 페이징 버튼 클릭 시
+		$(document).on("click", ".page-link", function (e) {
+		  e.preventDefault();
+		  const page = $(this).data("page");
+		  const fundingId = "${funding.fundingId}";
+		  console.log("페이지 클릭됨:", page);
+		  loadReviewPage(fundingId, page);
+		});
 </script>
+
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
 
@@ -185,11 +231,11 @@
 			style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" />
 		<div id="fundingControls"
 			style="text-align: center; margin-top: 10px;">
-			<button id="fundingPrevBtn" class="nav-btn">&#x276E;</button>
-			<c:forEach var="img" items="${funding.images}" varStatus="status">
-				<span class="dot funding-dot" data-index="${status.index}">●</span>
-			</c:forEach>
-			<button id="fundingNextBtn" class="nav-btn">&#x276F;</button>
+			<div class="dot-wrapper">
+				<c:forEach var="img" items="${funding.images}" varStatus="status">
+					<span class="dot funding-dot" data-index="${status.index}">●</span>
+				</c:forEach>
+			</div>
 		</div>
 	</div>
 
@@ -263,7 +309,8 @@
 
 			<p class="total-price">
 				총 가격 <br> <span class="total-amount"> <span
-					id="totalPrice">${funding.salePrice}</span><span class="won">원</span>
+					id="totalPrice"><fmt:formatNumber
+							value="${funding.salePrice}" type="number" /></span><span class="won">원</span>
 				</span>
 			</p>
 		</div>
@@ -282,29 +329,32 @@
 	<button class="tab-btn" data-tab="review">리뷰(${reviewCount})</button>
 </div>
 
-<!-- 내용이 바뀔 영역 -->
-<!-- product 이미지 슬라이더 -->
+<!-- 콘텐츠 영역 -->
 <div id="tab-content">
-	<pre class="funding-desc">${funding.fundingDesc}</pre>
 
-	<div class="product-image-carousel"
-		style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
-		<img id="productMainImage" src="" alt="상품 이미지"
-			style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" />
-		<button id="productPrevBtn" class="nav-btn"
-			style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%);">&#x276E;</button>
-		<button id="productNextBtn" class="nav-btn"
-			style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);">&#x276F;</button>
+	<!-- 설명 탭 영역 -->
+	<div id="desc-tab">
+		<pre class="funding-desc">${funding.fundingDesc}</pre>
+
+
+		<div class="product-image-carousel"
+			style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
+			<img id="productMainImage" src="" alt="상품 이미지"
+				style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" />
+			<button id="productPrevBtn" class="nav-btn"
+				style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%);">&#x276E;</button>
+			<button id="productNextBtn" class="nav-btn"
+				style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);">&#x276F;</button>
+		</div>
+
+		<div class="hashtags">
+			<c:forEach var="tag" items="${taglist}">#${tag} </c:forEach>
+		</div>
 	</div>
 
-	<div class="hashtags" style="margin-top: 10px;">#남대문맛집 #곰탕추천
-		#건강한한식 #직장인간식 #한밤늦은히든</div>
-</div>
-
-<!-- 숨겨진 리뷰 HTML (JSTL 반복문 활용) -->
-<div id="review-wrapper">
-	<div class="review-list" style="display: none;">
-		<c:forEach var="review" items="${reviewlist}" varStatus="status">
+	<!-- 리뷰 탭 영역 -->
+	<div id="review-tab" style="display: none;">
+		<%-- <c:forEach var="review" items="${reviewlist}" varStatus="status">
 			<div class="review-card" data-index="${status.index}">
 				<div class="review-body">
 					<div class="review-left">
@@ -312,14 +362,12 @@
 							<span class="user-icon">👤</span> <strong>${review.name}</strong>
 							<span class="review-date">${review.createdAt}</span>
 						</div>
-
 						<div class="review-rating">
 							<c:forEach begin="1" end="5" var="i">
 								<span
 									class="star <c:if test='${i <= review.rating}'>filled</c:if>">★</span>
 							</c:forEach>
 						</div>
-
 						<div class="review-content">${review.content}</div>
 					</div>
 					<div class="review-image">
@@ -328,5 +376,19 @@
 				</div>
 			</div>
 		</c:forEach>
+
+		<!-- 페이징 버튼 -->
+		<div class="pagination-container"
+			style="text-align: center; margin-top: 20px;">
+			<c:forEach begin="1" end="${totalPages}" var="i">
+				<c:choose>
+					<c:when test="${i == currentPage}">
+						<strong style="color: #ff7a52;">[${i}]</strong>
+					</c:when>
+					<c:otherwise>
+						<a href="${cpath}/fundings/${funding.fundingId}?page=${i}">[${i}]</a>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</div> --%>
 	</div>
-</div>
