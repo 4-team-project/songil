@@ -17,13 +17,14 @@
 	<!-- 본문 -->
 	<div class="main-content">
 		<!-- 검색 -->
-		<div class="search-wrapper"
-			style="display: flex; justify-content: flex-end;">
-			<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
-		</div>
+		
 		<!-- 탭 -->
-		<div id="tabs" class="tabs"></div>
-
+		<div class="tab-search-bar">
+    <div id="tabs" class="tabs"></div>
+    <div class="search-wrapper">
+        <%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
+    </div>
+</div>
 		<!-- 쿠폰 리스트 -->
 		<div class="coupon-list">
 			<c:forEach var="coupon" items="${coupons}">
@@ -43,10 +44,10 @@
 						<c:choose>
 							<c:when test="${coupon.useStatus == '미사용'}">
 								<div class="sale">
-									<br>
+									
 									<fmt:formatNumber value="${discountRateInt}" type="number"
 										maxFractionDigits="0" />
-									% <br> <br>
+									% 
 								</div>
 							</c:when>
 							<c:when test="${coupon.useStatus == '사용'}">
@@ -67,32 +68,29 @@
 						<div class="title">
 							<strong class="coupon-title">${store.storeName}</strong>
 						</div>
-						<div class="desc coupon-desc">
+						<div class="name">
 							<strong>${funding.fundingName}</strong>
 						</div>
 						<div class="desc">${funding.fundingDesc}</div>
 					</div>
-
 					<div class="coupon-right">
 						<c:choose>
 							<c:when
 								test="${coupon.useStatus == '사용' and coupon.reviewed == 1}">
-								<button class="use-btn used-btn">사용완료</button>
+								<button class="use-btn used-btn"><span class="btn-word">사용완료</span></button>
 							</c:when>
 							<c:when test="${coupon.useStatus == '사용'}">
-								<button class="use-btn used-btn">사용완료</button>
+								<button class="use-btn used-btn"><span class="btn-word">사용완료</span></button>
 								<button type="button" class="review-btn"
-									onclick="openReviewModal('${cpath}/review/write/${coupon.couponId}')">리뷰쓰기</button>
+									onclick="openReviewModal('${cpath}/review/write/${coupon.couponId}')"><span class="btn-word">리뷰쓰기</span></button>
 							</c:when>
 							<c:when test="${coupon.useStatus == '미사용'}">
 								<form action="${cpath}/user/coupon/detail" method="post"
 									style="display: inline;">
 									<input type="hidden" name="couponId" value="${coupon.couponId}" />
-									<button type="submit" class="use-btn unused-btn">사용하기</button>
+									<button type="submit" class="use-btn unused-btn"><span class="btn-word">사용하기</span></button>
 								</form>
 								<div class="coupon-date">
-									<fmt:formatDate value="${coupon.createdAt}"
-										pattern="yyyy.MM.dd" />
 									~
 									<fmt:formatDate value="${coupon.expiredAt}"
 										pattern="yyyy.MM.dd" />
@@ -138,6 +136,7 @@
 
 	function renderTabs(status) {
 	    const tabsContainer = document.getElementById('tabs');
+	    
 	    if (status === '미사용') {
 	        tabsContainer.innerHTML = `
 	            <div class="tab" data-tab="all">모든 쿠폰</div>
