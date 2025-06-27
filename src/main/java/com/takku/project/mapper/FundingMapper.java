@@ -41,8 +41,4 @@ public interface FundingMapper {
 	List<FundingDTO> selectFundingListByStatus(@Param("userId") int userId, @Param("status") String status);
   
 	int updateFundingStatusIfExpired(@Param("fundingId") Integer fundingId, @Param("status") String status);
-	
-	//페이지 처리용
-	List<FundingDTO> selectFundingListByStatusWithPaging(Map<String, Object> params);
-	int countFundingByStatus(Map<String, Object> params);
 }

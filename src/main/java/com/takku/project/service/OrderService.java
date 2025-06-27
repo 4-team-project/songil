@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.OrderDTO;
 import com.takku.project.mapper.OrderMapper;
 
@@ -18,9 +21,17 @@ public class OrderService implements OrderMapper {
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.OrderMapper.";
 
+	private final String imageNamespace = "com.takku.project.mapper.ImageMapper.";
+
 	@Override
 	public List<OrderDTO> selectByUserId(Integer userId) {
 		List<OrderDTO> orderList = sqlSession.selectList(namespace + "selectByUserId", userId);
+		
+		for (OrderDTO order : orderList) {
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
+					order.getFundingId());
+			order.setImages(images);
+		}
 		return orderList;
 	}
 
@@ -61,11 +72,18 @@ public class OrderService implements OrderMapper {
 
 	@Override
 	public List<OrderDTO> getOrdersByUserAndStatus(int userId, String status) {
-		 Map<String, Object> paramMap = new HashMap<>();
-		    paramMap.put("userId", userId);
-		    paramMap.put("status", status);
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("status", status);
 
-		    return sqlSession.selectList(namespace + "getOrdersByUserAndStatus", paramMap);
+		List<OrderDTO> orderList = sqlSession.selectList(namespace + "getOrdersByUserAndStatus", param);
+	
+		for (OrderDTO order : orderList) {
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
+					order.getFundingId());
+			order.setImages(images);
+		}
+		return orderList;
 	}
 
 }

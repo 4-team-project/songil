@@ -267,37 +267,4 @@
 		</if>
 		ORDER BY o.purchased_at DESC
 	</select>
-
-	<!-- 페이징 데이터 조회 -->
-	<select id="selectFundingListByStatusWithPaging"
-		parameterType="map" resultType="FundingDTO">
-		SELECT * FROM (
-		SELECT A.*, ROWNUM RNUM FROM (
-			SELECT f.*
-			FROM TAKKU_FUNDING f
-			JOIN TAKKU_ORDER o ON f.FUNDING_ID = o.FUNDING_ID
-			WHERE o.USER_ID = #{userId}
-			<if test="status != null">
-				AND f.STATUS = #{status}
-			</if>
-			ORDER BY o.PURCHASED_AT DESC
-		) A
-		WHERE ROWNUM &lt;= #{endRow}
-	)
-	WHERE RNUM &gt; #{offset}
-	</select>
-
-	<!-- 페이징 전체 개수 조회 -->
-	<select id="countFundingByStatus" parameterType="map"
-		resultType="int">
-		SELECT COUNT(*)
-		FROM TAKKU_FUNDING f
-		JOIN TAKKU_ORDER o ON f.FUNDING_ID = o.FUNDING_ID
-		WHERE o.USER_ID = #{userId}
-		<if test="status != null">
-			AND f.STATUS = #{status}
-		</if>
-	</select>
-
 </mapper>
-

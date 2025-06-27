@@ -12,7 +12,7 @@
 					<span class="payment-label">구매일:</span> ${order.purchasedAt}
 				</div>
 				<div class="payment-image">
-					<img src="" alt="상점 이미지" />
+					<img src="${cpath}${order.images[0].imageUrl}" alt="메뉴 이미지" />
 				</div>
 			</div>
 
