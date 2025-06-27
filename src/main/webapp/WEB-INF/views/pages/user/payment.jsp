@@ -67,7 +67,6 @@
 				<c:choose>
 					<c:when test="${saveOrder.status eq '환불'}">
 						<div class="cancel-box">
-							<div class="fail-icon">❗</div>
 							<h1 class="cancel">결제가 취소되었습니다.</h1>
 						</div>
 					</c:when>

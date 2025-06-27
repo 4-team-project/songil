@@ -66,6 +66,7 @@
 .btn:hover {
 	background-color: #ff9670;
 	color: #fff;
+	cursor: pointer;
 }
 
 .modal {
