@@ -37,11 +37,13 @@ public class FundingDTO {
 	private String thumbnailImageUrl;
 	private String storeName;
 	private Integer price;
+	private Date purchasedAt;
+	private String storeAddress;
 	private Double avgRating;
 	private Integer reviewCnt;
 
 	// 추천 펀딩 list를 위한 추가 필드
 	private Double score;
+  
 	private Integer daysLeft;
-
 }

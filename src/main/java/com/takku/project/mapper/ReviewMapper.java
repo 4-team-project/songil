@@ -1,6 +1,7 @@
 package com.takku.project.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.takku.project.domain.ReviewDTO;
 
@@ -19,4 +20,8 @@ public interface ReviewMapper {
 	
 	//내 리뷰 보기
 	List<ReviewDTO> reviewByUserID(Integer userId);
+	
+	List<ReviewDTO> reviewByProductIdWithPaging(Integer productId, int page, int size);
+	
+	int countByProductId(Integer productId);
 }

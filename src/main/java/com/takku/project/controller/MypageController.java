@@ -2,17 +2,28 @@ package com.takku.project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.OrderDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.service.OrderService;
+import com.takku.project.service.UserService;
 
 @Controller
+@RequestMapping("/user")
 public class MypageController {
 
 	/*
@@ -23,8 +34,11 @@ public class MypageController {
 	@Autowired
 	OrderService orderService;
 	
+	@Autowired
+	UserService userService;
 	
-	@GetMapping("/user/mypage")
+	
+	@GetMapping("/mypage")
 	public String myPage(Model model) {
 		// 페이지명 전달
 		model.addAttribute("pageName", "마이페이지");
@@ -48,9 +62,62 @@ public class MypageController {
 		
 		//위에서 userid 세션에서 꺼내오는 거 나중에 추가하기
 		// 모델에 테스트 데이터 넣기
+		
+		
+		 // 유저 정보 조회 (임시 userId=5)
+	    UserDTO user = userService.selectByUserId(5);
+	    model.addAttribute("user", user);
+	    
+	    
 		model.addAttribute("orderList", orderService.selectByUserId(5)); //임시 userid
 
 		// 뷰 이름 반환 (mypage.jsp)
 		return "user.mypage";
 	}
+	@PostMapping("/update")
+	@ResponseBody  // 이걸 붙이면 리턴값이 View 이름이 아니라 응답 본문으로 간다
+	public String updateUser(HttpServletRequest request, HttpSession session) {
+	    //UserDTO user = (UserDTO) session.getAttribute("loginUser");
+		
+		UserDTO user = userService.selectByUserId(5);
+
+	    String nickname = request.getParameter("nickname");
+	    String password = request.getParameter("password");
+	    String passwordConfirm = request.getParameter("passwordConfirm");
+	    String sido = request.getParameter("sido");
+	    String sigungu = request.getParameter("sigungu");
+
+	    // 닉네임
+	    if (nickname != null && !nickname.trim().isEmpty()) {
+	        user.setNickname(nickname);
+	    }
+
+	    // 비밀번호
+	    if (password != null && !password.isEmpty()) {
+	        if (!password.equals(passwordConfirm)) {
+	            return "-1";  // 비밀번호 불일치
+	        }
+	        user.setPassword(password); 
+	    }
+
+	    // 주소
+	    if (sido != null && !sido.isEmpty()) {
+	        user.setSido(sido);
+	    }
+
+	    if (sigungu != null && !sigungu.isEmpty()) {
+	        user.setSigungu(sigungu);
+	    }
+
+	    int result = userService.updateUser(user);
+
+	    if (result > 0) {
+	        session.setAttribute("loginUser", user);
+	        return "1";  // 성공
+	    } else {
+	        return "0";  // 실패
+	    }
+	}
+
+
 }
