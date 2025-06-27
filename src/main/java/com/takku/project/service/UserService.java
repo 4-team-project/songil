@@ -29,14 +29,14 @@ public class UserService implements UserMapper{
 	}
 
 	@Override
-	public UserDTO selectByPhone(String phone, String password) {
-		UserDTO user = sqlSession.selectOne(namespace + "selectByPhone", phone);
-		boolean isUser = user.getPassword().equals(password);
-		if(isUser == false || user == null) {
-			return null;
-		} else {
+	public UserDTO selectByPhone(String phone, String password, String userType) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("phone", phone);
+		map.put("password", password);
+		map.put("userType", userType);
+		
+		UserDTO user = sqlSession.selectOne(namespace + "selectByPhone", map);
 		return user;
-		}
 	}
 
 	@Override

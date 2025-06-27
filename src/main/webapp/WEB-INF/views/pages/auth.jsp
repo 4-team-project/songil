@@ -5,30 +5,15 @@
 <link rel="stylesheet" type="text/css"
 	href="${cpath}/resources/css/pages/auth.css">
 
-<script>
-	$(function() {
-		// 회원가입 모달 열기
-		$('#joinBtn').on('click', function(e) {
-			e.preventDefault();
-			$('#joinModal').fadeIn();
-		});
-
-		// 모달 닫기 (X 버튼 또는 취소 버튼 또는 바깥 영역 클릭)
-		$('#closeJoinModal, #cancelJoinBtn').on('click', function() {
-			$('#joinModal').fadeOut();
-		});
-
-		$('#joinModal').on('click', function(e) {
-			if (e.target === this) {
-				$(this).fadeOut();
-			}
-		});
-	});
-</script>
-
 <div class="login-container">
 	<img src="${cpath}/resources/images/logo.svg" class="logo-img" />
 
+	<c:if test="${not empty resultMessage}">
+		<div class="login-error-message">
+			${resultMessage}
+		</div>
+	</c:if>
+	
 	<div class="login-box">
 		<form action="${cpath}/auth/login" method="post">
 			<!-- 핸드폰 번호 입력 -->
@@ -44,10 +29,10 @@
 
 			<!-- 사용자 / 소상공인 선택 -->
 			<div class="user-type-select">
-				<label> <input type="radio" name="userType" value="user" checked /> 
+				<label> <input type="radio" name="userType" value="사용자" checked /> 
 					<span>사용자</span>
 				</label> 
-				<label> <input type="radio" name="userType" value="seller" />
+				<label> <input type="radio" name="userType" value="소상공인" />
 					<span>소상공인</span>
 				</label>
 			</div>
@@ -57,7 +42,7 @@
 
 			<!-- 링크들 -->
 			<div class="login-links">
-				<a href="#" id="joinBtn" class="btn" style="float: right;">회원가입</a>
+				<a href="${cpath}/auth/signup" id="joinBtn" class="btn" style="float: right;">회원가입</a>
 			</div>
 		</form>
 	</div>

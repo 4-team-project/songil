@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.service.AIService;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
@@ -32,7 +36,9 @@ public class HomeController {
     AIService aiService; 
 
     @GetMapping("/user/home")
-    public String homePage(@RequestParam(defaultValue = "1") int userId, Model model) {
+    public String homePage(@RequestParam(defaultValue = "1") int userId, Model model, HttpSession session) {
+
+    	UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         List<FundingDTO> recommendList = aiService.getRecommendations(userId); 
         for (FundingDTO funding : recommendList) {

@@ -73,7 +73,7 @@ public class UserServiceTest {
 
         when(sqlSession.selectOne(namespace + "selectByPhone", "01012345678")).thenReturn(user);
 
-        UserDTO result = userService.selectByPhone("01012345678", "pass123");
+        UserDTO result = userService.selectByPhone("01012345678", "pass123","소상공인");
 
         assertNotNull(result);
         assertEquals(user, result);
@@ -88,7 +88,7 @@ public class UserServiceTest {
 
         when(sqlSession.selectOne(namespace + "selectByPhone", "01012345678")).thenReturn(user);
 
-        UserDTO result = userService.selectByPhone("01012345678", "wrongpass");
+        UserDTO result = userService.selectByPhone("01012345678", "wrongpass", "소상공인");
 
         assertNull(result);
     }
