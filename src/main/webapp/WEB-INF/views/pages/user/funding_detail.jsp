@@ -342,7 +342,7 @@
 <div id="tab-content">
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
-		<pre class="funding-desc">${funding.fundingDesc}</pre>
+		<pre class="product-desc">${funding.fundingDesc}</pre>
 
 
 		<div class="product-image-carousel"
@@ -362,41 +362,4 @@
 
 	<!-- 리뷰 탭 영역 -->
 	<div id="review-tab" style="display: none;">
-		<%-- <c:forEach var="review" items="${reviewlist}" varStatus="status">
-			<div class="review-card" data-index="${status.index}">
-				<div class="review-body">
-					<div class="review-left">
-						<div class="review-user">
-							<span class="user-icon">👤</span> <strong>${review.name}</strong>
-							<span class="review-date">${review.createdAt}</span>
-						</div>
-						<div class="review-rating">
-							<c:forEach begin="1" end="5" var="i">
-								<span
-									class="star <c:if test='${i <= review.rating}'>filled</c:if>">★</span>
-							</c:forEach>
-						</div>
-						<div class="review-content">${review.content}</div>
-					</div>
-					<div class="review-image">
-						<img src="${review.images}" alt="리뷰 이미지" />
-					</div>
-				</div>
-			</div>
-		</c:forEach>
-
-		<!-- 페이징 버튼 -->
-		<div class="pagination-container"
-			style="text-align: center; margin-top: 20px;">
-			<c:forEach begin="1" end="${totalPages}" var="i">
-				<c:choose>
-					<c:when test="${i == currentPage}">
-						<strong style="color: #ff7a52;">[${i}]</strong>
-					</c:when>
-					<c:otherwise>
-						<a href="${cpath}/fundings/${funding.fundingId}?page=${i}">[${i}]</a>
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-		</div> --%>
 	</div>
