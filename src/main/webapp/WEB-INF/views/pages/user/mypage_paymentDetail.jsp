@@ -31,7 +31,7 @@
 					결제상태: <span id="modal-status"></span>
 				</p>
 				<p>
-					펀딩 성공 여부: <span id="modal-success"></span>
+					<span id="modal-success"></span>
 				</p>
 			</div>
 
