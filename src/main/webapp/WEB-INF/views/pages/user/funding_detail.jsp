@@ -76,6 +76,15 @@
 	    });
 	  }
 	}
+
+	function formatDate(timestamp) {
+		  const date = new Date(timestamp);
+		  return date.toLocaleDateString("ko-KR", {
+		    year: "numeric",
+		    month: "2-digit",
+		    day: "2-digit",
+		  });
+		}
 	
 	$(document).ready(function() {
 	  createImageSlider(fundingImages, "#fundingMainImage", "#fundingPrevBtn", "#fundingNextBtn", ".funding-dot");
@@ -168,7 +177,7 @@
 		                <div class="review-user">
 		                  <span class="user-icon">👤</span>
 		                  <strong>\${review.name}</strong>
-		                  <span class="review-date">\${review.createdAt}</span>
+		                  <span class="review-date">\${formatDate(review.createdAt)}</span>
 		                </div>
 		                <div class="review-rating">
 		                  \${[1, 2, 3, 4, 5].map(i =>
