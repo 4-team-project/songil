@@ -76,6 +76,15 @@
 	    });
 	  }
 	}
+
+	function formatDate(timestamp) {
+		  const date = new Date(timestamp);
+		  return date.toLocaleDateString("ko-KR", {
+		    year: "numeric",
+		    month: "2-digit",
+		    day: "2-digit",
+		  });
+		}
 	
 	function formatDate(timestamp) {
 		  const date = new Date(timestamp);
@@ -344,8 +353,6 @@
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
 		<pre class="funding-desc">${funding.fundingDesc}</pre>
-
-
 		<div class="product-image-carousel"
 			style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
 			<img id="productMainImage" src="" alt="상품 이미지"
