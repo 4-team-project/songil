@@ -86,19 +86,10 @@
 		  });
 		}
 	
-	function formatDate(timestamp) {
-		  const date = new Date(timestamp);
-		  const year = date.getFullYear();
-		  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-		  const day = ("0" + date.getDate()).slice(-2);
-		  return `\${year}.\${month}.\${day}`;  // → 마침표 없음
-	}
-
 	$(document).ready(function() {
 	  createImageSlider(fundingImages, "#fundingMainImage", "#fundingPrevBtn", "#fundingNextBtn", ".funding-dot");
 	  createImageSlider(productImages, "#productMainImage", "#productPrevBtn", "#productNextBtn");
 	});
-	
 	//구매 개수, 총 가격 증가 감소
 	$(function () {
 		const salePrice = parseInt("${funding.salePrice}");
@@ -213,7 +204,7 @@
 		        if (i === currentPage) {
 		          paginationHtml += `<strong style="color: #ff9670;">[\${i}]</strong>`;
 		        } else {
-		        	paginationHtml += `<a href="#" class="page-link" data-page="\${i}" style="color: #999; text-decoration: none; margin: 0 5px;">[\${i}]</a>`;
+		          paginationHtml += `<a href="#" class="page-link" data-page="\${i}" style="color: #999; text-decoration: none; margin: 0 5px;">[\${i}]</a>`;
 		        }
 		      }
 		      $("#review-tab").append(`<div class="pagination-container" style="text-align: center; margin-top: 20px;">\${paginationHtml}</div>`);
@@ -246,7 +237,7 @@
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
-			style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" />
+			style="width: 90%; height: 90%; object-fit: cover; border-radius: 20px;" />
 		<div id="fundingControls"
 			style="text-align: center; margin-top: 10px;">
 			<div class="dot-wrapper">
@@ -349,12 +340,13 @@
 
 <!-- 콘텐츠 영역 -->
 <div id="tab-content">
-
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
 		<pre class="funding-desc">${funding.fundingDesc}</pre>
+
+
 		<div class="product-image-carousel"
-			style="width: 60%; height: 400px; position: relative; margin-top: 20px;">
+			style="width: 45%; height: 300px; position: relative; margin-top: 20px;">
 			<img id="productMainImage" src="" alt="상품 이미지"
 				style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" />
 			<button id="productPrevBtn" class="nav-btn"

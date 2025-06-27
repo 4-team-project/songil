@@ -1,3 +1,4 @@
+
 package com.takku.project.mapper;
 
 import com.takku.project.domain.UserDTO;
@@ -9,7 +10,7 @@ public interface UserMapper {
 	int insertUser(UserDTO user);
 
 	//휴대폰 번호로 조회
-	UserDTO selectByPhone(String phone, String password);
+	UserDTO selectByPhone(String phone, String password, String userType);
 
 	//사용자 번호로 조회
     UserDTO selectByUserId(Integer userId);
@@ -30,3 +31,4 @@ public interface UserMapper {
     int restorePointAfterCancel(int userId, int usePoint);
 
 }
+

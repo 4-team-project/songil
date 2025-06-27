@@ -1,22 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" isELIgnored="false"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Mypage</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/common/style.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/common/mypage.css">
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/components/regionDropdown.css">
 
-</head>
-<body>
 	<div class="mypage-container">
 
 		<!-- 사이드바 -->
@@ -217,5 +207,3 @@ function bindFundingTabs() {
  });
 } 
 </script>
-</body>
-</html>
