@@ -1,3 +1,4 @@
+
 package com.takku.project.mapper;
 
 import com.takku.project.domain.UserDTO;
@@ -30,3 +31,4 @@ public interface UserMapper {
     int restorePointAfterCancel(int userId, int usePoint);
 
 }
+

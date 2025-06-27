@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @charset "UTF-8";
 
 body {
@@ -197,4 +198,196 @@ body {
     margin: 0 5px;
     font-weight: bold;
     color: #333;
+=======
+@charset "UTF-8";
+
+.coupon-container {
+	 display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 16px;
+  border-right: 1px solid #eee;
+  color: #FF9670;
+  background-color: #FFF6F0;
+  
+}
+
+.menu-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.menu-sub {
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+}
+
+.main-content {
+  flex: 1;
+  padding: 0 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #FF9670;
+}
+
+.tab {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #999;
+}
+
+.tab.active {
+  color: #FF9670;
+  border-bottom: 3px solid #FF9670;
+}
+
+
+
+.coupon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.coupon-card {
+  display: flex;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+
+.coupon-left {
+  color: #FF9670;
+  background-color: FFF6F0;
+  font-weight: bold;
+  width: 120px;
+  text-align: center;
+}
+
+.coupon-middle {
+  flex: 1;
+  padding: 0 16px;
+}
+
+.store {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.desc {
+  font-size: 13px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coupon-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.use-btn,
+.review-btn {
+  background-color: #FF9670;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.pagination {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.page {
+  margin: 0 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #FF9670;
+  font-weight: bold;
+}
+
+.page.current {
+  background-color: #FF9670;
+  color: white;
+}
+
+.coupon-date {
+  font-size: 10px;
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+.menu-title,
+.menu-sub {
+  cursor: pointer;
+  padding: 10px;
+  transition: background 0.2s;
+}
+
+.menu-title.active,
+.menu-sub.active {
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #ff9670;
+  border-radius: 5px;
+}
+
+.no-result-message {
+    padding: 40px;
+    text-align: center;
+    color: #999;
+    font-size: 16px;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+.page {
+    display: inline-block;
+    margin: 0 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: #555;
+    background-color: #eee;
+}
+.page.current {
+    background-color: #ff9670;
+    color: white;
+    font-weight: bold;
+}
+
+.page-arrow {
+    cursor: pointer;
+    margin: 0 5px;
+    font-weight: bold;
+    color: #333;
+>>>>>>> d829b03 (🐛 bugfix: git-develop 코드 수정)
 }

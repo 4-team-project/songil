@@ -1,18 +1,11 @@
-/* °øÅë ¼³Á¤ */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 * {
 	box-sizing: border-box;
 	-webkit-font-smoothing: antialiased;
 }
 
-body {
-	font-family: 'Spoqa Han Sans Neo', sans-serif;
-	background-color: #fefefe;
-	padding: 40px 0;
-	display: flex;
-	justify-content: center;
-}
 
-/* ¸®ºä ¹Ú½º */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ */
 .review-box {
 	width: 680px;
 	background-color: #fff;
@@ -30,7 +23,7 @@ h2 {
 	margin-bottom: 30px;
 }
 
-/* Á¾·á ¹öÆ° */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° */
 .review-close-btn {
 	position: absolute;
 	top: 16px;
@@ -47,7 +40,7 @@ h2 {
 	color: #ff6b6b;
 }
 
-/* ÆÝµù Á¤º¸ ¿µ¿ª */
+/* ï¿½Ýµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 .info {
 	background-color: #fff5ef;
 	padding: 20px;
@@ -68,7 +61,7 @@ h2 {
 	font-weight: bold;
 }
 
-/* ¶óº§ */
+/* ï¿½ï¿½ */
 label {
 	font-size: 15px;
 	font-weight: 700;
@@ -78,7 +71,7 @@ label {
 	text-align: left;
 }
 
-/* ÅØ½ºÆ® ÀÔ·Â ÇÊµå */
+/* ï¿½Ø½ï¿½Æ® ï¿½Ô·ï¿½ ï¿½Êµï¿½ */
 textarea {
 	width: 100%;
 	background-color: #fff5ef;
@@ -92,7 +85,7 @@ textarea {
 	box-shadow: inset 0 0 0 1px #ffd3c0;
 }
 
-/* º°Á¡ ¿µ¿ª */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 .star-rating {
 	display: flex;
 	gap: 10px;
@@ -112,12 +105,12 @@ textarea {
 	-webkit-text-stroke: 0;
 }
 
-/* ÆÄÀÏ ¾÷·Îµå ¼û±è */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ */
 input[type="file"] {
 	display: none;
 }
 
-/* »ç¿ëÀÚ Á¤ÀÇ ÆÄÀÏ ¾÷·Îµå ¹öÆ° */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½Æ° */
 .custom-file-upload {
 	display: inline-block;
 	border: 1px solid #ffa987;
@@ -136,7 +129,7 @@ input[type="file"] {
 	background-color: #fff0e9;
 }
 
-/* ÀÌ¹ÌÁö ¹Ì¸®º¸±â */
+/* ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ */
 .preview-image {
 	position: relative;
 	display: inline-block;
@@ -167,7 +160,7 @@ input[type="file"] {
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* µî·Ï ¹öÆ° */
+/* ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° */
 .submit-btn {
 	background-color: #ffa987;
 	border: none;
@@ -180,14 +173,14 @@ input[type="file"] {
 	transition: background-color 0.3s ease;
 	display: inline-block;
 	margin-top: 20px;
-	float: right; /* ¿À¸¥ÂÊ Á¤·Ä */
+	float: right; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 }
 
 .submit-btn:hover {
 	background-color: #ff9670;
 }
 
-/* ¸ð´Þ ¹è°æ */
+/* ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ */
 .modal-overlay {
 	position: fixed;
 	inset: 0;
@@ -198,7 +191,7 @@ input[type="file"] {
 	z-index: 1000;
 }
 
-/* ¸ð´Þ ÀüÃ¼ ÇÁ·¹ÀÓ */
+/* ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 .modal-dialog {
 	background-color: white;
 	border-radius: 16px;
@@ -210,7 +203,7 @@ input[type="file"] {
 	flex-direction: column;
 }
 
-/* »ó´Ü Á¦¸ñ ¹Ù */
+/* ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ */
 .modal-header {
 	display: flex;
 	justify-content: space-between;
@@ -233,14 +226,14 @@ input[type="file"] {
 	color: #ff6b6b;
 }
 
-/* ±¸ºÐ¼± */
+/* ï¿½ï¿½ï¿½Ð¼ï¿½ */
 .modal-dialog hr {
 	margin: 0;
 	border: none;
 	border-top: 1px solid #eee;
 }
 
-/* ÄÜÅÙÃ÷ ¹Ú½º (¹è°æ °­Á¶) */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) */
 .modal-content {
 	background-color: #fff3ec;
 	border-radius: 12px;
@@ -249,7 +242,7 @@ input[type="file"] {
 	margin: 24px;
 }
 
-/* Á¦¸ñ ¸Þ½ÃÁö */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ */
 .modal-content .modal-title {
 	font-size: 16px;
 	color: #f26545;
@@ -257,13 +250,13 @@ input[type="file"] {
 	margin-bottom: 8px;
 }
 
-/* ¼³¸í ¸Þ½ÃÁö */
+/* ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ï¿½ï¿½ */
 .modal-content .modal-desc {
 	font-size: 14px;
 	color: #888;
 }
 
-/* ¹öÆ° ¿µ¿ª */
+/* ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ */
 .modal-buttons {
 	display: flex;
 	justify-content: center;
@@ -281,14 +274,14 @@ input[type="file"] {
 	transition: background-color 0.2s ease;
 }
 
-/* Ãë¼Ò ¹öÆ° */
+/* ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° */
 .modal-cancel {
 	background-color: white;
 	border: 1px solid #ffb9a0;
 	color: #ff6b4d;
 }
 
-/* È®ÀÎ/°è¼Ó ¾²±â ¹öÆ° */
+/* È®ï¿½ï¿½/ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° */
 .modal-confirm {
 	background-color: #ff9670;
 	color: white;
@@ -299,7 +292,7 @@ input[type="file"] {
 	background-color: #ff7f50;
 }
 
-/* ´Ý±â ¹öÆ° */
+/* ï¿½Ý±ï¿½ ï¿½ï¿½Æ° */
 .close-btn {
 	background: none;
 	border: none;

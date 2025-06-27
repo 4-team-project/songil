@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE tiles-definitions PUBLIC
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
@@ -131,3 +132,4 @@
 			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
 	</definition>
 </tiles-definitions>
+

@@ -1,3 +1,4 @@
+
 package com.takku.project.service;
 
 import java.util.HashMap;
@@ -82,3 +83,4 @@ public class UserService implements UserMapper{
 		return sqlSession.update(namespace + "restorePointAfterCancel", map);
 	}
 }
+

@@ -1,3 +1,4 @@
+
 package com.takku.project.controller;
 
 import java.time.LocalDate;
@@ -64,3 +65,4 @@ public class HomeController {
         return "user.home";
     }
 }
+

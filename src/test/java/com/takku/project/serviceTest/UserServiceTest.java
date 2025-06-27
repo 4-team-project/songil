@@ -1,3 +1,4 @@
+
 package com.takku.project.serviceTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,3 +143,4 @@ public class UserServiceTest {
         assertEquals(3, result);
     }
 }
+

@@ -1,3 +1,4 @@
+
 @charset "utf-8";
 
 .login-container {
@@ -185,4 +186,5 @@
 .modal-btn.confirm {
 	background: #ff7a52;
 	color: white;
+
 }
