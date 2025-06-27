@@ -20,28 +20,31 @@
 	<div class="mypage-container">
 
 		<!-- 사이드바 -->
-		<aside class="sidebar">
+		<nav class="sidebar">
 			<div class="profile-section">
-				<div class="profile-image"></div>
-				<div class="username">닉네임</div>
+				<span class="user-icon">👤</span>
+				<div class="username">${user.nickname}님</div>
 				<a href="#" class="editMypage">내 정보 수정하기</a>
 			</div>
 
 			<!-- 구매내역 -->
-			<nav class="menu">
-				<div class="menulist">
-					<a href="#" class="buylist active">구매 내역</a> <a href="#"
-						class="activeFunding">내가참여한펀딩</a> <a href="#" class="logout">로그아웃</a>
-				</div>
-			</nav>
-		</aside>
+			<div class="menulist">
+				<a href="#" class="buylist active">구매 내역</a> 
+				<a href="#" class="activeFunding">내가참여한펀딩</a>
+			</div>
+			
+			<!-- 로그아웃 -->
+			<div class="logout">
+				<a href="#" class="logout">로그아웃</a>
+			</div>
+		</nav>
 
 		<!-- 구매내역 > nav-->
 		<section class="content-area">
-			<nav class="tab-search-container">
+			<div class="tab-search-container">
 
 				<!-- 구매내역 -->
-				<div class="tab-wrapper buylist">
+				<div class="tab-wrapper-buylist">
 					<ul class="tab-menu">
 						<li><a href="#" class="allbuylist active"
 							data-status="allbuylist">모든 구매 내역</a></li>
@@ -55,7 +58,7 @@
 				<div class="tab-wrapper fundinglist" style="display: none">
 					<ul class="funding_nav">
 						<li><a href="#" class="allfundinglist active"
-							data-status="allfundinglist">내가 참여한 <br>모든 펀딩
+							data-status="allfundinglist">모든 펀딩
 						</a></li>
 						<li><a href="#" class="progressing" data-status="progressing">
 								진행 중인 펀딩</a></li>
@@ -70,7 +73,7 @@
 				<div class="search-wrapper">
 					<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
 				</div>
-			</nav>
+			</div>
 
 			<!-- 구매내역 > 헤더 -->
 			<div class="table-header buylist-header">
@@ -100,12 +103,12 @@
 
 	<!-- 내 정보 수정하기 -->
 	<%@ include file="/WEB-INF/views/pages/user/mypage_userInfoEdit.jsp"%>
-	
+
 	<!-- 결제상세 -->
 	<%@ include file="/WEB-INF/views/pages/user/mypage_paymentDetail.jsp"%>
 
 
-<script>
+	<script>
   // html 로딩 완료 후 실행되는 함수들
   window.addEventListener('DOMContentLoaded', () => {
   bindModalEvents(); //모달 열기/닫기
@@ -125,7 +128,7 @@ function bindMenuClickEvents() {
 	    fundingMenu.classList.remove('active');
 	    
 	//탭 숨기기/보여주기
-    document.querySelector('.tab-wrapper.buylist').style.display = 'flex'; // 구매내역 탭 보임
+    document.querySelector('.tab-wrapper-buylist').style.display = 'flex'; // 구매내역 탭 보임
     document.querySelector('.tab-wrapper.fundinglist').style.display = 'none'; 
     
     // 헤더 토글
@@ -146,7 +149,7 @@ function bindMenuClickEvents() {
     buyMenu.classList.remove('active');
 
     //탭 숨김 보여주기
-    document.querySelector('.tab-wrapper.buylist').style.display = 'none';
+    document.querySelector('.tab-wrapper-buylist').style.display = 'none';
     document.querySelector('.tab-wrapper.fundinglist').style.display = 'flex'; //펀딩 탭 보임
     
 	 // 헤더 토글
