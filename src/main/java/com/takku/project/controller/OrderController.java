@@ -141,7 +141,7 @@ public class OrderController {
 		}
 
 		model.addAttribute("orderList", orderList);
-		return "pages/user/orderList";
+		return "pages/user/mypage_orderList";
 	}
 
 	@PostMapping("/cancel")

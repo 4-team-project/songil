@@ -176,7 +176,7 @@ function bindBuyTabs() {
     
      currentTabStatus = status;
 
-     fetch(`${contextPath}/order/list?status=\${status}`)
+     fetch(`${cpath}/order/list?status=\${status}`)
        .then(response => {
          if (!response.ok) throw new Error('서버 응답 에러: ' + response.status);
          return response.text();
@@ -204,7 +204,7 @@ function bindFundingTabs() {
 		 const status = tab.getAttribute('data-status');
 		 currentTabStatus = status;
 		 
-		 fetch(`${contextPath}/fundings/list?status=\${status}`)
+		 fetch(`${cpath}/fundings/list?status=\${status}`)
 		 .then(response => response.text())
 		 .then(html => {
 			 document.getElementById('funding-list-container').innerHTML = html;

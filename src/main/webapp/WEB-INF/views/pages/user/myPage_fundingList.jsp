@@ -40,30 +40,3 @@
     </div>
   </div>
 </c:forEach>
-
-
-
-<div class="pagination">
-    <c:if test="${currentPage > 1}">
-        <a href="${cpath}/fundings/paged?status=${status}&page=${currentPage - 1}">이전</a>
-    </c:if>
-
-    
-<c:out value="${totalPage}" default="totalPage is null"/>
-<c:out value="${currentPage}" default="currentPage is null"/>
-
-    <c:forEach var="i" begin="1" end="${totalPage}">
-        <c:choose>
-            <c:when test="${i == currentPage}">
-                <b>${i}</b>
-            </c:when>
-            <c:otherwise>
-                <a href="?status=${status}&page=${i}">${i}</a>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-
-    <c:if test="${currentPage < totalPage}">
-        <a href="${cpath}/fundings/paged?status=${status}&page=${currentPage + 1}">다음</a>
-    </c:if>
-</div>

@@ -1,6 +1,7 @@
 package com.takku.project.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +30,6 @@ public class OrderDTO {
 	private String fundingName;
 	private String impUid;
 	private String merchantUid;
+	private List<ImageDTO> images;
 	
 }	

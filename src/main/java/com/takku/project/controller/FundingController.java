@@ -78,7 +78,6 @@ public class FundingController {
 
 		return "pages/common/funding";
 	}
-	
 
 	@ApiOperation(value = "펀딩 검색 (JSON 응답)", notes = "검색 조건에 따라 펀딩을 필터링하고 JSON 응답으로 반환합니다.")
 	@GetMapping("/search/json")
@@ -95,9 +94,9 @@ public class FundingController {
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
 		for (FundingDTO funding : fundingList) {
-            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
-            funding.setDaysLeft((int) Math.max(days, 0));  
-        }
+			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+			funding.setDaysLeft((int) Math.max(days, 0));
+		}
 		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
@@ -158,112 +157,61 @@ public class FundingController {
 
 		return "user.funding_detail";
 	}
-    
-	public String getFundingDetail(@PathVariable("fundingId") int fundingId,
-	                               @RequestParam(defaultValue = "1") int page,
-	                               @RequestParam(defaultValue = "10") int size,
-	                               Model model) {
-	    FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-	    if (funding == null) return "error/error";
 
-	    ProductDTO product = productService.selectByProductId(funding.getProductId());
-	    List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
-	    StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-	    List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
+	public String getFundingDetail(@PathVariable("fundingId") int fundingId, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+		if (funding == null)
+			return "error/error";
 
-	    int totalReviews = reviewService.countByProductId(funding.getProductId());
-	    int totalPages = (int) Math.ceil((double) totalReviews / size);
+		ProductDTO product = productService.selectByProductId(funding.getProductId());
+		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
+		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+		List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
 
-	    List<ReviewDTO> reviewlist = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
-	    double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
+		int totalReviews = reviewService.countByProductId(funding.getProductId());
+		int totalPages = (int) Math.ceil((double) totalReviews / size);
 
-	    model.addAttribute("funding", funding);
-	    model.addAttribute("store", store);
-	    model.addAttribute("product", product);
-	    model.addAttribute("productImages", productImages);
-	    model.addAttribute("reviewlist", reviewlist);
-	    model.addAttribute("avgRating", avgRating);
-	    model.addAttribute("reviewCount", totalReviews);
-	    model.addAttribute("taglist", taglist);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
+		List<ReviewDTO> reviewlist = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
+		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
 
-	    return "user.funding_detail";
+		model.addAttribute("funding", funding);
+		model.addAttribute("store", store);
+		model.addAttribute("product", product);
+		model.addAttribute("productImages", productImages);
+		model.addAttribute("reviewlist", reviewlist);
+		model.addAttribute("avgRating", avgRating);
+		model.addAttribute("reviewCount", totalReviews);
+		model.addAttribute("taglist", taglist);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+
+		return "user.funding_detail";
 	}
-	
-	//리뷰 페이지 처리
+
+	// 리뷰 페이지 처리
 	@GetMapping("/{fundingId}/reviews")
 	@ResponseBody
 	public Map<String, Object> getReviews(@PathVariable("fundingId") int fundingId,
-	                                      @RequestParam(defaultValue = "1") int page,
-	                                      @RequestParam(defaultValue = "10") int size) {
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
 
-	    FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-	    if (funding == null) {
-	        return Map.of("error", "존재하지 않는 펀딩입니다.");
-	    }
+		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+		if (funding == null) {
+			return Map.of("error", "존재하지 않는 펀딩입니다.");
+		}
 
-	    int totalReviews = reviewService.countByProductId(funding.getProductId());
-	    int totalPages = (int) Math.ceil((double) totalReviews / size);
-	    List<ReviewDTO> reviewList = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
+		int totalReviews = reviewService.countByProductId(funding.getProductId());
+		int totalPages = (int) Math.ceil((double) totalReviews / size);
+		List<ReviewDTO> reviewList = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
 
-	    return Map.of(
-	        "reviewlist", reviewList,
-	        "totalPages", totalPages,
-	        "currentPage", page
-	    );
+		return Map.of("reviewlist", reviewList, "totalPages", totalPages, "currentPage", page);
 
 	}
 
-	//기존 - 전체리스트
+	// 기존 - 전체리스트
 	@GetMapping("/list")
 	public String selectFundingListByStatus(@RequestParam("status") String status, Model model) {
-		int userId = 5; //임시 userId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		  if ("allfundinglist".equals(status)) {
-		        status = null; // 전체 조회 - 조건에서 status 제외
-		    } else if ("progressing".equals(status)) {
-		        status = "진행중";
-		    } else if ("achieved".equals(status)) {
-		        status = "성공";
-		    } else if ("failed".equals(status)) {
-		        status = "미달성";
-		    }
-		  
-		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
-		//System.out.println(fundingList);
-		/*
-		 * for (FundingDTO f : fundingList) { System.out.println("fundingName=" +
-		 * f.getFundingName()); System.out.println("storeName=" + f.getStoreName());
-		 * System.out.println("startDate=" + f.getStartDate());
-		 * System.out.println("endDate=" + f.getEndDate()); System.out.println("status="
-		 * + f.getStatus()); System.out.println("thumbnailImageUrl=" +
-		 * f.getThumbnailImageUrl()); }
-			
-		  System.out.println("fundingList.size() = " + fundingList.size());
-		    for (FundingDTO f : fundingList) {
-		        System.out.println("fundingName = " + f.getFundingName());
-		    }
-		
-		for (FundingDTO dto : fundingList) {
-		    System.out.println("펀딩명: " + dto.getFundingName());
-		    System.out.println("결제일: " + dto.getPurchasedAt());
-		    System.out.println("펀딩기간: " + dto.getStartDate() + " ~ " + dto.getEndDate());
-		    System.out.println("주소: " + dto.getStoreAddress());
-		}*/
-		
-		model.addAttribute("fundingList", fundingList);
-		return "pages/user/myPage_fundingList";
-	}
-	  
-	
-	//페이징처리용
-	@GetMapping("/paged")
-	public String selectFundingListByStatus(@RequestParam("status") String status,
-			@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
-		int userId = 5; 
-		int pageSize = 10;
-		System.out.println("status = " + status + ", page = " + page);
+		int userId = 5; // 임시 userId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		if ("allfundinglist".equals(status)) {
 			status = null; // 전체 조회 - 조건에서 status 제외
@@ -274,20 +222,10 @@ public class FundingController {
 		} else if ("failed".equals(status)) {
 			status = "미달성";
 		}
-
-		int offset = (page - 1) * pageSize;
-
-		Map<String, Object> pageData = fundingService.selectFundingListByStatus(userId, status, offset, pageSize);
-
-		List<FundingDTO> fundingList = (List<FundingDTO>) pageData.get("list");
 		
-		int totalCount = (Integer) pageData.get("totalCount");
-		int totalPage = (int) Math.ceil((double) totalCount / pageSize);
-
+		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
 		model.addAttribute("fundingList", fundingList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPage", totalPage);
-
+		
 		return "pages/user/myPage_fundingList";
 	}
 }
