@@ -23,4 +23,13 @@ public interface StoreStatsMapper {
 	List<LabelValueDTO> selectGenderRatio();
 
 	List<AgeGenderTagDTO> selectTopTagsByAgeGender();
+
+	/** 상품별 월별 주문/매출 통계 */
+	List<OrderStatsDTO> selectProductMonthlyStats(int productId);
+
+	/** 상품별 연령대 통계 */
+	List<LabelValueDTO> selectProductAgeStats(int productId);
+
+	/** 상품별 성별 통계 */
+	List<LabelValueDTO> selectProductGenderStats(int productId);
 }

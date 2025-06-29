@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-  
+
 	private Integer productId;
 	private Integer storeId;
 	private String productName;
@@ -22,5 +22,6 @@ public class ProductDTO {
 	private Date createdAt;
 	private List<ImageDTO> images;
 	private String thumbnailImageUrl;
+	private Double averageRating; // 평점 평균 (null 가능성 있어서 Double)
 
 }
