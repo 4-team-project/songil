@@ -74,7 +74,7 @@ public class StoreController {
 		return "redirect:/seller/store/list";
 	}
 
-	// seller -> 현재 상점 표시용
+	// seller -> 한정 상품 펀딩 or 일반 펀딩
 	@GetMapping("/create-step1")
 	public String selectStoreNameByUserId(Model model) {
 		int userId = 3; // 임시 사용자 ID
@@ -83,25 +83,18 @@ public class StoreController {
 		return "pages/seller/createFunding";
 	}
 
+	// 상품 정보
 	@GetMapping("/create-step2")
 	public String selectFundingMenuType() {
-		return "pages/seller/create_selectMenu";
+		return "pages/seller/create_existMenu";
 	}
 	
-	//기존 메뉴 선택을 눌렀을 때 create_existMenu로
-	@GetMapping("/create_existMenu")
-	public String showExistingMenuPage() {
-	    return "pages/seller/create_existMenu"; 
-	}
-
-	//새로운 메뉴 등록을 눌렀을 때 create_newMenu로
-	@GetMapping("/create_newMenu")
-	public String showNewMenuPage() {
-	    return "pages/seller/create_newMenu"; 
-	}
-	
-	@PostMapping("/create-step3")
-	public String insertFundingMenuDetail() {
+	//기간 및 이미지
+	@GetMapping("/create-step3")
+	public String selectDateAndImage() {
 		return "pages/seller/create_insertDetail";
 	}
+		
+	
+	
 }
