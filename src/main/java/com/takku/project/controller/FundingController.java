@@ -1,5 +1,7 @@
 package com.takku.project.controller;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -55,6 +57,19 @@ public class FundingController {
 				.collect(Collectors.toList());
 	}
 
+	@GetMapping("/search/fragment")
+	public String getSortedFundingFragment(@RequestParam String sort, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "8") int size, Model model) {
+		List<FundingDTO> list = fundingService.getFundingsByConditionWithPaging(null, null, null, null, sort, page,
+				size);
+		for (FundingDTO funding : list) {
+			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+			funding.setDaysLeft((int) Math.max(days, 0));
+		}
+		model.addAttribute("fundinglist", list);
+		return "common/fundingFragment";
+	}
+
 	@ApiOperation(value = "펀딩 검색 (페이징)", notes = "검색 조건에 따라 펀딩을 필터링하고 페이징된 목록을 조회합니다.")
 	@GetMapping("/search")
 	public String searchFundingWithPaging(@RequestParam(required = false) String keyword,
@@ -68,6 +83,12 @@ public class FundingController {
 		List<String> keywordList = splitKeywords(keyword);
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
+
+		for (FundingDTO funding : fundingList) {
+			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+			funding.setDaysLeft((int) Math.max(days, 0));
+		}
+
 		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
 		int totalPages = (int) Math.ceil((double) total / size);
 
@@ -76,7 +97,7 @@ public class FundingController {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("sort", sort);
 
-		return "pages/common/funding";
+		return "common/funding";
 	}
 
 	@ApiOperation(value = "펀딩 검색 (JSON 응답)", notes = "검색 조건에 따라 펀딩을 필터링하고 JSON 응답으로 반환합니다.")
@@ -89,8 +110,13 @@ public class FundingController {
 
 		if (size <= 0)
 			size = 10;
+		
+		if (keyword != null) {
+		    keyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8);
+		}
 
 		List<String> keywordList = splitKeywords(keyword);
+		System.out.println("split된 키워드 목록: " + keywordList);
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
 		for (FundingDTO funding : fundingList) {
@@ -222,10 +248,10 @@ public class FundingController {
 		} else if ("failed".equals(status)) {
 			status = "미달성";
 		}
-		
+
 		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
 		model.addAttribute("fundingList", fundingList);
-		
+
 		return "pages/user/myPage_fundingList";
 	}
 }

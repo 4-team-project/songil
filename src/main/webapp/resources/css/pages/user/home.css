@@ -1,14 +1,17 @@
 @import url('../../base/fonts.css');
 
-#filteredFundingList {
+#filteredFundingListBox {
 	display: flex;
-	flex-wrap: wrap;
 	width: 1076px;
-	row-gap: 32px;
-	column-gap: 20px;
+	flex-direction: column; 
 }
-.funding-box {
-  width: 254px; 
+
+.filteredFundingList {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 32px;
+  column-gap: 20px;
+  width: 100%;
 }
 
 .content-box {

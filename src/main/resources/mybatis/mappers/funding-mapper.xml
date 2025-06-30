@@ -50,9 +50,15 @@
 		f.status,
 		f.created_at,
 		s.store_name,
-		p.price
+		p.price,
+		(
+		SELECT AVG(r.rating)
+		FROM takku_review r
+		WHERE r.product_id = f.product_id
+		) AS avg_rating
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id = s.store_id
+		JOIN takku_store s ON f.store_id =
+		s.store_id
 		JOIN takku_product p ON f.product_id = p.product_id
 		<where>
 			f.status IN ('진행중', '준비중')
@@ -60,13 +66,17 @@
 				AND (
 				<foreach collection="keywordList" item="kw" separator="OR">
 					LOWER(f.funding_name) LIKE '%' || LOWER(#{kw}) || '%'
-					OR INSTR(DBMS_LOB.SUBSTR(f.funding_desc, 4000, 1), #{kw}) > 0
-					OR EXISTS (
+					OR
+					INSTR(DBMS_LOB.SUBSTR(f.funding_desc, 4000, 1), #{kw}) > 0
+					OR EXISTS
+					(
 					SELECT 1
 					FROM takku_funding_tag ft
-					JOIN takku_tag t ON ft.tag_id = t.tag_id
+					JOIN takku_tag t ON ft.tag_id =
+					t.tag_id
 					WHERE ft.funding_id = f.funding_id
-					AND LOWER(t.tag_name) LIKE '%' || LOWER(#{kw}) || '%'
+					AND LOWER(t.tag_name)
+					LIKE '%' || LOWER(#{kw}) || '%'
 					)
 				</foreach>
 				)
@@ -83,12 +93,7 @@
 		</where>
 		<choose>
 			<when test="sort == 'popular'">
-				ORDER BY (
-				SELECT AVG(r.rating)
-				FROM takku_review r
-				JOIN takku_product p2 ON r.product_id = p2.product_id
-				WHERE p2.product_id = f.product_id
-				) DESC NULLS LAST, f.end_date ASC
+				ORDER BY avg_rating DESC NULLS LAST, f.end_date ASC
 			</when>
 			<when test="sort == 'closing'">
 				ORDER BY f.end_date ASC
@@ -116,8 +121,10 @@
 		resultType="int">
 		SELECT COUNT(DISTINCT f.funding_id)
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id = s.store_id
-		JOIN takku_product p ON f.product_id = p.product_id
+		JOIN
+		takku_store s ON f.store_id = s.store_id
+		JOIN takku_product p ON
+		f.product_id = p.product_id
 		<where>
 			f.status IN ('진행중', '준비중')
 			<if test="keywordList != null and keywordList.size() > 0">
@@ -130,9 +137,11 @@
 					(
 					SELECT 1
 					FROM takku_funding_tag ft
-					JOIN takku_tag t ON ft.tag_id = t.tag_id
+					JOIN takku_tag t ON ft.tag_id =
+					t.tag_id
 					WHERE ft.funding_id = f.funding_id
-					AND LOWER(t.tag_name) LIKE '%' || LOWER(#{kw}) || '%'
+					AND LOWER(t.tag_name)
+					LIKE '%' || LOWER(#{kw}) || '%'
 					)
 				</foreach>
 				)
