@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @charset "utf-8";
 
 .payment-result-container {
@@ -335,5 +334,4 @@
 .modal-btn.confirm {
 	background: #ff7a52;
 	color: white;
->>>>>>> d829b03 (🐛 bugfix: git-develop 코드 수정)
 }

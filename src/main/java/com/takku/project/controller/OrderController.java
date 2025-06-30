@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,9 @@ public class OrderController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Value("${iamport.api.key}")
+    private String iamportApiKey;
 
 	// 주문 폼
 	@GetMapping
@@ -63,6 +67,7 @@ public class OrderController {
 		model.addAttribute("loginUser", user);
 		model.addAttribute("quantity", quantity);
 		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("iamportApiKey", iamportApiKey);
 		return "user.order";
 	}
 

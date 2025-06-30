@@ -16,7 +16,7 @@ $(function() {
     const quantity = parseInt("${quantity}");
     
     const IMP = window.IMP;
-    IMP.init("imp22234788"); // 본인의 가맹점 식별코드
+    IMP.init("${iamportApiKey}"); // 본인의 가맹점 식별코드
 
     // 전액 사용 버튼 클릭 시
     $("#useAllPointBtn").click(function () {
