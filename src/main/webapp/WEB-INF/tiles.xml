@@ -35,14 +35,14 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/auth.jsp" />
 	</definition>
-	
+
 	<!-- 회원가입 -->
 	<definition name="auth.signup" extends="subLayout">
 		<put-attribute name="title" value="회원가입" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/auth_signup.jsp" />
 	</definition>
-	
+
 	<!-- 홈 -->
 	<definition name="user.home" extends="defaultLayout">
 		<put-attribute name="title" value="홈" />
@@ -130,5 +130,14 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
 	</definition>
+
+	<definition name="seller/productStats"
+		extends="defaultLayout">
+		<put-attribute name="title" value="상품 통계" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/productStats.jsp" />
+	</definition>
+
+
 </tiles-definitions>
 

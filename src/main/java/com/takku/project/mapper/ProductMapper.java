@@ -6,18 +6,13 @@ import com.takku.project.domain.ProductDTO;
 
 public interface ProductMapper {
 
-	// 1. ��ǰ ���
-	int insertProduct(ProductDTO product);
+	void insertProduct(ProductDTO product);
 
-    // 2. ���� ID�� ��ǰ ��� ��ȸ
-    List<ProductDTO> selectProductByStoreId(Integer storeId);
+	List<ProductDTO> selectProductByStoreId(int storeId);
 
-    // 3. ��ǰ ����
-    int updateProduct(ProductDTO product);
+	ProductDTO selectByProductId(int productId);
 
-    // 4. ��ǰ ����
-    int deleteProduct(Integer productId);
-    
-    // 5. selectByProductId
-    ProductDTO selectByProductId(Integer productId);
+	void updateProduct(ProductDTO product);
+
+	void deleteProduct(int productId);
 }

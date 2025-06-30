@@ -58,6 +58,32 @@ public class StoreStatsService {
 		return rawData;
 	}
 
+	public List<OrderStatsDTO> getProductMonthlyStats(int productId) {
+		return statsMapper.selectProductMonthlyStats(productId);
+	}
+
+	public List<LabelValueDTO> getProductAgeStats(int productId) {
+		List<LabelValueDTO> rawData = statsMapper.selectProductAgeStats(productId);
+		double total = rawData.stream().mapToDouble(LabelValueDTO::getValue).sum();
+		for (LabelValueDTO item : rawData) {
+			double percent = (item.getValue() * 100.0) / total;
+			item.setLabel(item.getLabel() + " (" + String.format("%.1f", percent) + "%)");
+			item.setValue(percent);
+		}
+		return rawData;
+	}
+
+	public List<LabelValueDTO> getProductGenderStats(int productId) {
+		List<LabelValueDTO> rawData = statsMapper.selectProductGenderStats(productId);
+		double total = rawData.stream().mapToDouble(LabelValueDTO::getValue).sum();
+		for (LabelValueDTO item : rawData) {
+			double percent = (item.getValue() * 100.0) / total;
+			item.setLabel(item.getLabel() + " (" + String.format("%.1f", percent) + "%)");
+			item.setValue(percent);
+		}
+		return rawData;
+	}
+
 	public List<AgeGenderTagDTO> getTopTagsByAgeGender() {
 		return statsMapper.selectTopTagsByAgeGender();
 	}
