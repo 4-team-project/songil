@@ -1,6 +1,5 @@
 package com.takku.project.service;
 
-
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,12 @@ import com.takku.project.domain.StoreDTO;
 import com.takku.project.mapper.StoreMapper;
 
 @Service
-public class StoreService implements StoreMapper{
+public class StoreService implements StoreMapper {
 
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.StoreMapper.";
-	
+
 	@Override
 	public int insertStore(StoreDTO store) {
 		int result = sqlSession.insert(namespace + "insertStore", store);
@@ -42,19 +41,39 @@ public class StoreService implements StoreMapper{
 
 	@Override
 	public int countByBusinessNumber(String businessNumber) {
-		int result = sqlSession.selectOne(namespace+"countByBusinessNumber", businessNumber);
+		int result = sqlSession.selectOne(namespace + "countByBusinessNumber", businessNumber);
 		return result;
 	}
 
 	@Override
-    public Integer findStoreIdByUserId(int userId) {
-        return sqlSession.selectOne(namespace + "selectStoreIdByUserId", userId);
-    }
+	public Integer findStoreIdByUserId(int userId) {
+		return sqlSession.selectOne(namespace + "selectStoreIdByUserId", userId);
+	}
 
-	//seller -> userId별 상점이름 조회
+	// seller -> userId별 상점이름 조회
 	@Override
 	public StoreDTO selectStoreNameByUserId(int userId) {
-		return sqlSession.selectOne(namespace+ "selectStoreNameByUserId", userId);
+		return sqlSession.selectOne(namespace + "selectStoreNameByUserId", userId);
 	}
-	
+
+	@Override
+	public int countTodayOrdersByStoreId(int storeId) {
+		return sqlSession.selectOne(namespace + "countTodayOrdersByStoreId", storeId);
+	}
+
+	@Override
+	public Integer sumTodaySalesByStoreId(int storeId) {
+		return sqlSession.selectOne(namespace + "sumTodaySalesByStoreId", storeId);
+	}
+
+	@Override
+	public int countOngoingFundingsByStoreId(int storeId) {
+		return sqlSession.selectOne(namespace + "countOngoingFundingsByStoreId", storeId);
+	}
+
+	@Override
+	public int countUpcomingFundingsByStoreId(int storeId) {
+		return sqlSession.selectOne(namespace + "countUpcomingFundingsByStoreId", storeId);
+	}
+
 }

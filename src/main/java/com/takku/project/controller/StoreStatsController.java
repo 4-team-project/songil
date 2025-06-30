@@ -1,6 +1,7 @@
 package com.takku.project.controller;
 
 import com.takku.project.domain.StoreDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.domain.stats.OrderStatsDTO;
 import com.takku.project.domain.stats.PopularProductDTO;
 import com.takku.project.domain.stats.ProductRePurchaseDTO;
@@ -11,6 +12,8 @@ import com.takku.project.service.FundingService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.StoreStatsService;
+import com.takku.project.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,10 +36,47 @@ public class StoreStatsController {
 	private StoreStatsService statsService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private AIService aiService;
 
 	@Autowired
 	private ProductService productService;
+
+	@GetMapping("/store/main")
+	public String getMain(Model model) {
+		Integer storeId = 1;
+		Integer userId = 1;
+
+		UserDTO user = userService.selectByUserId(userId);
+		StoreDTO store = storeService.selectStoreById(storeId);
+
+		// 통계 조회
+		int todayOrderCount = storeService.countTodayOrdersByStoreId(storeId);
+		int todaySales = storeService.sumTodaySalesByStoreId(storeId);
+		int ongoingFundingCount = storeService.countOngoingFundingsByStoreId(storeId);
+		int upcomingFundingCount = storeService.countUpcomingFundingsByStoreId(storeId);
+
+		// Model에 추가
+		model.addAttribute("userDTO", user);
+		model.addAttribute("storeDTO", store);
+		model.addAttribute("todayOrderCount", todayOrderCount);
+		model.addAttribute("todaySales", todaySales);
+		model.addAttribute("ongoingFundingCount", ongoingFundingCount);
+		model.addAttribute("upcomingFundingCount", upcomingFundingCount);
+
+		// 기존 통계
+		model.addAttribute("orderStats", statsService.getMonthlyOrderStats(storeId));
+		model.addAttribute("popularProducts", statsService.getPopularProducts(storeId));
+		model.addAttribute("tagStats", statsService.getTagStats(storeId));
+		model.addAttribute("topRePurchased", statsService.getTopRePurchasedProducts(storeId));
+		model.addAttribute("ageDistribution", statsService.getAgeDistribution());
+		model.addAttribute("genderRatio", statsService.getGenderRatio());
+		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
+
+		return "seller/main";
+	}
 
 	@GetMapping("/store/stats")
 	public String getStoreStats(@RequestParam("storeId") int storeId, Model model, HttpSession session) {
@@ -57,7 +97,6 @@ public class StoreStatsController {
 		System.out.println(store);
 		System.out.println(fundingService.selectFundingByFundingId(1));
 		// View 전달
-		model.addAttribute("storeId", storeId); // 필요한 경우 JSP에서 storeId 사용 가능
 		model.addAttribute("storeDTO", store);
 		model.addAttribute("orderStats", orderStats);
 		model.addAttribute("popularProducts", popularProducts);
