@@ -82,5 +82,9 @@
 		SELECT store_id FROM takku_store WHERE user_id =
 		#{userId}
 	</select>
+	
+	<select id = "selectStoreNameByUserId" resultType = "StoreDTO">
+		SELECT * FROM takku_store WHERE user_id = #{userId}
+	</select>
 
 </mapper>

@@ -25,4 +25,6 @@ public class UserDTO {
     private String isPartner;
     private Date createdAt;
     private Integer point;
+    private String fundingType;
+    
 }
