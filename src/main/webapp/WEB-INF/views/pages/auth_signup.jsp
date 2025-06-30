@@ -18,13 +18,39 @@
 
 			$("#closeModalBtn").off("click").on("click", function() {
 				$("#resultModal").fadeOut(function() {
-					if (callback) callback();
+					if (callback)
+						callback();
 				});
 			});
 		}
+		
+		//비밀번호 유효성 검사
+		$("#password").on("input", function () {
+		    const password = $(this).val();
+		    const errorSpan = $("#passwordError");
+		    const successSpan = $("#passwordSuccess");
 
-		$("#cancelJoinBtn").on("click", function() {
-			location.href = "${cpath}/auth/login";
+		    fetch("${cpath}/api/v1/validations/password-format", {
+		        method: "POST",
+		        headers: {
+		            "Content-Type": "application/json"
+		        },
+		        body: JSON.stringify({ password: password })
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.valid) {
+		            errorSpan.hide();
+		            successSpan.text("사용 가능한 비밀번호입니다.").show();
+		        } else {
+		            successSpan.hide();
+		            if (password.length < 6) {
+		                errorSpan.text("비밀번호는 최소 6자 이상이어야 합니다.").show();
+		            } else {
+		                errorSpan.text("비밀번호는 영문자와 숫자를 포함해야 합니다.").show();
+		            }
+		        }
+		    })
 		});
 
 		// 인증번호 전송
@@ -37,7 +63,9 @@
 				return;
 			}
 
-			$.post("${cpath}/auth/send-auth-code", { phone: phone }, function(res) {
+			$.post("${cpath}/auth/send-auth-code", {
+				phone : phone
+			}, function(res) {
 				if (res === "success") {
 					$("#authCodeSection").show();
 				} else {
@@ -56,7 +84,9 @@
 				return;
 			}
 
-			$.post("${cpath}/auth/verify-auth-code", { inputCode: inputCode }, function(res) {
+			$.post("${cpath}/auth/verify-auth-code", {
+				inputCode : inputCode
+			}, function(res) {
 				if (res === "success") {
 					$("#authSuccessMessage").show();
 					$("#authVerified").val("true");
@@ -89,7 +119,10 @@
 				return;
 			}
 
-			$.post("${cpath}/auth/check-duplicate", { phone: phone, userType: userType }, function(res) {
+			$.post("${cpath}/auth/check-duplicate", {
+				phone : phone,
+				userType : userType
+			}, function(res) {
 				if (res.exists) {
 					$("#duplicateMsg").text("중복된 계정입니다. 다른 번호를 입력하세요.").show();
 				} else {
@@ -151,10 +184,14 @@
 				본인인증이 완료되었습니다.</p>
 			<input type="hidden" name="authVerified" id="authVerified"
 				value="false" />
+
 			<p>
-				<strong>비밀번호</strong> <input type="password" name="password"
-					required class="modal-input" />
-			</p>
+				<strong>비밀번호</strong> 
+				<input type="text" name="password" id="password" required class="modal-input" style="width: 300px;" />
+			</p>  
+			<span id="passwordError" style="color: red; font-size: 14px; display: none; margin-left: 112px;"></span>
+  			<span id="passwordSuccess" style="color: green; font-size: 14px; display: none; margin-left: 112px;"></span>
+
 			<p>
 				<strong>이름</strong> <input type="text" name="name" required
 					class="modal-input" />
@@ -172,14 +209,36 @@
 				<strong>닉네임</strong> <input type="text" name="nickname" required
 					class="modal-input" />
 			</p>
-			<p>
-				<strong>시/도</strong> <input type="text" name="sido" required
-					class="modal-input" placeholder="ex)서울, 부산, 광주" />
-			</p>
-			<p>
-				<strong>시/군/구</strong> <input type="text" name="sigungu" required
-					class="modal-input" placeholder="ex)마포구, 영등포구" />
-			</p>
+
+			<!-- 주소 api js 추가 -->
+			<script src="${cpath}/resources/js/address.js"></script>
+			<script
+				src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+			<div class="address-section">
+				<p class="address-row">
+					<strong>주소</strong> 
+					<input type="text" name="postcode" id="postcode" class="modal-input small-input" placeholder="우편번호" readonly>
+					<button type="button" class="auth-btn" onclick="execDaumPostcode()">주소 검색</button>
+					<button type="button" class="auth-btn" id="clearAddressBtn">지우기</button>
+				</p>
+
+				<input type="hidden" id="sido" name="sido"> 
+				<input type="hidden" id="sigungu" name="sigungu">
+
+				<p>
+					<strong>&nbsp&nbsp&nbsp&nbsp&nbsp</strong> 
+					<input type="text" name="roadAddress" id="roadAddress" class="modal-input" placeholder="도로명 주소" readonly>
+				</p>
+
+				<p>
+					<strong>&nbsp&nbsp&nbsp&nbsp&nbsp</strong> 
+					<input type="text" name="jibunAddress" id="jibunAddress" class="modal-input" placeholder="지번 주소 (선택)" readonly>
+				</p>
+			</div>
+
+
+
 		</div>
 
 		<div class="modal-buttons">

@@ -20,8 +20,10 @@ public class UserDTO {
     private String gender;
     private Date birth;
     private String nickname;
-    private String sido;
-    private String sigungu;
+    private String postcode; //우편번호
+    private String sido; //시도
+    private String sigungu; //시군도
+    private String detailAddr; //상세주소
     private String isPartner;
     private Date createdAt;
     private Integer point;
