@@ -45,7 +45,7 @@
 </div>
 
 <!-- 다음 단계 -->
-<form action="${pageContext.request.contextPath}/seller/store/create-step4" onsubmit="return checkConfirmed();">
+<form action="${pageContext.request.contextPath}/seller/create-step4" onsubmit="return checkConfirmed();">
   <button type="submit">다음</button>
 </form>
 
