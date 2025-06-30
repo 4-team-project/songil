@@ -83,7 +83,7 @@ public class StoreController {
 		return "redirect:/seller/store/list";
 	}
 
-	// seller -> 현재 상점 표시용
+	// seller -> 한정 상품 펀딩 or 일반 펀딩
 	@GetMapping("/create-step1")
 	public String selectStoreNameByUserId(Model model) {
 		int userId = 3; // 임시 사용자 ID
@@ -92,9 +92,10 @@ public class StoreController {
 		return "pages/seller/createFunding";
 	}
 
+	// 상품 정보
 	@GetMapping("/create-step2")
 	public String selectFundingMenuType() {
-		return "pages/seller/create_selectMenu";
+		return "pages/seller/create_existMenu";
 	}
 
 	// 기존 메뉴 선택을 눌렀을 때 create_existMenu로
@@ -178,5 +179,11 @@ public class StoreController {
 		 * model.addAttribute("startDate", funding.getStartDate());
 		 */// Date로 저장돼 있다면 포맷 필요
 	    return "pages/seller/funding_complete";
+	}
+	
+	//기간 및 이미지
+	@GetMapping("/create-step3")
+	public String selectDateAndImage() {
+		return "pages/seller/create_insertDetail";
 	}
 }

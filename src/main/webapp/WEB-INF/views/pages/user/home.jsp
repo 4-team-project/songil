@@ -10,21 +10,11 @@
 	<div class="main-contents">
 		<div class="head-box">
 			<p>
-				세연님 <span>추천 펀딩</span>
+				${sessionScope.loginUser.nickname}님 <span>추천 펀딩</span>
 			</p>
-			<!-- 지역 드롭다운 -->
 			<div class="dropdown-box">
-				<div class="dropdown">
-					<button class="dropbtn" id="sidoButton"
-						onclick="toggleDropdown('sido')">시/도 선택</button>
-					<div class="dropdown-content" id="sidoDropdown"></div>
-				</div>
-				<div class="dropdown">
-					<button class="dropbtn" id="sigunguButton"
-						onclick="toggleDropdown('sigungu')">시/군/구 선택</button>
-					<div class="dropdown-content" id="sigunguDropdown"></div>
-				</div>
-				<div class="find-btn" id="findBtn">찾기</div>
+				<%@ include file="/WEB-INF/views/common/regionDropdown.jsp"%>
+				<div class="find-btn">찾기</div>
 			</div>
 		</div>
 		<div id="main-contents">
@@ -32,7 +22,7 @@
 				<%@ include file="/WEB-INF/views/common/funding.jsp"%>
 			</div>
 
-			<div id="filteredFundingList"></div>
+			<div id="filteredFundingListBox"></div>
 
 			<div class="add-button" id="moreButton">
 				<div class="add-button-text">더보기</div>
@@ -47,3 +37,4 @@
 
 <script src="${cpath}/resources/js/funding.js"></script>
 <script src="${cpath}/resources/js/region.js"></script>
+<script src="${cpath}/resources/js/searchBox.js"></script>
