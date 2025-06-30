@@ -1,30 +1,32 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java"%>
 <meta charset="UTF-8">
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 빈 파비콘 (브라우저 요청 방지) -->
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/my_coupon_page.css" />
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/review-form.css" />
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/review-form.css" />
 
 <div class="coupon-container">
-<!-- 사이드 메뉴 -->
-<div class="sidebar">
-	<div class="menu-title active">사용 가능한 쿠폰</div>
-	<div class="menu-sub">사용한 쿠폰</div>
-</div>
+	<!-- 사이드 메뉴 -->
+	<div class="sidebar">
+		<div class="menu-title active">사용 가능한 쿠폰</div>
+		<div class="menu-sub">사용한 쿠폰</div>
+	</div>
 	<!-- 본문 -->
 	<div class="main-content">
 		<!-- 검색 -->
-		
+
 		<!-- 탭 -->
 		<div class="tab-search-bar">
-    <div id="tabs" class="tabs"></div>
-    <div class="search-wrapper">
-        <%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
-    </div>
-</div>
+			<div id="tabs" class="tabs"></div>
+			<div class="search-wrapper">
+				<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
+			</div>
+		</div>
 		<!-- 쿠폰 리스트 -->
 		<div class="coupon-list">
 			<c:forEach var="coupon" items="${coupons}">
@@ -44,10 +46,10 @@
 						<c:choose>
 							<c:when test="${coupon.useStatus == '미사용'}">
 								<div class="sale">
-									
+
 									<fmt:formatNumber value="${discountRateInt}" type="number"
 										maxFractionDigits="0" />
-									% 
+									%
 								</div>
 							</c:when>
 							<c:when test="${coupon.useStatus == '사용'}">
@@ -71,24 +73,44 @@
 						<div class="name">
 							<strong>${funding.fundingName}</strong>
 						</div>
-						<div class="desc">${funding.fundingDesc}</div>
+						<div class="desc">
+							<c:choose>
+
+								<c:when test="${fn:length(funding.fundingDesc) > 40}">
+      ${fn:substring(funding.fundingDesc, 0, 40)}... <span class="more"
+										onclick="goToCouponDetail('${cpath}/user/coupon/detail', '${coupon.couponId}')"
+										style="color: #FF9670; cursor: pointer;">더보기</span>
+								</c:when>
+								<c:otherwise>
+      ${funding.fundingDesc}
+    </c:otherwise>
+							</c:choose>
+						</div>
 					</div>
 					<div class="coupon-right">
 						<c:choose>
 							<c:when
 								test="${coupon.useStatus == '사용' and coupon.reviewed == 1}">
-								<button class="use-btn used-btn"><span class="btn-word">사용완료</span></button>
+								<button class="use-btn used-btn">
+									<span class="btn-word">사용완료</span>
+								</button>
 							</c:when>
 							<c:when test="${coupon.useStatus == '사용'}">
-								<button class="use-btn used-btn"><span class="btn-word">사용완료</span></button>
+								<button class="use-btn used-btn">
+									<span class="btn-word">사용완료</span>
+								</button>
 								<button type="button" class="review-btn"
-									onclick="openReviewModal('${cpath}/review/write/${coupon.couponId}')"><span class="btn-word">리뷰쓰기</span></button>
+									onclick="openReviewModal('${cpath}/review/write/${coupon.couponId}')">
+									<span class="btn-word">리뷰쓰기</span>
+								</button>
 							</c:when>
 							<c:when test="${coupon.useStatus == '미사용'}">
 								<form action="${cpath}/user/coupon/detail" method="post"
 									style="display: inline;">
 									<input type="hidden" name="couponId" value="${coupon.couponId}" />
-									<button type="submit" class="use-btn unused-btn"><span class="btn-word">사용하기</span></button>
+									<button type="submit" class="use-btn unused-btn">
+										<span class="btn-word">사용하기</span>
+									</button>
 								</form>
 								<div class="coupon-date">
 									~
@@ -591,8 +613,26 @@
         window.location.href = cpath + "/user/reviews";
         closeModal(); // 페이지 이동 후에도 모달 닫기
     }
+    
+	//쿠폰 설명 더보기 클릭시 쿠폰 상세보기로 이동(시간 되면 쿠폰 설명 상세보기 페이지 작성)
+    
+    function goToCouponDetail(url, couponId) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'couponId';
+      input.value = couponId;
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    
+  </script>
 
     
-    </script>
 <div id="reviewModalContainer" class="modal-overlay"
 	style="display: none;"></div>
