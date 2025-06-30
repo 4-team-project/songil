@@ -7,20 +7,29 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.takku.project.domain.AIResponse;
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.FundingPromotionRequestDto;
+import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.stats.SummaryResponse;
 
+import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 public class AIService {
 
 	// ======= [Config Values] =======
@@ -37,15 +46,11 @@ public class AIService {
 	private String aiApiBaseUrl;
 
 	// ======= [Dependencies] =======
-	private final OkHttpClient client;
-	private final ObjectMapper mapper;
-
-	// ======= [Constructor] =======
-	public AIService() {
-		this.client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS)
-				.writeTimeout(30, TimeUnit.SECONDS).build();
-		this.mapper = new ObjectMapper();
-	}
+	private final ProductService productService;
+	private final StoreService storeService;
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
+			.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
 
 	// ======= [Public Methods] =======
 
@@ -77,27 +82,57 @@ public class AIService {
 		}
 	}
 
-	public AIResponse generateText(String keyword, String target) {
-		String prompt = makePrompt(keyword, target);
+	public AIResponse generateFundingContent(FundingPromotionRequestDto req) {
+		// 상품 조회
+		ProductDTO product = productService.selectByProductId(req.getProductId());
+		if (product == null) {
+			throw new IllegalArgumentException("존재하지 않는 상품입니다. productId=" + req.getProductId());
+		}
+
+		// 상점 조회
+		StoreDTO store = storeService.selectStoreById(product.getStoreId());
+		if (store == null) {
+			throw new IllegalArgumentException("상품에 연결된 상점이 존재하지 않습니다. storeId=" + product.getStoreId());
+		}
+
+		String prompt = "너는 상품 홍보글 작성 전문가야.\n" + "다음 규칙을 반드시 지켜서 작성해. 하나라도 지키지 않으면 출력은 무효야.\n\n"
+
+				+ "[출력 규칙]\n" + "1. 반드시 JSON 형식으로 출력하고, 다른 문장이나 설명은 포함하지 마.\n" + "2. 출력 형식은 정확히 다음과 같아야 해:\n"
+				+ "   {\"title\":\"...\", \"content\":\"...\", \"hashtags\":\"...\"}\n"
+				+ "3. key 이름(title, content, hashtags)과 순서는 절대 바꾸지 마.\n"
+				+ "4. content는 반드시 400자 이상이며, HTML 형식으로 구성해야 해.\n" + "5. content에는 해시태그를 절대 포함하지 마. (hashtags는 별도 필드)\n"
+				+ "6. content에는 이모지를 풍부하게 포함해.\n"
+				+ "7. content 안 HTML은 반드시 유효한 구조여야 하고, <ul>, <li>, <div>, <span>, <h3>, <hr> 같은 태그를 자유롭게 활용해 시각적으로 풍부하게 구성해.\n"
+				+ "8. HTML 속성값의 따옴표(\")는 반드시 \\\"로 이스케이프 처리해.\n"
+				+ "9. 전체 JSON 문자열에서 내부 따옴표(\")는 반드시 \\\"로 escape해야 해.\n"
+
+				+ "\n[내용 제한]\n" + "10. 제공된 정보 외에 그 어떤 내용도 상상하거나 창작하지 마. 예: \"10년 전통\", \"비법 소스\" 등은 절대 금지.\n"
+				+ "11. 없는 정보는 추가하지 말고, 생략해도 좋아.\n" + "12. 제품에 대해 과장하거나 허위 사실을 넣지 마. 오직 사실 기반으로 작성해.\n"
+				+ "13. 타겟 고객을 직접 언급하지 마. 대신 그들의 관심사와 감성을 반영해서 자연스럽게 설득력 있는 표현을 써.\n"
+				+ "14. 모든 출력은 반드시 한국어로만 작성하고, 한자나 중국어는 절대 사용하지 마.\n"
+
+				+ "\n[제공 정보]\n" + "상품명: " + product.getProductName() + "\n" + "상품설명: " + product.getDescription() + "\n"
+				+ "원가: " + product.getPrice() + "원\n" + "판매가: " + req.getSalePrice() + "원\n" + "상점명: "
+				+ store.getStoreName() + "\n" + "상점 설명: " + store.getDescription() + "\n" + "카테고리: "
+				+ store.getCategoryName() + "\n" + "지역: " + store.getSido() + " " + store.getSigungu() + "\n" + "키워드: "
+				+ req.getKeyword() + "\n" + "타겟층: " + req.getTarget();
 
 		try {
 			String requestBody = buildGroqRequestBody(prompt);
 			Request request = new Request.Builder().url(apiUrl).addHeader("Authorization", "Bearer " + apiKey)
 					.post(RequestBody.create(requestBody, MediaType.parse("application/json"))).build();
 
+			System.out.println("🔍 요청 프롬프트:\n" + prompt);
+			System.out.println("🧾 Groq 응답:\n" + requestBody);
+
 			try (Response response = client.newCall(request).execute()) {
 				if (!response.isSuccessful()) {
-					throw new RuntimeException(String.format("Groq API 호출 실패: HTTP %d - keyword: [%s], target: [%s]",
-							response.code(), keyword, target));
+					throw new RuntimeException("Groq API 호출 실패: HTTP " + response.code());
 				}
-
-				String responseBody = response.body().string();
-				return parseGroqResponse(responseBody);
+				return parseGroqResponse(response.body().string());
 			}
-
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Groq API 처리 중 예외 발생 - keyword: [%s], target: [%s], message: %s",
-					keyword, target, e.getMessage()), e);
+			throw new RuntimeException("AI 홍보글 생성 실패 - " + e.getMessage(), e);
 		}
 	}
 
@@ -185,15 +220,6 @@ public class AIService {
 		} catch (Exception e) {
 			throw new RuntimeException("추천 FastAPI API 결과 파싱 실패 - message: " + e.getMessage(), e);
 		}
-	}
-
-	private String makePrompt(String keyword, String target) {
-		return "너는 상품 홍보글 작성 전문가야.\n" + "아래 규칙을 반드시 지켜서 작성해:\n"
-				+ "1. 출력은 반드시 JSON 형식으로만 출력해. 부가 설명, 안내 문구, 코드 블럭 (예: ```json 등), 기타 모든 텍스트는 절대 추가하지 마.\n"
-				+ "2. 출력 형식: {\"title\":\"...\", \"content\":\"...\", \"hashtags\":\"...\"}\n"
-				+ "3. JSON의 key 이름과 순서는 그대로 유지할 것.\n" + "4. content의 글 길이는 최소 200자 이상 작성할 것.\n"
-				+ "5. 글 전체에 이모티콘을 자연스럽게 포함할 것.\n" + "6. 타겟 고객을 문장 안에서 직접 언급하지 말고, 타겟 고객의 관심사와 선호를 반영해서 작성할 것.\n"
-				+ "7. 모든 결과는 한국어로 작성할 것.\n\n" + "상품: " + keyword + "\n" + "타겟 고객: " + target;
 	}
 
 }

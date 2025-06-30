@@ -1,12 +1,15 @@
 package com.takku.project.controller;
 
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.stats.OrderStatsDTO;
 import com.takku.project.domain.stats.PopularProductDTO;
 import com.takku.project.domain.stats.ProductRePurchaseDTO;
 import com.takku.project.domain.stats.SummaryResponse;
 import com.takku.project.domain.stats.TagStatsDTO;
 import com.takku.project.service.AIService;
+import com.takku.project.service.FundingService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.StoreService;
 import com.takku.project.service.StoreStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,12 @@ import java.util.List;
 
 @Controller
 public class StoreStatsController {
+
+	@Autowired
+	private StoreService storeService;
+
+	@Autowired
+	private FundingService fundingService;
 
 	@Autowired
 	private StoreStatsService statsService;
@@ -44,9 +53,12 @@ public class StoreStatsController {
 		List<PopularProductDTO> popularProducts = statsService.getPopularProducts(storeId);
 		List<TagStatsDTO> tagStats = statsService.getTagStats(storeId);
 		List<ProductRePurchaseDTO> topRePurchased = statsService.getTopRePurchasedProducts(storeId);
-
+		StoreDTO store = storeService.selectStoreById(storeId);
+		System.out.println(store);
+		System.out.println(fundingService.selectFundingByFundingId(1));
 		// View 전달
 		model.addAttribute("storeId", storeId); // 필요한 경우 JSP에서 storeId 사용 가능
+		model.addAttribute("storeDTO", store);
 		model.addAttribute("orderStats", orderStats);
 		model.addAttribute("popularProducts", popularProducts);
 		model.addAttribute("tagStats", tagStats);

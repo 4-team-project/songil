@@ -2,6 +2,7 @@ package com.takku.project.controller;
 
 import com.takku.project.domain.AIResponse;
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.FundingPromotionRequestDto;
 import com.takku.project.domain.stats.SummaryResponse;
 import com.takku.project.service.AIService;
 import io.swagger.annotations.Api;
@@ -67,16 +68,15 @@ public class AIController {
 	}
 
 	// ======= [JSON 응답: 글 생성 결과] =======
-	@PostMapping(value = "/api/ai-generate", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/api/funding-content", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	@ApiOperation(value = "상품 홍보글 생성 (JSON)", notes = "AI를 통해 키워드와 타겟을 기반으로 상품 홍보글을 생성하여 JSON으로 반환합니다.")
-	public ResponseEntity<AIResponse> generateFundingTextJson(@RequestParam String keyword,
-			@RequestParam String target) {
+	@ApiOperation(value = "펀딩 홍보글 생성", notes = "프론트에서 보낸 입력값으로 AI 홍보글을 생성해 반환합니다.")
+	public ResponseEntity<?> generateFundingContentJson(@RequestBody FundingPromotionRequestDto requestDto) {
 		try {
-			AIResponse aiResponse = aiService.generateText(keyword, target);
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(aiResponse);
+			AIResponse result = aiService.generateFundingContent(requestDto);
+			return ResponseEntity.ok(result);
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(AIResponse.builder().content("error: " + e.getMessage()).build());
+			return ResponseEntity.status(500).body("{\"error\":\"" + e.getMessage().replace("\"", "'") + "\"}");
 		}
 	}
 
@@ -106,13 +106,16 @@ public class AIController {
 	// ======= [뷰 응답: 글 생성 실행] =======
 	@PostMapping("/ai-generate")
 	@ApiOperation(value = "상품 홍보글 생성 실행 (View)", notes = "AI를 통해 생성된 홍보글을 HTML 뷰에 표시합니다.")
-	public String generateFundingTextView(@RequestParam String keyword, @RequestParam String target, Model model) {
+	public String generateFundingTextView(@ModelAttribute FundingPromotionRequestDto dto, Model model) {
 		try {
-			AIResponse aiResponse = aiService.generateText(keyword, target);
+			System.out.println(dto);
+			AIResponse aiResponse = aiService.generateFundingContent(dto);
+			System.out.println(aiResponse);
 			model.addAttribute("aiResponse", aiResponse);
 		} catch (Exception e) {
 			model.addAttribute("aiError", e.getMessage());
 		}
 		return "pages/seller/funding_ai_form";
 	}
+
 }
