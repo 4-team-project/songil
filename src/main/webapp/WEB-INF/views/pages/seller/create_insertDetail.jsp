@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>step2. 기간 및 이미지</title>
 </head>
 <body>
 <h1>입력 디테일</h1>

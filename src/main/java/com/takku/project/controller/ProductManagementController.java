@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.service.ProductService;
 
 @Controller
@@ -82,4 +85,16 @@ public class ProductManagementController {
 		return "redirect:/seller/product";
 	}
 	
+	//상품가져오기
+	@GetMapping(value = "/list", produces = "application/json")
+	@ResponseBody
+	public List<ProductDTO> getProductListJson(@RequestParam int storeId) {
+	    return productService.selectProductByStoreId(storeId);
+	}
+	
+	@GetMapping(value = "/info", produces = "application/json")
+	@ResponseBody
+	public ProductDTO getProductInfo(@RequestParam int productId) {
+	    return productService.selectByProductId(productId);
+	}
 }
