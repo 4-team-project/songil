@@ -31,8 +31,8 @@ public interface FundingMapper {
 	// 종료일 조회
 	Date selectEndDateByFundingId(@Param("fundingId") int fundingId);
 
-	// 상태별 조회
-	//List<FundingDTO> selectByFundingStatus(@Param("status") String status);
+	// 상태별 조회 - 매일 마감 처리용 조회
+	List<FundingDTO> selectByFundingStatus(@Param("status") String status);
 
 	// 펀딩 상태 갱신
 	int updateFundingStatus(@Param("fundingId") Integer fundingId, @Param("status") String status);

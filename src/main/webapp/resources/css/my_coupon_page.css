@@ -38,6 +38,7 @@
     border-bottom: 3px solid #ffe1ce;
     
 }
+
 .tabs {
 	margin-top: 10px;
 	padding-top: 10px;
@@ -243,4 +244,10 @@ padding-top: 30px;
 .usedAt, .use {
 	font-size: 20px;
 	font-weigth: bold;
+}
+
+.more {
+	font-size: 14px;
+	color: #666;
+	text-decoration: underline;
 }
