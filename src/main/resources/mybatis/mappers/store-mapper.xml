@@ -41,9 +41,11 @@
 		SELECT
 		f.*, j.category_name
 		FROM takku_store f
-		LEFT JOIN takku_store_category j
+		LEFT JOIN
+		takku_store_category j
 		ON f.category_id = j.category_id
-		WHERE store_id = #{storeId}
+		WHERE store_id =
+		#{storeId}
 	</select>
 
 	<!-- 3. 상점 정보 수정 -->
@@ -82,9 +84,57 @@
 		SELECT store_id FROM takku_store WHERE user_id =
 		#{userId}
 	</select>
-	
-	<select id = "selectStoreNameByUserId" resultType = "StoreDTO">
-		SELECT * FROM takku_store WHERE user_id = #{userId}
+
+	<select id="selectStoreNameByUserId" resultType="StoreDTO">
+		SELECT * FROM
+		takku_store WHERE user_id = #{userId}
+	</select>
+
+
+	<!-- 1. 오늘 참여 수 -->
+	<select id="countTodayOrdersByStoreId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM takku_order o
+		JOIN takku_funding f ON o.funding_id =
+		f.funding_id
+		WHERE f.store_id = #{storeId}
+		AND o.status = '결제완료'
+		AND
+		TRUNC(o.purchased_at) = TRUNC(SYSDATE)
+	</select>
+
+	<!-- 2. 오늘 매출 합계 -->
+	<select id="sumTodaySalesByStoreId" resultType="int">
+		SELECT
+		NVL(SUM(o.amount), 0)
+		FROM takku_order o
+		JOIN takku_funding f ON
+		o.funding_id = f.funding_id
+		WHERE f.store_id = #{storeId}
+		AND o.status =
+		'결제완료'
+		AND TRUNC(o.purchased_at) = TRUNC(SYSDATE)
+	</select>
+
+	<!-- 3. 진행 중인 펀딩 수 -->
+	<select id="countOngoingFundingsByStoreId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM takku_funding
+		WHERE store_id = #{storeId}
+		AND status =
+		'진행중'
+	</select>
+
+	<!-- 4. 진행 예정인 펀딩 수 -->
+	<select id="countUpcomingFundingsByStoreId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM takku_funding
+		WHERE store_id = #{storeId}
+		AND status =
+		'준비중'
 	</select>
 
 </mapper>
