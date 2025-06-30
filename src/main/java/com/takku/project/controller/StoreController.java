@@ -1,21 +1,27 @@
 package com.takku.project.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.UserDTO;
+import com.takku.project.service.FundingService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.UserService;
 
 @Controller
-@RequestMapping("/seller/store")
+@RequestMapping("/seller")
 public class StoreController {
 
 	@Autowired
@@ -23,14 +29,17 @@ public class StoreController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private FundingService fundingService;
 
-	@GetMapping("/new")
+	@GetMapping("/store/new")
 	public String showStoreForm() {
 		return "store_form";
 	}
 
 	// 상점 등록
-	@PostMapping
+	@PostMapping("/store")
 	public String insertStore(StoreDTO storeDTO, RedirectAttributes ra) {
 		int result = storeService.insertStore(storeDTO);
 		if (result > 0) {
@@ -42,7 +51,7 @@ public class StoreController {
 	}
 
 	// 상점 수정 폼
-	@GetMapping("/{storeId}/edit")
+	@GetMapping("/store/{storeId}/edit")
 	public String showEditForm(@PathVariable("storeId") Integer storeId, Model model) {
 		StoreDTO store = storeService.selectStoreById(storeId);
 		model.addAttribute("storeDTO", store);
@@ -50,7 +59,7 @@ public class StoreController {
 	}
 
 	// 상점 수정 처리
-	@PostMapping("/{storeId}/edit")
+	@PostMapping("/store/{storeId}/edit")
 	public String updateStore(@PathVariable("storeId") Integer storeId, StoreDTO storeDTO, RedirectAttributes ra) {
 		storeDTO.setStoreId(storeId);
 		int result = storeService.updateStore(storeDTO);
@@ -63,7 +72,7 @@ public class StoreController {
 	}
 
 	// 상점 삭제 처리
-	@PostMapping("/{storeId}/delete")
+	@PostMapping("/store/{storeId}/delete")
 	public String deleteStore(@PathVariable("storeId") Integer storeId, RedirectAttributes ra) {
 		int result = storeService.deleteStore(storeId);
 		if (result > 0) {
@@ -87,21 +96,87 @@ public class StoreController {
 	public String selectFundingMenuType() {
 		return "pages/seller/create_selectMenu";
 	}
-	
-	//기존 메뉴 선택을 눌렀을 때 create_existMenu로
+
+	// 기존 메뉴 선택을 눌렀을 때 create_existMenu로
 	@GetMapping("/create_existMenu")
 	public String showExistingMenuPage() {
-	    return "pages/seller/create_existMenu"; 
+		return "pages/seller/create_existMenu";
 	}
 
-	//새로운 메뉴 등록을 눌렀을 때 create_newMenu로
+	// 새로운 메뉴 등록을 눌렀을 때 create_newMenu로
 	@GetMapping("/create_newMenu")
 	public String showNewMenuPage() {
-	    return "pages/seller/create_newMenu"; 
+		return "pages/seller/create_newMenu";
 	}
-	
+
 	@PostMapping("/create-step3")
 	public String insertFundingMenuDetail() {
 		return "pages/seller/create_insertDetail";
+	}
+
+	//ai, 직접입력 선택 창
+	@GetMapping("/create-step4")
+	public String writeType(HttpSession session, Model model) {
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		model.addAttribute("store", store);
+		return "pages/seller/select_writetype";
+	}
+
+	//선택 후 제목, 내용 입력 창
+	@PostMapping("/create-step5")
+	public String handleWriteType(@RequestParam("type") String type, HttpSession session, Model model) {
+
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		model.addAttribute("store", store);
+
+		if ("directly".equals(type)) {
+			return "pages/seller/funding_direct_input"; 
+		} else if ("ai".equals(type)) {
+			return "pages/seller/funding_ai_input";
+		}
+
+		// 잘못된 type 처리
+		return "redirect:/error";
+	}
+	
+	@PostMapping("/submit-funding")
+	public String handleFundingBasicInfo(
+	        @ModelAttribute FundingDTO funding,
+	        HttpSession session) {
+	    // 세션에서 기존 fundingDTO 가져오기
+	    FundingDTO sessionDTO = (FundingDTO) session.getAttribute("fundingDTO");
+
+	    // 만약 세션에 없으면 새로 생성 (예외 처리 목적)
+	    if (sessionDTO == null) {
+	        sessionDTO = new FundingDTO();
+	    }
+
+	    // 입력된 값만 덮어쓰기
+	    sessionDTO.setFundingName(funding.getFundingName());
+	    sessionDTO.setFundingDesc(funding.getFundingDesc());
+
+		/*
+		 * fundingService.insertFunding(sessionDTO);
+		 * 
+		 */
+
+	    return "redirect:/seller/complete";
+	}
+	
+	@GetMapping("/complete")
+	public String fundingComplete(HttpSession session, Model model) {
+	    FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
+	    
+	    session.removeAttribute("fundingDTO");
+	    // 예외 처리 (없을 경우 홈으로)
+		/*
+		 * if (funding == null) { return "redirect:/"; }
+		 */
+
+		/*
+		 * model.addAttribute("fundingName", funding.getFundingName());
+		 * model.addAttribute("startDate", funding.getStartDate());
+		 */// Date로 저장돼 있다면 포맷 필요
+	    return "pages/seller/funding_complete";
 	}
 }

@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+.funding-complete-box {
+	border: 2px solid #ff9670;
+	border-radius: 12px;
+	padding: 30px 20px;
+	text-align: center;
+	max-width: 500px;
+	margin: 40px auto;
+	background-color: #fff7f5;
+}
+
+.funding-complete-box h2 {
+	font-size: 30px;
+	color: #ff9670;
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+
+.funding-complete-box p {
+	font-size: 20px;
+	color: #333;
+	line-height: 1.6;
+	font-weight: bold;
+}
+
+.funding-complete-box strong {
+	font-weight: bold;
+	color: #ff4400;
+}
+
+.btn-group {
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	margin-top: 30px;
+}
+
+.btn-filled, .btn-outline {
+	padding: 12px 24px;
+	border-radius: 8px;
+	font-size: 16px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: all 0.2s ease-in-out;
+	text-align: center;
+	width: 160px;
+	box-sizing: border-box;
+}
+
+.btn-filled {
+	background-color: #ff9670;
+	color: white;
+	border: none;
+}
+
+.btn-filled:hover {
+	background-color: #ff7135;
+}
+
+.btn-outline {
+	background-color: white;
+	color: #ff9670;
+	border: 2px solid #ff9670;
+}
+
+.btn-outline:hover {
+	background-color: #ff9670;
+	color:white;
+}
