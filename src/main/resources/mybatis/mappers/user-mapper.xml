@@ -15,12 +15,7 @@
 		#{userType}, #{phone},
 		#{password}, #{name}, #{gender}, #{birth},
 		#{nickname}, #{sido},
-		#{sigungu}, #{isPartner}, SYSDATE, 0
-
-		nickname, sido, sigungu, is_partner, created_at, point
-		) VALUES (
-		#{userType}, #{phone}, #{password}, #{name}, #{gender}, #{birth},
-		#{nickname}, #{sido}, #{sigungu}, #{isPartner}, SYSDATE, 0
+		#{sigungu}, 'N', SYSDATE, 0
 		)
 	</insert>
 
@@ -30,7 +25,8 @@
 		SELECT *
 		FROM takku_user
 		WHERE phone = #{phone}
-		and password = #{password}
+		and password =
+		#{password}
 		and user_type = #{userType}
 	</select>
 
@@ -49,33 +45,34 @@
 		password = #{password},
 		nickname = #{nickname},
 		sido = #{sido},
-		sigungu = #{sigungu}
+		sigungu =
+		#{sigungu}
 		WHERE user_id = #{userId}
 	</update>
 
 	<!-- 이메일 확인 -->
 	<select id="countByEmail" resultType="int">
-		SELECT COUNT(*) FROM takku_user WHERE email = #{email}
+		SELECT COUNT(*) FROM
+		takku_user WHERE email = #{email}
 	</select>
 
 	<!-- 휴대폰 번호 및 사용자 타입 중복 체크 -->
 	<select id="countByPhone" resultType="int">
 		SELECT COUNT(*) AS cnt
-		FROM takku_user
+		FROM
+		takku_user
 		WHERE phone = #{phone}
+		AND user_type = #{userType}
 	</select>
 
 
-	 <!-- 내 정보 수정 -->
-	<!--<update id="updateUser" parameterType="UserDTO">
-		UPDATE takku_user
-		SET
-		<if test="password != null">password = #{password, jdbcType=VARCHAR},</if>
-		<if test="nickname != null">nickname = #{nickname, jdbcType=VARCHAR}</if>
-		WHERE user_id = #{userId}
-	</update> -->
+	<!-- 내 정보 수정 -->
+	<!--<update id="updateUser" parameterType="UserDTO"> UPDATE takku_user SET 
+		<if test="password != null">password = #{password, jdbcType=VARCHAR},</if> 
+		<if test="nickname != null">nickname = #{nickname, jdbcType=VARCHAR}</if> 
+		WHERE user_id = #{userId} </update> -->
 
-	
+
 
 	<!-- 포인트 차감 -->
 	<update id="updatePointAfterPayment">
@@ -91,6 +88,14 @@
 		SET point = point + #{usePoint}
 		WHERE user_id = #{userId}
 	</update>
+
+	<!-- 계정 중복 확인 -->
+	<select id="countByPhoneAndUserType" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM takku_user
+		WHERE phone = #{phone} AND user_type = #{userType}
+	</select>
 </mapper>
 
 
