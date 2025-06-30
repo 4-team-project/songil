@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.StoreDTO;
@@ -85,9 +86,18 @@ public class StoreController {
 
 	// 상품 정보
 	@GetMapping("/create-step2")
-	public String selectFundingMenuType() {
-		return "pages/seller/create_existMenu";
-	}
+    public String createStep2(@RequestParam("type") String type, Model model) {
+        if ("general".equals(type)) {
+            // 일반 펀딩 선택 시
+            return "pages/seller/create_normalFunding"; 
+        } else if ("limited".equals(type)) {
+            // 한정 상품 펀딩 선택 시 (필요하면)
+            return "pages/seller/create_existMenu"; 
+        } else {
+            // 기본 페이지 혹은 에러 처리
+            return "pages/seller/createFunding"; // 선택 페이지로 다시 보내거나
+        }
+    }
 	
 	//기간 및 이미지
 	@GetMapping("/create-step3")
