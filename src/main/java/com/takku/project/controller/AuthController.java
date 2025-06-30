@@ -130,4 +130,10 @@ public class AuthController {
 		}
 		return phone;
 	}
+	
+	@PostMapping("/addr")
+	public String registerUser(UserDTO user) {
+	    userService.insertUser(user);
+	    return "redirect:/user/login";
+	}
 }

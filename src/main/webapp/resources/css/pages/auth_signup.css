@@ -214,3 +214,23 @@
 #verifyAuthCodeBtn:hover {
 	background-color: #ff7a52;
 }
+
+/*주소*/
+.address-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.small-input {
+  max-width: auto;
+  flex: 0 0 auto;
+  margin-right: 0;
+}
