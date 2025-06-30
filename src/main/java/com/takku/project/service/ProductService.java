@@ -7,40 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.takku.project.domain.ProductDTO;
-import com.takku.project.mapper.ProductMapper;
 
 @Service
-public class ProductService implements ProductMapper{
+public class ProductService {
 
 	@Autowired
-	SqlSession sqlSession;
-	String namespace = "com.takku.project.mapper.ProductMapper.";
-	
-	@Override
+	private SqlSession sqlSession;
+
+	private final String namespace = "com.takku.project.mapper.ProductMapper.";
+
 	public int insertProduct(ProductDTO productVO) {
-		int result = sqlSession.insert(namespace+"insertProduct", productVO);
-		return result;
-	}
-	@Override
-	public List<ProductDTO> selectProductByStoreId(Integer storeId) {
-		List<ProductDTO> proList = sqlSession.selectList(namespace + "getProductByStoreId", storeId);
-		return proList;
-	}
-	@Override
-	public int updateProduct(ProductDTO productVO) {
-		int result = sqlSession.update(namespace+"updateProduct", productVO);
-		return result;
-	}
-	@Override
-	public int deleteProduct(Integer productId) {
-		int result = sqlSession.delete(namespace+"deleteProduct", productId);
-		return result;
-	}
-	
-	@Override
-	public ProductDTO selectByProductId(Integer productId) {
-		ProductDTO product = sqlSession.selectOne(namespace+"selectByProductId", productId);
-		return product;
+		return sqlSession.insert(namespace + "insertProduct", productVO);
 	}
 
+	public List<ProductDTO> selectProductByStoreId(Integer storeId) {
+		return sqlSession.selectList(namespace + "selectProductByStoreId", storeId);
+	}
+
+	public int updateProduct(ProductDTO productVO) {
+		return sqlSession.update(namespace + "updateProduct", productVO);
+	}
+
+	public int deleteProduct(Integer productId) {
+		return sqlSession.delete(namespace + "deleteProduct", productId);
+	}
+
+	public ProductDTO selectByProductId(Integer productId) {
+		return sqlSession.selectOne(namespace + "selectByProductId", productId);
+	}
 }

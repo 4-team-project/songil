@@ -267,4 +267,8 @@
 		</if>
 		ORDER BY o.purchased_at DESC
 	</select>
+	
+	<select id="selectByFundingStatus" parameterType="String" resultType="fundingDTO">
+		select funding_id, target_qty, current_qty from takku_funding where status = #{status}
+	</select>
 </mapper>
