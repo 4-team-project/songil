@@ -22,7 +22,7 @@ public class UserDTO {
     private String nickname;
     private String sido;
     private String sigungu;
-    private Character isPartner;
+    private String isPartner;
     private Date createdAt;
     private Integer point;
 }

@@ -237,7 +237,7 @@
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
-			style="width: 90%; height: 90%; object-fit: cover; border-radius: 20px;" />
+			style="width: 90%; height: 80%; object-fit: cover; border-radius: 20px; margin-top: 40px" />
 		<div id="fundingControls"
 			style="text-align: center; margin-top: 10px;">
 			<div class="dot-wrapper">

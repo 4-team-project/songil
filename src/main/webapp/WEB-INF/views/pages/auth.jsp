@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
@@ -47,37 +46,4 @@
 			</div>
 		</form>
 	</div>
-	<div id="joinModal" class="modal" style="display: none;">
-		<div class="modal-content">
-			<span class="close" id="closeJoinModal">&times;</span>
-			<h2 class="modal-title">회원가입</h2>
-
-			<form id="joinForm" method="post" action="${cpath}/user/join">
-				<div class="modal-info">
-					<p>
-						<strong>이름</strong><input type="text" name="name" required
-							class="modal-input" />
-					</p>
-					<p>
-						<strong>전화번호</strong><input type="text" name="phone" required
-							class="modal-input" />
-					</p>
-					<p>
-						<strong>비밀번호</strong><input type="password" name="password"
-							required class="modal-input" />
-					</p>
-					<p>
-						<strong>비밀번호 확인</strong><input type="password"
-							name="confirmPassword" required class="modal-input" />
-					</p>
-				</div>
-
-				<div class="modal-buttons">
-					<button type="submit" class="modal-btn confirm">가입하기</button>
-					<button type="button" class="modal-btn cancel" id="cancelJoinBtn">취소</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
 </div>

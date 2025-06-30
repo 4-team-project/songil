@@ -30,5 +30,6 @@ public interface UserMapper {
     //포인트 반환
     int restorePointAfterCancel(int userId, int usePoint);
 
+    boolean countByPhoneAndUserType(String phone, String userType);
 }
 

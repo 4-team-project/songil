@@ -12,18 +12,18 @@ import com.takku.project.domain.UserDTO;
 import com.takku.project.mapper.UserMapper;
 
 @Service
-public class UserService implements UserMapper{
+public class UserService implements UserMapper {
 
 	@Autowired
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.UserMapper.";
-	
+
 	@Override
 	public int insertUser(UserDTO user) {
-			int count = countByPhone(user.getPhone(), user.getUserType());
-			if(count > 0) {
-				throw new RuntimeException("이미 존재하는 사용자 번호입니다.");
-			}
+		int count = countByPhone(user.getPhone(), user.getUserType());
+		if (count > 0) {
+			throw new RuntimeException("이미 존재하는 사용자 번호입니다.");
+		}
 
 		int result = sqlSession.insert(namespace + "insertUser", user);
 		return result;
@@ -35,7 +35,7 @@ public class UserService implements UserMapper{
 		map.put("phone", phone);
 		map.put("password", password);
 		map.put("userType", userType);
-		
+
 		UserDTO user = sqlSession.selectOne(namespace + "selectByPhone", map);
 		return user;
 	}
@@ -54,7 +54,7 @@ public class UserService implements UserMapper{
 
 	@Override
 	public int countByEmail(String email) {
-		int result = sqlSession.selectOne(namespace+"countByEmail", email);
+		int result = sqlSession.selectOne(namespace + "countByEmail", email);
 		return result;
 	}
 
@@ -82,5 +82,14 @@ public class UserService implements UserMapper{
 		map.put("usePoint", usePoint);
 		return sqlSession.update(namespace + "restorePointAfterCancel", map);
 	}
-}
 
+	@Override
+	public boolean countByPhoneAndUserType(String phone, String userType) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("phone", phone);
+		map.put("userType", userType);
+
+		Integer count = sqlSession.selectOne(namespace + "countByPhoneAndUserType", map);
+		return count != null && count > 0;
+	}
+}
