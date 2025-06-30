@@ -21,28 +21,4 @@
 </body>
 </html>
 
-<script>
-const cpath = '${pageContext.request.contextPath}';
-
-function sendSearchData() {
-  const searchText = document.getElementById("searchText").value.trim();
-
-  if (searchText !== "") {
-    const encodedSearch = encodeURIComponent(searchText);
-
-    if (typeof loadFundings === 'function') {
-      window.currentPage = 1;
-      loadFundings({ keyword: encodedSearch });
-    } else {
-      window.location.href = `${cpath}/fundings/ajax?search=${encodedSearch}`;
-    }
-  }
-}
-
-document.getElementById("searchText").addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    sendSearchData();
-  }
-});
-</script>
 

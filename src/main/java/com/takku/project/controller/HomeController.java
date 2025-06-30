@@ -49,16 +49,18 @@ public class HomeController {
             funding.setDaysLeft((int) Math.max(days, 0));  
         }
 
-        List<FundingDTO> ongoingFundingList = fundingService.selectByFundingStatusWithJoin("진행중");
+        List<FundingDTO> ongoingFundingList = fundingService.getFundingsByConditionWithPaging(null, null, null, null, "popular", 1, 8);
 
         for (FundingDTO funding : ongoingFundingList) {
             List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
             funding.setImages(images);
+            
 
             long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
             funding.setDaysLeft((int) Math.max(days, 0));  
         }
 
+        model.addAttribute("user", loginUser);
         model.addAttribute("recommendList", recommendList); 
         model.addAttribute("fundinglist", ongoingFundingList); 
 
