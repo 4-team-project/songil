@@ -60,7 +60,7 @@ $('#menuSelect').on('focus', function() {
 
     if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
       let discount = ((1 - (sellingPrice / basePrice)) * 100).toFixed(1);
-      $('#discountRate').text(`할인율은 ${discount}%입니다.`);
+      $('#discountRate').text(`할인율은 \${discount}%입니다.`);
     } else if (sellingPrice > basePrice) {
       $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
     } else {

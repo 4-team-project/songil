@@ -188,6 +188,7 @@ public class FundingManagementController {
 	// 상품 정보
 	@GetMapping("/create-step2")
 	public String createStep2(@RequestParam("type") String type, Model model, HttpSession session) {
+		
 		// 상점이름
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
 		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
@@ -197,10 +198,12 @@ public class FundingManagementController {
 		if ("general".equals(type)) {
 			fundingDTO.setFundingType("일반");
 			session.setAttribute("fundingDTO", fundingDTO);
+			session.setAttribute("fundingType", "general");
 			return "seller.normalFunding";
 		} else if ("limited".equals(type)) {
 			fundingDTO.setFundingType("한정");
 			session.setAttribute("fundingDTO", fundingDTO);
+			session.setAttribute("fundingType", "limited");
 			return "seller.existMenu";
 		} else {
 			return "seller.createFunding";

@@ -12,7 +12,7 @@
 
 	<div class="fundingDate">
 		<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
-		<!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
+		
 		<div id="dateArea">
 			<span style="font-size: 20px;">시작일</span>
 			<input type="date" id="startDate" name="startDate" required /> 
@@ -41,13 +41,13 @@
 		<button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
 
 		<!-- 사진 미리보기 -->
-		<div class="preview-container"></div>
+		<div id="previewContainer" class="preview-container"></div>
 	</div>
 
 
 	<div class="btn-container">
 		<c:set var="type" value="${sessionScope.fundingType}" />
-<button class="btn" type="button"
+		<button class="btn" type="button"
         onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
 		<button class="btn" type="submit">다음</button>
 	</div>
