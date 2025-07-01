@@ -127,7 +127,7 @@ public class AIController {
 		} catch (Exception e) {
 			model.addAttribute("aiError", e.getMessage());
 		}
-		return "pages/seller/funding_ai_input";
+		return "seller.aiInsertResult";
 	}
 
 }

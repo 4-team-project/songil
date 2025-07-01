@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/funding_ai_input.css">
@@ -36,9 +37,9 @@
 <c:if test="${not empty aiResponse}">
 	<h3>
 		아래는 AI가 자동으로 만든 펀딩 제목과 설명, 관련 단어입니다.<br> 원하는 문장이 아니라면 아래 [다시 생성]
-		버트느로 다시 요청해보세요!
+		버튼으로 다시 요청해보세요!
 	</h3>
-	<form action="${pageContext.request.contextPath}/seller/submit-funding"
+	<form action="${cpath}/seller/fundings/submit-funding"
 		method="post">
 		<div class="input-group">
 			<label for="title">펀딩 제목</label> <input type="text" id="title"
@@ -49,7 +50,7 @@
 		<div class="input-group">
 			<label for="htmlContent">펀딩 설명</label>
 			<div id="htmlContent" class="content-viewer"></div>
-			<textarea id="fundingContentHidden" name="fundingContent"
+			<textarea id="fundingContentHidden" name="fundingDesc"
 				style="display: none;" required></textarea>
 		</div>
 
