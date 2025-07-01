@@ -52,7 +52,7 @@ $(document).ready(function() {
 
     if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
       let discount = ((1 - (sellingPrice / basePrice)) * 100).toFixed(1);
-      $('#discountRate').text(`할인율은 ${discount}%입니다.`);
+      $('#discountRate').text(`할인율은 \${discount}%입니다.`);
     } else if (sellingPrice > basePrice) {
       $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
     }
@@ -73,11 +73,11 @@ $(document).ready(function() {
 	  $('#priceModal').fadeOut();
 	  $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
 	});
-});
+
 
 </script>
 
-<form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="get">
+<form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 <div class="menuName">
   <div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
   <div class="menu-select">
