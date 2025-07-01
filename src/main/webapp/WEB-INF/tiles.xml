@@ -132,6 +132,31 @@
 			value="/WEB-INF/views/pages/seller/home.jsp" />
 		<put-attribute name="title" value="오늘의 상점" />
 	</definition>
+	
+		<!-- 소상공인 펀딩 만들기 -->
+	<definition name="seller.createFunding" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/createFunding.jsp" />
+		<put-attribute name="title" value="펀딩 만들기 첫 화면" />
+	</definition>
+	
+	<definition name="seller.existMenu" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/create_existMenu.jsp" />
+		<put-attribute name="title" value="펀딩 만들기_한정상품_상품정보" />
+	</definition>
+	
+	<definition name="seller.normalFunding" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/create_normalFunding.jsp" />
+		<put-attribute name="title" value="펀딩 만들기_일반펀딩_상품정보" />
+	</definition>
+	
+	<definition name="seller.insertDetail" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/create_insertDetail.jsp" />
+		<put-attribute name="title" value="펀딩 만들기_기간및이미지" />
+	</definition>
 
 	<definition name="seller/stats" extends="defaultLayout">
 		<put-attribute name="title" value="상점 통계" />

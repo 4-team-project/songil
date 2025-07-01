@@ -2,15 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>step2. 기간 및 이미지</title>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-	<h2>상점이름: ${store.storeName }</h2>
+
 	<h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
 	<form action="${pageContext.request.contextPath}/seller/create-step4" method="post"
 		onsubmit="return checkConfirmed();">
@@ -52,7 +47,7 @@
 	<!-- 이전 -->
 	<button type="button" onclick="goBack()">이전</button>
 
-	<script>
+<script>
 let isDateConfirmed = false;
 
 function submitDate() {
@@ -129,5 +124,3 @@ inputPhoto.addEventListener('change', (e) => {
 });
 </script>
 
-</body>
-</html>

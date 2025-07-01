@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>step1. 상품 정보</title>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
+
 <h2>상점이름: ${store.storeName }</h2>
 <h1>일반 펀딩</h1>
 <form action="${pageContext.request.contextPath}/seller/create-step3" method="get">
@@ -151,5 +146,3 @@ function goBack() {
 }
 </script>
 
-</body>
-</html>
