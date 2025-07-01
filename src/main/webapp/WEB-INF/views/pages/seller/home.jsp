@@ -15,7 +15,6 @@
 		<c:out value="${storeDTO.storeName}" default="상점" />
 	</h1>
 
-
 	<div class="summary">
 		<div class="summary-box">
 			<p>오늘 참여</p>

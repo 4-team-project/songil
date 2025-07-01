@@ -1,185 +1,230 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<html>
-<head>
-<title>상점 통계</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-body {
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
 	font-family: 'Noto Sans KR', sans-serif;
 	background-color: #f9f9f9;
-	margin: 30px;
+	font-size: 14px;
+	box-sizing: border-box;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.main-content {
+	flex: 1;
+	padding: 40px;
+	overflow-y: auto;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
 }
 
 h1 {
-	text-align: center;
+	text-align: left;
+	font-size: 2em;
 	margin-bottom: 40px;
+	color: #333;
+	font-weight: 700;
 }
 
-.grid {
+.stats-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr); /* 3열 고정 */
-	gap: 30px;
-	max-width: 1200px;
-	margin: 0 auto;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
 }
 
 .card {
-	background: white;
+	border: 2px solid #fdbfa8;
+	background-color: #fff8f5;
+	border-radius: 10px;
 	padding: 20px;
-	border-radius: 16px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+	box-sizing: border-box;
 }
 
-.card.full-width {
-	grid-column: span 3; /* 1행 전체 차지 */
+.card h2 {
+	font-size: 1.5em;
+	color: #f97c5d;
+	margin-bottom: 10px;
+	font-weight: 600;
+}
+
+.full-width {
+	grid-column: 1/-1;
 }
 
 canvas {
 	width: 100% !important;
-	height: auto !important;
+	height: 300px !important;
+	display: block;
+	margin: 0 auto;
 }
 
-.card h2 {
-	font-size: 18px;
-	margin-bottom: 15px;
+.repurchase-list {
+	padding-left: 20px;
+	font-size: 14px;
 }
 
-.reRate {
-	font-weight: bold;
-	font-size: 16px;
-	text-align: center;
+.repurchase-list li {
 	margin-bottom: 10px;
 }
+
+.repurchase-list strong {
+	color: #333;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.tips {
+	background-color: #fff1ec;
+	border-left: 5px solid #f97c5d;
+	padding: 15px;
+	margin-top: 30px;
+	border-radius: 8px;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 13px;
+	color: #444;
+}
+
+.icon {
+	width: 30px;
+	height: 30px;
+	vertical-align: middle;
+	margin-right: 6px;
+}
+
+.highlight {
+	color: #f97c5d;
+	font-weight: 600;
+}
 </style>
-</head>
-<body>
 
-	<h1>📊 상점 통계 대시보드</h1>
+<div class="wrapper">
+	<div class="main-content">
+		<h1>
+			<img src="${cpath}/resources/images/icons/solar_star-bold.svg" alt="상점 통계" class="icon" />
+			<c:out value="${userDTO.nickname}" default="딱쿠" />
+			사장님의 <span class="highlight"><c:out value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
+		</h1>
 
-	<div class="grid">
-		<!-- 1. 월별 주문 및 매출 (한 줄 전체) -->
-		<div class="card full-width">
-			<h2>1. 월별 주문 및 매출</h2>
-			<canvas id="orderChart"></canvas>
-		</div>
+		<div class="stats-grid">
+			<!-- 1. 월별 주문 및 매출 -->
+			<div class="card full-width">
+				<h2>1. 월별 주문 및 매출</h2>
+				<canvas id="orderChart"></canvas>
+			</div>
 
-		<!-- 2. 인기 상품 -->
-		<div class="card">
-			<h2>2. 인기 상품 Top 5</h2>
-			<canvas id="popularProductChart"></canvas>
-		</div>
+			<!-- 2. 인기 상품 -->
+			<div class="card">
+				<h2>2. 인기 상품 Top 5</h2>
+				<canvas id="popularProductChart"></canvas>
+			</div>
 
-		<!-- 3. 재구매 Top 5 -->
-		<div class="card">
-			<h2>3. 재구매 Top 5 상품</h2>
-			<p style="color: gray; font-size: 14px;">(재구매 횟수)</p>
-			<ol style="padding-left: 20px; font-size: 16px;">
-				<c:forEach var="item" items="${topRePurchased}" varStatus="status">
-					<li style="margin-bottom: 10px;"><strong>${item.productName}</strong>
-						<span style="color: gray; font-size: 14px;">
-							(${item.rePurchaseCount}회)</span></li>
-				</c:forEach>
-				<c:if test="${empty topRePurchased}">
-					<li>재구매 상품 정보가 없습니다.</li>
-				</c:if>
-			</ol>
-		</div>
+			<!-- 3. 태그별 주문 수 -->
+			<div class="card">
+				<h2>3. 태그별 주문 수</h2>
+				<canvas id="tagStatsChart"></canvas>
+			</div>
 
-		<!-- 4. 태그별 주문 통계 -->
-		<div class="card">
-			<h2>4. 태그별 주문 수</h2>
-			<canvas id="tagStatsChart"></canvas>
+			<!-- 4. 재구매 상품 -->
+			<div class="card full-width">
+				<h2>4. 재구매 Top 5</h2>
+				<p style="font-size: 15px; color: gray;">(재구매 횟수 기준)</p>
+				<ol class="repurchase-list">
+					<c:forEach var="item" items="${topRePurchased}">
+						<li>
+							<strong style="font-size: 18px;">${item.productName}</strong>
+							<span style="color: gray; font-size: 18px;">(${item.rePurchaseCount}회)</span>
+						</li>
+					</c:forEach>
+					<c:if test="${empty topRePurchased}">
+						<li>재구매 상품 정보가 없습니다.</li>
+					</c:if>
+				</ol>
+			</div>
 		</div>
 	</div>
+</div>
 
-
-	<script>
-    // 1. 월별 주문/매출 - Line Chart
-new Chart(document.getElementById('orderChart'), {
-    type: 'bar',
-    data: {
-        labels: [<c:forEach var="stat" items="${orderStats}">"${stat.month}",</c:forEach>],
-        datasets: [
-            {
-                type: 'bar',
-                label: '주문 수',
-                data: [<c:forEach var="stat" items="${orderStats}">${stat.orderCount},</c:forEach>],
-                backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                yAxisID: 'y'
-            },
-            {
-                type: 'line',
-                label: '매출 (원)',
-                data: [<c:forEach var="stat" items="${orderStats}">${stat.revenue},</c:forEach>],
-                borderColor: 'rgba(255, 99, 132, 0.9)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-                yAxisID: 'y1',
-                pointRadius: 3,
-                pointHoverRadius: 6
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        interaction: {
-            mode: 'index',
-            intersect: false
-        },
-        animation: {
-            duration: 1800,
-            easing: 'easeOutQuart'
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                position: 'left',
-                title: {
-                    display: true,
-                    text: '주문 수'
-                }
-            },
-            y1: {
-                beginAtZero: true,
-                position: 'right',
-                grid: {
-                    drawOnChartArea: false
+<script>
+    // 1. 월별 주문/매출
+    new Chart(document.getElementById('orderChart'), {
+        type: 'bar',
+        data: {
+            labels: [<c:forEach var="stat" items="${orderStats}">"${stat.month}",</c:forEach>],
+            datasets: [
+                {
+                    label: '주문 수',
+                    data: [<c:forEach var="stat" items="${orderStats}">${stat.orderCount},</c:forEach>],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    yAxisID: 'y'
                 },
-                title: {
-                    display: true,
-                    text: '매출 (원)'
+                {
+                    type: 'line',
+                    label: '매출 (원)',
+                    data: [<c:forEach var="stat" items="${orderStats}">${stat.revenue},</c:forEach>],
+                    borderColor: '#f97c5d',
+                    backgroundColor: 'rgba(249, 124, 93, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    yAxisID: 'y1'
                 }
-            }
+            ]
         },
-        plugins: {
-            legend: {
-                position: 'top'
-            },
-            tooltip: {
+        options: {
+            responsive: true,
+            interaction: {
                 mode: 'index',
-                intersect: false,
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-                        let value = context.parsed.y;
-                        if (label === '매출 (원)') {
-                            return label + ': ' + value.toLocaleString() + '원';
-                        } else {
-                            return label + ': ' + value + '건';
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: '주문 수', font: { size: 20 } },
+                    ticks: { font: { size: 20 } }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                    title: { display: true, text: '매출 (원)', font: { size: 20 } },
+                    ticks: { font: { size: 20 } }
+                },
+                x: {
+                    ticks: { font: { size: 20 } }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    bodyFont: { size: 20 },
+                    titleFont: { size: 20 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let value = context.parsed.y;
+                            return label.includes('매출') ? `${label}: ${value.toLocaleString()}원` : `${label}: ${value}건`;
                         }
                     }
+                },
+                legend: {
+                    labels: { font: { size: 20 } }
                 }
             }
         }
-    }
-});
+    });
 
-
-    // 2. 인기 상품 - Pie Chart
+    // 2. 인기 상품 Pie
     new Chart(document.getElementById('popularProductChart'), {
         type: 'pie',
         data: {
@@ -187,20 +232,26 @@ new Chart(document.getElementById('orderChart'), {
             datasets: [{
                 data: [<c:forEach var="p" items="${popularProducts}">${p.value},</c:forEach>],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)'
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                    '#FF9F40', '#C9CBCF', '#8E44AD', '#2ECC71', '#E67E22'
                 ]
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    bodyFont: { size: 20 },
+                    titleFont: { size: 20 }
+                },
+                legend: {
+                    labels: { font: { size: 20 } }
+                }
+            }
         }
     });
 
-    // 4. 태그별 통계 - Doughnut Chart
+    // 3. 태그별 주문 수 - Doughnut
     new Chart(document.getElementById('tagStatsChart'), {
         type: 'doughnut',
         data: {
@@ -208,19 +259,23 @@ new Chart(document.getElementById('orderChart'), {
             datasets: [{
                 data: [<c:forEach var="tag" items="${tagStats}">${tag.value},</c:forEach>],
                 backgroundColor: [
-                    'rgba(255, 159, 64, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                    'rgba(75, 192, 192, 0.7)'
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                    '#FF9F40', '#C9CBCF', '#8E44AD', '#2ECC71', '#E67E22'
                 ]
             }]
         },
         options: {
             responsive: true,
-            cutout: '60%'
+            cutout: '60%',
+            plugins: {
+                tooltip: {
+                    bodyFont: { size: 20 },
+                    titleFont: { size: 20 }
+                },
+                legend: {
+                    labels: { font: { size: 20 } }
+                }
+            }
         }
     });
 </script>
-</body>
-</html>

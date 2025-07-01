@@ -91,16 +91,17 @@ public class StoreStatsController {
 		// if (loginUser == null || !loginUser.ownsStore(storeId)) {
 		// return "redirect:/error/unauthorized";
 		// }
+		Integer userId = 1;
+		UserDTO user = userService.selectByUserId(userId);
+		StoreDTO store = storeService.selectStoreById(storeId);
 
 		// 통계 데이터 조회
 		List<OrderStatsDTO> orderStats = statsService.getMonthlyOrderStats(storeId);
 		List<PopularProductDTO> popularProducts = statsService.getPopularProducts(storeId);
 		List<TagStatsDTO> tagStats = statsService.getTagStats(storeId);
 		List<ProductRePurchaseDTO> topRePurchased = statsService.getTopRePurchasedProducts(storeId);
-		StoreDTO store = storeService.selectStoreById(storeId);
-		System.out.println(store);
-		System.out.println(fundingService.selectFundingByFundingId(1));
 		// View 전달
+		model.addAttribute("userDTO", user);
 		model.addAttribute("storeDTO", store);
 		model.addAttribute("orderStats", orderStats);
 		model.addAttribute("popularProducts", popularProducts);
