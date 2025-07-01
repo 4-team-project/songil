@@ -283,6 +283,7 @@ public class FundingManagementController {
 
 		model.addAttribute("fundingName", funding.getFundingName());
 		model.addAttribute("startDate", funding.getStartDate());
+		model.addAttribute("fundingId", funding.getFundingId());
 		// Date로 저장돼 있다면 포맷 필요
 		return "seller.result";
 	}
