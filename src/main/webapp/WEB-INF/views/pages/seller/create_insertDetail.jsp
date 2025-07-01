@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -10,49 +10,49 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h2>상점이름: ${store.storeName }</h2>
-<h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
+	<h2>상점이름: ${store.storeName }</h2>
+	<h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
+	<form action="${pageContext.request.contextPath}/seller/create-step4" method="post"
+		onsubmit="return checkConfirmed();">
 
-<!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
-<div id="dateArea">
-  <label for="startDate">시작일</label>
-  <input type="date" id="startDate" name="startDate" required />
+		<!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
+		<div id="dateArea">
+			<label for="startDate">시작일</label> <input type="date" id="startDate"
+				name="startDate" required /> <label for="endDate">종료일</label> <input
+				type="date" id="endDate" name="endDate" required />
 
-  <label for="endDate">종료일</label>
-  <input type="date" id="endDate" name="endDate" required />
+			<button type="button" onclick="submitDate()">확인</button>
+		</div>
 
-  <button type="button" onclick="submitDate()">확인</button>
-</div>
+		<!-- 날짜 출력 -->
+		<div id="dateInfo" style="margin-top: 10px;"></div>
 
-<!-- 날짜 출력 -->
-<div id="dateInfo" style="margin-top: 10px;"></div>
+		<h2>펀딩 사진을 선택해 주세요</h2>
+		<!-- 사진 추가 -->
+		<div class="menuPicture">
+			<div class="menu-label">
+				메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
+				사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong> 버튼을 눌러주세요.
+			</div>
 
-<h2>펀딩 사진을 선택해 주세요</h2>
-<!-- 사진 추가 -->
-<div class="menuPicture">
-  <div class="menu-label">
-    메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
-    사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong> 버튼을 눌러주세요.
-  </div>
+			<button type="button" id="btnAddPhoto">펀딩 사진 추가하기</button>
+			<input type="file" id="inputPhoto" accept="image/*" multiple
+				style="display: none" />
 
-  <button type="button" id="btnAddPhoto">펀딩 사진 추가하기</button>
-  <input type="file" id="inputPhoto" accept="image/*" multiple style="display: none" />
-  
-  <button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
+			<button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
 
-  <!-- 사진 미리보기 -->
-  <div class="preview-container" id="previewContainer"></div>
-</div>
+			<!-- 사진 미리보기 -->
+			<div class="preview-container" id="previewContainer"></div>
+		</div>
 
-<!-- 다음 단계 -->
-<form action="${pageContext.request.contextPath}/seller/create-step4" onsubmit="return checkConfirmed();">
-  <button type="submit">다음</button>
-</form>
+		<!-- 다음 단계 -->
+		<button type="submit">다음</button>
+	</form>
 
-<!-- 이전 -->
-<button type="button" onclick="goBack()">이전</button>
+	<!-- 이전 -->
+	<button type="button" onclick="goBack()">이전</button>
 
-<script>
+	<script>
 let isDateConfirmed = false;
 
 function submitDate() {

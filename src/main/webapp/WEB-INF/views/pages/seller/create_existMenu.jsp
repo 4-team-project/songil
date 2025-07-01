@@ -12,7 +12,7 @@
 <body>
 	<h2>상점이름: ${store.storeName }</h2>
 	<h1>한정 상품 펀딩</h1>
-<form action="${pageContext.request.contextPath}/seller/create-step3" method="get">
+<form action="${pageContext.request.contextPath}/seller/create-step3" method="post">
 	<div class="menuName">
 		<div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
 		<div class="menu-select">
@@ -29,8 +29,8 @@
 
 	<!-- 메뉴의 정가 입력 -->
 	<div class="menuPrice">
-		<div class="menu-label">해당 메뉴를 얼마에 판매할지 입력해주세요</div>
-		<input type="number" id="menuPrice" placeholder="판매가 " required /><br> <span
+		<div class="menu-label" name = "fundingName">해당 메뉴를 얼마에 판매할지 입력해주세요</div>
+		<input type="number" id="menuPrice" placeholder="판매가 " name="salePrice" required /><br> <span
 			id="discountRate">할인율은 %입니다.</span>
 	</div>
 
@@ -38,7 +38,7 @@
 	<div class="form-group">
 		<label for="minSales">원하시는 최소 판매 개수를 입력해주세요.(펀딩 성공 기준)</label>
 		<div class="description">예: 30개를 목표로 하면, 30개가 팔려야 펀딩이 성공합니다.</div>
-		<input type="number" id="minSales" name="minSales"
+		<input type="number" id="minSales" name=targetQty
 			placeholder="최소 판매 개수 입력" required/><br>
 		<span id="minPrice">펀딩 성공을 위한 최소 금액은 <span id="amount"></span>원입니다.</span>
 	</div>
@@ -47,7 +47,7 @@
 	<div class="form-group">
 		<label for="maxSales">펀딩 이벤트로 판매 가능한 최대 개수를 입력해 주세요.</label>
 		<div class="description">예: 50개가 가능하면, 50개 판매시 사용자가 펀딩 참여 불가능.</div>
-		<input type="number" id="maxSales" name="maxSales"
+		<input type="number" id="maxSales" name="maxQty"
 			placeholder="최대 판매 개수 입력" required/>
 	</div>
 
@@ -55,7 +55,7 @@
 	<div class="form-group">
 		<label for="maxPerUser">한 사람이 최대 몇 개까지 살 수 있는지 정해주세요.</label>
 		<div class="description">예: 1명당 2개까지 구매 가능</div>
-		<input type="number" id="maxPerUser" name="maxPerUser"
+		<input type="number" id="maxPerUser" name="perQty"
 			placeholder="인당 구매 가능 개수 입력" required/>
 	</div>
 	
