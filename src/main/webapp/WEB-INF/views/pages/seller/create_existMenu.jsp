@@ -2,22 +2,17 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ste1. 상품 정보</title>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-	<h2>상점이름: ${store.storeName }</h2>
+
+
 	<h1>한정 상품 펀딩</h1>
 <form action="${pageContext.request.contextPath}/seller/create-step3" method="post">
 	<div class="menuName">
 		<div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
 		<div class="menu-select">
 
-			<select id="menuSelect" required>
+			<select id="menuSelect" name="productId" required>
 				<option value="" disabled selected>메뉴를 선택해주세요.</option>
 			</select>
 
@@ -68,13 +63,12 @@
 //메뉴명
 $(document).ready(function() {
   $('#menuSelect').on('focus', function() {
-    const storeId = 1; // 상점ID 고정값
+    const storeId = ${store.storeId}; 
 
     $.ajax({
-      url: '/seller/product/list',
+      url: '${pageContext.request.contextPath}/seller/product/list',
       method: 'GET',
       data: { storeId: storeId },
-      dataType: 'json',
       success: function(productList) {
         $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
         $.each(productList, function(i, product) {
@@ -95,7 +89,7 @@ $(document).ready(function() {
   $('#menuSelect').on('change', function() {
     const productId = $(this).val();
     $.ajax({
-      url: '/seller/product/info',
+      url: '${pageContext.request.contextPath}/seller/product/info',
       method: 'GET',
       data: { productId: productId },
       dataType: 'json',
@@ -110,7 +104,7 @@ $(document).ready(function() {
         }
       },
       error: function() {
-        alert('상품 정보를 불러오지 못했습니다.');
+        alert('상품정보를 불러오지 못했습니다.');
       }
     });
   });
@@ -125,7 +119,7 @@ $(document).ready(function() {
     const productId = $(this).val();
 
     $.ajax({
-      url: '/seller/product/info',
+      url: '${pageContext.request.contextPath}/seller/product/info',
       method: 'GET',
       data: { productId: productId },
       dataType: 'json',
@@ -186,5 +180,3 @@ function goBack() {
 }
 </script>
 
-</body>
-</html>
