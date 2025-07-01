@@ -295,8 +295,6 @@ public class FundingManagementController {
 	public String fundingComplete(HttpSession session, Model model) {
 		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
 
-		session.removeAttribute("fundingDTO");
-
 		// 예외 처리 (없을 경우 홈으로)
 		if (funding == null) {
 			return "redirect:/seller/fundings/create-step1";
@@ -305,7 +303,10 @@ public class FundingManagementController {
 		model.addAttribute("fundingName", funding.getFundingName());
 		model.addAttribute("startDate", funding.getStartDate());
 		model.addAttribute("fundingId", funding.getFundingId());
-		// Date로 저장돼 있다면 포맷 필요
+		
+		session.removeAttribute("fundingDTO");
+		session.removeAttribute("aiRetryCount");
+		
 		return "seller.result";
 	}
 

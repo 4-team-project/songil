@@ -111,22 +111,41 @@ public class AIController {
 	@ApiOperation(value = "상품 홍보글 생성 실행 (View)", notes = "AI를 통해 생성된 홍보글을 HTML 뷰에 표시합니다.")
 	public String generateFundingTextView(@RequestParam("keywords") String keywords,
 			@RequestParam("target") String target, HttpSession session, Model model) {
+		// ==== 🔸 AI 재생성 횟수 제한 ====
+		Integer retryCount = (Integer) session.getAttribute("aiRetryCount");
+		if (retryCount == null)
+			retryCount = 0;
+
+		if (retryCount >= 3) {
+			model.addAttribute("aiError", "AI 생성은 최대 3회까지만 가능합니다.");
+			return "seller.aiInsertResult";
+		}
+
+		// 카운트 증가 및 저장
+		session.setAttribute("aiRetryCount", retryCount + 1);
+
+		// ==== 🔸 기존 로직 ====
 		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
+		if (funding == null) {
+			model.addAttribute("aiError", "펀딩 정보가 없습니다. 처음부터 다시 진행해주세요.");
+			return "redirect:/seller/create-step1";
+		}
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String startDate = sdf.format(funding.getStartDate());
 		String endDate = sdf.format(funding.getEndDate());
 
 		FundingPromotionRequestDto dto = FundingPromotionRequestDto.builder().endDate(endDate).keyword(keywords)
-				.productId(funding.getProductId()).salePrice(funding.getSalePrice()).startDate(startDate).target(target).build();
+				.productId(funding.getProductId()).salePrice(funding.getSalePrice()).startDate(startDate).target(target)
+				.build();
 
 		try {
-			System.out.println(dto);
 			AIResponse aiResponse = aiService.generateFundingContent(dto);
-			System.out.println(aiResponse);
 			model.addAttribute("aiResponse", aiResponse);
 		} catch (Exception e) {
-			model.addAttribute("aiError", e.getMessage());
+			model.addAttribute("aiError", "AI 생성 중 오류가 발생했습니다: " + e.getMessage());
 		}
+
 		return "seller.aiInsertResult";
 	}
 
