@@ -1,5 +1,7 @@
 package com.takku.project.mapper;
 
+import java.util.List;
+
 import com.takku.project.domain.StoreDTO;
 
 public interface StoreMapper {
@@ -29,5 +31,8 @@ public interface StoreMapper {
 
 	// 4. 진행 예정인 펀딩 수
 	int countUpcomingFundingsByStoreId(int storeId);
+
+	// 사용자 상점 전체 조회
+	List<StoreDTO> selectStoreListByUserId(int userId);
 
 }

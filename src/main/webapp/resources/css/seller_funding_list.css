@@ -1,0 +1,94 @@
+.funding-tabs button {
+    padding: 10px 15px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.funding-tabs button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+.funding-card {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* 추가: 펀딩 개수 요약 스타일 */
+.funding-summary {
+    margin-top: 10px; /* 탭과의 간격 */
+    font-size: 0.9em;
+    color: #666;
+    display: flex; /* 가로로 나열 */
+    gap: 15px; /* 항목 간 간격 */
+}
+.funding-summary span {
+    font-weight: bold;
+    color: #333;
+}
+
+#fundingListContainer {
+    display: flex;
+    flex-wrap: wrap; /* 여러 줄로 카드 나열 */
+    gap: 20px; /* 카드 사이의 간격 */
+    margin-top: 20px;
+}
+.funding-card {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    flex: 1 1 calc(33% - 20px); /* 한 줄에 3개 카드 (33.33% - gap) */
+    min-width: 250px; /* 최소 너비 */
+    box-sizing: border-box; /* padding, border가 width에 포함 */
+    cursor: pointer; /* 마우스 오버 시 포인터 변경 */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* 부드러운 전환 효과 */
+}
+.funding-card:hover {
+    transform: translateY(-5px); /* 호버 시 살짝 위로 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* 호버 시 그림자 진해짐 */
+}
+.funding-card h3 {
+    margin-top: 0;
+    color: #007bff; /* 제목 색상 */
+    font-size: 1.2em;
+    border-bottom: 1px solid #eee; /* 제목 아래 구분선 */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.funding-card p {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    color: #555;
+}
+.funding-card p strong {
+    color: #333;
+}
+
+/* 상점 버튼 스타일 (선택 사항) */
+#storeListContainer {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#storeListContainer button {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    background-color: #e6f2ff;
+    color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#storeListContainer button:hover {
+    background-color: #007bff;
+    color: white;
+}

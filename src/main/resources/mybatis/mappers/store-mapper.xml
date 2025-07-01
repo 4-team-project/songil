@@ -137,4 +137,9 @@
 		'준비중'
 	</select>
 
+	<!-- 사용자의 상점 리스트 조회 -->
+	<select id="selectStoreListByUserId" parameterType="int" resultType="storeDTO">
+		select * from takku_store where user_id = #{user_id}
+	</select>
+
 </mapper>

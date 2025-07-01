@@ -292,9 +292,16 @@
 		s.store_name,
 		p.price
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id = s.store_id
-		JOIN takku_product p ON f.product_id = p.product_id
+		JOIN takku_store s ON
+		f.store_id = s.store_id
+		JOIN takku_product p ON f.product_id =
+		p.product_id
 		WHERE f.end_date > SYSDATE
 		ORDER BY f.created_at DESC
+	</select>
+
+	<!-- 상점Id로 펀딩 전체 조회 -->
+	<select id="selectFudingListByStoreId" parameterType="int" resultType="fundingDTO">
+	 	select * from takku_funding where store_id = #{store_id}
 	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.takku.project.service;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,12 @@ public class StoreService implements StoreMapper {
 	@Override
 	public int countUpcomingFundingsByStoreId(int storeId) {
 		return sqlSession.selectOne(namespace + "countUpcomingFundingsByStoreId", storeId);
+	}
+
+	// 사용자 상점 전체 조회
+	@Override
+	public List<StoreDTO> selectStoreListByUserId(int userId) {
+		return sqlSession.selectList(namespace + "selectStoreListByUserId", userId);
 	}
 
 }
