@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/select_writetype.css">
@@ -32,7 +33,7 @@
 	<input type="hidden" id="writeTypeInput" name="type" value="">
 
 	<h3>
-		마지막으로, 불고기 정식에 대한 펀딩 제목과 펀딩 내용을 입력해야 합니다.<br>어떤 방식으로 작성할까요?
+		마지막으로, ${product.productName}에 대한 펀딩 제목과 펀딩 내용을 입력해야 합니다.<br>어떤 방식으로 작성할까요?
 	</h3>
 
 	<div class="funding-type-container">

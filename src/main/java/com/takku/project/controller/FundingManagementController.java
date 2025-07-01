@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -177,9 +177,11 @@ public class FundingManagementController {
 		model.addAttribute("store", store);
 
 		FundingDTO fundingDTO = new FundingDTO();
-
+		fundingDTO.setStoreId(store.getStoreId());
+		
 		session.setAttribute("fundingDTO", fundingDTO);
 		session.setAttribute("store", store);
+		
 		return "seller.createFunding";
 	}
 
@@ -188,11 +190,17 @@ public class FundingManagementController {
 	public String createStep2(@RequestParam("type") String type, Model model, HttpSession session) {
 		// 상점이름
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+		
 		model.addAttribute("store", store);
-
+		
 		if ("general".equals(type)) {
+			fundingDTO.setFundingType("일반");
+			session.setAttribute("fundingDTO", fundingDTO);
 			return "seller.normalFunding";
 		} else if ("limited".equals(type)) {
+			fundingDTO.setFundingType("한정");
+			session.setAttribute("fundingDTO", fundingDTO);
 			return "seller.existMenu";
 		} else {
 			return "seller.createFunding";
@@ -223,14 +231,27 @@ public class FundingManagementController {
 	@PostMapping("/create-step4")
 	public String writeType(@ModelAttribute FundingDTO funding, HttpSession session, Model model) {
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
-
 		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-
+		
+		ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
+		
 		fundingDTO.setStartDate(funding.getStartDate()); // 시작일
 		fundingDTO.setEndDate(funding.getEndDate()); // 마감일
+		
+		Date today = new Date(); // java.util.Date
+
+		// java.sql.Date → java.util.Date로 변환해서 비교
+		Date startDate = new Date(funding.getStartDate().getTime());
+
+		if (startDate.after(today)) {
+		    fundingDTO.setStatus("준비중");
+		} else {
+		    fundingDTO.setStatus("진행중");
+		}
 
 		session.setAttribute("fundingDTO", fundingDTO);
 		model.addAttribute("store", store);
+		model.addAttribute("product", product);
 		return "seller.selectWriteType";
 	}
 
@@ -264,17 +285,15 @@ public class FundingManagementController {
 		// 입력된 값만 덮어쓰기
 		sessionDTO.setFundingName(funding.getFundingName());
 		sessionDTO.setFundingDesc(funding.getFundingDesc());
-
+		System.out.println(sessionDTO);
 		fundingService.insertFunding(sessionDTO);
 
-		return "redirect:/takku/seller/fundings/complete";
+		return "redirect:/seller/fundings/complete";
 	}
 
 	@GetMapping("/complete")
 	public String fundingComplete(HttpSession session, Model model) {
 		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
-
-		session.removeAttribute("fundingDTO");
 
 		// 예외 처리 (없을 경우 홈으로)
 		if (funding == null) {
@@ -284,7 +303,10 @@ public class FundingManagementController {
 		model.addAttribute("fundingName", funding.getFundingName());
 		model.addAttribute("startDate", funding.getStartDate());
 		model.addAttribute("fundingId", funding.getFundingId());
-		// Date로 저장돼 있다면 포맷 필요
+		
+		session.removeAttribute("fundingDTO");
+		session.removeAttribute("aiRetryCount");
+		
 		return "seller.result";
 	}
 

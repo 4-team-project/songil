@@ -1,10 +1,105 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_exist_normal.css">
+
+<script>
+let basePrice = null;
+
+$(document).ready(function () {
+
+  // 메뉴 목록 불러오기
+$('#menuSelect').on('focus', function() {
+    const storeId = ${store.storeId}; 
+
+    $.ajax({
+      url: '${pageContext.request.contextPath}/seller/product/list',
+      method: 'GET',
+      data: { storeId: storeId },
+      success: function(productList) {
+        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
+        $.each(productList, function(i, product) {
+          $('#menuSelect').append(
+            $('<option></option>').val(product.productId).text(product.productName)
+          );
+        });
+      }
+    });
+  });
+});
+
+  // 메뉴 선택 시 정가 불러오기 + basePrice 저장
+  $('#menuSelect').on('change', function () {
+    const productId = $(this).val();
+    $.ajax({
+      url: '${pageContext.request.contextPath}/seller/product/info',
+      method: 'GET',
+      data: { productId: productId },
+      dataType: 'json',
+      success: function (product) {
+        if (product && product.price != null) {
+          basePrice = product.price;
+          $('#menuPrice').attr('placeholder', basePrice);
+          $('#menuPrice').val('');
+          $('#discountRate').text('할인율은 %입니다.');
+          updateMinPrice(); // 정가 변경되면 최소금액도 다시 계산
+        } else {
+          basePrice = null;
+          $('#menuPrice').attr('placeholder', '가격 정보를 불러오지 못했습니다.');
+        }
+      }
+    });
+  });
+
+  // 할인율 계산
+  $('#menuPrice').on('input', function () {
+    const sellingPrice = Number($(this).val());
+
+    if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
+      let discount = ((1 - (sellingPrice / basePrice)) * 100).toFixed(1);
+      $('#discountRate').text(`할인율은 ${discount}%입니다.`);
+    } else if (sellingPrice > basePrice) {
+      $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
+    } else {
+      $('#discountRate').text('할인율은 %입니다.');
+    }
+    updateMinPrice();
+  });
+
+  // 최소 펀딩 성공 금액 계산
+  $('#minSales').on('input', updateMinPrice);
+
+  function updateMinPrice() {
+    const price = Number($('#menuPrice').val());
+    const quantity = Number($('#minSales').val());
+
+    if (price > 0 && quantity > 0) {
+      const minAmount = price * quantity;
+      $('#amount').text(minAmount.toLocaleString());
+    } else {
+      $('#amount').text('0');
+    }
+  }
+
+  // 제출 시 정가보다 높은 경우 차단
+  $('form').on('submit', function (e) {
+    const sellingPrice = Number($('#menuPrice').val());
+    if (basePrice && sellingPrice > basePrice) {
+      e.preventDefault();
+      $('#priceModal').fadeIn();
+    }
+  });
+  
+  //모달 닫기 및 포커스 이동
+  $('#closeModalBtn').on('click', function () {
+    $('#priceModal').fadeOut();
+    $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
+  });
+});
+
+</script>
 
 <form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 	<div class="menuName">
@@ -62,102 +157,15 @@
 </form>
 
 
-<script>
-//메뉴명
-$(document).ready(function() {
-  $('#menuSelect').on('focus', function() {
-    const storeId = ${store.storeId}; 
+<!-- 경고 모달 -->
+<div id="priceModal">
+  <div class="modal-content">
+    <div class="warning-box">
+      판매가는 정가보다 높을 수 없습니다.
+    </div>
+    <button id="closeModalBtn">확인</button>
+  </div>
+</div>
+<button type="submit" onclick="goBack()">이전</button>
 
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/list',
-      method: 'GET',
-      data: { storeId: storeId },
-      success: function(productList) {
-        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
-        $.each(productList, function(i, product) {
-          $('#menuSelect').append(
-            $('<option></option>').val(product.productId).text(product.productName)
-          );
-        });
-      }
-    });
-  });
-});
-
-//가격
-$(document).ready(function() {
-  $('#menuSelect').on('change', function() {
-    const productId = $(this).val();
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/info',
-      method: 'GET',
-      success: function(product) {
-        console.log("받은 상품 정보:", product);
-        if (product && product.price != null) {
-          $('#menuPrice').attr('placeholder', product.price);
-          $('#menuPrice').val('');
-        }
-      }
-    });
-  });
-});
-
-//할인율
-$(document).ready(function() {
-  let basePrice = null; // 정가
-
-  $('#menuSelect').on('change', function() {
-    const productId = $(this).val();
-
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/info',
-      method: 'GET',
-      data: { productId: productId },
-      success: function(product) {
-        if (product && product.price != null) {
-          basePrice = product.price;
-          $('#menuPrice').attr('placeholder', basePrice);
-          $('#menuPrice').val('');
-          $('#discountRate').text('할인율은 %입니다.');
-        }
-      }
-    });
-  });
-
-// 판매가 입력 시 할인율 계산
-$('#menuPrice').on('input', function() {
-  const sellingPrice = Number($(this).val());
-
-  if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
-    let discount = ((1 - (sellingPrice / basePrice)) * 100);
-    discount = discount.toFixed(1);
-
-     $('#discountRate').text(`할인율은 \${discount}%입니다.`);
-   } else if (sellingPrice > basePrice) {
-     $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
-   }
-  });
-});
-
-//펀딩 성공을 위한 최소 금액은 -원입니다.
-$(function() {
-  function updateMinPrice() {
-    const baseAmount = Number($('#menuPrice').val()); 
-    const minSales = Number($('#minSales').val()); 
-    const minAmount = baseAmount * minSales;
-
-    if (minAmount > 0) {
-      $('#amount').text(minAmount.toLocaleString());
-    } else {
-      $('#amount').text('0');
-    }
-  }
-
-  $('#menuPrice, #minSales').on('input', updateMinPrice);
-
-  updateMinPrice();
-});
-	
-
-</script>
 

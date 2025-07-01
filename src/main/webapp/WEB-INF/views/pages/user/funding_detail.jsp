@@ -16,6 +16,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+  const isLoggedIn = ${not empty sessionScope.loginUser ? 'true' : 'false'};
+</script>
+
+<script>
 	//funding 이미지 배열
 	const fundingImages = [
 	    <c:choose>
@@ -125,6 +129,11 @@
 	//구매하기 결제 창 이동
 	$(function () {
 		  $(".buy-button").click(function () {
+			  if (!isLoggedIn) {
+			      alert("로그인 후 이용 가능합니다.");
+			      location.href = "${cpath}/auth/login"; 
+			      return;
+			    }
 		    const quantity = $("#quantity").val();
 		    const totalPrice = $("#totalPrice").text().replace(/,/g, ""); // 쉼표 제거
 
@@ -361,5 +370,4 @@
 	</div>
 
 	<!-- 리뷰 탭 영역 -->
-	<div id="review-tab" style="display: none;">
-	</div>
+	<div id="review-tab" style="display: none;"></div>

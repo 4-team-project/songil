@@ -39,7 +39,7 @@ public class MypageController {
 	
 	
 	@GetMapping("/mypage")
-	public String myPage(Model model) {
+	public String myPage(Model model, HttpSession session) {
 		// 페이지명 전달
 		model.addAttribute("pageName", "마이페이지");
 
@@ -64,12 +64,12 @@ public class MypageController {
 		// 모델에 테스트 데이터 넣기
 		
 		
-		 // 유저 정보 조회 (임시 userId=5)
-	    UserDTO user = userService.selectByUserId(5);
-	    model.addAttribute("user", user);
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+	    model.addAttribute("user", loginUser);
 	    
 	    
-		model.addAttribute("orderList", orderService.selectByUserId(5)); //임시 userid
+	    model.addAttribute("orderList", orderService.selectByUserId(loginUser.getUserId()));
+
 
 		// 뷰 이름 반환 (mypage.jsp)
 		return "user.mypage";
@@ -79,7 +79,8 @@ public class MypageController {
 	public String updateUser(HttpServletRequest request, HttpSession session) {
 	    //UserDTO user = (UserDTO) session.getAttribute("loginUser");
 		
-		UserDTO user = userService.selectByUserId(5);
+		UserDTO user = (UserDTO) session.getAttribute("loginUser");
+		if (user == null) return "0"; 
 
 	    String nickname = request.getParameter("nickname");
 	    String password = request.getParameter("password");

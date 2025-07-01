@@ -4,6 +4,8 @@
 	overflow-y: auto;
 	box-sizing: border-box;
 	background-color: white;
+	display: flex;
+	flex-direction: column;
 }
 
 .store-text {

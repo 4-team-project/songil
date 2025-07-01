@@ -1,7 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 
-<link rel="stylesheet" href="${cpath}/resources/css/layout/main-header.css" />
+<link rel="stylesheet"
+	href="${cpath}/resources/css/layout/main-header.css" />
 
 <div class="box"></div>
 <div class="header-box">
@@ -9,10 +10,21 @@
 		<img src="${cpath}/resources/images/logo.svg" alt="logo" />
 	</div>
 	<div class="lower-box">
-		<%@ include file="/WEB-INF/views/common/searchBox.jsp" %>
+		<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
 		<div class="nav-box">
-			<div class="nav-text" onclick="location.href='${cpath}/user/coupon'">내 쿠폰함</div>
-			<div class="nav-text" onclick="location.href='${cpath}/user/mypage'">마이페이지</div>
+			<c:choose>
+				<c:when test="${not empty sessionScope.loginUser}">
+					<div class="nav-text"
+						onclick="location.href='${cpath}/user/coupon'">내 쿠폰함</div>
+					<div class="nav-text"
+						onclick="location.href='${cpath}/user/mypage'">마이페이지</div>
+				</c:when>
+				<c:otherwise>
+					<div class="nav-text" onclick="location.href='${cpath}/auth/login'">로그인</div>
+					<div class="nav-text"
+						onclick="location.href='${cpath}/auth/signup'">회원가입</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 </div>

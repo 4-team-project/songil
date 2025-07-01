@@ -19,6 +19,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,217 +28,224 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class AIService {
+public class AIService implements DisposableBean {
 
-    @Value("${groq.api.url}")
-    private String apiUrl;
+	@Value("${groq.api.url}")
+	private String apiUrl;
 
-    @Value("${groq.api.key}")
-    private String apiKey;
+	@Value("${groq.api.key}")
+	private String apiKey;
 
-    @Value("${groq.api.model}")
-    private String model;
+	@Value("${groq.api.model}")
+	private String model;
 
-    @Value("${external.ai.api.url}")
-    private String aiApiBaseUrl;
+	@Value("${external.ai.api.url}")
+	private String aiApiBaseUrl;
 
-    private final ProductService productService;
-    private final StoreService storeService;
+	private final ProductService productService;
+	private final StoreService storeService;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final OkHttpClient client = new OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build();
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
+			.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
 
-    public SummaryResponse getReviewSummary(int productId) {
-        String url = aiApiBaseUrl + "/summary/" + productId;
-        Request request = new Request.Builder().url(url).get().build();
+	@Override
+	public void destroy() {
+		System.out.println("🧹 AIService 종료 중 - OkHttp 정리");
+		client.connectionPool().evictAll(); // 커넥션 풀 비우기
+		client.dispatcher().executorService().shutdown(); // 백그라운드 쓰레드 종료
+	}
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new RuntimeException("요약 FastAPI 호출 실패: HTTP " + response.code());
-            }
-            String responseBody = response.body().string();
-            JsonNode root = mapper.readTree(responseBody);
+	public SummaryResponse getReviewSummary(int productId) {
+		String url = aiApiBaseUrl + "/summary/" + productId;
+		Request request = new Request.Builder().url(url).get().build();
 
-            JsonNode summaryNode = root.path("summary");
-            if (summaryNode.isMissingNode() || !summaryNode.has("positive") || !summaryNode.has("negative")) {
-                throw new RuntimeException("요약 결과 형식이 올바르지 않습니다.");
-            }
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new RuntimeException("요약 FastAPI 호출 실패: HTTP " + response.code());
+			}
+			String responseBody = response.body().string();
+			JsonNode root = mapper.readTree(responseBody);
 
-            List<String> positive = mapper.convertValue(summaryNode.get("positive"), new TypeReference<List<String>>() {});
-            List<String> negative = mapper.convertValue(summaryNode.get("negative"), new TypeReference<List<String>>() {});
+			JsonNode summaryNode = root.path("summary");
+			if (summaryNode.isMissingNode() || !summaryNode.has("positive") || !summaryNode.has("negative")) {
+				throw new RuntimeException("요약 결과 형식이 올바르지 않습니다.");
+			}
 
-            return new SummaryResponse(productId, positive, negative);
+			List<String> positive = mapper.convertValue(summaryNode.get("positive"), new TypeReference<List<String>>() {
+			});
+			List<String> negative = mapper.convertValue(summaryNode.get("negative"), new TypeReference<List<String>>() {
+			});
 
-        } catch (Exception e) {
-            throw new RuntimeException("요약 API 처리 실패 - productId: " + productId + ", message: " + e.getMessage(), e);
-        }
-    }
+			return new SummaryResponse(productId, positive, negative);
 
-    public AIResponse generateFundingContent(FundingPromotionRequestDto req) {
-        ProductDTO product = productService.selectByProductId(req.getProductId());
-        if (product == null) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다. productId=" + req.getProductId());
-        }
+		} catch (Exception e) {
+			throw new RuntimeException("요약 API 처리 실패 - productId: " + productId + ", message: " + e.getMessage(), e);
+		}
+	}
 
-        StoreDTO store = storeService.selectStoreById(product.getStoreId());
-        if (store == null) {
-            throw new IllegalArgumentException("상품에 연결된 상점이 존재하지 않습니다. storeId=" + product.getStoreId());
-        }
+	public AIResponse generateFundingContent(FundingPromotionRequestDto req) {
+		ProductDTO product = productService.selectByProductId(req.getProductId());
+		if (product == null) {
+			throw new IllegalArgumentException("존재하지 않는 상품입니다. productId=" + req.getProductId());
+		}
 
-        String prompt = buildPrompt(req, product, store);
-        int maxRetries = 5;
-        int attempts = 0;
+		StoreDTO store = storeService.selectStoreById(product.getStoreId());
+		if (store == null) {
+			throw new IllegalArgumentException("상품에 연결된 상점이 존재하지 않습니다. storeId=" + product.getStoreId());
+		}
 
-        while (attempts <= maxRetries) {
-            try {
-                String requestBody = buildGroqRequestBody(prompt);
-                Request request = new Request.Builder().url(apiUrl)
-                    .addHeader("Authorization", "Bearer " + apiKey)
-                    .post(RequestBody.create(requestBody, MediaType.parse("application/json"))).build();
+		String prompt = buildPrompt(req, product, store);
+		int maxRetries = 10;
+		int attempts = 0;
 
-                System.out.println("🔍 요청 프롬프트:\n" + prompt);
+		while (attempts <= maxRetries) {
+			try {
+				String requestBody = buildGroqRequestBody(prompt);
+				Request request = new Request.Builder().url(apiUrl).addHeader("Authorization", "Bearer " + apiKey)
+						.post(RequestBody.create(requestBody, MediaType.parse("application/json"))).build();
 
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) {
-                        throw new RuntimeException("Groq API 호출 실패: HTTP " + response.code());
-                    }
-                    String responseBody = response.body().string();
-                    return parseGroqResponse(responseBody);
-                }
+				try (Response response = client.newCall(request).execute()) {
+					if (!response.isSuccessful()) {
+						throw new RuntimeException("Groq API 호출 실패: HTTP " + response.code());
+					}
+					String responseBody = response.body().string();
+					return parseGroqResponse(responseBody);
+				}
 
-            } catch (Exception e) {
-                attempts++;
-                if (attempts > maxRetries) {
-                    throw new RuntimeException("AI 홍보글 생성 실패 - 재시도 실패 (" + attempts + "회): " + e.getMessage(), e);
-                }
-                System.err.println("⚠️ Groq 응답 파싱 실패, 재시도 중... (" + attempts + "회)");
-            }
-        }
+			} catch (Exception e) {
+				attempts++;
+				if (attempts > maxRetries) {
+					throw new RuntimeException("AI 홍보글 생성 실패 - 재시도 실패 (" + attempts + "회): " + e.getMessage(), e);
+				}
+				System.err.println("⚠️ Groq 응답 파싱 실패, 재시도 중... (" + attempts + "회)");
+			}
+		}
 
-        throw new IllegalStateException("AI 홍보글 생성 실패: 알 수 없는 오류");
-    }
+		throw new IllegalStateException("AI 홍보글 생성 실패: 알 수 없는 오류");
+	}
 
-    public List<FundingDTO> getRecommendations(int userId) {
-        String json = getRecommendationsAsString(userId);
-        return parseRecommendationList(json);
-    }
+	public List<FundingDTO> getRecommendations(int userId) {
+		String json = getRecommendationsAsString(userId);
+		return parseRecommendationList(json);
+	}
 
-    public String getRecommendationsAsString(int userId) {
-        String fullUrl = aiApiBaseUrl + "/recommend/" + userId;
-        Request request = new Request.Builder().url(fullUrl).get().build();
+	public String getRecommendationsAsString(int userId) {
+		String fullUrl = aiApiBaseUrl + "/recommend/" + userId;
+		Request request = new Request.Builder().url(fullUrl).get().build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new RuntimeException("추천 FastAPI API 호출 실패: HTTP " + response.code() + " - userId: " + userId);
-            }
-            return response.body().string();
-        } catch (Exception e) {
-            throw new RuntimeException("추천 FastAPI API 호출 실패 - userId: " + userId + ", message: " + e.getMessage(), e);
-        }
-    }
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new RuntimeException("추천 FastAPI API 호출 실패: HTTP " + response.code() + " - userId: " + userId);
+			}
+			return response.body().string();
+		} catch (Exception e) {
+			throw new RuntimeException("추천 FastAPI API 호출 실패 - userId: " + userId + ", message: " + e.getMessage(), e);
+		}
+	}
 
-    // ======= [Private Helpers] =======
+	// ======= [Private Helpers] =======
 
-    private String buildPrompt(FundingPromotionRequestDto req, ProductDTO product, StoreDTO store) {
-        return "너는 상품 홍보글 작성 전문가야.\n" +
-               "다음 규칙을 반드시 지켜서 작성해. 하나라도 지키지 않으면 출력은 무효야.\n\n" +
-               "[출력 규칙]\n" +
-               "1. 반드시 JSON 형식으로 출력하고, 다른 문장이나 설명은 포함하지 마.\n" +
-               "2. 출력 형식은 정확히 다음과 같아야 해:\n" +
-               "   {\"title\":\"...\", \"content\":\"...\", \"hashtags\":\"...\"}\n" +
-               "3. key 이름(title, content, hashtags)과 순서는 절대 바꾸지 마.\n" +
-               "4. content는 반드시 400자 이상이며, HTML 형식으로 구성해야 해.\n" +
-               "5. content에는 해시태그를 절대 포함하지 마. (hashtags는 별도 필드)\n" +
-               "6. content에는 이모지를 풍부하게 포함해.\n" +
-               "7. content 안 HTML은 반드시 유효한 구조여야 하고, <ul>, <li>, <div>, <span>, <h3>, <hr> 같은 태그를 자유롭게 활용해 시각적으로 풍부하게 구성해.\n" +
-               "8. HTML 속성값의 따옴표(\")는 반드시 \\\"로 이스케이프 처리해.\n" +
-               "9. 전체 JSON 문자열에서 내부 따옴표(\")는 반드시 \\\"로 escape해야 해.\n\n" +
-               "[내용 제한]\n" +
-               "10. 제공된 정보 외에 그 어떤 내용도 상상하거나 창작하지 마. 예: \"10년 전통\", \"비법 소스\" 등은 절대 금지.\n" +
-               "11. 없는 정보는 추가하지 말고, 생략해도 좋아.\n" +
-               "12. 제품에 대해 과장하거나 허위 사실을 넣지 마. 오직 사실 기반으로 작성해.\n" +
-               "13. 타겟 고객을 직접 언급하지 마. 대신 그들의 관심사와 감성을 반영해서 자연스럽게 설득력 있는 표현을 써.\n" +
-               "14. 모든 출력은 반드시 한국어로만 작성하고, 한자나 중국어는 절대 사용하지 마.\n\n" +
-               "[제공 정보]\n" +
-               "상품명: " + product.getProductName() + "\n" +
-               "상품설명: " + product.getDescription() + "\n" +
-               "원가: " + product.getPrice() + "원\n" +
-               "판매가: " + req.getSalePrice() + "원\n" +
-               "상점명: " + store.getStoreName() + "\n" +
-               "상점 설명: " + store.getDescription() + "\n" +
-               "카테고리: " + store.getCategoryName() + "\n" +
-               "지역: " + store.getSido() + " " + store.getSigungu() + "\n" +
-               "키워드: " + req.getKeyword() + "\n" +
-               "타겟층: " + req.getTarget();
-    }
+	private String buildPrompt(FundingPromotionRequestDto req, ProductDTO product, StoreDTO store) {
+		return String.join("\n", "다음 조건에 따라 홍보글을 작성하세요.", "", "[출력 조건]", "1. 출력은 반드시 JSON 형식입니다.",
+				"2. JSON 구조는 다음과 같아야 합니다:", "{\"title\":\"...\", \"content\":\"...\", \"hashtags\":\"...\"}",
+				"3. content는 400자 이상이며 HTML 형식이어야 합니다.",
+				"4. content에는 이모지를 포함하고, <div>, <ul>, <li>, <h3>, <hr>, <span> 태그 등을 사용할 수 있습니다.",
+				"5. content에는 해시태그를 넣지 마세요.", "6. HTML 속성값의 따옴표(\")는 반드시 \\\"로 escape 처리하세요.",
+				"7. 전체 JSON 문자열 내 모든 따옴표(\")도 \\\"로 escape 처리하세요.", "", "[제공된 정보]", "상품명: " + product.getProductName(),
+				"상품설명: " + product.getDescription(), "원가: " + product.getPrice() + "원",
+				"판매가: " + req.getSalePrice() + "원", "상점명: " + store.getStoreName(), "상점 설명: " + store.getDescription(),
+				"카테고리: " + store.getCategoryName(), "지역: " + store.getSido() + " " + store.getSigungu(),
+				"키워드: " + req.getKeyword(), "타겟층: " + req.getTarget());
+	}
 
-    private String buildGroqRequestBody(String prompt) throws Exception {
-        ObjectNode jsonNode = mapper.createObjectNode();
-        jsonNode.put("model", model);
+	private String buildGroqRequestBody(String prompt) throws Exception {
+		ObjectNode jsonNode = mapper.createObjectNode();
+		jsonNode.put("model", model);
 
-        ArrayNode messages = mapper.createArrayNode();
+		ArrayNode messages = mapper.createArrayNode();
 
-        ObjectNode systemMsg = mapper.createObjectNode();
-        systemMsg.put("role", "system");
-        systemMsg.put("content", "반드시 JSON 형식으로만 응답해.");
-        messages.add(systemMsg);
+		ObjectNode systemMsg = mapper.createObjectNode();
+		systemMsg.put("role", "system");
+		systemMsg.put("content", "반드시 JSON 형식으로만 응답해.");
+		messages.add(systemMsg);
 
-        ObjectNode userMsg = mapper.createObjectNode();
-        userMsg.put("role", "user");
-        userMsg.put("content", prompt);
-        messages.add(userMsg);
+		ObjectNode userMsg = mapper.createObjectNode();
+		userMsg.put("role", "user");
+		userMsg.put("content", prompt);
+		messages.add(userMsg);
 
-        jsonNode.set("messages", messages);
-        jsonNode.put("temperature", 0.7);
-        jsonNode.put("max_tokens", 2048);
-        jsonNode.put("stream", false);
+		jsonNode.set("messages", messages);
+		jsonNode.put("temperature", 0.7);
+		jsonNode.put("max_tokens", 2048);
+		jsonNode.put("stream", false);
 
-        return mapper.writeValueAsString(jsonNode);
-    }
+		return mapper.writeValueAsString(jsonNode);
+	}
 
-    private AIResponse parseGroqResponse(String responseBody) throws Exception {
-        JsonNode rootNode = mapper.readTree(responseBody);
+	private AIResponse parseGroqResponse(String responseBody) throws Exception {
+		JsonNode rootNode = mapper.readTree(responseBody);
 
-        if (rootNode.has("error")) {
-            throw new RuntimeException("Groq API 에러: " + rootNode.get("error").get("message").asText());
-        }
+		if (rootNode.has("error")) {
+			throw new RuntimeException("Groq API 에러: " + rootNode.get("error").get("message").asText());
+		}
 
-        JsonNode choicesNode = rootNode.path("choices");
-        if (!choicesNode.isArray() || choicesNode.size() == 0) {
-            throw new RuntimeException("Groq API 응답에 choices가 없음");
-        }
+		JsonNode choicesNode = rootNode.path("choices");
+		if (!choicesNode.isArray() || choicesNode.size() == 0) {
+			throw new RuntimeException("Groq API 응답에 choices가 없음");
+		}
 
-        String content = choicesNode.get(0).path("message").path("content").asText(null);
-        if (content == null) {
-            throw new RuntimeException("Groq API 응답에서 content가 없음");
-        }
+		String content = choicesNode.get(0).path("message").path("content").asText(null);
+		if (content == null) {
+			throw new RuntimeException("Groq API 응답에서 content가 없음");
+		}
 
-        content = content.replaceAll("(?s)<think>.*?</think>", "").trim();
-        String cleanedJson = content
-            .replaceAll("(?i)```json\\n?", "")
-            .replaceAll("\\n?```", "")
-            .replaceAll("[\\n\\r]", "")
-            .trim();
+		// 🧹 <think> 제거 + ```json ``` 블록 제거 + 개행 제거
+		content = content.replaceAll("(?s)<think>.*?</think>", "").trim();
+		String cleanedJson = content.replaceAll("(?i)```json\\s*", "").replaceAll("```", "").replaceAll("[\\n\\r]", "")
+				.trim();
 
-        JsonNode jsonResult = mapper.readTree(cleanedJson);
+		// 🧪 JSON 구조 파싱
+		JsonNode jsonResult = mapper.readTree(cleanedJson);
 
-        AIResponse aiResponse = new AIResponse();
-        aiResponse.setTitle(jsonResult.path("title").asText(""));
-        aiResponse.setContent(jsonResult.path("content").asText(""));
-        aiResponse.setHashtags(jsonResult.path("hashtags").asText(""));
+		String title = jsonResult.path("title").asText(null);
+		String htmlContent = jsonResult.path("content").asText(null);
+		String hashtagsRaw = jsonResult.path("hashtags").asText(null);
 
-        return aiResponse;
-    }
+		// ✅ 내용 검증
+		if (title == null || title.trim().isEmpty()) {
+			throw new IllegalArgumentException("AI 응답 title이 누락되었거나 비어있음: " + cleanedJson);
+		}
 
-    private List<FundingDTO> parseRecommendationList(String json) {
-        try {
-            return mapper.readValue(json, new TypeReference<List<FundingDTO>>() {});
-        } catch (Exception e) {
-            throw new RuntimeException("추천 FastAPI API 결과 파싱 실패 - message: " + e.getMessage(), e);
-        }
-    }
+		if (htmlContent == null || htmlContent.trim().length() < 400) {
+			throw new IllegalArgumentException("AI 응답 content가 너무 짧거나 없음: " + cleanedJson);
+		}
+
+		if (hashtagsRaw == null || hashtagsRaw.trim().isEmpty()) {
+			throw new IllegalArgumentException("AI 응답 hashtags가 없음: " + cleanedJson);
+		}
+
+		// 🧵 해시태그 처리 (setHashtags 메서드 활용)
+		AIResponse aiResponse = new AIResponse();
+		aiResponse.setTitle(title);
+		aiResponse.setContent(htmlContent);
+		aiResponse.setHashtags(hashtagsRaw);
+
+		// 해시태그 포맷 확인
+		boolean allValid = aiResponse.getHashtags().stream().allMatch(tag -> tag.startsWith("#"));
+		if (!allValid) {
+			throw new IllegalArgumentException("해시태그 형식 오류 (모든 태그는 #로 시작해야 함): " + aiResponse.getHashtags());
+		}
+
+		return aiResponse;
+	}
+
+	private List<FundingDTO> parseRecommendationList(String json) {
+		try {
+			return mapper.readValue(json, new TypeReference<List<FundingDTO>>() {
+			});
+		} catch (Exception e) {
+			throw new RuntimeException("추천 FastAPI API 결과 파싱 실패 - message: " + e.getMessage(), e);
+		}
+	}
 }

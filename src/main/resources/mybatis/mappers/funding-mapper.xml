@@ -199,14 +199,14 @@
 		takku_funding (
 		product_id, store_id, funding_type, funding_name,
 		funding_desc, start_date, end_date,
-		sale_price, target_qty, max_qty,
+		sale_price, target_qty, max_qty, current_qty,
 		per_qty, status, created_at
 		) VALUES (
 		#{productId}, #{storeId},
 		#{fundingType}, #{fundingName},
 		#{fundingDesc}, #{startDate},
 		#{endDate},
-		#{salePrice}, #{targetQty}, #{maxQty},
+		#{salePrice}, #{targetQty}, #{maxQty}, 0,
 		#{perQty}, #{status},
 		SYSDATE
 		)

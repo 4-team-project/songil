@@ -10,7 +10,14 @@
 	<div class="main-contents">
 		<div class="head-box">
 			<p id="recommendTitle">
-				${sessionScope.loginUser.nickname}님 <span>추천 펀딩</span>
+			<c:choose>
+				<c:when test="${not empty sessionScope.loginUser}">
+					${sessionScope.loginUser.nickname}님 <span>추천 펀딩</span>
+				</c:when>
+				<c:otherwise>
+					딱쿠의 <span>오늘의 추천 펀딩</span>
+				</c:otherwise>
+			</c:choose>
 			</p>
 			<div class="dropdown-box">
 				<%@ include file="/WEB-INF/views/common/regionDropdown.jsp"%>
