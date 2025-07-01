@@ -3,7 +3,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<h2>상점이름: ${store.storeName }</h2>
+
 <h1>일반 펀딩</h1>
 <form action="${pageContext.request.contextPath}/seller/create-step3" method="get">
 	<div class="menuName">
@@ -54,10 +54,9 @@ $(document).ready(function() {
 	    const storeId = 1; // 상점ID 고정값
 
 	    $.ajax({
-	      url: '/seller/product/list',
+	      url: '${pageContext.request.contextPath}/seller/product/list',
 	      method: 'GET',
 	      data: { storeId: storeId },
-	      dataType: 'json',
 	      success: function(productList) {
 	        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
 	        $.each(productList, function(i, product) {
@@ -78,7 +77,7 @@ $(document).ready(function() {
 	  $('#menuSelect').on('change', function() {
 	    const productId = $(this).val();
 	    $.ajax({
-	      url: '/seller/product/info',
+	      url: '${pageContext.request.contextPath}/seller/product/info',
 	      method: 'GET',
 	      data: { productId: productId },
 	      dataType: 'json',
@@ -108,7 +107,7 @@ $(document).ready(function() {
 	    const productId = $(this).val();
 
 	    $.ajax({
-	      url: '/seller/product/info',
+	      url: '${pageContext.request.contextPath}/seller/product/info',
 	      method: 'GET',
 	      data: { productId: productId },
 	      dataType: 'json',
