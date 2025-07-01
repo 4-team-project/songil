@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
@@ -60,10 +61,9 @@ public class OrderController {
 	// 주문 폼
 	@GetMapping
 	public String orderForm(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
-			Model model, HttpSession session) {
+			Model model, @SessionAttribute(name = "loginUser", required = false) UserDTO loginUser) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 		if (loginUser == null) {
 	        return "redirect:/auth/login";
 	    }
@@ -82,10 +82,11 @@ public class OrderController {
 	@PostMapping("/payment")
 	public String processOrder(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
 			@RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, @SessionAttribute(name = "loginUser", required = false) UserDTO loginUser) {
 
-		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		UserDTO loginUser = userService.selectByUserId(7); // test
+		   if (loginUser == null) {
+		        return "redirect:/auth/login";
+		    }
 
 		int finalPrice = totalPrice - usePoint;
 
@@ -139,17 +140,17 @@ public class OrderController {
 	}
 
 	@GetMapping("/list")
-	public String getOrdersByStatus(@RequestParam String status, Model model) {
+	public String getOrdersByStatus(@RequestParam String status, Model model, @SessionAttribute(name = "loginUser", required = false) UserDTO loginUser) {
 		List<OrderDTO> orderList = new ArrayList<>();
 
 		if ("allbuylist".equals(status)) {
-			orderList = orderService.selectByUserId(5); // 전체 조회
+			orderList = orderService.selectByUserId(loginUser.getUserId()); // 전체 조회
 		} else if ("complete".equals(status)) {
-			orderList = orderService.getOrdersByUserAndStatus(5, "결제완료"); // 임시 userid!!!!!!!!!!!!!
+			orderList = orderService.getOrdersByUserAndStatus(loginUser.getUserId(), "결제완료"); 
 		} else if ("cancel".equals(status)) {
-			orderList = orderService.getOrdersByUserAndStatus(5, "환불"); // 임시 userid!!!!!!!!!!!!!
+			orderList = orderService.getOrdersByUserAndStatus(loginUser.getUserId(), "환불"); 
 		} else if ("null".equals(status)) {
-			orderList = orderService.selectByUserId(5);
+			orderList = orderService.selectByUserId(loginUser.getUserId());
 		}
 
 		model.addAttribute("orderList", orderList);
@@ -158,19 +159,29 @@ public class OrderController {
 
 	@PostMapping("/cancel")
 	@ResponseBody
-	public int updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
-		OrderDTO order = orderService.selectOrderByOrderId(orderId);
-		if (order == null)
-			return 0;
-
-		// 1. 주문 상태 업데이트
-		int result = orderService.updateOrderFundingStatus(orderId);
-		
-		// 2. 포인트 복원 (결제에 포인트 사용한 경우만)
-	    if (result > 0 && order.getUsePoint() > 0) {
-	        userService.restorePointAfterCancel(order.getUserId(), order.getUsePoint());
+	public Map<String, Object> updateOrderFundingStatus(@RequestParam("orderId") Integer orderId) {
+	    Map<String, Object> result = new HashMap<>();
+	    OrderDTO order = orderService.selectOrderByOrderId(orderId);
+	    
+	    if (order == null) {
+	        result.put("success", false);
+	        result.put("message", "해당 주문을 찾을 수 없습니다.");
+	        return result;
 	    }
 
-		return result;
+	    int updateResult = orderService.updateOrderFundingStatus(orderId);
+	    if (updateResult > 0) {
+	        if (order.getUsePoint() > 0) {
+	            userService.restorePointAfterCancel(order.getUserId(), order.getUsePoint());
+	        }
+	        result.put("success", true);
+	        result.put("message", "주문이 성공적으로 취소되었습니다.");
+	    } else {
+	        result.put("success", false);
+	        result.put("message", "주문 취소 처리 실패.");
+	    }
+
+	    return result;
 	}
+
 }
