@@ -14,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/ai")
@@ -96,7 +99,7 @@ public class AIController {
 		return "user.home";
 	}
 
-	// ======= [뷰 응답: 글 생성 폼] =======
+	// ======= [뷰 응답: 글 생성 폼] ======= 필요없을듯?
 	@GetMapping("/ai-form")
 	@ApiOperation(value = "홍보글 생성 폼 페이지", notes = "상품 홍보글 생성을 위한 입력 폼을 반환합니다.")
 	public String showForm() {
@@ -106,7 +109,16 @@ public class AIController {
 	// ======= [뷰 응답: 글 생성 실행] =======
 	@PostMapping("/ai-generate")
 	@ApiOperation(value = "상품 홍보글 생성 실행 (View)", notes = "AI를 통해 생성된 홍보글을 HTML 뷰에 표시합니다.")
-	public String generateFundingTextView(@ModelAttribute FundingPromotionRequestDto dto, Model model) {
+	public String generateFundingTextView(@RequestParam("keywords") String keywords,
+			@RequestParam("target") String target, HttpSession session, Model model) {
+		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String startDate = sdf.format(funding.getStartDate());
+		String endDate = sdf.format(funding.getEndDate());
+
+		FundingPromotionRequestDto dto = FundingPromotionRequestDto.builder().endDate(endDate).keyword(keywords)
+				.productId(funding.getProductId()).salePrice(funding.getSalePrice()).startDate(startDate).target(target).build();
+
 		try {
 			System.out.println(dto);
 			AIResponse aiResponse = aiService.generateFundingContent(dto);
@@ -115,7 +127,7 @@ public class AIController {
 		} catch (Exception e) {
 			model.addAttribute("aiError", e.getMessage());
 		}
-		return "pages/seller/funding_ai_form";
+		return "pages/seller/funding_ai_input";
 	}
 
 }
