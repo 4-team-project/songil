@@ -10,7 +10,7 @@
 <body>
 <div class="search-box">
 	<input class="search-text" id="searchText" type="text" placeholder="검색하기">
-	<div class="search-button" onclick="sendSearchData()">
+	<div class="search-button" id="searchButton" onclick="sendSearchData()">
 		<div class="search-button-circle">
 			<img class="search-icon"
 				src="${cpath}/resources/images/icons/search.svg"

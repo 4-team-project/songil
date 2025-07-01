@@ -72,38 +72,45 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const toggleDiv = document.getElementById("toggleImg");
-  const img = toggleDiv?.querySelector("img");
-  const categoryList = document.getElementById("categoryList");
+	  const toggleDiv = document.getElementById("toggleImg");
+	  const img = toggleDiv?.querySelector("img");
+	  const categoryList = document.getElementById("categoryList");
 
-  const defaultSrc = `${cpath}/resources/images/icons/drop-down.svg`;
-  const toggledSrc = `${cpath}/resources/images/icons/drop-up.svg`;
-  let toggled = false;
+	  const defaultSrc = `${cpath}/resources/images/icons/drop-down.svg`;
+	  const toggledSrc = `${cpath}/resources/images/icons/drop-up.svg`;
+	  let toggled = localStorage.getItem('categoryToggled') === 'true'; 
 
-  if (img && categoryList) {
-    img.src = defaultSrc;
-    categoryList.style.display = "none";
+	  if (img && categoryList) {
+	    img.src = toggled ? toggledSrc : defaultSrc;
+	    categoryList.style.display = toggled ? "flex" : "none";
 
-    toggleDiv.addEventListener("click", () => {
-      toggled = !toggled;
-      img.src = toggled ? toggledSrc : defaultSrc;
-      categoryList.style.display = toggled ? "flex" : "none";
-    });
-  }
+	    toggleDiv.addEventListener("click", () => {
+	      toggled = !toggled;
+	      img.src = toggled ? toggledSrc : defaultSrc;
+	      categoryList.style.display = toggled ? "flex" : "none";
+	      localStorage.setItem('categoryToggled', toggled);
+	    });
+	  }
 
-  const categoryBoxes = document.querySelectorAll(".category-box");
-  categoryBoxes.forEach(box => {
-    box.addEventListener("click", () => {
-      document.querySelectorAll(".category-box").forEach(b => b.classList.remove("selected"));
-      box.classList.add("selected");
+	  document.querySelectorAll('.category-box').forEach(btn => {
+		  btn.addEventListener('click', function () {
+			  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('selected'));
+			  this.classList.add('selected');
+		    const categoryId = this.getAttribute('data-category-id');
+		    const sido = document.getElementById('sidoButton').textContent.trim();
+		    const sigungu = document.getElementById('sigunguButton').textContent.trim();
+		    const keyword = lastParams.keyword || '';
 
-      const categoryId = parseInt(box.dataset.categoryId, 10);
-      if (!isNaN(categoryId) && typeof window.loadFundings === 'function') {
-        window.currentPage = 1;
-        window.loadFundings({ categoryId });
-      }
-    });
-  });
-});
+		    currentPage = 1;
+		    isFullList = false;
+
+		    lastParams.categoryId = categoryId;
+		    updateRecommendTitle(sido, sigungu, keyword);
+
+		    loadFundings({ categoryId, sido, sigungu, keyword });
+		  });
+		});
+
+	});
 </script>
 

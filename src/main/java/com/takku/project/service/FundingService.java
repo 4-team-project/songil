@@ -183,4 +183,13 @@ public class FundingService {
 		funding.setAvgRating(avgRating != null ? avgRating : 0.0);
 		funding.setReviewCnt(reviewCnt != null ? reviewCnt : 0);
 	}
+	
+	public List<FundingDTO> getOngoingFundings() {
+		List<FundingDTO> list = sqlSession.selectList(namespace + "selectOngoingFundings");
+		for (FundingDTO funding : list) {
+			enrichFundingWithExtras(funding);
+		}
+		return list;
+	}
+
 }

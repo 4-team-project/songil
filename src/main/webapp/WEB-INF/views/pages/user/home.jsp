@@ -9,12 +9,12 @@
 	<%@ include file="/WEB-INF/views/common/categoryBar.jsp"%>
 	<div class="main-contents">
 		<div class="head-box">
-			<p>
+			<p id="recommendTitle">
 				${sessionScope.loginUser.nickname}님 <span>추천 펀딩</span>
 			</p>
 			<div class="dropdown-box">
 				<%@ include file="/WEB-INF/views/common/regionDropdown.jsp"%>
-				<div class="find-btn">찾기</div>
+				<div class="find-btn disabled" id="findBtn">찾기</div>
 			</div>
 		</div>
 		<div id="main-contents">
