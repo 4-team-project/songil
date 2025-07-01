@@ -193,6 +193,4 @@ public class StoreController {
 			model.addAttribute("product", product);
 			return "/pages/seller/sellerFundingDetail";
 		}
-
-
 }
