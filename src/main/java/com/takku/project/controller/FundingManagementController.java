@@ -208,7 +208,7 @@ public class FundingManagementController {
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
 		model.addAttribute("store", store);
 
-		fundingDTO.setFundingName(funding.getFundingName()); // 펀딩명
+		fundingDTO.setProductId(funding.getProductId()); // 상품ID
 		fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
 		fundingDTO.setTargetQty(funding.getTargetQty()); // 최소 판매 개수
 		fundingDTO.setMaxQty(funding.getMaxQty()); // 최대 판매 개수
@@ -265,10 +265,7 @@ public class FundingManagementController {
 		sessionDTO.setFundingName(funding.getFundingName());
 		sessionDTO.setFundingDesc(funding.getFundingDesc());
 
-		/*
-		 * fundingService.insertFunding(sessionDTO);
-		 * 
-		 */
+		fundingService.insertFunding(sessionDTO);
 
 		return "redirect:/seller/complete";
 	}
