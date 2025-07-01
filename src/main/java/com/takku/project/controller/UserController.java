@@ -11,6 +11,7 @@ import com.takku.project.service.UserService;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -39,16 +41,14 @@ public class UserController {
 
 	 //1. 마이페이지 메인 (내 정보 보기)
 	@GetMapping
-	public String myPage(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
-		//UserDTO user = userService.selectByUserId(loginUser.getUserId());
-		UserDTO user = userService.selectByUserId(5);
-		model.addAttribute("user", user);
-
+	public String myPage(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, Model model) {
+		model.addAttribute("user", loginUser);
 		return "pages/user/mypage"; // mypage.jsp
 	}
+	
 	// 2. 회원정보 수정 폼
 	@GetMapping("/edit")
-	public String editForm(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
+	public String editForm(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, Model model) {
 		UserDTO user = userService.selectByUserId(loginUser.getUserId());
 		model.addAttribute("user", user);
 		return "mypage"; 
@@ -56,7 +56,7 @@ public class UserController {
 
 	// 3. 회원정보 수정 처리
 	@PutMapping
-	public String updateUser(@ModelAttribute("loginUser") UserDTO loginUser, @ModelAttribute UserDTO user,
+	public String updateUser(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, @ModelAttribute UserDTO user,
 			RedirectAttributes redirectAttributes) {
 		user.setUserId(loginUser.getUserId()); // 세션 정보 기준으로 userId 고정
 
@@ -71,7 +71,7 @@ public class UserController {
 
 	// 4. 내 리뷰 관리
 	@GetMapping("/reviews")
-	public String myReviews(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
+	public String myReviews(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, Model model) {
 		List<ReviewDTO> reviewList = reveiwService.reviewByUserID(loginUser.getUserId());
 		model.addAttribute("reviewList", reviewList);
 
@@ -80,7 +80,7 @@ public class UserController {
 	
 	//5.내 쿠폰함
 	@GetMapping("/coupons")
-	public String myCoupons(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
+	public String myCoupons(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, Model model) {
 	    List<CouponDTO> couponList = couponService.selectCouponByUserId(loginUser.getUserId());
 	    model.addAttribute("couponList", couponList);
 	    return "mypage_coupons";
@@ -88,7 +88,7 @@ public class UserController {
 	
 	//6.내 주문내역 조회
 	@GetMapping("/orders")
-	public String myOrders(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
+	public String myOrders(@SessionAttribute(name = "loginUser", required = false) UserDTO loginUser, Model model) {
 	    List<OrderDTO> orderList = orderService.selectByUserId(loginUser.getUserId());
 	    model.addAttribute("orderList", orderList);
 	    return "mypage_orders";

@@ -4,6 +4,7 @@
 	overflow-y: auto;
 	box-sizing: border-box;
 	background-color: white;
+	display: flex;
 }
 
 .store-text {
