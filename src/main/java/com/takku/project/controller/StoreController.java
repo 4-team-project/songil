@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.StoreDTO;
-import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.UserService;
@@ -85,16 +84,25 @@ public class StoreController {
 
 	// seller -> 한정 상품 펀딩 or 일반 펀딩
 	@GetMapping("/create-step1")
-	public String selectStoreNameByUserId(Model model) {
+	public String selectStoreNameByUserId(Model model, HttpSession session) {
 		int userId = 3; // 임시 사용자 ID
 		StoreDTO store = storeService.selectStoreNameByUserId(userId);
 		model.addAttribute("store", store);
+		
+		session.setAttribute("userId", userId);
+		session.setAttribute("store", store);
 		return "pages/seller/createFunding";
 	}
 
 	// 상품 정보
 	@GetMapping("/create-step2")
-    public String createStep2(@RequestParam("type") String type, Model model) {
+    public String createStep2(@RequestParam("type") String type, Model model, HttpSession session) {
+		//상점이름
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		model.addAttribute("store", store);
+		
+		session.setAttribute("fundingtype", type);
+		
         if ("general".equals(type)) {
             return "pages/seller/create_normalFunding"; 
         } else if ("limited".equals(type)) {
@@ -108,20 +116,44 @@ public class StoreController {
 		return "pages/seller/create_existMenu";
 	}
 
-	// 기존 메뉴 선택을 눌렀을 때 create_existMenu로
-	@GetMapping("/create_existMenu")
-	public String showExistingMenuPage() {
-		return "pages/seller/create_existMenu";
-	}
+	/*
+	 * // 기존 메뉴 선택을 눌렀을 때 create_existMenu로
+	 * 
+	 * @GetMapping("/create_existMenu") public String showExistingMenuPage() {
+	 * return "pages/seller/create_existMenu"; }
+	 * 
+	 * // 새로운 메뉴 등록을 눌렀을 때 create_newMenu로
+	 * 
+	 * @GetMapping("/create_newMenu") public String showNewMenuPage() { return
+	 * "pages/seller/create_newMenu"; }
+	 */
+	
+	//기간 및 이미지
+	@GetMapping("/create-step3")
+	public String selectDateAndImage(HttpSession session, Model model) {
 
-	// 새로운 메뉴 등록을 눌렀을 때 create_newMenu로
-	@GetMapping("/create_newMenu")
-	public String showNewMenuPage() {
-		return "pages/seller/create_newMenu";
+		
+		String type = (String) session.getAttribute("fundingType");
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		
+		model.addAttribute("store", store);
+		model.addAttribute("type", type);
+		
+		return "pages/seller/create_insertDetail";
 	}
 
 	@PostMapping("/create-step3")
-	public String insertFundingMenuDetail() {
+	public String insertFundingMenuDetail(HttpSession session, Model model) {
+		//상점이름
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		model.addAttribute("store", store);
+		
+		int userId = (int) session.getAttribute("userId");
+		String type = (String) session.getAttribute("fundingType");
+		
+		model.addAttribute("userId", userId);
+		model.addAttribute("type", type);
+		
 		return "pages/seller/create_insertDetail";
 	}
 
@@ -191,9 +223,5 @@ public class StoreController {
 	    return "pages/seller/funding_complete";
 	}
 	
-	//기간 및 이미지
-	@GetMapping("/create-step3")
-	public String selectDateAndImage() {
-		return "pages/seller/create_insertDetail";
-	}
+	
 }
