@@ -36,6 +36,7 @@
 	    document.querySelectorAll('.payment-detail-btn').forEach(btn => {
 	      btn.onclick = () => {
 	        const orderId = btn.getAttribute('data-orderid');
+	        console.log("상세 요청 orderId:", orderId); 
 	        fetch(`${cpath}/order/detail?orderId=${orderId}`)
 	          .then(response => response.json())
 	          .then(data => {
