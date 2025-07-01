@@ -231,7 +231,7 @@ public class FundingManagementController {
 
 		session.setAttribute("fundingDTO", fundingDTO);
 		model.addAttribute("store", store);
-		return "pages/seller/select_writetype";
+		return "seller.selectWriteType";
 	}
 
 	// 선택 후 제목, 내용 입력 창
@@ -242,9 +242,9 @@ public class FundingManagementController {
 		model.addAttribute("store", store);
 
 		if ("directly".equals(type)) {
-			return "pages/seller/funding_direct_input";
+			return "seller.directInsert";
 		} else if ("ai".equals(type)) {
-			return "pages/seller/funding_ai_input";
+			return "seller.aiInsert";
 		}
 
 		// 잘못된 type 처리
@@ -267,7 +267,7 @@ public class FundingManagementController {
 
 		fundingService.insertFunding(sessionDTO);
 
-		return "redirect:/seller/complete";
+		return "redirect:/takku/seller/fundings/complete";
 	}
 
 	@GetMapping("/complete")
@@ -278,13 +278,13 @@ public class FundingManagementController {
 
 		// 예외 처리 (없을 경우 홈으로)
 		if (funding == null) {
-			return "redirect:/seller/create-step1";
+			return "redirect:/seller/fundings/create-step1";
 		}
 
 		model.addAttribute("fundingName", funding.getFundingName());
 		model.addAttribute("startDate", funding.getStartDate());
 		// Date로 저장돼 있다면 포맷 필요
-		return "pages/seller/funding_complete";
+		return "seller.result";
 	}
 
 	// 기간 및 이미지

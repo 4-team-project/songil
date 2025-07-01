@@ -4,7 +4,15 @@
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/funding_ai_input.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>
+	$(function() {
+		const content = `${aiResponse != null ? aiResponse.content : ''}`; // JSTL 데이터를 JS로 가져옴
+		$("#htmlContent").html(content); // innerHTML로 출력
+		$("#fundingContentHidden").val(content); // 서버 제출용 textarea에 저장
+	});
+</script>
 <h3>불고기 정식은 어떤 느낌인가요?</h3>
 <p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
 
@@ -39,14 +47,15 @@
 		</div>
 
 		<div class="input-group">
-			<label for="content">펀딩 설명</label>
-			<textarea id="content" name="fundingContent"
-				placeholder="AI가 작성한 펀딩 설명을 수정해보세요" required>${aiResponse.content}</textarea>
+			<label for="htmlContent">펀딩 설명</label>
+			<div id="htmlContent" class="content-viewer"></div>
+			<textarea id="fundingContentHidden" name="fundingContent"
+				style="display: none;" required></textarea>
 		</div>
 
 		<div class="input-group">
-			<label for="hashtags">관련 단어</label> <input type="text"
-				id="hashtags" name="hashtags" placeholder="예: 불고기, 정식, 든든한한끼"
+			<label for="hashtags">관련 단어</label> <input type="text" id="hashtags"
+				name="hashtags" placeholder="예: 불고기, 정식, 든든한한끼"
 				value="${aiResponse.hashtags}" required />
 		</div>
 
