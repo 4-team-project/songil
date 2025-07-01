@@ -136,4 +136,28 @@ public class AuthController {
 	    userService.insertUser(user);
 	    return "redirect:/user/login";
 	}
+	
+	// 비밀번호 찾기
+	@GetMapping("/findPassword")
+	public String findPassword(Model model) {
+		model.addAttribute("pageName", "비밀번호 찾기");
+	    return "auth.findPassword";
+	}
+	
+	@PostMapping("/findPassword")
+	@ResponseBody
+	public String findPassword(@RequestParam String phone,
+	                           @RequestParam String userType,
+	                           @RequestParam String name) {
+		phone = formatPhone(phone);
+		// 사용자 찾기
+	    UserDTO user = userService.findUserPassword(userType, name, phone);
+
+	    if (user != null) {
+	        // 복호화 없이 평문 저장이라면 그대로 전달 (주의!)
+	        return user.getPassword(); // 또는 JSON으로 {"password": "abc123"} 등
+	    } else {
+	        return "not-found";
+	    }
+	}
 }

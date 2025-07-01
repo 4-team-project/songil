@@ -6,11 +6,11 @@
 	href="${cpath}/resources/css/pages/auth_signup.css">
 
 <script>
-	$("#cancelJoinBtn").on("click", function() {
-		location.href = "${cpath}/auth/login";
-	});
-
 	$(function() {
+		$("#cancelJoinBtn").on("click", function() {
+			location.href = "${cpath}/auth/login";
+		});
+		
 		// 모달 열기 함수
 		function showModal(message, callback) {
 			$("#modalMsg").text(message);
@@ -242,12 +242,12 @@
 		</div>
 
 		<div class="modal-buttons">
-			<button type="submit" class="modal-btn confirm">가입하기</button>
 			<button type="button" class="modal-btn cancel" id="cancelJoinBtn">취소</button>
+			<button type="submit" class="modal-btn confirm">가입하기</button>
 		</div>
 	</form>
 
-	<!-- 모달 영역 (CSS는 auth_signup.css에 있음) -->
+	<!-- 모달 영역 -->
 	<div id="resultModal">
 		<p id="modalMsg"></p>
 		<button id="closeModalBtn">확인</button>
