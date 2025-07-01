@@ -51,6 +51,13 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/auth_signup.jsp" />
 	</definition>
+	
+	<!-- 비밀번호 찾기 -->
+	<definition name="auth.findPassword" extends="subLayout">
+		<put-attribute name="title" value="비밀번호 찾기" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/find_password.jsp" />
+	</definition>
 
 	<!-- 홈 -->
 	<definition name="user.home" extends="defaultLayout">

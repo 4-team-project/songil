@@ -42,6 +42,7 @@
 
 			<!-- 링크들 -->
 			<div class="login-links">
+				<a href="${cpath}/auth/findPassword" id="joinBtn" class="btn" style="float: left;">비밀번호 찾기</a>
 				<a href="${cpath}/auth/signup" id="joinBtn" class="btn" style="float: right;">회원가입</a>
 			</div>
 		</form>

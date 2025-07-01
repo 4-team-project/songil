@@ -96,6 +96,14 @@
 		FROM takku_user
 		WHERE phone = #{phone} AND user_type = #{userType}
 	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="findUserPassword" parameterType="map" resultType="UserDTO">
+		SELECT * FROM takku_user
+		WHERE user_type = #{userType} 
+		AND phone = #{phone}
+		AND name = #{name}
+	</select>
 </mapper>
 
 

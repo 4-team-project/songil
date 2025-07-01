@@ -31,5 +31,7 @@ public interface UserMapper {
     int restorePointAfterCancel(int userId, int usePoint);
 
     boolean countByPhoneAndUserType(String phone, String userType);
+    
+    UserDTO findUserPassword(String userType, String name, String phone);
 }
 

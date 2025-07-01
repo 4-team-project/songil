@@ -92,4 +92,17 @@ public class UserService implements UserMapper {
 		Integer count = sqlSession.selectOne(namespace + "countByPhoneAndUserType", map);
 		return count != null && count > 0;
 	}
+
+	@Override
+	public UserDTO findUserPassword(String userType, String name, String phone) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userType", userType);
+		map.put("name", name);
+		map.put("phone", phone);
+		
+		UserDTO user = sqlSession.selectOne(namespace + "findUserPassword", map);
+		return user;
+	}
+	
+	
 }
