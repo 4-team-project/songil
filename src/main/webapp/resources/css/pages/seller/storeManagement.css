@@ -25,10 +25,11 @@
 }
 
 .icon {
-	width: 30px;
-	height: 30px;
+	width: 34px;
+	height: 34px;
 	vertical-align: middle;
 	margin-right: 6px;
+	stroke-width: 100;
 }
 
 .store-container {

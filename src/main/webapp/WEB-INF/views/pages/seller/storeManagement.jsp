@@ -10,8 +10,8 @@
 		<div class="title-container">
 			<h1>
 				<img
-					src="${cpath}/resources/images/icons/famicons_today-outline.svg"
-					alt="오늘의 펀딩" class="icon" />
+					src="${cpath}/resources/images/icons/store.svg"
+					alt="store" class="icon" />
 				<c:out value="${userDTO.nickname}" default="사장님" />
 				의 <span class="highlight">상점 관리</span>
 			</h1>

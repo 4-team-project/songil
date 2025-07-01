@@ -10,7 +10,6 @@
 .sidebar {
 	width: 320px;
 	background-color: #FFF6F0;
-	height: 100vh;
 	padding: 20px;
 	flex-shrink: 0;
 	box-sizing: border-box;
