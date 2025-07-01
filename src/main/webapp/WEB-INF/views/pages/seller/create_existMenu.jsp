@@ -4,7 +4,110 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let basePrice = null; // ✅ 전역으로 선언
 
+$(document).ready(function () {
+
+  // 메뉴 목록 불러오기
+  $('#menuSelect').on('focus', function () {
+    const storeId = ${store.storeId};
+
+    $.ajax({
+      url: '${pageContext.request.contextPath}/seller/product/list',
+      method: 'GET',
+      data: { storeId: storeId },
+      success: function (productList) {
+        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
+        $.each(productList, function (i, product) {
+          $('#menuSelect').append(
+            $('<option></option>').val(product.productId).text(product.productName)
+          );
+        });
+      },
+      error: function () {
+        alert('상품 목록을 불러오지 못했습니다.');
+      }
+    });
+  });
+
+  // 메뉴 선택 시 정가 불러오기 + basePrice 저장
+  $('#menuSelect').on('change', function () {
+    const productId = $(this).val();
+    $.ajax({
+      url: '${pageContext.request.contextPath}/seller/product/info',
+      method: 'GET',
+      data: { productId: productId },
+      dataType: 'json',
+      success: function (product) {
+        if (product && product.price != null) {
+          basePrice = product.price;
+          $('#menuPrice').attr('placeholder', basePrice);
+          $('#menuPrice').val('');
+          $('#discountRate').text('할인율은 %입니다.');
+          updateMinPrice(); // 정가 변경되면 최소금액도 다시 계산
+        } else {
+          basePrice = null;
+          $('#menuPrice').attr('placeholder', '가격 정보를 불러오지 못했습니다.');
+        }
+      },
+      error: function () {
+        alert('상품 정보를 불러오지 못했습니다.');
+      }
+    });
+  });
+
+  // 할인율 계산
+  $('#menuPrice').on('input', function () {
+    const sellingPrice = Number($(this).val());
+
+    if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
+      let discount = ((1 - (sellingPrice / basePrice)) * 100).toFixed(1);
+      $('#discountRate').text(`할인율은 ${discount}%입니다.`);
+    } else if (sellingPrice > basePrice) {
+      $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
+    } else {
+      $('#discountRate').text('할인율은 %입니다.');
+    }
+
+    updateMinPrice();
+  });
+
+  // 최소 펀딩 성공 금액 계산
+  $('#minSales').on('input', updateMinPrice);
+
+  function updateMinPrice() {
+    const price = Number($('#menuPrice').val());
+    const quantity = Number($('#minSales').val());
+
+    if (price > 0 && quantity > 0) {
+      const minAmount = price * quantity;
+      $('#amount').text(minAmount.toLocaleString());
+    } else {
+      $('#amount').text('0');
+    }
+  }
+
+  // 🚫 제출 시 정가보다 높은 경우 차단
+  $('form').on('submit', function (e) {
+    const sellingPrice = Number($('#menuPrice').val());
+    if (basePrice && sellingPrice > basePrice) {
+      e.preventDefault();
+      $('#priceModal').fadeIn();
+    }
+  });
+  
+  //모달 닫기 및 포커스 이동
+  $('#closeModalBtn').on('click', function () {
+    $('#priceModal').fadeOut();
+    $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
+  });
+});
+
+function goBack() {
+  window.history.back();
+}
+</script>
 
 <h1>한정 상품 펀딩</h1>
 <form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
@@ -56,127 +159,15 @@
 	
   <button type="submit">다음</button>
 </form>
+
+<!-- 경고 모달 -->
+<div id="priceModal">
+  <div class="modal-content">
+    <div class="warning-box">
+      판매가는 정가보다 높을 수 없습니다.
+    </div>
+    <button id="closeModalBtn">확인</button>
+  </div>
+</div>
 <button type="submit" onclick="goBack()">이전</button>
-
-
-<script>
-//메뉴명
-$(document).ready(function() {
-  $('#menuSelect').on('focus', function() {
-    const storeId = ${store.storeId}; 
-
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/list',
-      method: 'GET',
-      data: { storeId: storeId },
-      success: function(productList) {
-        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
-        $.each(productList, function(i, product) {
-          $('#menuSelect').append(
-            $('<option></option>').val(product.productId).text(product.productName)
-          );
-        });
-      },
-      error: function() {
-        alert('상품 목록을 불러오지 못했습니다.');
-      }
-    });
-  });
-});
-
-//가격
-$(document).ready(function() {
-  $('#menuSelect').on('change', function() {
-    const productId = $(this).val();
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/info',
-      method: 'GET',
-      data: { productId: productId },
-      dataType: 'json',
-      success: function(product) {
-        console.log("받은 상품 정보:", product);
-        if (product && product.price != null) {
-          $('#menuPrice').attr('placeholder', product.price);
-          $('#menuPrice').val('');
-        } else {
-          $('#menuPrice').attr('placeholder', '가격 정보를 불러오지 못했습니다.');
-          $('#menuPrice').val('');
-        }
-      },
-      error: function() {
-        alert('상품정보를 불러오지 못했습니다.');
-      }
-    });
-  });
-});
-
-//할인율
-$(document).ready(function() {
-  let basePrice = null; // 정가 (기본 가격)
-
-
-  $('#menuSelect').on('change', function() {
-    const productId = $(this).val();
-
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/info',
-      method: 'GET',
-      data: { productId: productId },
-      dataType: 'json',
-      success: function(product) {
-        if (product && product.price != null) {
-          basePrice = product.price;
-          $('#menuPrice').attr('placeholder', basePrice);
-          $('#menuPrice').val('');
-          $('#discountRate').text('할인율은 %입니다.');
-        }
-      },
-      error: function() {
-        alert('상품 정보를 불러오지 못했습니다.');
-      }
-    });
-  });
-
-// 판매가 입력 시 할인율 계산
-$('#menuPrice').on('input', function() {
-  const sellingPrice = Number($(this).val());
-
-  if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
-    let discount = ((1 - (sellingPrice / basePrice)) * 100);
-    discount = discount.toFixed(1); // 소수점 1자리까지
-
-     $('#discountRate').text(`할인율은 \${discount}%입니다.`);
-   } else if (sellingPrice > basePrice) {
-     $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
-   }
-  });
-});
-
-//펀딩 성공을 위한 최소 금액은 =원입니다.
-$(function() {
-	  // 기본 초기화 (초기 텍스트 세팅)
-	  function updateMinPrice() {
-	    const baseAmount = Number($('#menuPrice').val()); 
-	    const minSales = Number($('#minSales').val()); 
-	    const minAmount = baseAmount * minSales;
-
-	    if (minAmount > 0) {
-	      $('#amount').text(minAmount.toLocaleString());
-	    } else {
-	      $('#amount').text('0');
-	    }
-	  }
-
-	  // menuPrice와 minSales 입력값 변경 시마다 실행
-	  $('#menuPrice, #minSales').on('input', updateMinPrice);
-
-	  // 페이지 로딩 시 초기화
-	  updateMinPrice();
-	});
-	
-	
-function goBack() {
-  window.history.back();
-}
-</script>
 
