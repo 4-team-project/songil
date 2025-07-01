@@ -94,7 +94,7 @@ public class StoreController {
 
 		session.setAttribute("fundingDTO", fundingDTO);
 		session.setAttribute("store", store);
-		return "pages/seller/createFunding";
+		return "seller.createFunding";
 	}
 
 	// 상품 정보
@@ -109,14 +109,11 @@ public class StoreController {
 		} else if ("limited".equals(type)) {
 			return "pages/seller/create_existMenu";
 		} else {
-			return "pages/seller/createFunding";
+			return "seller.createFunding";
 		}
 	}
 
-	@GetMapping("/create-step3")
-	public String selectDateAndImage() {
-		return "pages/seller/create_insertDetail";
-	}
+
 
 	// 펀딩이름 판매가 최소 판매개수 최대판대매수 인당구매
 	@PostMapping("/create-step3")
