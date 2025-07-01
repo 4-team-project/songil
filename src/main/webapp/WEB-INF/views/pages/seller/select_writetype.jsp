@@ -27,7 +27,7 @@
 <h1>현재 상점 : ${store.storeName}</h1>
 
 <form id="fundingForm"
-	action="${pageContext.request.contextPath}/seller/create-step5"
+	action="${pageContext.request.contextPath}/seller/fundings/create-step5"
 	method="post">
 	<input type="hidden" id="writeTypeInput" name="type" value="">
 

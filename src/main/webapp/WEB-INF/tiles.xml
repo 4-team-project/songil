@@ -157,6 +157,30 @@
 			value="/WEB-INF/views/pages/seller/create_insertDetail.jsp" />
 		<put-attribute name="title" value="펀딩 만들기_기간및이미지" />
 	</definition>
+	
+	<definition name="seller.selectWriteType" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/select_writetype.jsp" />
+		<put-attribute name="title" value="펀딩 정보 입력 방법 선택" />
+	</definition>
+	
+	<definition name="seller.directInsert" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/funding_direct_input.jsp" />
+		<put-attribute name="title" value="펀딩 정보 직접 입력" />
+	</definition>
+	
+	<definition name="seller.aiInsert" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/funding_ai_input.jsp" />
+		<put-attribute name="title" value="펀딩 정보 직접 입력" />
+	</definition>
+	
+	<definition name="seller.result" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/funding_complete.jsp" />
+		<put-attribute name="title" value="펀딩 생성 결과" />
+	</definition>
 
 	<definition name="seller/stats" extends="defaultLayout">
 		<put-attribute name="title" value="상점 통계" />

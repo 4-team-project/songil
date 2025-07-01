@@ -23,7 +23,7 @@ h2 {
 	margin-bottom: 25px;
 }
 
-.input-group input {
+.input-group input, .input-group textarea {
 	width: 100%;
 	font-size: 16px;
 	padding: 12px;
@@ -41,6 +41,17 @@ h2 {
 	border-color: #ff9670;
 	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
 }
+
+.content-viewer {
+		width: 100%;
+		font-size: 16px;
+		padding: 12px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		background-color: #fafafa;
+		box-sizing: border-box;
+		min-height: 200px;
+	}
 
 .btn-group {
 	display: flex;

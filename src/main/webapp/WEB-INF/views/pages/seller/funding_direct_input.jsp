@@ -7,7 +7,7 @@
 <h3>펀딩 제목과 내용을 입력해주세요.</h3>
 
 <form
-	action="${pageContext.request.contextPath}/seller/submit-funding"
+	action="${pageContext.request.contextPath}/seller/fundings/submit-funding"
 	method="post">
 	<div class="input-group">
 		<label for="title">펀딩 제목을 입력해 주세요</label> <input type="text"
