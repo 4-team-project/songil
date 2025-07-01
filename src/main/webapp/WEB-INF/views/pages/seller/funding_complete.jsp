@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/funding_complete.css">
@@ -16,7 +17,7 @@
     </p>
 
     <div class="btn-group">
-        <a href="/seller/store/edit" class="btn-outline">펀딩 수정하기</a>
-        <a href="/" class="btn-filled">홈으로 가기</a>
+        <a href="${cpath}/seller/fundings/${fundingId}/edit" class="btn-outline">펀딩 수정하기</a>
+        <a href="${cpath}/seller/home" class="btn-filled">홈으로 가기</a>
     </div>
 </div>
