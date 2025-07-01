@@ -10,7 +10,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
+<h2>상점이름: ${store.storeName }</h2>
 <h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
 
 <!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
