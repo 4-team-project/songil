@@ -10,7 +10,9 @@
 .sidebar {
 	width: 320px;
 	background-color: #FFF6F0;
+	height: 100vh;
 	padding: 20px;
+	flex-shrink: 0;
 	box-sizing: border-box;
 	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
 }
