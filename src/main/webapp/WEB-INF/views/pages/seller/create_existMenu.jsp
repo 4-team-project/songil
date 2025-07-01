@@ -13,6 +13,7 @@ $(document).ready(function () {
   // 메뉴 목록 불러오기
 $('#menuSelect').on('focus', function() {
     const storeId = ${store.storeId}; 
+    console.log("storeId: ", storeId);
 
     $.ajax({
       url: '${pageContext.request.contextPath}/seller/product/list',
@@ -28,7 +29,7 @@ $('#menuSelect').on('focus', function() {
       }
     });
   });
-});
+
 
   // 메뉴 선택 시 정가 불러오기 + basePrice 저장
   $('#menuSelect').on('change', function () {
@@ -166,6 +167,5 @@ $('#menuSelect').on('focus', function() {
     <button id="closeModalBtn">확인</button>
   </div>
 </div>
-<button type="submit" onclick="goBack()">이전</button>
 
 
