@@ -51,7 +51,7 @@
 <script>
 $(document).ready(function() {
 	  $('#menuSelect').on('focus', function() {
-	    const storeId = 1; // 상점ID 고정값
+	    const storeId = ${store.storeId}; // 상점ID 고정값
 
 	    $.ajax({
 	      url: '${pageContext.request.contextPath}/seller/product/list',
