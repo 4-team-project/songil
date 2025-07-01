@@ -19,4 +19,7 @@ public interface StoreMapper {
 	Integer findStoreIdByUserId(int userId);
 
 	StoreDTO selectStoreNameByUserId(int userId);
+
+	// 사용자 상점 전체 조회
+	List<StoreDTO> selectStoreListByUserId(int userId);
 }

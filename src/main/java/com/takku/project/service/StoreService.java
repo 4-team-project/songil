@@ -58,4 +58,10 @@ public class StoreService implements StoreMapper {
 		return sqlSession.selectOne(namespace + "selectStoreNameByUserId", userId);
 	}
 
+	// 사용자 상점 전체 조회
+	@Override
+	public List<StoreDTO> selectStoreListByUserId(int userId) {
+		return sqlSession.selectList(namespace + "selectStoreListByUserId", userId);
+	}
+
 }
