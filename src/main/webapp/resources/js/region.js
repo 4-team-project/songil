@@ -88,93 +88,112 @@ const regionData = {
   ]
 };
 
+window.toggleDropdown = function(type) {
+	  document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove("show"));
+	  const dropdown = document.getElementById(type + "Dropdown");
+	  if (dropdown) {
+	    dropdown.classList.toggle("show");
+	  }
+	};
 
-window.onload = function () {
-	window.toggleDropdown = function(type) {
-		  document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove("show"));
-		  const dropdown = document.getElementById(type + "Dropdown");
-		  dropdown.classList.toggle("show");
-		};
-	
-	console.log("region.js 실행됨");
+	window.onload = function () {
+	  console.log("region.js 실행됨");
 
-  const sidoBtn = document.getElementById("sidoButton");
-  const sidoDropdown = document.getElementById("sidoDropdown");
-  const sigunguBtn = document.getElementById("sigunguButton");
-  const sigunguDropdown = document.getElementById("sigunguDropdown");
-
-  Object.keys(regionData).forEach(sido => {
-    const div = document.createElement("div");
-    div.className = "dropdown-item";
-    div.innerText = sido;
-
-	div.onclick = () => {
-	  const prevSelected = sidoDropdown.querySelector(".selected");
-	  if (prevSelected) prevSelected.classList.remove("selected");
-	
-	  div.classList.add("selected");
-	
 	  const sidoBtn = document.getElementById("sidoButton");
-	  sidoBtn.innerText = sido;
-	
-	  sidoBtn.classList.add("selected");  
-	  sigunguBtn.innerText = "시/군/구 선택";
-	  sigunguBtn.classList.remove("selected");
-	
-	  renderSigungu(sido);
-	  checkFindButtonEnabled();
-	
-	  sidoDropdown.classList.remove("show");
-	};
-
-
-    sidoDropdown.appendChild(div);
-  });
-
-  function renderSigungu(selectedSido) {
-    sigunguDropdown.innerHTML = '';
-    sigunguDropdown.scrollTop = 0;
-
-    const sigungus = regionData[selectedSido] || [];
-    sigungus.forEach(sigungu => {
-      const div = document.createElement("div");
-      div.className = "dropdown-item";
-      div.innerText = sigungu;
-
-	div.onclick = () => {
-	  const prevSelected = sigunguDropdown.querySelector(".selected");
-	  if (prevSelected) prevSelected.classList.remove("selected");
-	
-	  div.classList.add("selected");
-	
+	  const sidoDropdown = document.getElementById("sidoDropdown");
 	  const sigunguBtn = document.getElementById("sigunguButton");
-	  sigunguBtn.innerText = sigungu;
-	
-	  sigunguBtn.classList.add("selected"); 
-	  checkFindButtonEnabled(); 
-	
-	  sigunguDropdown.classList.remove("show");
+	  const sigunguDropdown = document.getElementById("sigunguDropdown");
+
+	  Object.keys(regionData).forEach(sido => {
+	    const div = document.createElement("div");
+	    div.className = "dropdown-item";
+	    div.innerText = sido;
+
+	    div.onclick = () => {
+	      const prevSelected = sidoDropdown.querySelector(".selected");
+	      if (prevSelected) prevSelected.classList.remove("selected");
+
+	      div.classList.add("selected");
+
+	      sidoBtn.innerText = sido;
+	      sidoBtn.classList.add("selected");
+	      sigunguBtn.innerText = "시/군/구 선택";
+	      sigunguBtn.classList.remove("selected");
+
+	      renderSigungu(sido);
+	      checkFindButtonEnabled();
+
+	      sidoDropdown.classList.remove("show");
+	    };
+
+	    sidoDropdown.appendChild(div);
+	  });
+
+	  function renderSigungu(selectedSido) {
+	    sigunguDropdown.innerHTML = '';
+	    sigunguDropdown.scrollTop = 0;
+
+	    const sigungus = regionData[selectedSido] || [];
+	    sigungus.forEach(sigungu => {
+	      const div = document.createElement("div");
+	      div.className = "dropdown-item";
+	      div.innerText = sigungu;
+
+	      div.onclick = () => {
+	        const prevSelected = sigunguDropdown.querySelector(".selected");
+	        if (prevSelected) prevSelected.classList.remove("selected");
+
+	        div.classList.add("selected");
+
+	        sigunguBtn.innerText = sigungu;
+	        sigunguBtn.classList.add("selected");
+	        checkFindButtonEnabled();
+
+	        sigunguDropdown.classList.remove("show");
+	      };
+
+	      sigunguDropdown.appendChild(div);
+	    });
+	  }
+
+	  window.addEventListener("click", (e) => {
+	    if (!e.target.closest(".dropdown")) {
+	      document.querySelectorAll(".dropdown-content").forEach(el => el.classList.remove("show"));
+	    }
+	  });
 	};
-	 sigunguDropdown.appendChild(div); 
-    });
-  }
 
-  // 외부 클릭 시 드롭다운 모두 닫기
-  window.addEventListener("click", (e) => {
-    if (!e.target.closest(".dropdown")) {
-      document.querySelectorAll(".dropdown-content").forEach(el => el.classList.remove("show"));
-    }
-  });
-};
+	document.addEventListener("DOMContentLoaded", function () {
+		  const sidoBtn = document.getElementById("sidoButton");
+		  const sigunguBtn = document.getElementById("sigunguButton");
 
-function checkFindButtonEnabled() {
-  const sidoSelected = document.getElementById("sidoButton").classList.contains("selected");
-  const sigunguSelected = document.getElementById("sigunguButton").classList.contains("selected");
-  const findBtn = document.getElementById("findBtn");
+		  if (sidoBtn) {
+		    sidoBtn.addEventListener("click", function () {
+		      toggleDropdown('sido');
+		    });
+		  }
 
-  if (sidoSelected && sigunguSelected) {
-    findBtn.classList.remove("disabled");
-  } else {
-    findBtn.classList.add("disabled");
-  }
-}
+		  if (sigunguBtn) {
+		    sigunguBtn.addEventListener("click", function () {
+		      if (!sidoBtn.classList.contains('selected')) {
+		        alert('먼저 시/도를 선택해주세요.');
+		        return;
+		      }
+		      toggleDropdown('sigungu');
+		    });
+		  }
+		});
+
+	function checkFindButtonEnabled() {
+	  const sidoSelected = document.getElementById("sidoButton").classList.contains("selected");
+	  const sigunguSelected = document.getElementById("sigunguButton").classList.contains("selected");
+	  const findBtn = document.getElementById("findBtn");
+
+	  if (!findBtn) return;
+
+	  if (sidoSelected && sigunguSelected) {
+	    findBtn.classList.remove("disabled");
+	  } else {
+	    findBtn.classList.add("disabled");
+	  }
+	}

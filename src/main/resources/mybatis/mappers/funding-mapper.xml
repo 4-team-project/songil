@@ -54,12 +54,15 @@
 		(
 		SELECT AVG(r.rating)
 		FROM takku_review r
-		WHERE r.product_id = f.product_id
+		WHERE
+		r.product_id = f.product_id
 		) AS avg_rating
 		FROM takku_funding f
-		JOIN takku_store s ON f.store_id =
+		JOIN
+		takku_store s ON f.store_id =
 		s.store_id
-		JOIN takku_product p ON f.product_id = p.product_id
+		JOIN takku_product p ON
+		f.product_id = p.product_id
 		<where>
 			f.status IN ('진행중', '준비중')
 			<if test="keywordList != null and keywordList.size() > 0">
@@ -276,8 +279,22 @@
 		</if>
 		ORDER BY o.purchased_at DESC
 	</select>
-	
-	<select id="selectByFundingStatus" parameterType="String" resultType="fundingDTO">
-		select funding_id, target_qty, current_qty from takku_funding where status = #{status}
+
+	<select id="selectByFundingStatus" parameterType="String"
+		resultType="fundingDTO">
+		select funding_id, target_qty, current_qty from
+		takku_funding where status = #{status}
+	</select>
+
+	<select id="selectOngoingFundings" resultMap="FundingResultMap">
+		SELECT
+		f.*,
+		s.store_name,
+		p.price
+		FROM takku_funding f
+		JOIN takku_store s ON f.store_id = s.store_id
+		JOIN takku_product p ON f.product_id = p.product_id
+		WHERE f.end_date > SYSDATE
+		ORDER BY f.created_at DESC
 	</select>
 </mapper>
