@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -254,4 +255,20 @@ public class FundingController {
 
 		return "pages/user/myPage_fundingList";
 	}
+	
+	//시작일, 종료일 보여주기
+
+    @PostMapping("/showDates")
+    public String showDates(
+        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+        Model model) {
+
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
+        return "pages/seller/create_insertDetail"; // 다시 step2.jsp 렌더링
+    }
+	
+ 
 }

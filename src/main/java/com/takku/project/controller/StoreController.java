@@ -94,6 +94,16 @@ public class StoreController {
 
 	// 상품 정보
 	@GetMapping("/create-step2")
+    public String createStep2(@RequestParam("type") String type, Model model) {
+        if ("general".equals(type)) {
+            return "pages/seller/create_normalFunding"; 
+        } else if ("limited".equals(type)) {
+            return "pages/seller/create_existMenu"; 
+        } else {
+            return "pages/seller/createFunding";
+        }
+    }
+
 	public String selectFundingMenuType() {
 		return "pages/seller/create_existMenu";
 	}
