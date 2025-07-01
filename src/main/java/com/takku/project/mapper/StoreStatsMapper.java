@@ -24,12 +24,31 @@ public interface StoreStatsMapper {
 
 	List<AgeGenderTagDTO> selectTopTagsByAgeGender();
 
-	/** 상품별 월별 주문/매출 통계 */
+	// product 기준 통계 쿼리
 	List<OrderStatsDTO> selectProductMonthlyStats(int productId);
 
-	/** 상품별 연령대 통계 */
 	List<LabelValueDTO> selectProductAgeStats(int productId);
 
-	/** 상품별 성별 통계 */
 	List<LabelValueDTO> selectProductGenderStats(int productId);
+
+	// store 기준 통계 쿼리
+	int countTodayOrdersByStoreId(int storeId);
+
+	Integer sumTodaySalesByStoreId(int storeId);
+
+	int countOngoingFundingsByStoreId(int storeId);
+
+	int countUpcomingFundingsByStoreId(int storeId);
+
+	// Funding 기준 통계 쿼리
+	int selectTodayFundingAmount(int fundingId); // 오늘 펀딩 금액
+
+	List<LabelValueDTO> selectFundingGenderRatio(int fundingId); // 참여자 성별
+
+	List<LabelValueDTO> selectFundingAgeDistribution(int fundingId); // 참여자 연령대
+
+	int selectFundingCompleteOrderCount(int fundingId); // 결제 완료 수
+
+	int selectFundingRefundOrderCount(int fundingId); // 환불 건수
+
 }
