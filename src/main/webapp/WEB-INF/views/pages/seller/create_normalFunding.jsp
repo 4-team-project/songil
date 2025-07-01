@@ -66,13 +66,15 @@ $(document).ready(function() {
       $('#priceModal').fadeIn();
     }
   });
-});
-
-	//모달 닫기 및 포커스 이동
+  
+//모달 닫기 및 포커스 이동
 	$('#closeModalBtn').on('click', function () {
 	  $('#priceModal').fadeOut();
 	  $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
 	});
+});
+
+	
 
 
 </script>

@@ -25,7 +25,6 @@
 		});
 	});
 </script>
-<h1>현재 상점 : ${store.storeName}</h1>
 
 <form id="fundingForm"
 	action="${pageContext.request.contextPath}/seller/fundings/create-step5"
@@ -33,7 +32,7 @@
 	<input type="hidden" id="writeTypeInput" name="type" value="">
 
 	<h3>
-		마지막으로, ${product.productName}에 대한 펀딩 제목과 펀딩 내용을 입력해야 합니다.<br>어떤 방식으로 작성할까요?
+		마지막으로, <strong>${product.productName}</strong>에 대한 펀딩 제목과 펀딩 내용을 입력해야 합니다.<br>어떤 방식으로 작성할까요?
 	</h3>
 
 	<div class="funding-type-container">
