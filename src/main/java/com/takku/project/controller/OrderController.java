@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.InputStreamReader;
@@ -53,18 +56,22 @@ public class OrderController {
 	@Value("${iamport.api.key}")
     private String iamportApiKey;
 
+	
 	// 주문 폼
 	@GetMapping
 	public String orderForm(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
-			Model model) {
+			Model model, HttpSession session) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-		UserDTO user = userService.selectByUserId(7); // test
-
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		if (loginUser == null) {
+	        return "redirect:/auth/login";
+	    }
+		
 		model.addAttribute("pageName", "결제하기");
 		model.addAttribute("funding", funding);
 		model.addAttribute("store", store);
-		model.addAttribute("loginUser", user);
+		model.addAttribute("loginUser", loginUser);
 		model.addAttribute("quantity", quantity);
 		model.addAttribute("totalPrice", totalPrice);
 		model.addAttribute("iamportApiKey", iamportApiKey);

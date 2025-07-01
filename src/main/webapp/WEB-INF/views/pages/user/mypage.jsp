@@ -7,98 +7,97 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/components/regionDropdown.css">
 
-	<div class="mypage-container">
+<div class="mypage-container">
 
-		<!-- 사이드바 -->
-		<nav class="sidebar">
-			<div class="profile-section">
-				<span class="user-icon">👤</span>
-				<div class="username">${user.nickname}님</div>
-				<a href="#" class="editMypage">내 정보 수정하기</a>
-			</div>
+	<!-- 사이드바 -->
+	<nav class="sidebar">
+		<div class="profile-section">
+			<span class="user-icon">👤</span>
+			<div class="username">${user.nickname}님</div>
+			<a href="#" class="editMypage">내 정보 수정하기</a>
+		</div>
+
+		<!-- 구매내역 -->
+		<div class="menulist">
+			<a href="#" class="buylist active">구매 내역</a> <a href="#"
+				class="activeFunding">내가참여한펀딩</a>
+		</div>
+
+		<!-- 로그아웃 -->
+		<form id="logoutForm" action="${cpath}/auth/logout" method="post">
+			<button type="submit" class="logout">로그아웃</button>
+		</form>
+	</nav>
+
+	<!-- 구매내역 > nav-->
+	<section class="content-area">
+		<div class="tab-search-container">
 
 			<!-- 구매내역 -->
-			<div class="menulist">
-				<a href="#" class="buylist active">구매 내역</a> 
-				<a href="#" class="activeFunding">내가참여한펀딩</a>
-			</div>
-			
-			<!-- 로그아웃 -->
-			<div class="logout">
-				<a href="#" class="logout">로그아웃</a>
-			</div>
-		</nav>
-
-		<!-- 구매내역 > nav-->
-		<section class="content-area">
-			<div class="tab-search-container">
-
-				<!-- 구매내역 -->
-				<div class="tab-wrapper-buylist">
-					<ul class="tab-menu">
-						<li><a href="#" class="allbuylist active"
-							data-status="allbuylist">모든 구매 내역</a></li>
-						<li><a href="#" class="complete" data-status="complete">결제
-								완료</a></li>
-						<li><a href="#" class="cancel" data-status="cancel">결제 취소</a></li>
-					</ul>
-				</div>
-
-				<!-- 내가 참여한 펀딩 > nav-->
-				<div class="tab-wrapper fundinglist" style="display: none">
-					<ul class="funding_nav">
-						<li><a href="#" class="allfundinglist active"
-							data-status="allfundinglist">모든 펀딩
-						</a></li>
-						<li><a href="#" class="progressing" data-status="progressing">
-								진행 중인 펀딩</a></li>
-						<li><a href="#" class="achieved" data-status="achieved">달성된
-								펀딩</a></li>
-						<li><a href="#" class="failed" data-status="failed">미달성된
-								펀딩</a></li>
-					</ul>
-				</div>
-
-				<!-- 검색하기 -->
-				<div class="search-wrapper">
-					<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
-				</div>
+			<div class="tab-wrapper-buylist">
+				<ul class="tab-menu">
+					<li><a href="#" class="allbuylist active"
+						data-status="allbuylist">모든 구매 내역</a></li>
+					<li><a href="#" class="complete" data-status="complete">결제
+							완료</a></li>
+					<li><a href="#" class="cancel" data-status="cancel">결제 취소</a></li>
+				</ul>
 			</div>
 
-			<!-- 구매내역 > 헤더 -->
-			<div class="table-header buylist-header">
-				<span class="col-title">결제명</span> <span class="col-amount">결제
-					금액</span> <span class="col-status">결제 여부</span> <span class="col-detail">결제상세</span>
+			<!-- 내가 참여한 펀딩 > nav-->
+			<div class="tab-wrapper fundinglist" style="display: none">
+				<ul class="funding_nav">
+					<li><a href="#" class="allfundinglist active"
+						data-status="allfundinglist">모든 펀딩 </a></li>
+					<li><a href="#" class="progressing" data-status="progressing">
+							진행 중인 펀딩</a></li>
+					<li><a href="#" class="achieved" data-status="achieved">달성된
+							펀딩</a></li>
+					<li><a href="#" class="failed" data-status="failed">미달성된
+							펀딩</a></li>
+				</ul>
 			</div>
 
-			<!-- 내가 참여한 펀딩 > 헤더 -->
-			<div class="table-header fundinglist-header" style="display: none;">
-				<span class="col-title">펀딩명</span> <span class="col-period">펀딩기간</span>
-				<span class="col-status">달성여부</span>
+			<!-- 검색하기 -->
+			<div class="search-wrapper">
+				<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
 			</div>
+		</div>
 
-			<!-- 구매내역 리스트 -->
-			<div id="order-list-container" class="content">
-				<jsp:include page="/WEB-INF/views/pages/user/mypage_orderList.jsp" />
-			</div>
+		<!-- 구매내역 > 헤더 -->
+		<div class="table-header buylist-header">
+			<span class="col-title">결제명</span> <span class="col-amount">결제
+				금액</span> <span class="col-status">결제 여부</span> <span class="col-detail">결제상세</span>
+		</div>
 
-			<!-- 내가 참여한 펀딩 리스트 -->
-			<div id="funding-list-container" class="content"
-				style="display: block;">
-				<jsp:include page="/WEB-INF/views/pages/user/myPage_fundingList.jsp" />
-			</div>
-		</section>
-	</div>
+		<!-- 내가 참여한 펀딩 > 헤더 -->
+		<div class="table-header fundinglist-header" style="display: none;">
+			<span class="col-title">펀딩명</span> <span class="col-period">펀딩기간</span>
+			<span class="col-status">달성여부</span>
+		</div>
+
+		<!-- 구매내역 리스트 -->
+		<div id="order-list-container" class="content">
+			<jsp:include page="/WEB-INF/views/pages/user/mypage_orderList.jsp" />
+		</div>
+
+		<!-- 내가 참여한 펀딩 리스트 -->
+		<div id="funding-list-container" class="content"
+			style="display: block;">
+			<jsp:include page="/WEB-INF/views/pages/user/myPage_fundingList.jsp" />
+		</div>
+	</section>
+</div>
 
 
-	<!-- 내 정보 수정하기 -->
-	<%@ include file="/WEB-INF/views/pages/user/mypage_userInfoEdit.jsp"%>
+<!-- 내 정보 수정하기 -->
+<%@ include file="/WEB-INF/views/pages/user/mypage_userInfoEdit.jsp"%>
 
-	<!-- 결제상세 -->
-	<%@ include file="/WEB-INF/views/pages/user/mypage_paymentDetail.jsp"%>
+<!-- 결제상세 -->
+<%@ include file="/WEB-INF/views/pages/user/mypage_paymentDetail.jsp"%>
 
 
-	<script>
+<script>
   // html 로딩 완료 후 실행되는 함수들
   window.addEventListener('DOMContentLoaded', () => {
   bindModalEvents(); //모달 열기/닫기
