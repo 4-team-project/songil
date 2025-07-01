@@ -6,6 +6,7 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/funding_complete.css">
 
+<div class="funding-complete-container">
 <div class="funding-complete-box">
     <h2>“<span>${fundingName}</span>” 등록 완료!</h2>
 
@@ -20,4 +21,5 @@
         <a href="${cpath}/seller/fundings/${fundingId}/edit" class="btn-outline">펀딩 수정하기</a>
         <a href="${cpath}/seller/home" class="btn-filled">홈으로 가기</a>
     </div>
+</div>
 </div>

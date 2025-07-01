@@ -1,20 +1,22 @@
 @charset "UTF-8";
 
+.funding-complete-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vh;
+	 height:60vh; /* 뷰포트 전체 높이 */
+}
+
 .funding-complete-box {
 	border: 2px solid #ff9670;
 	border-radius: 12px;
 	padding: 30px 20px;
 	text-align: center;
-	max-width: 500px;
-	margin: 40px auto;
 	background-color: #fff7f5;
-}
-
-.funding-complete-box h2 {
-	font-size: 30px;
-	color: #ff9670;
-	margin-bottom: 20px;
-	font-weight: bold;
+	max-width: 500px;
+	width: 90%;
+	box-sizing: border-box;
 }
 
 .funding-complete-box p {

@@ -194,6 +194,8 @@ public class FundingManagementController {
 		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
 		
 		model.addAttribute("store", store);
+		model.addAttribute("fundingDTO", fundingDTO);
+		
 		
 		if ("general".equals(type)) {
 			fundingDTO.setFundingType("일반");
@@ -218,6 +220,7 @@ public class FundingManagementController {
 
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
 		model.addAttribute("store", store);
+		
 
 		fundingDTO.setProductId(funding.getProductId()); // 상품ID
 		fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
@@ -228,6 +231,24 @@ public class FundingManagementController {
 		session.setAttribute("fundingDTO", fundingDTO);
 
 		return "seller.insertDetail";
+	}
+	
+	//css test용 -> 지우기 !!!!!!!!!!!!필수!!!!!!!!!!!!!!!
+	@GetMapping("/create-step4") 
+	public String cssTest() {
+		return "seller.selectWriteType";
+	}
+	@GetMapping("/create-step5") 
+	public String cssTest5() {
+		return "seller.directInsert";
+	}
+	@GetMapping("/create-step6") 
+	public String cssTest52() {
+		return "seller.aiInsert";
+	}
+	@GetMapping("/create-step7") 
+	public String cssTest527() {
+		return "seller.result";
 	}
 
 	// ai, 직접입력 선택 창

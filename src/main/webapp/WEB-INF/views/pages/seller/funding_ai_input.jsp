@@ -49,23 +49,24 @@
 						});
 	});
 </script>
-<h3>불고기 정식은 어떤 느낌인가요? (AI 자동 생성은 3회만 가능합니다!!)</h3>
-<p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
 
 <form action="${pageContext.request.contextPath}/ai/ai-generate"
 	method="post">
+	<h3>불고기 정식은 어떤 느낌인가요? <br><h2>(AI 자동 생성은 3회만 가능합니다!!)</h2></h3>
+	<p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
+
 	<div class="input-group">
 		<input type="text" name="keywords" placeholder="떠오르는 단어를 적어주세요"
 			required />
 	</div>
-	<div class="input-group">
+	<div class="input-group2">
 		<input type="text" name="target" placeholder="예: 20대 여성, 직장인, 커플"
 			required />
 	</div>
 
 	<div class="btn-group">
-		<button type="button" onclick="history.back()" class="nav-btn">이전</button>
-		<button type="submit" class="nav-btn">AI 생성</button>
+		<button class="btn" type="button" onclick="history.back()" class="nav-btn">이전</button>
+		<button class="btn" type="submit" class="nav-btn">AI 생성</button>
 	</div>
 </form>
 
@@ -107,6 +108,6 @@
 
 <c:if test="${not empty aiError}">
 	<p style="color: red;">
-		<b>${aiError}</b> 
+		<b>${aiError}</b>
 	</p>
 </c:if>

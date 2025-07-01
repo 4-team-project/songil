@@ -30,7 +30,7 @@
 	<!-- 사진 추가 -->
 	<div class="menuPicture">
 		<div class="menu-label">펀딩 사진을 선택해 주세요.</div>
-			<p>메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
+			<p><strong>최대 2개까지</strong> 메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
 			사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong> 버튼을 눌러주세요.</p>
 		
 
@@ -58,27 +58,33 @@
 let isDateConfirmed = false;
 
 function submitDate() {
-  const start = document.getElementById("startDate").value;
-  const end = document.getElementById("endDate").value;
+	  const start = document.getElementById("startDate").value;
+	  const end = document.getElementById("endDate").value;
 
-  if (!start || !end) {
-    alert("시작일과 종료일을 모두 입력해 주세요.");
-    return;
-  }
+	  if (!start || !end) {
+	    alert("시작일과 종료일을 모두 입력해 주세요.");
+	    return;
+	  }
 
-  // 날짜 포맷 변환 (YYYY년 M월 D일)
-  const startDateObj = new Date(start);
-  const endDateObj = new Date(end);
+	  const startDateObj = new Date(start);
+	  const endDateObj = new Date(end);
 
-  const formattedStart = `\${startDateObj.getFullYear()}년 \${startDateObj.getMonth() + 1}월 \${startDateObj.getDate()}일`;
-  const formattedEnd = `\${endDateObj.getFullYear()}년 \${endDateObj.getMonth() + 1}월 \${endDateObj.getDate()}일`;
+	  // 종료일이 시작일보다 이전일 경우
+	  if (endDateObj < startDateObj) {
+	    alert("종료일은 시작일보다 이후여야 합니다.");
+	    return;
+	  }
 
-  document.getElementById("dateInfo").innerText =
-    `\${formattedStart} 0시 ~ \${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
+	  const formattedStart = `\${startDateObj.getFullYear()}년 \${startDateObj.getMonth() + 1}월 \${startDateObj.getDate()}일`;
+	  const formattedEnd = `\${endDateObj.getFullYear()}년 \${endDateObj.getMonth() + 1}월 \${endDateObj.getDate()}일`;
 
-  isDateConfirmed = true;
-  alert("날짜가 확인되었습니다!");
-}
+	  document.getElementById("dateInfo").innerText =
+	    `\${formattedStart} 0시 ~ \${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
+
+	  isDateConfirmed = true;
+	  alert("날짜가 확인되었습니다!");
+	}
+
 
 function checkConfirmed() {
   if (!isDateConfirmed) {
