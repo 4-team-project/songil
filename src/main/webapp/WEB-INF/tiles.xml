@@ -158,6 +158,13 @@
 		<put-attribute name="title" value="펀딩 만들기_기간및이미지" />
 	</definition>
 
+	<!-- 소상공인 홈 -->
+	<definition name="seller.storeManagement" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/storeManagement.jsp" />
+		<put-attribute name="title" value="상점 관리" />
+	</definition>
+
 	<definition name="seller/stats" extends="defaultLayout">
 		<put-attribute name="title" value="상점 통계" />
 		<put-attribute name="body"
