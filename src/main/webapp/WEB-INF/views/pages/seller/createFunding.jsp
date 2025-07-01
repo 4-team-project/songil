@@ -12,13 +12,13 @@
 
 	<div class="funding-type-select">
 		<!-- 버튼 클릭 시 hidden input 값 설정 -->
-		<button type="button" id="btnLimited" onclick="selectFundingType('limited')">
+		<button type="button" id="btnLimited" class="funding-btn" onclick="selectFundingType('limited')">
 			<p>한정 상품 펀딩</p><br>
-			<span class="description">딱쿠에서만 만나볼 수 있는 메뉴에 대한 펀딩이에요</span>
+			<span class="description"><strong>딱쿠에서만</strong> 만나볼 수 있는 메뉴에 대한 펀딩이에요</span>
 		</button>
-		<button type="button" id="btnGeneral" onclick="selectFundingType('general')">
+		<button type="button" id="btnGeneral" class="funding-btn" onclick="selectFundingType('general')">
 			<p>일반 펀딩</p><br>
-			<span class="description">오프라인 매장과 딱쿠 모두에서 판매되는 메뉴에 대한 펀딩이에요</span>
+			<span class="description"><strong>상시</strong> 판매되는 메뉴에 대한 펀딩이에요</span>
 		</button>
 	</div>
 
@@ -27,10 +27,6 @@
 </form>
 
 <script>
-	function selectFundingType(type) {
-		// 버튼 클릭 시 hidden input 값 설정
-		document.getElementById('fundingTypeInput').value = type;
-	}
 
 	function validateSelection() {
 		const selected = document.getElementById('fundingTypeInput').value;
@@ -40,4 +36,24 @@
 		}
 		return true;
 	}
+	
+	function selectFundingType(type) {
+		  const btnLimited = document.getElementById('btnLimited');
+		  const btnGeneral = document.getElementById('btnGeneral');
+
+		  // 모든 버튼 초기화
+		  btnLimited.classList.remove('selected-limited', 'selected-general');
+		  btnGeneral.classList.remove('selected-limited', 'selected-general');
+
+		  // 선택한 버튼에만 스타일 추가
+		  if (type === 'limited') {
+		    btnLimited.classList.add('selected-limited');
+		  } else if (type === 'general') {
+		    btnGeneral.classList.add('selected-general');
+		  }
+
+		// 버튼 클릭 시 hidden input 값 설정
+			document.getElementById('fundingTypeInput').value = type;
+		}
+
 </script>

@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+h3 {
+	font-size: 32px;
+	margin: 100px 0 30px 50px;
+	text-align: center;
+}
+
+.funding-type-select {
+	margin-left: 50px;
+	padding-bottom: 40px;
+	display: flex;
+	justify-content: center;
+	gap: 24px;
+}
+
+/* 버튼 선택 시 스타일 */
+button.funding-btn.selected-limited {
+	border: 2px solid #ff9670 !important;
+	background-color: #fff9f7 !important;
+	transform: scale(1.05) !important;
+	z-index: 1 !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; 
+}
+
+button.funding-btn.selected-general {
+	border: 2px solid #ff9670 !important;
+	background-color: #fff9f7 !important;
+	transform: scale(1.05) !important;
+	z-index: 1 !important; 
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; 
+}
+
+#btnLimited, #btnGeneral {
+	column-count: 2;
+	width: 350px;
+	padding: 20px;
+	border-radius: 12px;
+	background: transparent;
+	border: 2px solid #eee;
+	cursor: pointer;
+	transition: all 0.3s ease; /* 크기 변경 부드럽게 */
+	transform: scale(1); /* 기본 크기 */
+}
+
+p {
+	color: #ff9670;
+	font-size: 40px;
+	margin: 10px 0;
+	font-weight: bold;
+}
+
+.description {
+	font-size: 22px;
+}
+
+.btn-next {
+	margin-left: 50px;
+	border: 2px solid #ff9670;
+	background: transparent;
+	color: #ff9670;
+	width: 730px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 30px;
+}
+
+.btn-next:hover {
+	background-color: #ff9670;
+	color: white;
+}
