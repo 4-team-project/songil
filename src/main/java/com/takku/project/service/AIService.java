@@ -89,7 +89,7 @@ public class AIService {
         }
 
         String prompt = buildPrompt(req, product, store);
-        int maxRetries = 2;
+        int maxRetries = 5;
         int attempts = 0;
 
         while (attempts <= maxRetries) {
