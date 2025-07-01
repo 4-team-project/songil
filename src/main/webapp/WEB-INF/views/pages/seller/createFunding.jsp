@@ -18,7 +18,7 @@
 		</button>
 		<button type="button" id="btnGeneral" class="funding-btn" onclick="selectFundingType('general')">
 			<p>일반 펀딩</p><br>
-			<span class="description"><strong>상시</strong> 판매되는 메뉴에 대한 펀딩이에요</span>
+			<span class="description"><strong>상시 판매</strong> 되는 메뉴에 대한 펀딩이에요</span>
 		</button>
 	</div>
 

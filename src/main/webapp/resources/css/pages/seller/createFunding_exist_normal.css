@@ -1,0 +1,151 @@
+@charset "UTF-8";
+
+form {
+	padding: 40px;
+	width: 780px;
+}
+
+.menu-label, 
+label {
+	font-weight: bold;
+	font-size: 25px;
+	margin-bottom: 10px;
+}
+
+.menuName, 
+.menuPrice, 
+.form-group {
+	padding: 20px 0 30px 20px;
+}
+
+.menu-select {
+	display: flex;
+	gap: 10px;
+}
+
+/* 메뉴를 선택해주세요. 박스 */
+#menuSelect {
+	flex: 1;
+	padding: 10px;
+	font-size: 20px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+}
+
+/* 정보 수정 / 추가 버튼 */
+.btn-edit, .btn-add {
+	padding: 8px 14px;
+	border: 2px solid #ff9670;
+	background-color: transparent;
+	color: #ff9670;
+	border-radius: 6px;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.btn-edit:hover, .btn-add:hover {
+	background-color: #fff3ee;
+}
+
+/* 인풋박스 */
+input[type="number"] {
+  width: 40%;
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#discountRate, 
+#minPrice {
+	font-weight: bold;
+	font-size: 25px;
+	color: #ff9670;
+}
+
+.description {
+	font-size: 17px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+  padding-top: 20px; 
+}
+
+.btn {
+	border: 2px solid #ff9670;
+	background: transparent;
+	color: #ff9670;
+	width: 200px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.btn:hover {
+	background-color: #ff9670;
+	color: white;
+}
+
+/* 모달 전체 배경 */
+#priceModal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 모달 박스 */
+#priceModal .modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  margin: 200px auto;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 경고 메시지 박스 */
+#priceModal .warning-box {
+  background-color: #FF9670;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* 확인 버튼 */
+#priceModal #closeModalBtn {
+  padding: 10px 20px;
+  background: #FF9670;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+

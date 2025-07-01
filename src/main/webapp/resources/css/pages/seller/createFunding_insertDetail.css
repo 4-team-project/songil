@@ -1,0 +1,142 @@
+@charset "UTF-8";
+
+form {
+	padding: 40px;
+	width: 780px;
+}
+
+.menu-label {
+	font-weight: bold;
+	font-size: 25px;
+	margin-bottom: 10px;
+}
+
+
+.fundingDate, 
+.menuPicture {
+	padding: 20px 0 30px 20px;
+}
+
+p {
+	font-size: 17px;
+}
+
+/* 날짜 입력 영역 */
+#dateArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 시작일/종료일 텍스트 */
+#dateArea span {
+  font-size: 15px;
+  color: #555;
+}
+
+/* 날짜 input */
+#dateArea input[type="date"] {
+  padding: 8px 10px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+}
+
+/* 버튼 스타일 통일 */
+#btnAddPhoto, #btnDefaultPhoto {
+  margin-right: 20px;
+  padding: 8px 16px;
+  background-color: #ff9670;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#btnAddPhoto:hover, #btnDefaultPhoto:hover {
+  background-color: #ff783e;
+}
+
+.preview-container {
+	display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 700px;
+  height: 300px;
+  margin-top: 10px;
+  padding: 50px;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+}
+
+.preview-item {
+  width: 250px;
+  height: 270px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.preview-item img {
+  width: 250px;
+  height: 270px;
+  object-fit: contain; /* 이미지 잘리지 않고 축소 */
+}
+
+.preview-item .btn-cancel {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255,80,80,0.9);
+  color: #fff;
+  font-size: 15px;
+  border: none;
+  width:250px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-check {
+	padding: 8px 14px;
+	border: 2px solid #ff9670;
+	background-color: transparent;
+	color: #ff9670;
+	border-radius: 6px;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.btn-check:hover {
+	background-color: #fff3ee;
+}
+
+.btn-container {
+  display: flex; /* 요거 추가! */
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+  padding-top: 20px; 
+}
+
+.btn {
+	border: 2px solid #ff9670;
+	background: transparent;
+	color: #ff9670;
+	width: 200px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.btn:hover {
+	background-color: #ff9670;
+	color: white;
+}

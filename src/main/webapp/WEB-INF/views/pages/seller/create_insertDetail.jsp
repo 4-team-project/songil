@@ -5,47 +5,54 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
+<form
+	action="${pageContext.request.contextPath}/seller/fundings/create-step4"
+	method="post" onsubmit="return checkConfirmed();">
 
-	<h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
-	<form action="${pageContext.request.contextPath}/seller/fundings/create-step4" method="post"
-		onsubmit="return checkConfirmed();">
-
+	<div class="fundingDate">
+		<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
 		<!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
 		<div id="dateArea">
-			<label for="startDate">시작일</label> <input type="date" id="startDate"
-				name="startDate" required /> <label for="endDate">종료일</label> <input
-				type="date" id="endDate" name="endDate" required />
+			<span style="font-size: 20px;">시작일</span>
+			<input type="date" id="startDate" name="startDate" required /> 
+			<span style="font-size: 20px;">종료일</span> 
+			<input type="date" id="endDate" name="endDate" required />
 
-			<button type="button" onclick="submitDate()">확인</button>
+			<button type="button" class="btn-check" onclick="submitDate()">확인</button>
 		</div>
 
 		<!-- 날짜 출력 -->
-		<div id="dateInfo" style="margin-top: 10px;"></div>
+		<div id="dateInfo" style="margin-top: 10px; font-size:20px; color:#ff9670; font-weight:bold;"></div>
+	</div>
 
-		<h2>펀딩 사진을 선택해 주세요</h2>
-		<!-- 사진 추가 -->
-		<div class="menuPicture">
-			<div class="menu-label">
-				메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
-				사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong> 버튼을 눌러주세요.
-			</div>
 
-			<button type="button" id="btnAddPhoto">펀딩 사진 추가하기</button>
-			<input type="file" id="inputPhoto" accept="image/*" multiple
-				style="display: none" />
+	<!-- 사진 추가 -->
+	<div class="menuPicture">
+		<div class="menu-label">펀딩 사진을 선택해 주세요.</div>
+			<p>메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을 누르면 사진을 선택할 수 있어요. <br>
+			사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong> 버튼을 눌러주세요.</p>
+		
 
-			<button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
+		<button type="button" id="btnAddPhoto">펀딩 사진 추가하기</button>
+		<input type="file" id="inputPhoto" accept="image/*" multiple
+			style="display: none" />
 
-			<!-- 사진 미리보기 -->
-			<div class="preview-container" id="previewContainer"></div>
-		</div>
+		<button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
 
-		<!-- 다음 단계 -->
-		<button type="submit">다음</button>
-	</form>
+		<!-- 사진 미리보기 -->
+		<div class="preview-container"></div>
+	</div>
 
-	<!-- 이전 -->
-	<button type="button" onclick="goBack()">이전</button>
+
+	<div class="btn-container">
+		<c:set var="type" value="${sessionScope.fundingType}" />
+<button class="btn" type="button"
+        onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
+		<button class="btn" type="submit">다음</button>
+	</div>
+</form>
+
 
 <script>
 let isDateConfirmed = false;
@@ -79,10 +86,6 @@ function checkConfirmed() {
     return false;
   }
   return true;
-}
-
-function goBack() {
-  window.history.back();
 }
 
 // 사진 미리보기
