@@ -8,6 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<h2>상점이름: ${store.storeName }</h2>
 <h1>일반 펀딩</h1>
 <form action="${pageContext.request.contextPath}/seller/create-step3" method="get">
 	<div class="menuName">

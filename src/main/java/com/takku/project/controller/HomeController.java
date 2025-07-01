@@ -37,7 +37,7 @@ public class HomeController {
     AIService aiService; 
 
     @GetMapping("/user/home")
-    public String homePage(@RequestParam(defaultValue = "1") int userId, Model model, HttpSession session) {
+    public String homePage(@RequestParam(defaultValue = "5") int userId, Model model, HttpSession session) {
 
     	UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
@@ -67,4 +67,3 @@ public class HomeController {
         return "user.home";
     }
 }
-

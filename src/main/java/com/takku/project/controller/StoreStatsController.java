@@ -44,7 +44,7 @@ public class StoreStatsController {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("/store/main")
+	@GetMapping("/seller/home")
 	public String getMain(Model model) {
 		Integer storeId = 1;
 		Integer userId = 1;
@@ -74,8 +74,10 @@ public class StoreStatsController {
 		model.addAttribute("ageDistribution", statsService.getAgeDistribution());
 		model.addAttribute("genderRatio", statsService.getGenderRatio());
 		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
-
-		return "seller/main";
+		
+		System.out.println(">>> user.home 컨트롤러 도달");
+		
+		return "seller.home";
 	}
 
 	@GetMapping("/store/stats")

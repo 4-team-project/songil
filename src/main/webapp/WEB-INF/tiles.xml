@@ -22,6 +22,15 @@
 			value="/WEB-INF/views/layout/footer.jsp" />
 	</definition>
 
+	<!-- 소상공인 레이아웃 정의 -->
+	<definition name="sellerLayout"
+		template="/WEB-INF/views/layout/sellerLayout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/layout/seller-header.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
 	<!-- 메인 -->
 	<definition name="main" extends="defaultLayout">
 		<put-attribute name="title" value="메인" />
@@ -117,10 +126,11 @@
 			value="/WEB-INF/views/error/error.jsp" />
 	</definition>
 
-	<!-- 통계 -->
-	<definition name="seller/main"
-		template="/WEB-INF/views/pages/seller/main.jsp">
-		<put-attribute name="title" value="상점 메인" />
+	<!-- 소상공인 홈 -->
+	<definition name="seller.home" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/home.jsp" />
+		<put-attribute name="title" value="오늘의 상점" />
 	</definition>
 
 	<definition name="seller/stats" extends="defaultLayout">
