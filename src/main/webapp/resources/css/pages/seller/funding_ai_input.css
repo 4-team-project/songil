@@ -64,3 +64,13 @@ h2 {
 	background-color: #ff9670;
 	color: white;
 }
+
+.nav-btn.filled {
+	background-color: #ff9670;
+	color: white;
+	border: none;
+}
+
+.nav-btn.filled:hover {
+	background-color: #ff9670;
+}

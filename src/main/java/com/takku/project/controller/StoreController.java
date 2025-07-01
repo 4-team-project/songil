@@ -179,15 +179,13 @@ public class StoreController {
 	    FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
 	    
 	    session.removeAttribute("fundingDTO");
+	    
 	    // 예외 처리 (없을 경우 홈으로)
-		/*
-		 * if (funding == null) { return "redirect:/"; }
-		 */
-
-		/*
-		 * model.addAttribute("fundingName", funding.getFundingName());
-		 * model.addAttribute("startDate", funding.getStartDate());
-		 */// Date로 저장돼 있다면 포맷 필요
+		if (funding == null) { return "redirect:/seller/create-step1"; }
+		
+		model.addAttribute("fundingName", funding.getFundingName());
+		model.addAttribute("startDate", funding.getStartDate());
+		// Date로 저장돼 있다면 포맷 필요
 	    return "pages/seller/funding_complete";
 	}
 	
