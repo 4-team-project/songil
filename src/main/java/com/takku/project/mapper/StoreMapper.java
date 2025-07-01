@@ -19,5 +19,4 @@ public interface StoreMapper {
 	Integer findStoreIdByUserId(int userId);
 
 	StoreDTO selectStoreNameByUserId(int userId);
-
 }
