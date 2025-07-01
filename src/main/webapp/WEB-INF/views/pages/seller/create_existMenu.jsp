@@ -6,8 +6,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-	<h1>한정 상품 펀딩</h1>
-<form action="${pageContext.request.contextPath}/seller/create-step3" method="post">
+<h1>한정 상품 펀딩</h1>
+<form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 	<div class="menuName">
 		<div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
 		<div class="menu-select">

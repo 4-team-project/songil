@@ -5,7 +5,7 @@
 
 
 <h1>일반 펀딩</h1>
-<form action="${pageContext.request.contextPath}/seller/create-step3" method="get">
+<form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="get">
 	<div class="menuName">
 		<div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
 		<div class="menu-select">
