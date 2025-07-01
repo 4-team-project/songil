@@ -17,7 +17,7 @@ h3 {
 /* 버튼 선택 시 스타일 */
 button.funding-btn.selected-limited {
 	border: 2px solid #ff9670 !important;
-	background-color: #fff9f7 !important;
+	background-color: #fff7f5 !important;
 	transform: scale(1.05) !important;
 	z-index: 1 !important;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; 
@@ -25,7 +25,7 @@ button.funding-btn.selected-limited {
 
 button.funding-btn.selected-general {
 	border: 2px solid #ff9670 !important;
-	background-color: #fff9f7 !important;
+	background-color: #fff7f5 !important;
 	transform: scale(1.05) !important;
 	z-index: 1 !important; 
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; 
@@ -34,6 +34,7 @@ button.funding-btn.selected-general {
 #btnLimited, #btnGeneral {
 	column-count: 2;
 	width: 350px;
+	height: 270px;
 	padding: 20px;
 	border-radius: 12px;
 	background: transparent;
@@ -55,14 +56,17 @@ p {
 }
 
 .btn-next {
-	margin-left: 50px;
+	margin-left: auto;
 	border: 2px solid #ff9670;
 	background: transparent;
 	color: #ff9670;
-	width: 730px;
+	align-content: flex-end;
+	width: 250px;
 	border-radius: 6px;
 	cursor: pointer;
 	font-size: 30px;
+	display: block;
+
 }
 
 .btn-next:hover {
