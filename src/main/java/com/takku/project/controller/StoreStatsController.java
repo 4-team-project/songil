@@ -53,10 +53,10 @@ public class StoreStatsController {
 		StoreDTO store = storeService.selectStoreById(storeId);
 
 		// 통계 조회
-		int todayOrderCount = storeService.countTodayOrdersByStoreId(storeId);
-		int todaySales = storeService.sumTodaySalesByStoreId(storeId);
-		int ongoingFundingCount = storeService.countOngoingFundingsByStoreId(storeId);
-		int upcomingFundingCount = storeService.countUpcomingFundingsByStoreId(storeId);
+		int todayOrderCount = statsService.countTodayOrdersByStoreId(storeId);
+		int todaySales = statsService.sumTodaySalesByStoreId(storeId);
+		int ongoingFundingCount = statsService.countOngoingFundingsByStoreId(storeId);
+		int upcomingFundingCount = statsService.countUpcomingFundingsByStoreId(storeId);
 
 		// Model에 추가
 		model.addAttribute("userDTO", user);
@@ -74,11 +74,13 @@ public class StoreStatsController {
 		model.addAttribute("ageDistribution", statsService.getAgeDistribution());
 		model.addAttribute("genderRatio", statsService.getGenderRatio());
 		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
-		
+
 		System.out.println(">>> user.home 컨트롤러 도달");
-		
+
 		return "seller.home";
 	}
+
+	// ------------ 밑은 테스트 용 컨트롤러 ------------
 
 	@GetMapping("/store/stats")
 	public String getStoreStats(@RequestParam("storeId") int storeId, Model model, HttpSession session) {
@@ -105,7 +107,7 @@ public class StoreStatsController {
 		model.addAttribute("tagStats", tagStats);
 		model.addAttribute("topRePurchased", topRePurchased);
 
-		return "seller/stats"; // 예시 jsp
+		return "seller/stats";
 	}
 
 	@GetMapping("/platform-stats")
@@ -114,7 +116,7 @@ public class StoreStatsController {
 		model.addAttribute("genderRatio", statsService.getGenderRatio());
 		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
 
-		return "seller/platformStats"; // JSP 경로
+		return "seller/platformStats";
 	}
 
 	@GetMapping("/product/stats")
@@ -133,6 +135,24 @@ public class StoreStatsController {
 		}
 
 		return "seller/productStats";
+	}
+
+	@GetMapping("/funding/stats")
+	public String getFundingStats(@RequestParam("fundingId") int fundingId, Model model) {
+
+		// 펀딩 통계 데이터 조회
+		int todayFundingAmount = statsService.getTodayFundingAmount(fundingId);
+		int completeOrders = statsService.getFundingCompleteOrderCount(fundingId);
+		int refundOrders = statsService.getFundingRefundOrderCount(fundingId);
+
+		model.addAttribute("fundingId", fundingId);
+		model.addAttribute("todayFundingAmount", todayFundingAmount);
+		model.addAttribute("completeOrders", completeOrders);
+		model.addAttribute("refundOrders", refundOrders);
+		model.addAttribute("fundingGenderStats", statsService.getFundingGenderRatio(fundingId));
+		model.addAttribute("fundingAgeStats", statsService.getFundingAgeDistribution(fundingId));
+
+		return "seller/fundingStats";
 	}
 
 }

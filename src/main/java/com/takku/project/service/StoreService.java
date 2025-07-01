@@ -58,30 +58,4 @@ public class StoreService implements StoreMapper {
 		return sqlSession.selectOne(namespace + "selectStoreNameByUserId", userId);
 	}
 
-	@Override
-	public int countTodayOrdersByStoreId(int storeId) {
-		return sqlSession.selectOne(namespace + "countTodayOrdersByStoreId", storeId);
-	}
-
-	@Override
-	public Integer sumTodaySalesByStoreId(int storeId) {
-		return sqlSession.selectOne(namespace + "sumTodaySalesByStoreId", storeId);
-	}
-
-	@Override
-	public int countOngoingFundingsByStoreId(int storeId) {
-		return sqlSession.selectOne(namespace + "countOngoingFundingsByStoreId", storeId);
-	}
-
-	@Override
-	public int countUpcomingFundingsByStoreId(int storeId) {
-		return sqlSession.selectOne(namespace + "countUpcomingFundingsByStoreId", storeId);
-	}
-
-	// 사용자 상점 전체 조회
-	@Override
-	public List<StoreDTO> selectStoreListByUserId(int userId) {
-		return sqlSession.selectList(namespace + "selectStoreListByUserId", userId);
-	}
-
 }
