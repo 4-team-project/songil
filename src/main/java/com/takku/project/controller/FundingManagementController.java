@@ -191,9 +191,9 @@ public class FundingManagementController {
 		model.addAttribute("store", store);
 
 		if ("general".equals(type)) {
-			return "pages/seller/create_normalFunding";
+			return "seller.normalFunding";
 		} else if ("limited".equals(type)) {
-			return "pages/seller/create_existMenu";
+			return "seller.existMenu";
 		} else {
 			return "seller.createFunding";
 		}
@@ -216,7 +216,7 @@ public class FundingManagementController {
 
 		session.setAttribute("fundingDTO", fundingDTO);
 
-		return "pages/seller/create_insertDetail";
+		return "seller.insertDetail";
 	}
 
 	// ai, 직접입력 선택 창
@@ -290,6 +290,6 @@ public class FundingManagementController {
 	// 기간 및 이미지
 	@GetMapping("/create-step3")
 	public String selectDateAndImage() {
-		return "pages/seller/create_insertDetail";
+		return "seller.insertDetail";
 	}
 }

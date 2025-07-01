@@ -7,7 +7,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<h2>펀딩 시작일과 종료일을 입력해 주세요</h2>
-	<form action="${pageContext.request.contextPath}/seller/create-step4" method="post"
+	<form action="${pageContext.request.contextPath}/seller/fundings/create-step4" method="post"
 		onsubmit="return checkConfirmed();">
 
 		<!-- 날짜 입력 영역: form 제거, 새로고침 방지 -->
