@@ -228,22 +228,32 @@
 		ORDER BY age_group, gender, rn
 	</select>
 
-	<!-- 상품 월별 주문/매출 -->
-	<select id="selectProductMonthlyStats"
-		resultType="com.takku.project.domain.stats.OrderStatsDTO">
-		SELECT TO_CHAR(o.purchased_at, 'YYYY-MM') AS month,
-		COUNT(*) AS orderCount,
-		SUM(o.amount) AS revenue
+	<!-- 1. 오늘 펀딩 금액 (해당 펀딩 기준, 결제완료 + 오늘 날짜) -->
+	<select id="selectTodayFundingAmount" resultType="int">
+		SELECT
+		NVL(SUM(o.amount), 0)
 		FROM takku_order o
-		JOIN takku_funding f ON o.funding_id = f.funding_id
-		WHERE f.product_id = #{productId}
+		WHERE o.funding_id =
+		#{fundingId}
 		AND o.status = '결제완료'
-		GROUP BY TO_CHAR(o.purchased_at, 'YYYY-MM')
-		ORDER BY month
+		AND TRUNC(o.purchased_at) = TRUNC(SYSDATE)
 	</select>
 
-	<!-- 연령대별 주문 수 -->
-	<select id="selectProductAgeStats"
+	<!-- 2. 참여 유저 성별 분포 (결제완료 상태 기준) -->
+	<select id="selectFundingGenderRatio"
+		resultType="com.takku.project.domain.stats.LabelValueDTO">
+		SELECT u.gender AS label, COUNT(*) AS value
+		FROM takku_order
+		o
+		JOIN takku_user u ON o.user_id = u.user_id
+		WHERE o.funding_id =
+		#{fundingId}
+		AND o.status = '결제완료'
+		GROUP BY u.gender
+	</select>
+
+	<!-- 3. 참여 유저 연령대 분포 (결제완료 상태 기준) -->
+	<select id="selectFundingAgeDistribution"
 		resultType="com.takku.project.domain.stats.LabelValueDTO">
 		SELECT
 		CASE
@@ -255,19 +265,92 @@
 		END AS label,
 		COUNT(*) AS value
 		FROM (
-		SELECT u.user_id, FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth)/12) AS age
-		FROM takku_user u
-		JOIN takku_order o ON u.user_id = o.user_id
-		JOIN
-		takku_funding f ON o.funding_id = f.funding_id
-		WHERE f.product_id =
-		#{productId} AND o.status = '결제완료'
+		SELECT FLOOR(MONTHS_BETWEEN(SYSDATE, u.birth)/12) AS age
+		FROM takku_order o
+		JOIN takku_user u ON o.user_id = u.user_id
+		WHERE o.funding_id = #{fundingId}
+		AND o.status = '결제완료'
 		)
 		GROUP BY
 		CASE
 		WHEN age BETWEEN 10 AND 19 THEN '10대'
 		WHEN age BETWEEN 20 AND 29 THEN '20대'
 		WHEN age BETWEEN 30 AND 39 THEN '30대'
+		WHEN age BETWEEN 40 AND 49 THEN '40대'
+		ELSE '50대 이상'
+		END
+		ORDER BY label
+	</select>
+
+	<!-- 4. 결제 완료 건수 -->
+	<select id="selectFundingCompleteOrderCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM takku_order
+		WHERE funding_id = #{fundingId}
+		AND status = '결제완료'
+	</select>
+
+	<!-- 5. 환불/결제 취소 건수 -->
+	<select id="selectFundingRefundOrderCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM takku_order
+		WHERE funding_id = #{fundingId}
+		AND status = '환불'
+	</select>
+
+	<!-- 상품 월별 주문/매출 -->
+	<select id="selectProductMonthlyStats"
+		resultType="com.takku.project.domain.stats.OrderStatsDTO">
+		SELECT TO_CHAR(o.purchased_at, 'YYYY-MM') AS month,
+		COUNT(*) AS orderCount,
+		SUM(o.amount) AS revenue
+		FROM takku_order o
+		JOIN
+		takku_funding f ON o.funding_id = f.funding_id
+		WHERE f.product_id =
+		#{productId}
+		AND o.status = '결제완료'
+		GROUP BY TO_CHAR(o.purchased_at,
+		'YYYY-MM')
+		ORDER BY month
+	</select>
+
+	<!-- 연령대별 주문 수 -->
+	<select id="selectProductAgeStats"
+		resultType="com.takku.project.domain.stats.LabelValueDTO">
+		SELECT
+		CASE
+		WHEN age BETWEEN 10 AND 19 THEN '10대'
+		WHEN age
+		BETWEEN 20 AND 29 THEN '20대'
+		WHEN age BETWEEN 30 AND 39 THEN '30대'
+		WHEN
+		age BETWEEN 40 AND 49 THEN '40대'
+		ELSE '50대 이상'
+		END AS label,
+		COUNT(*) AS
+		value
+		FROM (
+		SELECT u.user_id, FLOOR(MONTHS_BETWEEN(SYSDATE,
+		u.birth)/12) AS age
+		FROM takku_user u
+		JOIN takku_order o ON u.user_id =
+		o.user_id
+		JOIN
+		takku_funding f ON o.funding_id = f.funding_id
+		WHERE
+		f.product_id =
+		#{productId} AND o.status = '결제완료'
+		)
+		GROUP BY
+		CASE
+		WHEN age
+		BETWEEN 10 AND 19 THEN '10대'
+		WHEN age BETWEEN 20 AND 29 THEN '20대'
+		WHEN
+		age BETWEEN 30 AND 39 THEN '30대'
 		WHEN age BETWEEN 40 AND 49 THEN '40대'
 		ELSE '50대 이상'
 		END
@@ -281,8 +364,10 @@
 		COUNT(*) AS value
 		FROM takku_user u
 		JOIN takku_order o ON u.user_id = o.user_id
-		JOIN takku_funding f ON o.funding_id = f.funding_id
-		WHERE f.product_id = #{productId} AND o.status = '결제완료'
+		JOIN takku_funding f ON
+		o.funding_id = f.funding_id
+		WHERE f.product_id = #{productId} AND
+		o.status = '결제완료'
 		GROUP BY u.gender
 	</select>
 
