@@ -7,7 +7,7 @@
 
 <h3>어떤 펀딩을 만들고 싶으신가요?</h3>
 <form id="fundingForm"
-	action="${pageContext.request.contextPath}/seller/store/create-step2"
+	action="${pageContext.request.contextPath}/seller/create-step2"
 	onsubmit="return validateSelection();">
 	<input type="hidden" id="fundingTypeInput" name="type" value="">
 
