@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -153,18 +154,19 @@ public class FundingService {
 		param.put("status", status);
 		return sqlSession.update(namespace + "updateFundingStatusIfExpired", param);
 	}
-	
-	//사용자별 펀딩 상태 조회
-	public List<FundingDTO> selectFundingListByStatus(int userId, String status)  {
+
+	// 사용자별 펀딩 상태 조회
+	public List<FundingDTO> selectFundingListByStatus(int userId, String status) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("status", status);
-		List<FundingDTO> list = sqlSession.selectList(namespace+"selectFundingListByStatus", param); 
-		
+		List<FundingDTO> list = sqlSession.selectList(namespace + "selectFundingListByStatus", param);
+
 		for (FundingDTO funding : list) {
-			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId", funding.getFundingId());
+			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
+					funding.getFundingId());
 			funding.setImages(images);
-		} 
+		}
 		return list;
 	}
 
@@ -183,13 +185,18 @@ public class FundingService {
 		funding.setAvgRating(avgRating != null ? avgRating : 0.0);
 		funding.setReviewCnt(reviewCnt != null ? reviewCnt : 0);
 	}
-	
+
 	public List<FundingDTO> getOngoingFundings() {
 		List<FundingDTO> list = sqlSession.selectList(namespace + "selectOngoingFundings");
 		for (FundingDTO funding : list) {
 			enrichFundingWithExtras(funding);
 		}
 		return list;
+	}
+
+	// 상점 Id로 펀딩 전체 조회
+	public List<FundingDTO> selectFudingListByStoreId(@Param("storeId") int storeId) {
+		return sqlSession.selectList(namespace + "selectFudingListByStoreId", storeId);
 	}
 
 }

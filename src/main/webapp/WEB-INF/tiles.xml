@@ -178,6 +178,13 @@
 			value="/WEB-INF/views/pages/seller/productStats.jsp" />
 	</definition>
 
+	<definition name="seller/fundingStats"
+		extends="defaultLayout">
+		<put-attribute name="title" value="펀딩 통계" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/fundingStats.jsp" />
+	</definition>
+
 
 </tiles-definitions>
 
