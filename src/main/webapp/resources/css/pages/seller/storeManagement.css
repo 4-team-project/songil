@@ -1,16 +1,5 @@
 @import url('../../base/fonts.css');
 
-.main-content {
-	flex: 1;
-	padding: 40px;
-	overflow-y: auto;
-	box-sizing: border-box;
-	background-color: white;
-	display: flex;
-	flex-direction: column;
-	max-width: 900px;
-}
-
 .main-title-box {
 	display: flex;
 	justify-content: flex-start;
@@ -67,7 +56,6 @@
 
 .store-info-box {
 	display: block;
-	width: 820px;
 	background-color: #FFF4ED;
 	padding: 32px;
 	border: 1px solid #FF9670;
@@ -115,7 +103,6 @@
 .store-menu-box {
 	margin-top: 20px;
 	display: block;
-	width: 820px;
 	background-color: #FFF4ED;
 	padding: 54px 32px 32px 32px;
 	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));

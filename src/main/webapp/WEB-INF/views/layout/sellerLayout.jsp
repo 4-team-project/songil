@@ -13,7 +13,7 @@
 	</div>
 	<div class="seller-container">
 		<%@ include file="/WEB-INF/views/common/sellerSideBar.jsp"%>
-		<div id="body">
+		<div id="sellerBody">
 			<tiles:insertAttribute name="body" />
 		</div>
 	</div>
