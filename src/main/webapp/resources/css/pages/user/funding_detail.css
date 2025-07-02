@@ -261,7 +261,7 @@
 
 .funding-desc {
 	font-family: 'inherit';
-	white-space: pre-wrap;
+	white-space: nowrap;
 	font-size: 22px;
 	line-height: 1.8;
 }
