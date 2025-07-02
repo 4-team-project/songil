@@ -361,8 +361,6 @@ public class FundingManagementController {
 	        }
 
 	        tagService.insertFundingTag(fundingId, tagId);
-	        System.out.println(tagName);
-	        System.out.println(fundingId + " " + tagId);
 	    }
 		return "redirect:/seller/fundings/complete";
 	}
