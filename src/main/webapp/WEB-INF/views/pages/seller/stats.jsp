@@ -11,6 +11,7 @@
 	background-color: white;
 	display: flex;
 	flex-direction: column;
+	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
 }
 
 h1 {
@@ -200,14 +201,24 @@ canvas {
             },
             plugins: {
                 tooltip: {
-                    bodyFont: { size: 20 },
-                    titleFont: { size: 20 },
+                	enabled: true, 
+                    bodyFont: { size: 13 },
+                    titleFont: { size: 13 },
                     callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            let value = context.parsed.y;
-                            return label.includes('매출') ? `${label}: ${value.toLocaleString()}원` : `${label}: ${value}건`;
-                        }
+                    	label: function(context) {
+                    	    const datasetLabel = context.dataset?.label || '';
+                    	    const value = context.formattedValue;
+
+                    	    if (!value) return datasetLabel;
+
+                    	    if (datasetLabel.includes('매출')) {
+                    	        return context.formattedValue+"원";
+                    	    } else if (datasetLabel.includes('주문')) {
+                    	        return context.formattedValue+"건";
+                    	    } else {
+                    	        return `${datasetLabel}: ${value}`;
+                    	    }
+                    	}
                     }
                 },
                 legend: {

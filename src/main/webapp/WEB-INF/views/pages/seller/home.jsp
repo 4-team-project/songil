@@ -3,11 +3,14 @@
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
-
+<style>
+button, button:hover, button:active, button:focus {
+	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto !important;
+}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div class="main-content">
-
+<div class="main-content"
+	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
 	<c:choose>
 		<c:when test="${empty storeDTO}">
 			<h1>
@@ -17,9 +20,9 @@
 				<c:out value="${userDTO.nickname}" default="사장님" />
 				사장님의 <span class="highlight">오늘의 상점</span>
 			</h1>
-			<div class="no-store-box" style="max-width: 100%;">
+			<div class="no-store-box">
 				<p>
-					<strong>"아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요!"</strong>
+					<strong> "     아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요!    " </strong>
 				</p>
 				<div class="buttons">
 					<button onclick="alert('새 상점 만들기 클릭!')"
@@ -121,7 +124,8 @@
 	</c:choose>
 </div>
 
-<script>
+<c:if test="${not empty storeDTO}">
+	<script>
   // ChartJS: 월별 주문 및 매출
   new Chart(document.getElementById('orderChart'), {
     type: 'bar',
@@ -196,7 +200,5 @@
     },
     options: { responsive: true, cutout: '60%' }
   });
-  
-  
 </script>
-
+</c:if>
