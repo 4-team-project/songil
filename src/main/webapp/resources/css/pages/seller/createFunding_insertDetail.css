@@ -66,44 +66,36 @@ align-items: center;
   background-color: #ff783e;
 }
 
-.preview-container {
-	display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  width: 700px;
-  height: 300px;
-  margin-top: 10px;
-  border: 2px dashed #ccc;
-  border-radius: 6px;
+#previewContainer {
+	display: flex;  
+	flex-wrap: wrap;
 }
 
-.preview-item {
+.preview-image {
+  display: flex;
+  flex-direction: column;
   width: 250px;
-  height: 270px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+  margin: 10px;
 }
 
-.preview-item img {
+.preview-image img {
+	flex-wrap: wrap;
   width: 250px;
-  height: 270px;
-  object-fit: contain; /* 이미지 잘리지 않고 축소 */
+  height: 250px;
+  border-radius: 8px;
+  object-fit: contain;
+  background-color: #f8f8f8;
+  margin-bottom: 5px;
 }
 
-.preview-item .btn-cancel {
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255,80,80,0.9);
-  color: #fff;
-  font-size: 15px;
+.preview-image button {
+  background-color: #ff7675;
+  color: white;
   border: none;
-  width:250px;
-  border-radius: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 13px;
 }
 
 .btn-check {
@@ -128,6 +120,7 @@ align-items: center;
   align-items: center;
   width: 100%;
   padding-top: 20px; 
+  padding-left: 20px;
 }
 
 .btn {
@@ -139,6 +132,7 @@ align-items: center;
 	cursor: pointer;
 	font-size: 30px;
 	font-weight: bold;
+	text-align: center;
 }
 
 .btn:hover {

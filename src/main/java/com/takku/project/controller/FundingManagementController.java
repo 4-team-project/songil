@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.ReviewDTO;
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.TagDTO;
 import com.takku.project.domain.UserDTO;
@@ -42,6 +45,7 @@ import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.TagService;
+
 
 @Controller
 @RequestMapping("/seller/fundings")
@@ -269,46 +273,48 @@ public class FundingManagementController {
 	}
 
 	// ai, 직접입력 선택 창
-	@PostMapping("/create-step4")
-	public String writeType(@ModelAttribute FundingDTO funding, HttpSession session, Model model) {
-		StoreDTO store = (StoreDTO) session.getAttribute("store");
-		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-		
-		ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
-		
-		fundingDTO.setStartDate(funding.getStartDate()); // 시작일
-		fundingDTO.setEndDate(funding.getEndDate()); // 마감일
-		fundingDTO.setImages(funding.getImages()); //사진?
-		
-		System.out.println(fundingDTO);
-		
-		Date today = new Date(); // java.util.Date
+		@PostMapping("/create-step4")
+		public String writeType(@ModelAttribute FundingDTO funding, HttpSession session, Model model) {
+			StoreDTO store = (StoreDTO) session.getAttribute("store");
+			FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+			
+			ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
+			
+			fundingDTO.setStartDate(funding.getStartDate()); // 시작일
+			fundingDTO.setEndDate(funding.getEndDate()); // 마감일
+			fundingDTO.setImages(funding.getImages()); //사진?
+			
+			System.out.println(fundingDTO);
+			
+			Date today = new Date(); // java.util.Date
 
-		// java.sql.Date → java.util.Date로 변환해서 비교
-		Date startDate = new Date(funding.getStartDate().getTime());
+			// java.sql.Date → java.util.Date로 변환해서 비교
+			Date startDate = new Date(funding.getStartDate().getTime());
 
-		if (startDate.after(today)) {
-		    fundingDTO.setStatus("준비중");
-		} else {
-		    fundingDTO.setStatus("진행중");
+			if (startDate.after(today)) {
+			    fundingDTO.setStatus("준비중");
+			} else {
+			    fundingDTO.setStatus("진행중");
+			}
+
+			session.setAttribute("fundingDTO", fundingDTO);
+			model.addAttribute("store", store);
+			model.addAttribute("product", product);
+			
+			//이미지
+			List<ImageDTO> images = fundingDTO.getImages();
+
+		    if (images != null) {
+		        for (ImageDTO image : images) {
+		        	image.setFundingId(fundingDTO.getFundingId());
+		           System.out.println("@@@imageDTO : " + images);
+		        }
+		    }
+		    
+			return "seller.selectWriteType";
 		}
-
-		session.setAttribute("fundingDTO", fundingDTO);
-		model.addAttribute("store", store);
-		model.addAttribute("product", product);
-		
-		//이미지
-		List<ImageDTO> images = fundingDTO.getImages();
-
-	    if (images != null) {
-	        for (ImageDTO image : images) {
-	        	image.setFundingId(fundingDTO.getFundingId());
-	           System.out.println("@@@imageDTO : " + images);
-	        }
-	    }
-	    
-		return "seller.selectWriteType";
-	}
+	
+	
 
 	// 선택 후 제목, 내용 입력 창
 	@PostMapping("/create-step5")
@@ -389,63 +395,7 @@ public class FundingManagementController {
 	public String selectDateAndImage() {
 		return "seller.insertDetail";
 	}
-	
-	//이미지 업로드 처리용
-	@PostMapping("/uploadImage")
-	@ResponseBody
-	public List<String> uploadImage(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) {
-	    List<String> uploadedUrls = new ArrayList<>();
 
-	    String uploadPath = "C:\\upload\\takku";
-	    File uploadDir = new File(uploadPath);
-	    if (!uploadDir.exists()) uploadDir.mkdirs();
-
-	    for (MultipartFile file : files) {
-	        if (!file.isEmpty()) {
-	            try {
-	                String uuid = UUID.randomUUID().toString();
-	                String filename = uuid + "_" + file.getOriginalFilename();
-	                File dest = new File(uploadDir, filename);
-	                file.transferTo(dest);
-
-	                // URL로 사용할 경로
-	                String url = request.getContextPath() + "/upload/takku/" + filename;
-	                uploadedUrls.add(url);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-
-	    return uploadedUrls;
-	}
-	
-	//이미지 삭제
-	@PostMapping("/deleteImage")
-	@ResponseBody
-	public ResponseEntity<String> deleteImage(@RequestParam("imageUrl") String imageUrl) {
-	    try {
-	        String uploadRoot = "C:\\upload\\takku";
-	        
-	        // imageUrl에서 파일명만 추출
-	        String fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
-	        
-	        File file = new File(uploadRoot, fileName);
-	        if (file.exists()) {
-	            if (file.delete()) {
-	                return ResponseEntity.ok("파일 삭제 성공");
-	            } else {
-	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 실패");
-	            }
-	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일이 존재하지 않음");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생");
-	    }
-	}
-	
 	//기존 메뉴로 사진 불러오기
 	@PostMapping("/loadDefaultImages")
 	@ResponseBody
