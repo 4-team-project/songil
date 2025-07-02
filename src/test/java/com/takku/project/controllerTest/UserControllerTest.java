@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.takku.project.controller.UserController;
+import com.takku.project.controller.SellerController;
 import com.takku.project.domain.CouponDTO;
 import com.takku.project.domain.OrderDTO;
 import com.takku.project.domain.ReviewDTO;
@@ -28,7 +28,7 @@ import com.takku.project.service.UserService;
 public class UserControllerTest {
 
     @InjectMocks
-    private UserController userController;
+    private SellerController userController;
 
     @Mock
     private UserService userService;

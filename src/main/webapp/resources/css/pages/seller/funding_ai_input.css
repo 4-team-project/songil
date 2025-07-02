@@ -118,3 +118,15 @@ input[type="text"] {
 #closeModalBtn:hover {
 	background-color: #fff6f0; /* 좀 더 밝은 주황색 호버 */
 }
+
+/* 모달 배경 */
+#modalBackdrop {
+	position: fixed;  
+	display: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 9998;
+}

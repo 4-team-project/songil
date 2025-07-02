@@ -45,18 +45,75 @@
 			isNewShown = !isNewShown;
 		});
 	});
-	
-	$(function(){
-	    <%-- 수정 완료 여부 체크 --%>
-	    var updateSuccess = ${updateSuccess ? 'true' : 'false'};
 
-	    if(updateSuccess === 'true') {
-	        $("#resultModal").show();
-	    }
+	$(function() {
+	<%-- 수정 완료 여부 체크 --%>
+	var updateSuccess = $
+		{
+			updateSuccess ? 'true' : 'false'
+		}
+		;
 
-	    $("#closeModalBtn").on("click", function() {
-	        $("#resultModal").hide();
-	    });
+		if (updateSuccess === 'true') {
+			$("#resultModal").show();
+		}
+
+		$("#closeModalBtn").on("click", function() {
+			$("#resultModal").hide();
+		});
+	});
+
+	$(function() {
+		let actionType = ""; // 'register' or 'cancel'
+
+		$("#registerPartnerBtn")
+				.on(
+						"click",
+						function() {
+							actionType = "register";
+							$("#modalTitle").text("파트너 등록");
+							$("#modalDesc")
+									.html(
+											"파트너 등록 시 판매가 가능해지며, 수수료 약관에 동의한 것으로 간주됩니다.<br>계속 진행하시겠습니까?");
+							$("#partnerModal, #modalBackdrop").fadeIn();
+						});
+
+		$("#cancelPartnerTriggerBtn").on("click", function() {
+			actionType = "cancel";
+			$("#modalTitle").text("파트너 해지");
+			$("#modalDesc").html("파트너를 해지하면 판매 기능이 비활성화됩니다.<br>계속 진행하시겠습니까?");
+			$("#partnerModal, #modalBackdrop").fadeIn();
+		});
+
+		$("#cancelModalBtn, #modalBackdrop").on("click", function() {
+			$("#partnerModal, #modalBackdrop").fadeOut();
+		});
+
+		$("#confirmPartnerBtn").on("click", function() {
+			if (!$("#agreeCheckbox").is(":checked")) {
+				alert("약관에 동의해야 진행할 수 있습니다.");
+				return;
+			}
+
+			$.ajax({
+				type : "POST",
+				url : "${cpath}/seller/partner/change",
+				data : {
+					action : actionType
+				},
+				success : function(res) {
+					if (res === "success") {
+						alert("처리가 완료되었습니다.");
+						location.reload();
+					} else {
+						alert("처리에 실패했습니다.");
+					}
+				},
+				error : function() {
+					alert("오류가 발생했습니다.");
+				}
+			});
+		});
 	});
 </script>
 
@@ -148,7 +205,15 @@
 			<label>파트너 여부</label>
 			<div class="input-group with-btn">
 				<input type="text" value="${loginUser.isPartner}" readonly />
-				<button class="btn side-btn" type="button">해지하기</button>
+
+				<c:choose>
+					<c:when test="${loginUser.isPartner eq 'N'}">
+						<button class="btn side-btn" type="button" id="registerPartnerBtn">등록하기</button>
+					</c:when>
+					<c:when test="${loginUser.isPartner eq 'Y'}">
+						<button class="btn side-btn" type="button" id="cancelPartnerTriggerBtn">해지하기</button>
+					</c:when>
+				</c:choose>
 			</div>
 		</div>
 
@@ -174,3 +239,23 @@
 	<p id="modalMsg">회원 정보가 수정되었습니다.</p>
 	<button id="closeModalBtn">확인</button>
 </div>
+
+<!-- 파트너 등록 계약 모달 -->
+<div id="partnerModal">
+	<p id="modalTitle">파트너 등록 계약</p>
+	<p id="modalDesc">
+		소상공인 파트너로 등록하면 판매 기능이 활성화되며,<br /> 수수료 및 약관에 동의한 것으로 간주됩니다.<br />
+		계속하시겠습니까?
+	</p>
+	<div style="margin-top: 15px;">
+		<label><input type="checkbox" id="agreeCheckbox" /> 약관에
+			동의합니다.</label>
+	</div>
+	<div style="margin-top: 20px;">
+		<button id="cancelPartnerBtn">취소</button>
+		<button id="confirmPartnerBtn">등록</button>
+	</div>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>

@@ -19,7 +19,7 @@
 			const aiRetryCount = ${aiRetryCount};
 			if (aiRetryCount >= 3) {
 				e.preventDefault();
-				$("#resultModal").fadeIn();
+				$("#resultModal, #modalBackdrop").fadeIn();
 				return; // submit 막기
 			}
 			
@@ -49,7 +49,7 @@
 		
 		// 모달 닫기
 		$("#closeModalBtn").on("click", function () {
-			$("#resultModal").fadeOut();
+			$("#resultModal, #modalBackdrop").fadeOut();
 		});
 	});
 </script>
@@ -95,3 +95,6 @@
 	<p id="modalMsg">AI 생성 기회를 모두 사용하셨습니다. <br> 더 이상 생성이 불가능합니다.</p>
 	<button id="closeModalBtn">확인</button>
 </div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>
