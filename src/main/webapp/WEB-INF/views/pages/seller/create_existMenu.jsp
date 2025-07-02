@@ -63,7 +63,7 @@ $(document).ready(function() {
     const sellingPrice = Number($('#menuPrice').val());
     if (basePrice && sellingPrice > basePrice) {
       e.preventDefault();
-      $('#priceModal').fadeIn();
+      $('#resultModal').fadeIn();
     }
   });
   

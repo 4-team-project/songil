@@ -115,82 +115,6 @@ function checkConfirmed() {
 	}
 
 
-//사진 미리보기
-const btnAddPhoto = document.getElementById('btnAddPhoto');
-const inputPhoto = document.getElementById('inputPhoto');
-const previewContainer = document.getElementById('previewContainer');
-const hiddenInput = document.createElement("input");
-const btnDefaultPhoto = document.getElementById('btnDefaultPhoto');
-
-btnAddPhoto.addEventListener('click', () => inputPhoto.click());
-
-inputPhoto.addEventListener('change', (e) => {
-  const files = e.target.files;
-  const formData = new FormData();
-
-  for (let i = 0; i < files.length; i++) {
-    formData.append("files", files[i]);
-  }
-
-  $.ajax({
-    url: "${pageContext.request.contextPath}/seller/fundings/uploadImage",
-    type: "POST",
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function(response) {
-      const hiddenContainer = document.getElementById("hiddenImageInputs");
-      const previewContainer = document.getElementById("previewContainer");
-
-      response.forEach((url, index) => {
-        // 미리보기 이미지 렌더링
-        const div = document.createElement('div');
-        div.classList.add('preview-item');
-
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = "preview";
-
-        const btnCancel = document.createElement('button');
-        btnCancel.textContent = '취소하기';
-        btnCancel.classList.add('btn-cancel');
-
-        // 취소 시 미리보기와 hidden input 동시 제거
-        btnCancel.addEventListener('click', () => {
-          div.remove();
-          hiddenContainer.removeChild(hiddenInput);
-          
-          $.ajax({
-        	  url: "${pageContext.request.contextPath}/seller/fundings/deleteImage",
-        	    type: "POST",
-        	    data: { imageUrl: url }, // 또는 파일명만 보내기
-        	    success: function(res) {
-        	      console.log("서버 파일 삭제 성공");
-        	    },
-        	    error: function() {
-        	      alert("서버 파일 삭제 실패");
-        	    }
-          })
-        });
-
-        div.appendChild(img);
-        div.appendChild(btnCancel);
-        previewContainer.appendChild(div);
-
-        // hidden input 생성 (List<ImageDTO>에 자동 매핑됨)
-        const hiddenInput = document.createElement("input");
-        hiddenInput.type = "hidden";
-        hiddenInput.name = `images[\${index}].imageUrl`;
-        hiddenInput.value = url;
-        hiddenContainer.appendChild(hiddenInput);
-      });
-    },
-    error: function() {
-      alert("이미지 업로드 실패");
-    }
-  });
-});
-
 //기존 메뉴로 사진 불러오기
 btnDefaultPhoto.addEventListener('click', () => {
 	const fundingId = document.getElementById("fundingId").value;
@@ -251,4 +175,3 @@ $(function () {
 	});
 
 </script>
-
