@@ -6,7 +6,8 @@
 <head>
 <title><tiles:getAsString name="title" /></title>
 </head>
-<body>
+
+<body class="layout-wrapper">
 	<div id="header">
 		<tiles:insertAttribute name="header" />
 	</div>
