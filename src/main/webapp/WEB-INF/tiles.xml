@@ -101,6 +101,13 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
+	
+	<!-- 소상공인 마이페이지 -->
+	<definition name="seller.mypage" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/mypage.jsp" />
+		<put-attribute name="title" value="마이페이지" />
+	</definition>
 
 	<!-- 결제하기 -->
 	<definition name="user.order" extends="subLayout">
@@ -181,11 +188,10 @@
 			value="/WEB-INF/views/pages/seller/funding_direct_input.jsp" />
 		<put-attribute name="title" value="펀딩 정보 직접 입력" />
 	</definition>
-
-	<definition name="seller.aiInsert" extends="sellerLayout">
+	<definition name="seller.aiInsertForm" extends="sellerLayout">
 		<put-attribute name="body"
-			value="/WEB-INF/views/pages/seller/funding_ai_input.jsp" />
-		<put-attribute name="title" value="펀딩 정보 ai 입력" />
+			value="/WEB-INF/views/pages/seller/funding_ai_form.jsp" />
+		<put-attribute name="title" value="펀딩 정보 ai 입력 폼" />
 	</definition>
 
 	<definition name="seller.aiInsertResult"
@@ -224,14 +230,14 @@
 	</definition>
 
 	<definition name="seller/platformStats"
-		extends="defaultLayout">
+		extends="sellerLayout">
 		<put-attribute name="title" value="상점 통계" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
 	</definition>
 
 	<definition name="seller/productStats"
-		extends="defaultLayout">
+		extends="sellerLayout">
 		<put-attribute name="title" value="상품 통계" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/productStats.jsp" />

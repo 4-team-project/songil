@@ -89,52 +89,60 @@
 </style>
 
 <body>
-  <aside class="sidebar">
-    <div class="store-info">
-      <span>[현재 상점]</span>
-      <strong>김밥식 맛집(마포구)</strong>
-      <button class="change-store-btn">변경</button>
-    </div>
+	<aside class="sidebar">
+		<div class="store-info">
+			<span>[현재 상점]</span> <strong>김밥식 맛집(마포구)</strong>
+			<button class="change-store-btn">변경</button>
+		</div>
 
-    <nav class="menu">
-      <ul>
-        <li class="menu-item active" data-name="home" data-url="${cpath}/seller/home" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/home_active.svg" alt="home" />
-          <span>홈</span>
-        </li>
-        <li class="menu-item" data-name="add" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/add.svg" alt="add" />
-          <span>펀딩 만들기</span>
-        </li>
-        <li class="menu-item" data-name="funding" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/funding.svg" alt="funding" />
-          <span>펀딩 현황</span>
-        </li>
-        <li class="menu-item" data-name="statistics" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/statistics.svg" alt="statistics" />
-          <span>통계</span>
-        </li>
-        <li class="menu-item" data-name="money" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
-          <span>정산</span>
-        </li>
-        <li class="menu-item" data-name="store" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/store.svg" alt="store" />
-          <span>상점 관리</span>
-        </li>
-        <li class="menu-item" data-name="move" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/move.svg" alt="move" />
-          <span>펀딩 사이트로 이동</span>
-        </li>
-        <li class="menu-item" data-name="mypage" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
-          <img src="${cpath}/resources/images/sideBar/mypage.svg" alt="mypage" />
-          <span>내 정보</span>
-        </li>
-      </ul>
-    </nav>
-  </aside>
-  
-<script>
+		<nav class="menu">
+			<ul>
+				<li class="menu-item active" data-name="home"
+					data-url="${cpath}/seller/home" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/home_active.svg"
+					alt="home" /> <span>홈</span>
+				</li>
+				<li class="menu-item" data-name="add"
+					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/add.svg" alt="add" />
+					<span>펀딩 만들기</span>
+				</li>
+				<li class="menu-item" data-name="funding"
+					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/funding.svg"
+					alt="funding" /> <span>펀딩 현황</span>
+				</li>
+				<!-- TODO:여기 storeId는 세션에꺼 읽어서 넘겨주기 -->
+				<li class="menu-item" data-name="statistics"
+					data-url="${cpath}/seller/stats?storeId=2"
+					onclick="activateMenu(this)"><img
+					src="${cpath}/resources/images/sideBar/statistics.svg"
+					alt="statistics" /> <span>통계</span></li>
+				<li class="menu-item" data-name="money"
+					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
+					<span>정산</span>
+				</li>
+				<li class="menu-item" data-name="store"
+					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/store.svg" alt="store" />
+					<span>상점 관리</span>
+				</li>
+				<li class="menu-item" data-name="move"
+					data-url="${cpath}/user/home" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/move.svg" alt="move" />
+					<span>펀딩 사이트로 이동</span>
+				</li>
+				<li class="menu-item" data-name="mypage"
+					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/mypage.svg"
+					alt="mypage" /> <span>내 정보</span>
+				</li>
+			</ul>
+		</nav>
+	</aside>
+
+	<script>
   const cpath = '${cpath}';
 
   function imgExists(url, callback) {
@@ -152,8 +160,6 @@
       if (itemName === activeName) {
         item.classList.add('active');
         const activeSrc = `\${cpath}/resources/images/sideBar/\${itemName}_active.svg`;
-        console.log("name:", name);
-        console.log("itemname:", itemName);
         if (img) {
           imgExists(activeSrc, exists => {
             img.src = exists ? activeSrc : `\${cpath}/resources/images/sideBar/\${itemName}.svg`;
@@ -191,7 +197,7 @@
 
 	  if (path.includes('/seller/add')) menuName = 'add';
 	  else if (path.includes('/seller/funding')) menuName = 'funding';
-	  else if (path.includes('/seller/statistics')) menuName = 'statistics';
+	  else if (path.includes('/seller/stats')) menuName = 'statistics';
 	  else if (path.includes('/seller/money')) menuName = 'money';
 	  else if (path.includes('/seller/store')) menuName = 'store';
 	  else if (path.includes('/seller/move')) menuName = 'move';
@@ -205,7 +211,7 @@
 
 
 
-  
+
 </body>
 
 </html>

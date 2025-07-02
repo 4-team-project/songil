@@ -9,73 +9,56 @@
 
 <script>
 	$(function() {
-		const content = `${aiResponse != null ? aiResponse.content : ''}`; // JSTL 데이터를 JS로 가져옴
-		$("#htmlContent").html(content); // innerHTML로 출력
-		$("#fundingContentHidden").val(content); // 서버 제출용 textarea에 저장
-	});
-
-	$(function() {
 		const content = `${aiResponse != null ? aiResponse.content : ''}`;
 		$("#htmlContent").html(content);
 		$("#fundingContentHidden").val(content);
-
+		
 		// '다시 생성' 버튼 클릭 시
-		$("#regenerateBtn")
-				.on(
-						"click",
-						function() {
-							// 기존 input 값 유지한 채로 재요청
-							const keywords = $("input[name='keywords']").val()
-									|| "${param.keywords}";
-							const target = $("input[name='target']").val()
-									|| "${param.target}";
+		$("#regenerateBtn").on("click", function(e) {
+			
+			const aiRetryCount = ${aiRetryCount};
+			if (aiRetryCount >= 3) {
+				e.preventDefault();
+				$("#resultModal, #modalBackdrop").fadeIn();
+				return; // submit 막기
+			}
+			
+			// 기존 input 값 유지한 채로 재요청
+			const keywords = $("input[name='keywords']").val()
+					|| "${param.keywords}";
+			const target = $("input[name='target']").val()
+					|| "${param.target}";
 
-							const form = $(
-									'<form>',
-									{
-										method : 'POST',
-										action : '${pageContext.request.contextPath}/ai/ai-generate'
-									}).append($('<input>', {
-								type : 'hidden',
-								name : 'keywords',
-								value : keywords
-							}), $('<input>', {
-								type : 'hidden',
-								name : 'target',
-								value : target
-							}));
-							$('body').append(form);
-							form.submit();
-						});
+			const form = $(
+					'<form>',
+					{
+						method : 'POST',
+						action : '${pageContext.request.contextPath}/ai/ai-generate'
+					}).append($('<input>', {
+				type : 'hidden',
+				name : 'keywords',
+				value : keywords
+			}), $('<input>', {
+				type : 'hidden',
+				name : 'target',
+				value : target
+			}));
+			$('body').append(form);
+			form.submit();
+		});
+		
+		// 모달 닫기
+		$("#closeModalBtn").on("click", function () {
+			$("#resultModal, #modalBackdrop").fadeOut();
+		});
 	});
 </script>
 
-<form action="${pageContext.request.contextPath}/ai/ai-generate"
-	method="post">
-	<h3>불고기 정식은 어떤 느낌인가요? <br><h2>(AI 자동 생성은 3회만 가능합니다!!)</h2></h3>
-	<p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
-
-	<div class="input-group">
-		<input type="text" name="keywords" placeholder="떠오르는 단어를 적어주세요"
-			required />
-	</div>
-	<div class="input-group2">
-		<input type="text" name="target" placeholder="예: 20대 여성, 직장인, 커플"
-			required />
-	</div>
-
-	<div class="btn-group">
-		<button class="btn" type="button" onclick="history.back()" class="nav-btn">이전</button>
-		<button class="btn" type="submit" class="nav-btn">AI 생성</button>
-	</div>
-</form>
-
-<c:if test="${not empty aiResponse}">
-	<h3>
+	<h3 style="padding-left: 60px; margin-top: 60px;">
 		아래는 AI가 자동으로 만든 펀딩 제목과 설명, 관련 단어입니다.<br> 원하는 문장이 아니라면 아래 [다시 생성]
 		버튼으로 다시 요청해보세요!
 	</h3>
-	<p style="color: #888; font-size: 14px;">※ AI 생성 기회: ${3 - sessionScope.aiRetryCount}
+	<p style="color: #ff9670; font-size: 20px; padding-left: 60px; font-weight: bold;">※ AI 생성 기회: ${3 - sessionScope.aiRetryCount}
 		/ 3 남음</p>
 
 	<form action="${cpath}/seller/fundings/submit-funding" method="post">
@@ -93,21 +76,25 @@
 		</div>
 
 		<div class="input-group">
-			<label for="hashtags">관련 단어</label> <input type="text" id="hashtags"
-				name="hashtags" placeholder="예: 불고기, 정식, 든든한한끼"
+			<label for="keywords">관련 단어</label> <input type="text" id="keywords"
+				name="keywords" placeholder="예: 불고기, 정식, 든든한한끼"
 				value="${aiResponse.hashtags}" required />
 		</div>
 
 		<div class="btn-group">
-			<button type="button" class="nav-btn" id="regenerateBtn">다시
-				생성</button>
-			<button type="submit" class="nav-btn filled">등록</button>
+			<!-- 다시 생성 버튼 -->
+			<button class="btn" type="button" id="regenerateBtn">
+				다시 생성
+			</button>
+			<button class="btn filled" type="submit">등록</button>
 		</div>
 	</form>
-</c:if>
 
-<c:if test="${not empty aiError}">
-	<p style="color: red;">
-		<b>${aiError}</b>
-	</p>
-</c:if>
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg">AI 생성 기회를 모두 사용하셨습니다. <br> 더 이상 생성이 불가능합니다.</p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>

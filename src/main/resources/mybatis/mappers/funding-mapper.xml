@@ -195,14 +195,17 @@
 	</update>
 	<!-- 등록 -->
 	<insert id="insertFunding" parameterType="FundingDTO">
+	<selectKey keyProperty="fundingId" resultType="int" order="BEFORE">
+        SELECT takku_funding_seq.NEXTVAL FROM dual
+    </selectKey>
 		INSERT INTO
 		takku_funding (
-		product_id, store_id, funding_type, funding_name,
+		funding_id, product_id, store_id, funding_type, funding_name,
 		funding_desc, start_date, end_date,
 		sale_price, target_qty, max_qty, current_qty,
 		per_qty, status, created_at
 		) VALUES (
-		#{productId}, #{storeId},
+		#{fundingId}, #{productId}, #{storeId},
 		#{fundingType}, #{fundingName},
 		#{fundingDesc}, #{startDate},
 		#{endDate},
@@ -304,4 +307,11 @@
 	<select id="selectFudingListByStoreId" parameterType="int" resultType="fundingDTO">
 	 	select * from takku_funding where store_id = #{store_id}
 	</select>
+	
+	<!-- 펀딩id로 상품id 조회 -->
+	<select id="selectProductIdByFundingId" resultType="int">
+        SELECT product_id
+        FROM takku_funding
+        WHERE funding_id = #{fundingId}
+    </select>
 </mapper>
