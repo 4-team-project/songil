@@ -10,7 +10,6 @@
 .sidebar {
 	width: 320px;
 	background-color: #FFF6F0;
-	height: 100vh;
 	padding: 20px;
 	flex-shrink: 0;
 	box-sizing: border-box;
@@ -99,42 +98,42 @@
 
     <nav class="menu">
       <ul>
-        <li class="menu-item active" data-name="home" onclick="activateMenu(this)">
+        <li class="menu-item active" data-name="home" data-url="${cpath}/seller/home" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/home_active.svg" alt="home" />
           <span>홈</span>
         </li>
-        <li class="menu-item" data-name="add" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="add" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/add.svg" alt="add" />
           <span>펀딩 만들기</span>
         </li>
-        <li class="menu-item" data-name="funding" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="funding" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/funding.svg" alt="funding" />
           <span>펀딩 현황</span>
         </li>
-        <li class="menu-item" data-name="statistics" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="statistics" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/statistics.svg" alt="statistics" />
           <span>통계</span>
         </li>
-        <li class="menu-item" data-name="money" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="money" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
           <span>정산</span>
         </li>
-        <li class="menu-item" data-name="store" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="store" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/store.svg" alt="store" />
           <span>상점 관리</span>
         </li>
-        <li class="menu-item" data-name="move" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="move" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/move.svg" alt="move" />
           <span>펀딩 사이트로 이동</span>
         </li>
-        <li class="menu-item" data-name="mypage" onclick="activateMenu(this)">
+        <li class="menu-item" data-name="mypage" data-url="${cpath}/seller/store" onclick="activateMenu(this)">
           <img src="${cpath}/resources/images/sideBar/mypage.svg" alt="mypage" />
           <span>내 정보</span>
         </li>
       </ul>
     </nav>
   </aside>
-
+  
 <script>
   const cpath = '${cpath}';
 
@@ -145,43 +144,63 @@
     img.src = url;
   }
 
+  function updateMenuStyle(activeName) {
+    document.querySelectorAll('.menu-item').forEach(item => {
+      const itemName = item.getAttribute('data-name');
+      const img = item.querySelector('img');
+
+      if (itemName === activeName) {
+        item.classList.add('active');
+        const activeSrc = `\${cpath}/resources/images/sideBar/\${name}_active.svg`;
+        if (img) {
+          imgExists(activeSrc, exists => {
+            img.src = exists ? activeSrc : `\${cpath}/resources/images/sideBar/\${itemName}.svg`;
+          });
+        }
+      } else {
+        item.classList.remove('active');
+        if (img) {
+          img.src = `\${cpath}/resources/images/sideBar/\${itemName}.svg`;
+        }
+      }
+    });
+  }
+
   function activateMenu(el) {
     const target = el.closest('.menu-item');
     if (!target) return;
 
-    const name = target.dataset.name;
-    if (!name) {
-      console.warn("data-name이 비어있음:", target);
+    const name = target.getAttribute('data-name');
+    const url = target.getAttribute('data-url');
+
+    if (!name || !url) {
+      console.warn("data-name 또는 data-url이 비어있음:", target);
       return;
     }
 
-    document.querySelectorAll('.menu-item').forEach(item => {
-      item.classList.remove('active');
-      const itemName = item.dataset.name;
-      const img = item.querySelector('img');
-      if (img && itemName) {
-        img.src = `\${cpath}/resources/images/sideBar/\${itemName}.svg`;
-      }
-    });
+    localStorage.setItem('selectedMenu', name);
 
-    const img = target.querySelector('img');
-    const activeSrc = `\${cpath}/resources/images/sideBar/\${name}_active.svg`;
-    
-
-    if (img) {
-      imgExists(activeSrc, function(exists) {
-        if (exists) {
-          img.src = activeSrc;
-        } else {
-          console.warn(`이미지 없음: ${activeSrc}`);
-          img.src = `\${cpath}/resources/images/sideBar/\${name}.svg`;
-        }
-      });
-    }
-
-    target.classList.add('active');
+    window.location.href = url;
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+	  const path = window.location.pathname; 
+	  let menuName = 'home'; 
+
+	  if (path.includes('/seller/add')) menuName = 'add';
+	  else if (path.includes('/seller/funding')) menuName = 'funding';
+	  else if (path.includes('/seller/statistics')) menuName = 'statistics';
+	  else if (path.includes('/seller/money')) menuName = 'money';
+	  else if (path.includes('/seller/store')) menuName = 'store';
+	  else if (path.includes('/seller/move')) menuName = 'move';
+	  else if (path.includes('/seller/mypage')) menuName = 'mypage';
+	  else if (path.includes('/seller/home')) menuName = 'home'; 
+
+	  localStorage.setItem('selectedMenu', menuName);
+	  updateMenuStyle(menuName);
+	});
 </script>
+
 
 
   

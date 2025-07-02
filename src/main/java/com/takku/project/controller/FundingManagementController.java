@@ -7,10 +7,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
@@ -178,6 +184,8 @@ public class FundingManagementController {
 
 		FundingDTO fundingDTO = new FundingDTO();
 		fundingDTO.setStoreId(store.getStoreId());
+		//
+		fundingDTO.setFundingId(userId);
 		
 		session.setAttribute("fundingDTO", fundingDTO);
 		session.setAttribute("store", store);
@@ -196,7 +204,6 @@ public class FundingManagementController {
 		
 		model.addAttribute("store", store);
 		model.addAttribute("fundingDTO", fundingDTO);
-		
 		
 		if ("general".equals(type)) {
 			fundingDTO.setFundingType("일반");
@@ -220,8 +227,7 @@ public class FundingManagementController {
 		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
 
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
-		model.addAttribute("store", store);
-		
+		model.addAttribute("store", store);	
 
 		fundingDTO.setProductId(funding.getProductId()); // 상품ID
 		fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
@@ -266,6 +272,9 @@ public class FundingManagementController {
 		
 		fundingDTO.setStartDate(funding.getStartDate()); // 시작일
 		fundingDTO.setEndDate(funding.getEndDate()); // 마감일
+		fundingDTO.setImages(funding.getImages()); //사진?
+		
+		System.out.println(fundingDTO);
 		
 		Date today = new Date(); // java.util.Date
 
@@ -281,6 +290,17 @@ public class FundingManagementController {
 		session.setAttribute("fundingDTO", fundingDTO);
 		model.addAttribute("store", store);
 		model.addAttribute("product", product);
+		
+		//이미지
+		List<ImageDTO> images = fundingDTO.getImages();
+
+	    if (images != null) {
+	        for (ImageDTO image : images) {
+	        	image.setFundingId(fundingDTO.getFundingId());
+	           System.out.println("@@@imageDTO : " + images);
+	        }
+	    }
+	    
 		return "seller.selectWriteType";
 	}
 
@@ -301,6 +321,8 @@ public class FundingManagementController {
 		// 잘못된 type 처리
 		return "redirect:/error";
 	}
+	
+
 
 	@PostMapping("/submit-funding")
 	public String handleFundingBasicInfo(@ModelAttribute FundingDTO funding, HttpSession session) {
@@ -344,5 +366,76 @@ public class FundingManagementController {
 	@GetMapping("/create-step3")
 	public String selectDateAndImage() {
 		return "seller.insertDetail";
+	}
+	
+	//이미지 업로드 처리용
+	@PostMapping("/uploadImage")
+	@ResponseBody
+	public List<String> uploadImage(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request) {
+	    List<String> uploadedUrls = new ArrayList<>();
+
+	    String uploadPath = "C:\\upload\\takku";
+	    File uploadDir = new File(uploadPath);
+	    if (!uploadDir.exists()) uploadDir.mkdirs();
+
+	    for (MultipartFile file : files) {
+	        if (!file.isEmpty()) {
+	            try {
+	                String uuid = UUID.randomUUID().toString();
+	                String filename = uuid + "_" + file.getOriginalFilename();
+	                File dest = new File(uploadDir, filename);
+	                file.transferTo(dest);
+
+	                // URL로 사용할 경로
+	                String url = request.getContextPath() + "/upload/takku/" + filename;
+	                uploadedUrls.add(url);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    return uploadedUrls;
+	}
+	
+	//이미지 삭제
+	@PostMapping("/deleteImage")
+	@ResponseBody
+	public ResponseEntity<String> deleteImage(@RequestParam("imageUrl") String imageUrl) {
+	    try {
+	        String uploadRoot = "C:\\upload\\takku";
+	        
+	        // imageUrl에서 파일명만 추출
+	        String fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+	        
+	        File file = new File(uploadRoot, fileName);
+	        if (file.exists()) {
+	            if (file.delete()) {
+	                return ResponseEntity.ok("파일 삭제 성공");
+	            } else {
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 실패");
+	            }
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일이 존재하지 않음");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생");
+	    }
+	}
+	
+	//기존 메뉴로 사진 불러오기
+	@PostMapping("/loadDefaultImages")
+	@ResponseBody
+	public List<String> loadDefaultImages(@RequestParam("fundingId") int fundingId) {
+	    int productId = fundingService.selectProductIdByFundingId(fundingId);
+
+	    List<ImageDTO> productImages = imageService.selectImagesByProductId(productId);
+	    
+	    List<String> imageUrls = productImages.stream()
+	        .map(ImageDTO::getImageUrl)
+	        .collect(Collectors.toList());
+	   
+	    return imageUrls;
 	}
 }

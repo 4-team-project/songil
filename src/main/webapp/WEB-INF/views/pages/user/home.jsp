@@ -15,7 +15,7 @@
 					${sessionScope.loginUser.nickname}님 <span>추천 펀딩</span>
 				</c:when>
 				<c:otherwise>
-					딱쿠의 <span>오늘의 추천 펀딩</span>
+					딱쿠의 <span>오늘의 펀딩 PICK!</span>
 				</c:otherwise>
 			</c:choose>
 			</p>
