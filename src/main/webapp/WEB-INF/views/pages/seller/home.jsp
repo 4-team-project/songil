@@ -22,7 +22,7 @@ button, button:hover, button:active, button:focus {
 			</h1>
 			<div class="no-store-box">
 				<p>
-					<strong> "     아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요!    " </strong>
+					<strong> " 아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요! " </strong>
 				</p>
 				<div class="buttons">
 					<button onclick="alert('새 상점 만들기 클릭!')"
@@ -71,7 +71,7 @@ button, button:hover, button:active, button:focus {
 						alt="새 펀딩" class="icon" /> 새 펀딩 만들기
 				</button>
 				<button
-					onclick="document.getElementById('stats-section').scrollIntoView({behavior: 'smooth'});">
+					onclick="location.href='${cpath}/seller/stats?storeId=${storeDTO.storeId}'">
 					<img
 						src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
 						alt="통계" class="icon" /> 통계 보기
