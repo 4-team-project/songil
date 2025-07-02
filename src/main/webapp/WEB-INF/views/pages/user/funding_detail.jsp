@@ -167,7 +167,6 @@
 	  
 	  //페이지 처리
 	  function loadReviewPage(fundingId, page) {
-		  console.log("리뷰 로딩 중", fundingId, page);
 		  $.ajax({
 		    url: `${cpath}/fundings/${fundingId}/reviews`,
 		    method: "GET",
@@ -176,7 +175,7 @@
 		      const reviewList = data.reviewlist;
 		      const currentPage = data.currentPage;
 		      const totalPages = data.totalPages;
-
+			  
 		      let reviewHtml = '';
 		      reviewList.forEach((review, index) => {
 		        reviewHtml += `
@@ -194,11 +193,12 @@
 		                </div>
 		                <div class="review-content">\${review.content}</div>
 		              </div>
-		              <c:if test="${not empty review.images}">
-		              <div class="review-image">
-		                <img src="${cpath}${review.images[0].imageUrl}" alt="리뷰 이미지" />
-		              </div>
-		            </c:if>
+		              
+		              \${review.images && review.images.length > 0 ? `
+		            	        <div class="review-image">
+		            	          <img src="${cpath}\${review.images[0].imageUrl}" alt="리뷰 이미지" />
+		            	        </div>
+		            	      ` : ''}
 		            </div>
 		          </div>
 		        `;
@@ -242,7 +242,7 @@
 
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
-
+	
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
