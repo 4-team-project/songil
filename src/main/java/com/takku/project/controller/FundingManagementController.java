@@ -3,6 +3,7 @@ package com.takku.project.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,13 @@ import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
 import com.takku.project.domain.StoreDTO;
+import com.takku.project.domain.TagDTO;
 import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
+import com.takku.project.service.TagService;
 
 @Controller
 @RequestMapping("/seller/fundings")
@@ -55,6 +58,9 @@ public class FundingManagementController {
 
 	@Autowired
 	ImageService imageService;
+	
+	@Autowired
+	TagService tagService;
 
 	// 내 펀딩 목록
 	@GetMapping
@@ -325,21 +331,37 @@ public class FundingManagementController {
 
 
 	@PostMapping("/submit-funding")
-	public String handleFundingBasicInfo(@ModelAttribute FundingDTO funding, HttpSession session) {
+	public String handleFundingBasicInfo(@ModelAttribute FundingDTO funding, @RequestParam("keywords") String keywords, HttpSession session) {
 		// 세션에서 기존 fundingDTO 가져오기
-		FundingDTO sessionDTO = (FundingDTO) session.getAttribute("fundingDTO");
+		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
 
 		// 만약 세션에 없으면 새로 생성 (예외 처리 목적)
-		if (sessionDTO == null) {
-			sessionDTO = new FundingDTO();
+		if (fundingDTO == null) {
+			fundingDTO = new FundingDTO();
 		}
 
 		// 입력된 값만 덮어쓰기
-		sessionDTO.setFundingName(funding.getFundingName());
-		sessionDTO.setFundingDesc(funding.getFundingDesc());
-		System.out.println(sessionDTO);
-		fundingService.insertFunding(sessionDTO);
+		fundingDTO.setFundingName(funding.getFundingName());
+		fundingDTO.setFundingDesc(funding.getFundingDesc());
 
+		fundingService.insertFunding(fundingDTO);
+
+		int fundingId = fundingDTO.getFundingId();
+
+	    List<String> tagNames = extractTags(keywords); // 위에서 만든 메서드 사용
+
+	    for (String tagName : tagNames) {
+	        Integer tagId = tagService.getTagIdByName(tagName);
+
+	        if (tagId == null) {
+	        	TagDTO tagDTO = new TagDTO();
+	            tagDTO.setTagName(tagName);
+	            tagService.insertTag(tagDTO);
+	            tagId = tagDTO.getTagId();
+	        }
+
+	        tagService.insertFundingTag(fundingId, tagId);
+	    }
 		return "redirect:/seller/fundings/complete";
 	}
 
@@ -437,5 +459,17 @@ public class FundingManagementController {
 	        .collect(Collectors.toList());
 	   
 	    return imageUrls;
+	}
+	
+	public List<String> extractTags(String rawInput) {
+	    return Arrays.stream(
+	                rawInput
+	                .replaceAll("[\\[\\]#]", "") // 대괄호, # 제거
+	                .split("[,\\s]+")           // 쉼표 or 공백 기준 split
+	            )
+	            .map(String::trim)
+	            .filter(s -> !s.isBlank())
+	            .distinct()
+	            .collect(Collectors.toList());
 	}
 }
