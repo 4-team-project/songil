@@ -68,13 +68,15 @@
 	<button id="closeModalBtn">확인</button>
 </div>
 
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>
 
 <script>
 let isDateConfirmed = false;
 
 function showModalMessage(message) {
 	  $("#modalMsg").text(message);
-	  $("#resultModal").fadeIn();
+	  $("#resultModal, #modalBackdrop").fadeIn();
 	}
 
 function submitDate() {
@@ -170,7 +172,7 @@ btnDefaultPhoto.addEventListener('click', () => {
 
 $(function () {
 	  $("#closeModalBtn").on("click", function () {
-	    $("#resultModal").fadeOut();
+	    $("#resultModal, #modalBackdrop").fadeOut();
 	  });
 	});
 

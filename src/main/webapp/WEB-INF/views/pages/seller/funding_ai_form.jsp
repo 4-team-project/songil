@@ -13,19 +13,19 @@
 		if (aiRetryCount >= 3) {
 			$("#createAi").on("click", function (e) {
 				e.preventDefault();
-				$("#resultModal").fadeIn();
+				$("#resultModal, #modalBackdrop").fadeIn();
 			});
 		}
 
 		$("#closeModalBtn").on("click", function () {
-			$("#resultModal").fadeOut();
+			$("#resultModal, #modalBackdrop").fadeOut();
 		});
 	});
 </script>
 
 <form action="${cpath}/ai/ai-generate" method="post">
 	<h3>
-		<strong style="color: #ff9670">${product.productName}</strong>은 어떤 느낌인가요? <br>
+		<strong style="color: #ff9670">${product.productName}</strong> 메뉴는 어떤 느낌인가요? <br>
 		<h2>(AI 자동 생성은 3회만 가능합니다!!)</h2>
 	</h3>
 	<p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
@@ -50,3 +50,6 @@
 	<p id="modalMsg">AI 생성 기회를 모두 사용하셨습니다.<br>더 이상 생성이 불가능합니다.</p>
 	<button id="closeModalBtn">확인</button>
 </div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>

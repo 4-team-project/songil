@@ -44,9 +44,7 @@
 		SET
 		password = #{password},
 		nickname = #{nickname},
-		sido = #{sido},
-		sigungu =
-		#{sigungu}
+		is_partner = #{isPartner}
 		WHERE user_id = #{userId}
 	</update>
 
