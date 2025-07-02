@@ -151,7 +151,9 @@
 
       if (itemName === activeName) {
         item.classList.add('active');
-        const activeSrc = `\${cpath}/resources/images/sideBar/\${name}_active.svg`;
+        const activeSrc = `\${cpath}/resources/images/sideBar/\${itemName}_active.svg`;
+        console.log("name:", name);
+        console.log("itemname:", itemName);
         if (img) {
           imgExists(activeSrc, exists => {
             img.src = exists ? activeSrc : `\${cpath}/resources/images/sideBar/\${itemName}.svg`;
