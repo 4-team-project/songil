@@ -101,6 +101,13 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
+	
+	<!-- 소상공인 마이페이지 -->
+	<definition name="seller.mypage" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/mypage.jsp" />
+		<put-attribute name="title" value="마이페이지" />
+	</definition>
 
 	<!-- 결제하기 -->
 	<definition name="user.order" extends="subLayout">
