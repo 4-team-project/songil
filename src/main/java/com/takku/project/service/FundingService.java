@@ -198,5 +198,10 @@ public class FundingService {
 	public List<FundingDTO> selectFudingListByStoreId(@Param("storeId") int storeId) {
 		return sqlSession.selectList(namespace + "selectFudingListByStoreId", storeId);
 	}
+	
+	//기존 메뉴로 사진 불러오기
+	public int selectProductIdByFundingId(int fundingId) {
+		return sqlSession.selectOne(namespace + "selectProductIdByFundingId", fundingId);
+	}
 
 }

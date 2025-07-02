@@ -8,7 +8,8 @@
 
 	<!-- 이미지 등록 -->
 	<insert id="insertImageUrl" parameterType="ImageDTO">
-		INSERT INTO takku_image (review_id, image_url, product_id, funding_id)
+		INSERT INTO
+		takku_image (review_id, image_url, product_id, funding_id)
 		VALUES (
 		#{reviewId, jdbcType=INTEGER},
 		#{imageUrl, jdbcType=VARCHAR},
@@ -47,4 +48,14 @@
 		resultType="ImageDTO">
 		SELECT * FROM takku_image WHERE product_id = #{productId}
 	</select>
+
+	<!-- 펀딩만들기 -> 이미지 등록 -->
+	<insert id="insertImage" parameterType="ImageDTO">
+			INSERT INTO image (funding_id, image_url)
+	VALUES (
+		#{fundingId, jdbcType=INTEGER},
+		#{imageUrl, jdbcType=VARCHAR}
+	)
+	</insert>
+
 </mapper>
