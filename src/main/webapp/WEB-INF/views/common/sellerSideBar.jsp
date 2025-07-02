@@ -103,7 +103,7 @@
 					alt="home" /> <span>홈</span>
 				</li>
 				<li class="menu-item" data-name="add"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/fundings/create-step1" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/add.svg" alt="add" />
 					<span>펀딩 만들기</span>
 				</li>
@@ -195,7 +195,7 @@
 	  const path = window.location.pathname; 
 	  let menuName = 'home'; 
 
-	  if (path.includes('/seller/add')) menuName = 'add';
+	  if (path.includes('/seller/fundings/create-step1')) menuName = 'add';
 	  else if (path.includes('/seller/funding')) menuName = 'funding';
 	  else if (path.includes('/seller/stats')) menuName = 'statistics';
 	  else if (path.includes('/seller/money')) menuName = 'money';

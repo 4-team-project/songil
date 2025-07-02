@@ -6,6 +6,11 @@
 
 <c:set var="cpath" value="${pageContext.request.contextPath}" />
 
+<style>
+* {
+	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto !important;
+}
+</style>
 
 <link rel="stylesheet" href="${cpath}/resources/css/base/init.css" />
 

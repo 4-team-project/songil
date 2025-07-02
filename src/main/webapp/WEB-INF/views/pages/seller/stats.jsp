@@ -3,16 +3,6 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <style>
-.main-content {
-	flex: 1;
-	padding: 40px;
-	overflow-y: auto;
-	box-sizing: border-box;
-	background-color: white;
-	display: flex;
-	flex-direction: column;
-	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
-}
 
 h1 {
 	text-align: left;
@@ -106,7 +96,6 @@ canvas {
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="main-content">
 	<h1>
 		<img src="${cpath}/resources/images/icons/solar_star-bold.svg"
 			alt="상점 통계" class="icon" />
@@ -150,7 +139,7 @@ canvas {
 			</ol>
 		</div>
 	</div>
-</div>
+
 <script>
     // 1. 월별 주문/매출
     new Chart(document.getElementById('orderChart'), {

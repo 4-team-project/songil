@@ -3,126 +3,121 @@
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 button, button:hover, button:active, button:focus {
 	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto !important;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="main-content"
-	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
-	<c:choose>
-		<c:when test="${empty storeDTO}">
-			<h1>
-				<img
-					src="${cpath}/resources/images/icons/famicons_today-outline.svg"
-					alt="오늘의 펀딩" class="icon" />
-				<c:out value="${userDTO.nickname}" default="사장님" />
-				사장님의 <span class="highlight">오늘의 상점</span>
-			</h1>
-			<div class="no-store-box">
-				<p>
-					<strong> " 아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요! " </strong>
-				</p>
-				<div class="buttons">
-					<button onclick="alert('새 상점 만들기 클릭!')"
-						style="max-width: 200px; align-items: center; justify-content: center;">
-						<img
-							src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
-							alt="새 상점" class="icon" /> 새 상점 만들기
-					</button>
-				</div>
-			</div>
-
-		</c:when>
-
-		<c:otherwise>
-			<h1>
-				<img
-					src="${cpath}/resources/images/icons/famicons_today-outline.svg"
-					alt="오늘의 펀딩" class="icon" />
-				<c:out value="${userDTO.nickname}" default="사장님" />
-				사장님의 <span class="highlight">오늘의 상점</span> -
-				<c:out value="${storeDTO.storeName}" default="상점" />
-			</h1>
-			<div class="summary">
-				<div class="summary-box">
-					<p>오늘 참여</p>
-					<strong><c:out value="${todayOrderCount}" />건</strong>
-				</div>
-				<div class="summary-box">
-					<p>오늘 매출</p>
-					<strong>₩<c:out value="${todaySales}" /></strong>
-				</div>
-				<div class="summary-box">
-					<p>진행 중인 펀딩</p>
-					<strong><c:out value="${ongoingFundingCount}" />개</strong>
-				</div>
-				<div class="summary-box">
-					<p>진행 예정인 펀딩</p>
-					<strong><c:out value="${upcomingFundingCount}" />개</strong>
-				</div>
-			</div>
-
+<c:choose>
+	<c:when test="${empty storeDTO}">
+		<h1>
+			<img src="${cpath}/resources/images/icons/famicons_today-outline.svg"
+				alt="오늘의 펀딩" class="icon" />
+			<c:out value="${userDTO.nickname}" default="사장님" />
+			사장님의 <span class="highlight">오늘의 상점</span>
+		</h1>
+		<div class="no-store-box">
+			<p>
+				<strong> " 아직 등록된 상점이 없습니다. 첫 상점을 등록해보세요! " </strong>
+			</p>
 			<div class="buttons">
-				<button onclick="alert('새 펀딩 만들기 클릭!')">
+				<button onclick="alert('새 상점 만들기 클릭!')"
+					style="max-width: 200px; align-items: center; justify-content: center;">
 					<img
 						src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
-						alt="새 펀딩" class="icon" /> 새 펀딩 만들기
-				</button>
-				<button
-					onclick="location.href='${cpath}/seller/stats?storeId=${storeDTO.storeId}'">
-					<img
-						src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
-						alt="통계" class="icon" /> 통계 보기
-				</button>
-				<button onclick="alert('정산 신청하기 클릭!')">
-					<img
-						src="${pageContext.request.contextPath}/resources/images/icons/Group.svg"
-						alt="정산" class="icon" /> 정산 신청하기
+						alt="새 상점" class="icon" /> 새 상점 만들기
 				</button>
 			</div>
+		</div>
 
-			<h1>
+	</c:when>
+
+	<c:otherwise>
+		<h1>
+			<img src="${cpath}/resources/images/icons/famicons_today-outline.svg"
+				alt="오늘의 펀딩" class="icon" />
+			<c:out value="${userDTO.nickname}" default="사장님" />
+			사장님의 <span class="highlight">오늘의 상점</span> -
+			<c:out value="${storeDTO.storeName}" default="상점" />
+		</h1>
+		<div class="summary">
+			<div class="summary-box">
+				<p>오늘 참여</p>
+				<strong><c:out value="${todayOrderCount}" />건</strong>
+			</div>
+			<div class="summary-box">
+				<p>오늘 매출</p>
+				<strong>₩<c:out value="${todaySales}" /></strong>
+			</div>
+			<div class="summary-box">
+				<p>진행 중인 펀딩</p>
+				<strong><c:out value="${ongoingFundingCount}" />개</strong>
+			</div>
+			<div class="summary-box">
+				<p>진행 예정인 펀딩</p>
+				<strong><c:out value="${upcomingFundingCount}" />개</strong>
+			</div>
+		</div>
+
+		<div class="buttons">
+			<button onclick="alert('새 펀딩 만들기 클릭!')">
 				<img
-					src="${pageContext.request.contextPath}/resources/images/icons/solar_graph-up-linear.svg"
-					alt="매출 통계" class="icon" /> 최근 매출 통계
-			</h1>
-			<div class="sales-box">
-				<canvas id="orderChart"></canvas>
-			</div>
+					src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
+					alt="새 펀딩" class="icon" /> 새 펀딩 만들기
+			</button>
+			<button
+				onclick="location.href='${cpath}/seller/stats?storeId=${storeDTO.storeId}'">
+				<img
+					src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
+					alt="통계" class="icon" /> 통계 보기
+			</button>
+			<button onclick="alert('정산 신청하기 클릭!')">
+				<img
+					src="${pageContext.request.contextPath}/resources/images/icons/Group.svg"
+					alt="정산" class="icon" /> 정산 신청하기
+			</button>
+		</div>
 
-			<div class="tips">
-				<h2>
-					<img
-						src="${pageContext.request.contextPath}/resources/images/icons/check.svg"
-						alt="운영 꿀팁" class="icon" /> 운영 꿀팁
-				</h2>
-				<p>💡 딱쿠 플랫폼을 사용하는 고객들은?</p>
+		<h1>
+			<img
+				src="${pageContext.request.contextPath}/resources/images/icons/solar_graph-up-linear.svg"
+				alt="매출 통계" class="icon" /> 최근 매출 통계
+		</h1>
+		<div class="sales-box">
+			<canvas id="orderChart"></canvas>
+		</div>
 
-				<div class="stats-grid">
-					<div class="summary-box">
-						<canvas id="ageChart"></canvas>
-					</div>
-					<div class="summary-box">
-						<canvas id="genderChart"></canvas>
-					</div>
-					<div class="summary-box tag-box">
-						<h4>연령대 · 성별별 인기 태그</h4>
-						<ul style="padding-left: 20px; font-size: 14px;">
-							<c:forEach var="entry" items="${topTagsByGroup}">
-								<li><strong>${entry.ageGroup} ${entry.gender}:</strong> <c:forEach
-										var="tag" items="${entry.topTags}" varStatus="s">
+		<div class="tips">
+			<h2>
+				<img
+					src="${pageContext.request.contextPath}/resources/images/icons/check.svg"
+					alt="운영 꿀팁" class="icon" /> 운영 꿀팁
+			</h2>
+			<p>💡 딱쿠 플랫폼을 사용하는 고객들은?</p>
+
+			<div class="stats-grid">
+				<div class="summary-box">
+					<canvas id="ageChart"></canvas>
+				</div>
+				<div class="summary-box">
+					<canvas id="genderChart"></canvas>
+				</div>
+				<div class="summary-box tag-box">
+					<h4>연령대 · 성별별 인기 태그</h4>
+					<ul style="padding-left: 20px; font-size: 14px;">
+						<c:forEach var="entry" items="${topTagsByGroup}">
+							<li><strong>${entry.ageGroup} ${entry.gender}:</strong> <c:forEach
+									var="tag" items="${entry.topTags}" varStatus="s">
                     ${tag}<c:if test="${!s.last}">, </c:if>
-									</c:forEach></li>
-							</c:forEach>
-						</ul>
-					</div>
+								</c:forEach></li>
+						</c:forEach>
+					</ul>
 				</div>
 			</div>
-		</c:otherwise>
-	</c:choose>
-</div>
+		</div>
+	</c:otherwise>
+</c:choose>
 
 <c:if test="${not empty storeDTO}">
 	<script>

@@ -43,6 +43,11 @@ public class StoreController {
 	@Autowired
 	private ProductService productService;
 
+	@GetMapping()
+    public String homePage() {
+		return "seller.storeManagement";
+	}
+	
 	@GetMapping("/new")
 	public String showStoreForm() {
 		return "store_form";
