@@ -89,13 +89,13 @@ $('#menuSelect').on('focus', function() {
     const sellingPrice = Number($('#menuPrice').val());
     if (basePrice && sellingPrice > basePrice) {
       e.preventDefault();
-      $('#resultModal').fadeIn();
+      $('#resultModal, #modalBackdrop').fadeIn();
     }
   });
   
   //모달 닫기 및 포커스 이동
   $('#closeModalBtn').on('click', function () {
-    $('#resultModal').fadeOut();
+    $('#resultModal, #modalBackdrop').fadeOut();
     $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
   });
 });
@@ -162,3 +162,5 @@ $('#menuSelect').on('focus', function() {
 	<p id="modalMsg">판매가는 정가보다 높을 수 없습니다.</p>
 	<button id="closeModalBtn">확인</button>
 </div>
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>

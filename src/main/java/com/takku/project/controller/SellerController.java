@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -64,5 +66,21 @@ public class SellerController {
 		redirectAttributes.addFlashAttribute("updateSuccess", true);
 
 		return "redirect:/seller/mypage";
+	}
+	
+	@PostMapping("/partner/change")
+	@ResponseBody
+	public String changePartnerStatus(@RequestParam("action") String action, HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		// 테스트용
+		UserDTO user = userService.selectByUserId(3);
+		//if (loginUser == null) return "fail";
+
+		String newStatus = action.equals("register") ? "Y" : "N";
+		user.setIsPartner(newStatus);
+		userService.updateUser(user);
+		session.setAttribute("loginUser", loginUser);
+
+		return "success";
 	}
 }
