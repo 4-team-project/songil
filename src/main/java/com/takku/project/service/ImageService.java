@@ -72,4 +72,15 @@ public class ImageService implements ImageMapper {
 		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByProductId", productId);
 		return imagelist;
 	}
+	
+	//펀딩만들기 -> 이미지 저장
+	public void saveImages(List<ImageDTO> imageList, Integer fundingId) {
+	    for (ImageDTO image : imageList) {
+	    	System.out.println(image);
+	        image.setFundingId(fundingId);
+	        System.out.println("저장 전 확인 >> fundingId: " + image.getFundingId() + ", imageUrl: " + image.getImageUrl());
+	        sqlSession.insert(namespace + "insertImage", image);
+	    }
+	}
+	
 }

@@ -43,9 +43,15 @@ p {
   background-color: white;
 }
 
+.pictureBtn{
+	display: flex;
+align-items: center;
+	gap: 10px; /* 버튼 사이 간격 */
+	margin-top: 10px;
+}
+
 /* 버튼 스타일 통일 */
 #btnAddPhoto, #btnDefaultPhoto {
-  margin-right: 20px;
   padding: 8px 16px;
   background-color: #ff9670;
   color: white;
@@ -117,7 +123,7 @@ p {
 }
 
 .btn-container {
-  display: flex; /* 요거 추가! */
+  display: flex;
   justify-content: space-between; 
   align-items: center;
   width: 100%;
