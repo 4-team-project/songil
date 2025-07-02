@@ -1,5 +1,6 @@
 package com.takku.project.controller;
 
+import com.takku.project.domain.ProductDTO;
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.UserDTO;
 import com.takku.project.domain.stats.OrderStatsDTO;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
@@ -80,9 +82,7 @@ public class StoreStatsController {
 		return "seller.home";
 	}
 
-	// ------------ 밑은 테스트 용 컨트롤러 ------------
-
-	@GetMapping("/store/stats")
+	@GetMapping("/seller/stats")
 	public String getStoreStats(@RequestParam("storeId") int storeId, Model model, HttpSession session) {
 
 		// TODO: 로그인 유저가 해당 storeId의 소유자인지 검증
@@ -111,18 +111,14 @@ public class StoreStatsController {
 		return "seller/stats";
 	}
 
-	@GetMapping("/platform-stats")
-	public String platformStats(Model model) {
-		model.addAttribute("ageDistribution", statsService.getAgeDistribution());
-		model.addAttribute("genderRatio", statsService.getGenderRatio());
-		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
+	@GetMapping("/seller/store/products")
+	public String getPorductStats(@RequestParam("productId") int productId, Model model, HttpSession session) {
 
-		return "seller/platformStats";
-	}
+		// TODO: 세션으로 로그인 유저가 해당 storeId, productid의 소유자인지 검증
 
-	@GetMapping("/product/stats")
-	public String getProductStats(@RequestParam("productId") int productId, Model model) {
-		model.addAttribute("productId", productId);
+		Integer userId = 1;
+		UserDTO user = userService.selectByUserId(userId);
+		model.addAttribute("userDTO", user);
 		model.addAttribute("productStats", statsService.getProductMonthlyStats(productId));
 		model.addAttribute("productAgeStats", statsService.getProductAgeStats(productId));
 		model.addAttribute("productGenderStats", statsService.getProductGenderStats(productId));
@@ -136,6 +132,16 @@ public class StoreStatsController {
 		}
 
 		return "seller/productStats";
+	}
+
+	// ------------ 밑은 테스트 용 컨트롤러 ------------
+	@GetMapping("/platform-stats")
+	public String platformStats(Model model) {
+		model.addAttribute("ageDistribution", statsService.getAgeDistribution());
+		model.addAttribute("genderRatio", statsService.getGenderRatio());
+		model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
+
+		return "seller/platformStats";
 	}
 
 	@GetMapping("/funding/stats")
