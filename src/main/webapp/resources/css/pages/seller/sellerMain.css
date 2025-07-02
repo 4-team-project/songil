@@ -6,7 +6,6 @@
 	background-color: white;
 	display: flex;
 	flex-direction: column;
-	max-width: 900px;
 }
 
 .store-text {
@@ -133,26 +132,4 @@ canvas {
 	max-height: 250px;
 	display: block;
 	margin: 0 auto;
-}
-
-.no-store-box {
-	border: 2px solid #f97c5d;
-	padding: 40px 20px;
-	margin: 30px 0;
-	text-align: center;
-	border-radius: 8px;
-	font-size: 20px;
-	max-width: 100%;
-}
-
-.no-store-box p {
-	font-size: 24px; /* 문구 크게 */
-	font-weight: bold;
-	margin-bottom: 20px;
-}
-
-.no-store-box .icon {
-	width: 24px;
-	height: 24px;
-	margin-right: 8px;
 }

@@ -1,33 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-html, body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	font-family: 'Noto Sans KR', sans-serif;
-	background-color: #f9f9f9;
-	font-size: 14px;
-	box-sizing: border-box;
-}
-
-.wrapper {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-}
-
 .main-content {
 	flex: 1;
 	padding: 40px;
 	overflow-y: auto;
+	box-sizing: border-box;
 	background-color: white;
 	display: flex;
 	flex-direction: column;
-	box-sizing: border-box;
 }
 
 h1 {
@@ -41,7 +24,13 @@ h1 {
 .stats-grid {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: 20px;
+	gap: 12px;
+}
+
+.stats-grid canvas {
+	width: 100% !important;
+	height: 260px !important;
+	display: block;
 }
 
 .card {
@@ -63,9 +52,16 @@ h1 {
 	grid-column: 1/-1;
 }
 
+.stats-grid canvas {
+	width: 100% !important;
+	height: 260px !important;
+	display: block;
+}
+
 canvas {
 	width: 100% !important;
-	height: 300px !important;
+	height: auto !important;
+	max-height: 250px;
 	display: block;
 	margin: 0 auto;
 }
@@ -106,57 +102,54 @@ canvas {
 
 .highlight {
 	color: #f97c5d;
-	font-weight: 600;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="main-content">
+	<h1>
+		<img src="${cpath}/resources/images/icons/solar_star-bold.svg"
+			alt="상점 통계" class="icon" />
+		<c:out value="${userDTO.nickname}" default="딱쿠" />
+		사장님의 <span class="highlight"><c:out
+				value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
+	</h1>
 
-<div class="wrapper">
-	<div class="main-content">
-		<h1>
-			<img src="${cpath}/resources/images/icons/solar_star-bold.svg" alt="상점 통계" class="icon" />
-			<c:out value="${userDTO.nickname}" default="딱쿠" />
-			사장님의 <span class="highlight"><c:out value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
-		</h1>
+	<div class="stats-grid">
+		<!-- 1. 월별 주문 및 매출 -->
+		<div class="card full-width">
+			<h2>1. 월별 주문 및 매출</h2>
+			<canvas id="orderChart"></canvas>
+		</div>
 
-		<div class="stats-grid">
-			<!-- 1. 월별 주문 및 매출 -->
-			<div class="card full-width">
-				<h2>1. 월별 주문 및 매출</h2>
-				<canvas id="orderChart"></canvas>
-			</div>
+		<!-- 2. 인기 상품 -->
+		<div class="card">
+			<h2>2. 인기 상품 Top 5</h2>
+			<canvas id="popularProductChart"></canvas>
+		</div>
 
-			<!-- 2. 인기 상품 -->
-			<div class="card">
-				<h2>2. 인기 상품 Top 5</h2>
-				<canvas id="popularProductChart"></canvas>
-			</div>
+		<!-- 3. 태그별 주문 수 -->
+		<div class="card">
+			<h2>3. 태그별 주문 수</h2>
+			<canvas id="tagStatsChart"></canvas>
+		</div>
 
-			<!-- 3. 태그별 주문 수 -->
-			<div class="card">
-				<h2>3. 태그별 주문 수</h2>
-				<canvas id="tagStatsChart"></canvas>
-			</div>
-
-			<!-- 4. 재구매 상품 -->
-			<div class="card full-width">
-				<h2>4. 재구매 Top 5</h2>
-				<p style="font-size: 15px; color: gray;">(재구매 횟수 기준)</p>
-				<ol class="repurchase-list">
-					<c:forEach var="item" items="${topRePurchased}">
-						<li>
-							<strong style="font-size: 18px;">${item.productName}</strong>
-							<span style="color: gray; font-size: 18px;">(${item.rePurchaseCount}회)</span>
-						</li>
-					</c:forEach>
-					<c:if test="${empty topRePurchased}">
-						<li>재구매 상품 정보가 없습니다.</li>
-					</c:if>
-				</ol>
-			</div>
+		<!-- 4. 재구매 상품 -->
+		<div class="card full-width">
+			<h2>4. 재구매 Top 5</h2>
+			<p style="font-size: 15px; color: gray;">(재구매 횟수 기준)</p>
+			<ol class="repurchase-list">
+				<c:forEach var="item" items="${topRePurchased}">
+					<li><strong style="font-size: 18px;">${item.productName}</strong>
+						<span style="color: gray; font-size: 18px;">(${item.rePurchaseCount}회)</span>
+					</li>
+				</c:forEach>
+				<c:if test="${empty topRePurchased}">
+					<li>재구매 상품 정보가 없습니다.</li>
+				</c:if>
+			</ol>
 		</div>
 	</div>
 </div>
-
 <script>
     // 1. 월별 주문/매출
     new Chart(document.getElementById('orderChart'), {
