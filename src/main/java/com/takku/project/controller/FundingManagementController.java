@@ -181,6 +181,7 @@ public class FundingManagementController {
 		
 		session.setAttribute("fundingDTO", fundingDTO);
 		session.setAttribute("store", store);
+		session.removeAttribute("aiRetryCount");
 		
 		return "seller.createFunding";
 	}
@@ -224,7 +225,11 @@ public class FundingManagementController {
 
 		fundingDTO.setProductId(funding.getProductId()); // 상품ID
 		fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
-		fundingDTO.setTargetQty(funding.getTargetQty()); // 최소 판매 개수
+		if(fundingDTO.getFundingType().equals("한정")) {
+			fundingDTO.setTargetQty(0);
+		}else {
+			fundingDTO.setTargetQty(funding.getTargetQty()); // 최소 판매 개수
+		}
 		fundingDTO.setMaxQty(funding.getMaxQty()); // 최대 판매 개수
 		fundingDTO.setPerQty(funding.getPerQty()); // 인당 구매 가능 개수
 
@@ -282,14 +287,15 @@ public class FundingManagementController {
 	// 선택 후 제목, 내용 입력 창
 	@PostMapping("/create-step5")
 	public String handleWriteType(@RequestParam("type") String type, HttpSession session, Model model) {
+		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+		ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
 
-		StoreDTO store = (StoreDTO) session.getAttribute("store");
-		model.addAttribute("store", store);
-
+		model.addAttribute("product", product);
+		
 		if ("directly".equals(type)) {
 			return "seller.directInsert";
 		} else if ("ai".equals(type)) {
-			return "seller.aiInsert";
+			return "seller.aiInsertForm";
 		}
 
 		// 잘못된 type 처리
