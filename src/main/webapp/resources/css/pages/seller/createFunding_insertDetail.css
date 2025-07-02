@@ -145,3 +145,43 @@ align-items: center;
 	background-color: #ff9670;
 	color: white;
 }
+
+#resultModal {
+	display: none;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #ffffff;
+	padding: 30px 30px 20px 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(255, 150, 112, 0.5); /* 주황색 느낌 그림자 */
+	z-index: 9999;
+	width: 400px;
+	text-align: center;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+#resultModal p {
+	margin: 0;
+	font-size: 18px;
+	color: #ff9670; /* 진한 주황색 글씨 */
+	font-weight: bold;
+}
+
+#closeModalBtn {
+	margin-top: 20px;
+	padding: 8px 18px;
+	background-color: #ff9670; /* 주황색 버튼 */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 20px;
+	transition: background-color 0.3s ease;
+}
+
+#closeModalBtn:hover {
+	background-color: #ff7a52; /* 좀 더 밝은 주황색 호버 */
+}

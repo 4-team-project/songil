@@ -177,10 +177,10 @@
 		<put-attribute name="title" value="펀딩 정보 직접 입력" />
 	</definition>
 	
-	<definition name="seller.aiInsert" extends="sellerLayout">
+	<definition name="seller.aiInsertForm" extends="sellerLayout">
 		<put-attribute name="body"
-			value="/WEB-INF/views/pages/seller/funding_ai_input.jsp" />
-		<put-attribute name="title" value="펀딩 정보 ai 입력" />
+			value="/WEB-INF/views/pages/seller/funding_ai_form.jsp" />
+		<put-attribute name="title" value="펀딩 정보 ai 입력 폼" />
 	</definition>
 	
 	<definition name="seller.aiInsertResult" extends="sellerLayout">

@@ -5,7 +5,8 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
 <form
 	action="${pageContext.request.contextPath}/seller/fundings/create-step4"
 	method="post" onsubmit="return checkConfirmed();">
@@ -14,18 +15,19 @@
 
 	<div class="fundingDate">
 		<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
-		
+
 		<div id="dateArea">
-			<span style="font-size: 20px;">시작일</span>
-			<input type="date" id="startDate" name="startDate" required /> 
-			<span style="font-size: 20px;">종료일</span> 
-			<input type="date" id="endDate" name="endDate" required />
+			<span style="font-size: 20px;">시작일</span> <input type="date"
+				id="startDate" name="startDate" required /> <span
+				style="font-size: 20px;">종료일</span> <input type="date" id="endDate"
+				name="endDate" required />
 
 			<button type="button" class="btn-check" onclick="submitDate()">확인</button>
 		</div>
 
 		<!-- 날짜 출력 -->
-		<div id="dateInfo" style="margin-top: 10px; font-size:20px; color:#ff9670; font-weight:bold;"></div>
+		<div id="dateInfo"
+			style="margin-top: 10px; font-size: 20px; color: #ff9670; font-weight: bold;"></div>
 	</div>
 
 
@@ -52,25 +54,35 @@
 
 	</div>
 
-
 	<div class="btn-container">
 		<c:set var="type" value="${sessionScope.fundingType}" />
 		<button class="btn" type="button"
-        onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
+			onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
 		<button class="btn" type="submit">다음</button>
 	</div>
 </form>
 
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg"></p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
 
 <script>
 let isDateConfirmed = false;
+
+function showModalMessage(message) {
+	  $("#modalMsg").text(message);
+	  $("#resultModal").fadeIn();
+	}
 
 function submitDate() {
 	  const start = document.getElementById("startDate").value;
 	  const end = document.getElementById("endDate").value;
 
 	  if (!start || !end) {
-	    alert("시작일과 종료일을 모두 입력해 주세요.");
+		showModalMessage("시작일과 종료일을 모두 입력해 주세요.");
 	    return;
 	  }
 
@@ -79,7 +91,7 @@ function submitDate() {
 
 	  // 종료일이 시작일보다 이전일 경우
 	  if (endDateObj < startDateObj) {
-	    alert("종료일은 시작일보다 이후여야 합니다.");
+		showModalMessage("종료일은 시작일보다 이후여야 합니다.");
 	    return;
 	  }
 
@@ -90,17 +102,18 @@ function submitDate() {
 	    `\${formattedStart} 0시 ~ \${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
 
 	  isDateConfirmed = true;
-	  alert("날짜가 확인되었습니다!");
+	  showModalMessage("날짜가 확인되었습니다!");
 	}
 
 
 function checkConfirmed() {
-  if (!isDateConfirmed) {
-    alert("먼저 '확인' 버튼을 눌러 날짜를 제출해 주세요.");
-    return false;
-  }
-  return true;
-}
+	  if (!isDateConfirmed) {
+	    showModalMessage("먼저 '확인' 버튼을 눌러 날짜를 제출해 주세요.");
+	    return false;
+	  }
+	  return true;
+	}
+
 
 //사진 미리보기
 const btnAddPhoto = document.getElementById('btnAddPhoto');
@@ -230,5 +243,12 @@ btnDefaultPhoto.addEventListener('click', () => {
     }
   });
 });
+
+$(function () {
+	  $("#closeModalBtn").on("click", function () {
+	    $("#resultModal").fadeOut();
+	  });
+	});
+
 </script>
 
