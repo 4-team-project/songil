@@ -61,7 +61,8 @@ button, button:hover, button:active, button:focus {
 		</div>
 
 		<div class="buttons">
-			<button onclick="alert('새 펀딩 만들기 클릭!')">
+			<button
+				onclick="location.href='${cpath}/seller/fundings/create-step1'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
 					alt="새 펀딩" class="icon" /> 새 펀딩 만들기
@@ -72,12 +73,13 @@ button, button:hover, button:active, button:focus {
 					src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
 					alt="통계" class="icon" /> 통계 보기
 			</button>
-			<button onclick="alert('정산 신청하기 클릭!')">
+			<button onclick="location.href='${cpath}/seller/settlements'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/Group.svg"
-					alt="정산" class="icon" /> 정산 신청하기
+					alt="정산" class="icon" /> 정산 현황보기
 			</button>
 		</div>
+
 
 		<h1>
 			<img

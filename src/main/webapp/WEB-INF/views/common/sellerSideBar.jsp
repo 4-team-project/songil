@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
+<script>
+  const cpath = "${pageContext.request.contextPath}";
+</script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,22 +106,23 @@
 					alt="home" /> <span>홈</span>
 				</li>
 				<li class="menu-item" data-name="add"
-					data-url="${cpath}/seller/fundings/create-step1" onclick="activateMenu(this)">
-					<img src="${cpath}/resources/images/sideBar/add.svg" alt="add" />
-					<span>펀딩 만들기</span>
-				</li>
+					data-url="${cpath}/seller/fundings/create-step1"
+					onclick="activateMenu(this)"><img
+					src="${cpath}/resources/images/sideBar/add.svg" alt="add" /> <span>펀딩
+						만들기</span></li>
+				<!-- TODO:여기 유저 정보 세션에꺼 읽어서 넘겨주기 OR 컨트롤러 수정 -->
 				<li class="menu-item" data-name="funding"
-					data-url="${cpath}/seller/sellerFundingStats" onclick="activateMenu(this)">
-					<img src="${cpath}/resources/images/sideBar/funding.svg"
-					alt="funding" /> <span>펀딩 현황</span>
-				</li>
-				<!-- TODO:여기 storeId는 세션에꺼 읽어서 넘겨주기 -->
+					data-url="${cpath}/seller/store/list?userId=2"
+					onclick="activateMenu(this)"><img
+					src="${cpath}/resources/images/sideBar/funding.svg" alt="funding" />
+					<span>펀딩 현황</span></li>
+				<!-- TODO:여기 storeId는 세션에꺼 읽어서 넘겨주기 OR 컨트롤러 수정 -->
 				<li class="menu-item" data-name="statistics"
 					data-url="${cpath}/seller/stats?storeId=2"
 					onclick="activateMenu(this)"><img
 					src="${cpath}/resources/images/sideBar/statistics.svg"
 					alt="statistics" /> <span>통계</span></li>
-					
+
 				<li class="menu-item" data-name="money"
 					data-url="${cpath}/seller/settlements" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
@@ -129,11 +133,10 @@
 					<img src="${cpath}/resources/images/sideBar/store.svg" alt="store" />
 					<span>상점 관리</span>
 				</li>
-				<li class="menu-item" data-name="move"
-					data-url="${cpath}/user/home" onclick="activateMenu(this)">
-					<img src="${cpath}/resources/images/sideBar/move.svg" alt="move" />
-					<span>펀딩 사이트로 이동</span>
-				</li>
+				<li class="menu-item" data-name="move" data-url="${cpath}/user/home"
+					onclick="activateMenu(this)"><img
+					src="${cpath}/resources/images/sideBar/move.svg" alt="move" /> <span>펀딩
+						사이트로 이동</span></li>
 				<li class="menu-item" data-name="mypage"
 					data-url="${cpath}/seller/mypage" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/mypage.svg"
@@ -196,7 +199,7 @@
 	  let menuName = 'home'; 
 
 	  if (path.includes('/seller/fundings/create-step1')) menuName = 'add';
-	  else if (path.includes('/seller/sellerFundingStats')) menuName = 'funding';
+	  else if (path.includes('/seller/store/list')) menuName = 'funding';
 	  else if (path.includes('/seller/stats')) menuName = 'statistics';
 	  else if (path.includes('/seller/settlements')) menuName = 'money';
 	  else if (path.includes('/seller/store')) menuName = 'store';
