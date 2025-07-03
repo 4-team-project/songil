@@ -72,6 +72,17 @@ $(document).ready(function() {
     $('#resultModal, #modalBackdrop').fadeOut();
     $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
   });
+	
+	
+$(document).on('click', '#btn-edit', function(){
+	const productId = $('#menuSelect').val();
+	
+	if(productId) {
+		window.location.href='${pageContext.request.contextPath}/seller/product/' + productId + '/edit';
+	}else {
+		alert("수정할 메뉴를 선택해주세요");
+	}
+});
 });
 
 	
@@ -88,8 +99,8 @@ $(document).ready(function() {
       <option value="" disabled selected>메뉴를 선택해주세요.</option>
     </select>
 
-    <button type="button" class="btn-edit">정보 수정</button>
-    <button type="button" class="btn-add">메뉴 추가</button>
+    <button type="button" class="btn-edit" id="btn-edit">정보 수정</button>
+    <button type="button" class="btn-add" onclick="location.href='${pageContext.request.contextPath}/seller/product/new'">메뉴 추가</button>
   </div>
   <div id="menu-list"></div>
 </div>
