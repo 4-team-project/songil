@@ -5,6 +5,7 @@
 
 
 <c:set var="cpath" value="${pageContext.request.contextPath}" />
+<script>const cpath = "${cpath}";</script>
 
 <link rel="stylesheet" href="${cpath}/resources/css/base/init.css" />
 

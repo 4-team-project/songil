@@ -1,14 +1,10 @@
 @charset "UTF-8";
-
-
-
 h3 {
-	font-size: 32px;
-	margin: 100px 0 30px 50px;
+	font-size: 28px;
+	margin: 32px 0 30px 20px;
 }
 
 .funding-type-container {
-	margin-left: 50px;
 	padding-bottom: 40px;
 	display: flex;
 	justify-content: center;

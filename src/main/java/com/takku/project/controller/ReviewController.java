@@ -71,15 +71,18 @@ public class ReviewController {
 		return ResponseEntity.ok("등록 성공");
 	}
 
-	// 리뷰 목록 보기
-	@GetMapping("/product/{productId}/review")
-	public String productReviewList(@PathVariable("productId") Integer productId, Model model) {
+	// 리뷰 목록 보기 -> 펀딩 상세보기로 가는걸로 변경됨
+	@GetMapping("/product/{fundingId}/review")
+	public String productReviewList(@PathVariable("fundingId") Integer fundingId, Model model) {
+		/*
 		List<ReviewDTO> reviewList = reviewService.reviewByProductId(productId);
 		for (ReviewDTO review : reviewList) {
 			List<ImageDTO> imageList = imageService.selectImagesByReviewId(review.getReviewId());
 			review.setImages(imageList);
 		}
 		model.addAttribute("reviewList", reviewList);
-		return "pages/user/review";
+		*/
+		model.addAttribute(fundingId);
+		return "user.funding_detail";
 	}
 }

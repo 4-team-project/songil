@@ -2,19 +2,20 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
 <title>상품 통계</title>
 <style>
-.main-content {
-	flex: 1;
-	padding: 40px;
-	overflow-y: auto;
-	box-sizing: border-box;
-	background-color: white;
-	display: flex;
-	flex-direction: column;
-	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
+button, button:hover, button:active, button:focus {
+	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto !important;
+	width: 200px;
+	height: 70px;
+	font-size: 20px;
+}
+
+.summary-box {
+	margin: 10px 0;
 }
 
 .menu-box {
@@ -32,10 +33,10 @@
 	box-sizing: border-box;
 }
 
-/* ✅ 이미지: 1행 1열만 */
+/* ✅ 이미지: 1열 */
 .image-slider {
 	grid-column: 1;
-	grid-row: 1;
+	grid-row: 1/span 2;
 	aspect-ratio: 4/3;
 	background-color: #ddd;
 	display: flex;
@@ -51,25 +52,25 @@
 }
 
 .prev-btn, .next-btn {
+	all: unset; /* 버튼 스타일 초기화*/
 	position: absolute;
-	background-color: rgba(0, 0, 0, 0.4);
+	background-color: #FF9670;
 	border: none;
 	color: white;
-	font-size: 5px;
-	width: 10px !important;
+	font-size: 20px;
+	width: 30px !important;
 	height: 20px;
-	line-height: 20px; /* 👈 세로 중앙 정렬 */
 	cursor: pointer;
-	padding: 0;
+	text-align: center;
 	border-radius: 50%; /* 👈 동그랗게 */
 }
 
 .prev-btn {
-	left: 1px;
+	left: 5px;
 }
 
 .next-btn {
-	right: 1px;
+	right: 5px;
 }
 
 /* 메뉴 정보: 1행 2열 */
@@ -77,17 +78,52 @@
 	grid-column: 2;
 	grid-row: 1;
 	text-align: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 12px;
 }
-
 /* 수정 버튼: 2행 2열 */
 .edit-btn-wrap {
 	grid-column: 2;
 	grid-row: 2;
 	justify-self: end;
 }
+
+.product-name {
+	font-size: 24px;
+	font-weight: bold;
+	margin: 2;
+	color: #333;
+}
+
+.rating-price {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	font-size: 18px;
+	color: #555;
+}
+
+.rating {
+	background-color: #ffe8a1;
+	padding: 4px 8px;
+	border-radius: 5px;
+}
+
+.price {
+	font-weight: bold;
+	color: #e74a3b;
+	font-size: 20px;
+}
+
+.description {
+	font-size: 20px;
+	line-height: 1.6;
+	color: #444;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <div class="main-content"
 	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
 	<div class="menu-header">
@@ -102,10 +138,23 @@
 			<button class="next-btn" onclick="nextImage()">&gt;</button>
 		</div>
 		<div class="menu-info">
-			<h3>${productDTO.productName}</h3>
-			<p>${productDTO.description}</p>
-			<p>${productDTO.price}</p>
+			<h2 class="product-name">${productDTO.productName}</h2>
+			<div class="rating-price">
+				<c:choose>
+					<c:when
+						test="${not empty productDTO.averageRating and productDTO.averageRating > 0}">
+						<span class="rating">⭐ ${productDTO.averageRating}</span>
+					</c:when>
+					<c:otherwise>
+						<span class="rating">📝 리뷰가 없습니다</span>
+					</c:otherwise>
+				</c:choose>
+				<span class="price"><fmt:formatNumber
+						value="${productDTO.price}" type="currency" /></span>
+			</div>
+			<p class="description">${productDTO.description}</p>
 		</div>
+
 		<div class="edit-btn-wrap">
 			<button>메뉴 정보 수정</button>
 		</div>

@@ -168,8 +168,12 @@ public class FundingController {
 		List<ImageDTO> productImages = imageService.selectImagesByProductId(funding.getProductId());
 		StoreDTO store = storeService.selectStoreById(funding.getStoreId());
 		List<ReviewDTO> reviewlist = reviewService.reviewByProductId(funding.getProductId());
+		for (ReviewDTO review : reviewlist) {
+			List<ImageDTO> imageList = imageService.selectImagesByReviewId(review.getReviewId());
+			review.setImages(imageList);
+		}
 		List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
-
+		System.out.println(reviewlist);
 		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
 		int reviewCount = reviewlist.size();
 

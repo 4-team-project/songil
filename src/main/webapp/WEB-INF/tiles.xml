@@ -256,6 +256,31 @@
 			value="/WEB-INF/views/pages/seller/fundingStats.jsp" />
 	</definition>
 
+	<!-- 소상공인 펀딩 통계 -->
+	<definition name="seller/list" extends="sellerLayout">
+		<put-attribute name="title" value="사용자 펀딩 리스트" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/seller_funding_list.jsp" />
+	</definition>
+	<!-- 소상공인 펀딩 상세 정보 -->
+	<definition name="seller/detail" extends="sellerLayout">
+		<put-attribute name="title" value="펀딩 상세 정보" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/sellerFundingDetail.jsp" />
+	</definition>
+	<!-- 소상공인 펀딩 통계 -->
+	<definition name="seller/stats" extends="sellerLayout">
+		<put-attribute name="title" value="펀딩 통계" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/sellerFundingStats.jsp" />
+	</definition>
+	<!-- 소상공인 정산 관리 -->
+	<definition name="seller.settlement" extends="sellerLayout">
+		<put-attribute name="title" value="정산 관리" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/settlements.jsp" />
+	</definition>
+
 
 </tiles-definitions>
 
