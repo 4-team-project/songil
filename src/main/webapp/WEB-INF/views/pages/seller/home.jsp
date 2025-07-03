@@ -61,7 +61,8 @@ button, button:hover, button:active, button:focus {
 		</div>
 
 		<div class="buttons">
-			<button onclick="alert('새 펀딩 만들기 클릭!')">
+			<button
+				onclick="location.href='${cpath}/seller/fundings/create-step1'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
 					alt="새 펀딩" class="icon" /> 새 펀딩 만들기
@@ -72,12 +73,13 @@ button, button:hover, button:active, button:focus {
 					src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
 					alt="통계" class="icon" /> 통계 보기
 			</button>
-			<button onclick="alert('정산 신청하기 클릭!')">
+			<button onclick="location.href='${cpath}/seller/settlements'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/Group.svg"
-					alt="정산" class="icon" /> 정산 신청하기
+					alt="정산" class="icon" /> 정산 현황보기
 			</button>
 		</div>
+
 
 		<h1>
 			<img
@@ -118,6 +120,29 @@ button, button:hover, button:active, button:focus {
 		</div>
 	</c:otherwise>
 </c:choose>
+
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg">로그인이 필요합니다.</p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>
+
+<c:if test="${param.msg eq 'needStore'}">
+	<script>
+		$(function() {
+			const msg = '${param.msg}';
+			if (msg === 'needLogin') {
+				$("#resultModal, #modalBackdrop").fadeIn();
+				$("#closeModalBtn").on("click", function() {
+					$("#resultModal, #modalBackdrop").fadeOut();
+				});
+			}
+		});
+	</script>
+</c:if>
 
 <c:if test="${not empty storeDTO}">
 	<script>
@@ -195,5 +220,7 @@ button, button:hover, button:active, button:focus {
     },
     options: { responsive: true, cutout: '60%' }
   });
+  
+  
 </script>
 </c:if>

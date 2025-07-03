@@ -327,11 +327,20 @@
 
 .modal-btn.cancel {
 	background: #fff;
-	border: 1px solid #f4795c;
-	color: #f4795c;
+	border: 1px solid #ff9670;
+	color: #ff9670;
 }
 
 .modal-btn.confirm {
-	background: #ff7a52;
+	background: #ff9670;
 	color: white;
+}
+
+.modal-btn.cancel:hover{
+	background-color: #ff9670;
+	color: white;
+}
+
+.modal-btn.confirm:hover{
+	background-color: #fdd4c2;
 }

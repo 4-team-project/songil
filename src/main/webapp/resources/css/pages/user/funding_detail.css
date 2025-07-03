@@ -53,6 +53,7 @@
 	font-size: 24px;
 	margin: 0 5px;
 	color: #fff6f0;
+	cursor: pointer;
 }
 
 .dot:hover {
@@ -177,7 +178,7 @@
 }
 
 .qty-btn:hover {
-	background-color: #ff8759;
+	background-color: #fdd4c2;
 }
 
 .price-row {
@@ -380,4 +381,39 @@
 .page-btn.active-page {
 	font-weight: bold;
 	color: #ff9670;
+}
+
+.pagination {
+	text-align: center;
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.page-link {
+	border: 1px solid #ff9670;
+	background-color: white;
+	color: #333;
+	padding: 8px 14px;
+	font-size: 16px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-link:hover:not(:disabled) {
+	background-color: #ffe3d8;
+}
+
+.page-link:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+.page-link.active {
+	background-color: #ff9670;
+	color: white;
+	font-weight: bold;
+	border: 1px solid #ff9670;
 }

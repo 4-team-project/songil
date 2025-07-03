@@ -1,6 +1,8 @@
 package com.takku.project.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.SettlementDTO;
@@ -29,20 +33,35 @@ public class SettlementController {
 
 	@GetMapping()
 	public String getSettlement(HttpSession session, Model model, Integer storeId) {
-		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-	    //if (loginUser == null) return "redirect:/auth/login";
-
-	    StoreDTO store = (StoreDTO) session.getAttribute("store"); // 로그인 시 선택한 상점 정보
-	    //if (store == null) return "redirect:/seller/store/select"; // 상점 선택 안 된 경우
-	    
-	    List<SettlementDTO> settlements = settlementService.selectSettlementByStoreId(2);
-	    
-	    for (SettlementDTO settlement : settlements) {
-	        FundingDTO funding = fundingService.selectFundingByFundingId(settlement.getFundingId());
-	        settlement.setFunding(funding); // ← 정산에 펀딩정보 주입
-	    }
-	    
-	    model.addAttribute("settlementlist", settlements);
 		return "seller.settlement";
 	}
+	
+	@GetMapping("/list")
+	@ResponseBody
+	public Map<String, Object> getSettlementsByStore(HttpSession session,
+	        @RequestParam(defaultValue = "1") int page,
+	        @RequestParam(defaultValue = "5") int size) {
+
+	    StoreDTO store = (StoreDTO) session.getAttribute("store");
+	    int storeId = 2;
+
+	    int startRow = (page - 1) * size + 1;
+	    int endRow = page * size;
+
+	    List<SettlementDTO> pagedList = settlementService.selectSettlementByStoreIdWithPaging(storeId, startRow, endRow);
+	    int totalCount = settlementService.countSettlementByStoreId(storeId);
+	    int totalPages = (int) Math.ceil((double) totalCount / size);
+
+	    for (SettlementDTO settlement : pagedList) {
+	        FundingDTO funding = fundingService.selectFundingByFundingId(settlement.getFundingId());
+	        settlement.setFunding(funding);
+	    }
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("settlementlist", pagedList);
+	    result.put("currentPage", page);
+	    result.put("totalPages", totalPages);
+	    return result;
+	}
+
 }

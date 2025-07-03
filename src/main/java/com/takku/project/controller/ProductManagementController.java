@@ -1,7 +1,10 @@
 package com.takku.project.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -88,26 +91,56 @@ public class ProductManagementController {
 	}
 
 	//상품 수정 폼
-	@GetMapping("/{productId}/edit")
+	@GetMapping("/edit/{productId}")
 	public String showEditForm(@PathVariable("productId") Integer productId, Model model) {
 		ProductDTO productDTO = productService.selectByProductId(productId);
 		model.addAttribute("productDTO", productDTO);
-		return "seller_product_edit";
+		return "seller.product";
 	}
 	
 	//상품 수정 처리
-	@PutMapping("/{productId}")
-	public String updateProduct(@PathVariable ("productId") Integer productId, ProductDTO productDTO, RedirectAttributes ra) {
-		productDTO.setProductId(productId);
-		
-		int result = productService.updateProduct(productDTO);
-		if(result > 0) {
-			ra.addFlashAttribute("resultMessage", "상품이 수정되었습니다.");
-		}else {
-			ra.addFlashAttribute("resultMessage", "상품 수정에 실패하였습니다.");
-		}
-		return "redirect:/seller/product";
+	@PutMapping("/update/{productId}")
+	@ResponseBody
+	public String updateProduct(@PathVariable("productId") Integer productId, @RequestBody ProductDTO productDTO) {
+	    productDTO.setProductId(productId);
+
+	    int result = productService.updateProduct(productDTO);
+
+	    List<ImageDTO> existingImages = imageService.selectImagesByProductId(productId);
+	    List<String> existingUrls = existingImages.stream()
+	        .map(ImageDTO::getImageUrl)
+	        .collect(Collectors.toList());
+
+	    List<String> newUrls = productDTO.getImages() != null
+	        ? productDTO.getImages().stream()
+	            .map(ImageDTO::getImageUrl)
+	            .collect(Collectors.toList())
+	        : new ArrayList<>();
+
+	    for (String oldUrl : existingUrls) {
+	        if (!newUrls.contains(oldUrl)) {
+	            imageService.deleteImageUrl(oldUrl);
+	        }
+	    }
+
+	    for (String newUrl : newUrls) {
+	    	if (newUrl == null) continue; 
+	        if (!existingUrls.contains(newUrl)) {
+	            String correctedUrl = newUrl.startsWith("/image/") ? newUrl : "/image/" + newUrl;
+
+	            ImageDTO image = ImageDTO.builder()
+	                .productId(productId)
+	                .imageUrl(correctedUrl)
+	                .build();
+
+	            imageService.insertImageUrl(image);
+	        }
+	    }
+
+	    return result > 0 ? "상품이 수정되었습니다." : "상품 수정에 실패하였습니다.";
 	}
+
+
 	
 	//상품 삭제
 	@DeleteMapping("/{productId}")
@@ -133,4 +166,22 @@ public class ProductManagementController {
 	public ProductDTO getProductInfo(@RequestParam int productId) {
 	    return productService.selectByProductId(productId);
 	}
+	
+	//productId로 상품 정보 조회
+	@GetMapping(value = "/info/{productId}", produces = "application/json")
+	@ResponseBody
+	public ProductDTO getProductInfoByProductId(@PathVariable int productId, HttpServletRequest request) {
+	    ProductDTO product = productService.selectByProductId(productId);
+	    List<ImageDTO> imageList = imageService.selectImagesByProductId(productId);
+
+	    String cpath = request.getContextPath();
+
+	    for (ImageDTO image : imageList) {
+	        image.setImageUrl(cpath + image.getImageUrl());
+	    }
+
+	    product.setImages(imageList);
+	    return product;
+	}
+
 }

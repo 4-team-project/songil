@@ -5,8 +5,13 @@
 	href="${cpath}/resources/css/layout/seller-header.css" />
 
 <div class="box"></div>
-	<div class="header-box">
-		<div class="logo" onclick="location.href='${cpath}/seller/home'">
-			<img src="${cpath}/resources/images/logo.svg" alt="logo" />
+<div class="header-box">
+	<div class="logo" onclick="location.href='${cpath}/seller/home'">
+		<img src="${cpath}/resources/images/logo.svg" alt="logo" />
+	</div>
+	<div class="lower-box">
+		<div class="nav-box">
+			<div class="nav-text" onclick="location.href='${cpath}/auth/login'">로그아웃</div>
 		</div>
+	</div>
 </div>

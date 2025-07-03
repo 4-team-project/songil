@@ -1,8 +1,8 @@
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ include file="/WEB-INF/views/common/init.jsp"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
 <title>상품 통계</title>
@@ -59,10 +59,16 @@ button, button:hover, button:active, button:focus {
 	color: white;
 	font-size: 20px;
 	width: 30px !important;
-	height: 20px;
-	cursor: pointer;
+	height: 35px;
 	text-align: center;
 	border-radius: 50%; /* 👈 동그랗게 */
+}
+
+.prev-btn:hover, .next-btn:hover {
+	background-color: #ff774a;
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+	transform: scale(1.05);
+	transition: all 0.2s ease;
 }
 
 .prev-btn {
@@ -91,10 +97,13 @@ button, button:hover, button:active, button:focus {
 }
 
 .product-name {
-	font-size: 24px;
+	font-size: 32px;
 	font-weight: bold;
 	margin: 2;
 	color: #333;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .rating-price {
@@ -107,8 +116,11 @@ button, button:hover, button:active, button:focus {
 
 .rating {
 	background-color: #ffe8a1;
-	padding: 4px 8px;
-	border-radius: 5px;
+	padding: 6px 10px;
+	border-radius: 6px;
+	font-size: 22px;
+	font-weight: bold;
+	display: inline-block;
 }
 
 .price {
@@ -121,6 +133,58 @@ button, button:hover, button:active, button:focus {
 	font-size: 20px;
 	line-height: 1.6;
 	color: #444;
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* 최대 2줄까지 */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.review-summary {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	margin-top: 10px;
+	flex-wrap: wrap;
+}
+
+.review-card {
+	flex: 1 1 45%;
+	background-color: #ffffff;
+	border-radius: 12px;
+	padding: 16px 20px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	min-height: 150px;
+}
+
+.review-card.positive {
+	border-left: 8px solid #4CAF50;
+}
+
+.review-card.negative {
+	border-left: 8px solid #F44336;
+}
+
+.review-card h3 {
+	margin-top: 0;
+	margin-bottom: 12px;
+	font-size: 20px;
+	color: #333;
+}
+
+.review-lines {
+	font-size: 18px; /* 글자 크기 */
+	line-height: 1.8; /* 줄 간격 */
+	margin-top: 10px; /* 위쪽 여백 */
+	margin-bottom: 10px; /* 아래쪽 여백 */
+	color: #333; /* 글자 색 */
+}
+
+.summary-box h2 {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 8px;
+	padding-right: 8px;
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -130,13 +194,14 @@ button, button:hover, button:active, button:focus {
 		<button class="menu-list-btn" onclick="alert('메뉴 목록 보기 클릭!')">메뉴
 			목록 보기</button>
 	</div>
+
 	<div class="menu-box">
 		<div class="image-slider">
-			<button class="prev-btn" onclick="prevImage()">&lt;</button>
-			<img id="menu-image" src="${productDTO.thumbnailImageUrl}"
-				alt="메뉴 이미지">
-			<button class="next-btn" onclick="nextImage()">&gt;</button>
+			<div class="prev-btn" onclick="prevImage()">&lt;</div>
+			<img id="menu-image" src="" alt="메뉴 이미지">
+			<div class="next-btn" onclick="nextImage()">&gt;</div>
 		</div>
+
 		<div class="menu-info">
 			<h2 class="product-name">${productDTO.productName}</h2>
 			<div class="rating-price">
@@ -146,11 +211,12 @@ button, button:hover, button:active, button:focus {
 						<span class="rating">⭐ ${productDTO.averageRating}</span>
 					</c:when>
 					<c:otherwise>
-						<span class="rating">📝 리뷰가 없습니다</span>
+						<span class="rating-empty">리뷰가 없습니다</span>
 					</c:otherwise>
 				</c:choose>
-				<span class="price"><fmt:formatNumber
-						value="${productDTO.price}" type="currency" /></span>
+				<br> <span class="price"> <fmt:formatNumber
+						value="${productDTO.price}" type="currency" />
+				</span>
 			</div>
 			<p class="description">${productDTO.description}</p>
 		</div>
@@ -162,65 +228,128 @@ button, button:hover, button:active, button:focus {
 
 	<div class="summary-box">
 		<h2>리뷰 요약</h2>
-		<ul id="review-summary-list">
-			<c:choose>
-				<c:when
-					test="${not empty positiveSummary or not empty negativeSummary}">
-					<c:if test="${not empty positiveSummary}">
-						<li><strong>👍 긍정 요약</strong></li>
-						<c:forEach var="line" items="${positiveSummary}">
-							<li>💬 ${line}</li>
-						</c:forEach>
-					</c:if>
-					<c:if test="${not empty negativeSummary}">
-						<li style="margin-top: 1rem;"><strong>👎 부정 요약</strong></li>
-						<c:forEach var="line" items="${negativeSummary}">
-							<li>💬 ${line}</li>
-						</c:forEach>
-					</c:if>
-				</c:when>
-				<c:otherwise>
-					<li>😢 리뷰 요약이 없습니다.</li>
-				</c:otherwise>
-			</c:choose>
-		</ul>
-	</div>
-	<div class="summary">
 
+		<c:choose>
+			<c:when
+				test="${not empty positiveSummary or not empty negativeSummary}">
+				<!-- ✅ 설명 문구: 리뷰 요약이 있을 때만 보여줌 -->
+				<p style="font-size: 17px; color: #666; margin-top: 4px;">최근
+					100개의 리뷰를 분석하여 핵심 내용을 자동으로 추출한 것입니다.</p>
+
+				<div class="review-summary">
+					<c:if test="${not empty positiveSummary}">
+						<div class="review-card positive">
+							<h3>👍 긍정 리뷰</h3>
+							<ul class="review-lines">
+								<c:forEach var="line" items="${positiveSummary}">
+                            💬 ${line}<br>
+								</c:forEach>
+							</ul>
+						</div>
+					</c:if>
+
+					<c:if test="${not empty negativeSummary}">
+						<div class="review-card negative">
+							<h3>👎 부정 리뷰</h3>
+							<ul class="review-lines">
+								<c:forEach var="line" items="${negativeSummary}">
+                            💬 ${line}<br>
+								</c:forEach>
+							</ul>
+						</div>
+					</c:if>
+				</div>
+			</c:when>
+
+			<c:otherwise>
+				<p style="font-size: 20px; color: #999; padding: 10px;">😢 리뷰
+					요약이 없습니다.</p>
+			</c:otherwise>
+		</c:choose>
+	</div>
+
+	<div class="summary">
 		<div class="summary-box">
 			<h2>연령대 비율</h2>
-			<canvas id="ageChart"></canvas>
+			<c:choose>
+				<c:when test="${not empty productAgeStats}">
+					<canvas id="ageChart"></canvas>
+				</c:when>
+				<c:otherwise>
+					<p style="padding: 10px; font-size: 16px; color: #777;">📉 아직
+						판매 기록이 없습니다</p>
+				</c:otherwise>
+			</c:choose>
 		</div>
 
 		<div class="summary-box">
 			<h2>성별 비율</h2>
-			<canvas id="genderChart"></canvas>
+			<c:choose>
+				<c:when test="${not empty productGenderStats}">
+					<canvas id="genderChart"></canvas>
+				</c:when>
+				<c:otherwise>
+					<p style="padding: 10px; font-size: 16px; color: #777;">📉 아직
+						판매 기록이 없습니다</p>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 </div>
 
 <script>
 
+console.log("${productDTO}")
+
+const images = [
+	<c:forEach var="img" items="${productDTO.images}" varStatus="status">
+		"${cpath}${img.imageUrl}"<c:if test="${!status.last}">,</c:if>
+	</c:forEach>
+];
+
+let currentIndex = 0;
+const imgElement = document.getElementById("menu-image");
+
+// ✅ 첫 이미지 표시
+if (images.length > 0) {
+	imgElement.src = images[0];
+}
+
+function showImage(index) {
+	if (!images || images.length === 0) return;
+	currentIndex = (index + images.length) % images.length;
+	imgElement.src = images[currentIndex];
+}
+
+function prevImage() {
+	showImage(currentIndex - 1);
+}
+
+function nextImage() {
+	showImage(currentIndex + 1);
+}
+
+// ✅ 연령대 차트
 new Chart(document.getElementById('ageChart'), {
-    type: 'pie',
-    data: {
-        labels: [<c:forEach var="item" items="${productAgeStats}">"${item.label}",</c:forEach>],
-        datasets: [{
-            backgroundColor: ['#36b9cc', '#1cc88a', '#f6c23e', '#e74a3b', '#858796'],
-            data: [<c:forEach var="item" items="${productAgeStats}">${item.value},</c:forEach>]
-        }]
-    }
+	type: 'pie',
+	data: {
+		labels: [<c:forEach var="item" items="${productAgeStats}">"${item.label}",</c:forEach>],
+		datasets: [{
+			backgroundColor: ['#36b9cc', '#1cc88a', '#f6c23e', '#e74a3b', '#858796'],
+			data: [<c:forEach var="item" items="${productAgeStats}">${item.value},</c:forEach>]
+		}]
+	}
 });
 
+// ✅ 성별 차트
 new Chart(document.getElementById('genderChart'), {
-    type: 'doughnut',
-    data: {
-        labels: [<c:forEach var="item" items="${productGenderStats}">"${item.label}",</c:forEach>],
-        datasets: [{
-            backgroundColor: ['#4e73df', '#e74a3b'],
-            data: [<c:forEach var="item" items="${productGenderStats}">${item.value},</c:forEach>]
-        }]
-    }
+	type: 'doughnut',
+	data: {
+		labels: [<c:forEach var="item" items="${productGenderStats}">"${item.label}",</c:forEach>],
+		datasets: [{
+			backgroundColor: ['#4e73df', '#e74a3b'],
+			data: [<c:forEach var="item" items="${productGenderStats}">${item.value},</c:forEach>]
+		}]
+	}
 });
 </script>
-

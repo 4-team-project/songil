@@ -92,7 +92,7 @@ input[type="text"] {
 }
 
 .btn.filled:hover {
-	background-color: #ff7a52;
+	background-color: #fdd4c2;
 	color: white;
 }
 
@@ -133,7 +133,7 @@ input[type="text"] {
 }
 
 #closeModalBtn:hover {
-	background-color: #fff6f0; /* 좀 더 밝은 주황색 호버 */
+	background-color: #fdd4c2; /* 좀 더 밝은 주황색 호버 */
 }
 
 /* 모달 배경 */

@@ -136,7 +136,8 @@ p {
 }
 
 .btn-check:hover {
-	background-color: #fff3ee;
+	background-color: #ff9670;
+	color: white;
 }
 
 .btn-container {
@@ -202,7 +203,7 @@ p {
 }
 
 #closeModalBtn:hover {
-	background-color: #ff7a52; /* 좀 더 밝은 주황색 호버 */
+	background-color: #fdd4c2; /* 좀 더 밝은 주황색 호버 */
 }
 
 /* 모달 배경 */

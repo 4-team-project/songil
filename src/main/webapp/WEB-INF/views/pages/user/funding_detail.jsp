@@ -208,12 +208,12 @@
 		      $("#review-tab").html(reviewHtml);
 
 		      // 페이징 HTML 다시 그리기
-		      let paginationHtml = '';
+		      let paginationHtml = `<div class="pagination">`;
 		      for (let i = 1; i <= totalPages; i++) {
 		        if (i === currentPage) {
-		          paginationHtml += `<strong style="color: #ff9670;">[\${i}]</strong>`;
+		          paginationHtml += `<button class="page-link active" disabled>\${i}</button>`;
 		        } else {
-		          paginationHtml += `<a href="#" class="page-link" data-page="\${i}" style="color: #999; text-decoration: none; margin: 0 5px;">[\${i}]</a>`;
+		          paginationHtml += `<button class="page-link" data-page="\${i}">\${i}</button>`;
 		        }
 		      }
 		      $("#review-tab").append(`<div class="pagination-container" style="text-align: center; margin-top: 20px;">\${paginationHtml}</div>`);
