@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -257,7 +256,7 @@ public class FundingManagementController {
 						// 임시 이미지인 경우: 서버 이동 + URL 업데이트
 						String newFileName = imageService.moveImageFromTemp(imageUrl); // UUID.jpg 형태
 						img.setFundingId(fundingId);
-						img.setImageUrl("/image/" + newFileName);
+						img.setImageUrl(newFileName);
 						imageService.insertImageUrl(img);
 					}
 
