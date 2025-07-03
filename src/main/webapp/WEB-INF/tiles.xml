@@ -101,7 +101,7 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/user/mypage.jsp" />
 	</definition>
-	
+
 	<!-- 소상공인 마이페이지 -->
 	<definition name="seller.mypage" extends="sellerLayout">
 		<put-attribute name="body"
@@ -188,7 +188,8 @@
 			value="/WEB-INF/views/pages/seller/funding_direct_input.jsp" />
 		<put-attribute name="title" value="펀딩 정보 직접 입력" />
 	</definition>
-	<definition name="seller.aiInsertForm" extends="sellerLayout">
+	<definition name="seller.aiInsertForm"
+		extends="sellerLayout">
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/funding_ai_form.jsp" />
 		<put-attribute name="title" value="펀딩 정보 ai 입력 폼" />
@@ -216,10 +217,15 @@
 	</definition>
 
 	<!-- 상품 추가/수정 -->
-	<definition name="seller.product"
-		extends="sellerLayout">
+	<definition name="seller.product" extends="sellerLayout">
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/product/productDetail.jsp" />
+		<put-attribute name="title" value="메뉴" />
+	</definition>
+
+	<definition name="seller.store" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/store/storeDetail.jsp" />
 		<put-attribute name="title" value="메뉴" />
 	</definition>
 
