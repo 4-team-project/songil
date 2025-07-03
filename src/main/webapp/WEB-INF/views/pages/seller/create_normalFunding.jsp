@@ -12,7 +12,7 @@ $(document).ready(function () {
 
   // 메뉴 목록 불러오기
 $('#menuSelect').on('focus', function() {
-    const storeId = ${store.storeId}; 
+    const storeId = ${storeDTO.storeId}; 
     console.log("storeId: ", storeId);
 
     $.ajax({
