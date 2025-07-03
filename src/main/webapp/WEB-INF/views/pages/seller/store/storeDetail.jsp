@@ -31,16 +31,17 @@
 			<input type="text" name="postcode" id="postcode"
 				class="content-input" placeholder="우편번호" readonly>
 		</p>
-		<input type="hidden" id="sido" name="sido"> 
-		<input type="hidden" id="sigungu" name="sigungu">
-		<input type="hidden" id="bname" name="bname">
-		<input type="hidden" id="jibunAddress" name="jibunAddress">
+		<input type="hidden" id="sido" name="sido"> <input
+			type="hidden" id="sigungu" name="sigungu"> <input
+			type="hidden" id="bname" name="bname"> <input type="hidden"
+			id="jibunAddress" name="jibunAddress">
 		<p>
 			<strong>&nbsp&nbsp&nbsp&nbsp&nbsp</strong> <input type="text"
 				name="roadAddress" id="roadAddress" class="content-input"
 				placeholder="도로명 주소" readonly>
 		</p>
-		<input type="text" id="detailAddr" class="content-input" placeholder="상세 주소를 입력하세요">
+		<input type="text" id="detailAddr" class="content-input"
+			placeholder="상세 주소를 입력하세요">
 	</div>
 </div>
 

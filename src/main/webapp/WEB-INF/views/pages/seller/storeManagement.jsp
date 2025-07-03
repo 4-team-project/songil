@@ -34,7 +34,7 @@
 <div class="store-info-box">
 	<div class="store-info-title">
 		<div class="highlight">[현재 상점]</div>
-		김밥식 맛집
+		${store.storeName}
 	</div>
 	<div class="store-info-content">주소: 서울시 중구 세종대로</div>
 	<div class="store-info-content">전화번호: 02-1234-5678</div>

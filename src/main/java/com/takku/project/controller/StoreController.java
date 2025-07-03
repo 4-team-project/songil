@@ -55,10 +55,16 @@ public class StoreController {
 	
 	@Autowired
 	private StoreStatsService storeStatsService;
-
+	
 	@GetMapping()
-    public String storeManagementPage() {
-		return "seller.storeManagement";
+	public String showStoreManagement(Model model) {
+	    int storeId = 1; // 임시 상점 ID
+	    StoreDTO store = storeService.selectStoreById(storeId); 
+	    List<ProductDTO> productList = productService.selectProductByStoreId(storeId);
+	    
+	    model.addAttribute("store", store);
+	    model.addAttribute("productList", productList);
+	    return "seller.storeManagement"; 
 	}
 
 	@GetMapping("/new")

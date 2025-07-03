@@ -269,7 +269,7 @@
 			value="/WEB-INF/views/pages/seller/sellerFundingDetail.jsp" />
 	</definition>
 	<!-- 소상공인 펀딩 통계 -->
-	<definition name="seller/stats" extends="sellerLayout">
+	<definition name="seller/sellerFundingStats" extends="sellerLayout">
 		<put-attribute name="title" value="펀딩 통계" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/sellerFundingStats.jsp" />
