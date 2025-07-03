@@ -37,7 +37,7 @@ button.funding-btn.selected-general {
 	padding: 20px;
 	border-radius: 12px;
 	background: transparent;
-	border: 2px solid #eee;
+	border: 3px solid #eee;
 	cursor: pointer;
 	transition: all 0.3s ease; /* 크기 변경 부드럽게 */
 	transform: scale(1); /* 기본 크기 */

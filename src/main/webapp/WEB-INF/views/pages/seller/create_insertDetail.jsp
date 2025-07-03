@@ -28,11 +28,19 @@
   </div>
 </div>
 
+<h3>기간 및 이미지를 입력해주세요</h3>
 <div class="fundingDate">
 	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
+	<p> 달력 사진(
+  	<img src="${pageContext.request.contextPath}/resources/images/icons/calendar.svg"
+       alt="달력 아이콘"
+       id="calendarIcon"
+       style="width:24px; height:24px; cursor:pointer; vertical-align:middle;" />
+       )을 누르면 달력이 나와요.
+</p>
 	<div id="dateArea">
-		<span>시작일</span> <input type="date" id="startDate" required /> <span>종료일</span>
-		<input type="date" id="endDate" required />
+		<span>시작일</span> <input type="date" id="startDate" required class="form-input"/> <span>종료일</span>
+		<input type="date" id="endDate" required class="form-input"/>
 		<button type="button" class="btn-check" onclick="submitDate()">확인</button>
 	</div>
 	<div id="dateInfo"

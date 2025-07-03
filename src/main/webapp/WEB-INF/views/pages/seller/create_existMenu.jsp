@@ -107,6 +107,7 @@ $(document).on('click', '#btn-edit', function(){
   </div>
 </div>
 
+<h3>상품 정보를 입력해주세요.</h3>
 <form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 <div class="menuName">
   <div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
@@ -125,7 +126,7 @@ $(document).on('click', '#btn-edit', function(){
 <!-- 메뉴의 정가 입력 -->
 <div class="menuPrice">
   <div class="menu-label" name="fundingName">해당 메뉴를 얼마에 판매할지 판매가를 입력해주세요.</div>
-  <input type="number" id="menuPrice" placeholder="판매가 " name="salePrice" required /> &nbsp원<br> <span
+  <input type="number" id="menuPrice" placeholder="판매가 " name="salePrice" required class="form-input" /> <span class="unit-text">&nbsp원 </span><br> <span
     id="discountRate">할인율은 %입니다.</span>
 </div>
 
@@ -134,7 +135,7 @@ $(document).on('click', '#btn-edit', function(){
   <div class="menu-label">펀딩 이벤트로 판매 가능한 최대 개수를 입력해 주세요.</div>
   <div class="description">예: 50개가 가능하면, 50개 판매시 사용자가 펀딩 참여 불가능.</div>
   <input type="number" id="maxSales" name="maxQty"
-    placeholder="최대 판매 개수 입력" required/> &nbsp개
+    placeholder="최대 판매 개수 입력" required class="form-input"/> <span class="unit-text">&nbsp개</span>
 </div>
 
 <!-- 한 사람이 구매할 수 있는 펀딩 개수 -->
@@ -142,7 +143,7 @@ $(document).on('click', '#btn-edit', function(){
   <div class="menu-label">한 사람이 최대 몇 개까지 살 수 있는지 정해주세요.</div>
   <div class="description">예: 1명당 2개까지 구매 가능</div>
   <input type="number" id="maxPerUser" name="perQty"
-    placeholder="인당 구매 가능 개수 입력" required/>&nbsp&nbsp개
+    placeholder="인당 구매 가능 개수 입력" required class="form-input"/><span class="unit-text">&nbsp&nbsp개</span>
 </div>
 
 

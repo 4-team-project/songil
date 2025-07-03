@@ -82,7 +82,7 @@
 		<div class="input-group">
 			<label for="title">펀딩 제목</label> <input type="text" id="title"
 				name="fundingName" placeholder="예: 불고기 정식 펀딩"
-				value="${aiResponse.title}" required />
+				value="${aiResponse.title}" required class="form-input" />
 		</div>
 
 		<div class="input-group">
@@ -95,7 +95,7 @@
 		<div class="input-group">
 			<label for="keywords">관련 단어</label> <input type="text" id="keywords"
 				name="keywords" placeholder="예: 불고기, 정식, 든든한한끼"
-				value="${aiResponse.hashtags}" required />
+				value="${aiResponse.hashtags}" required class="form-input"/>
 		</div>
 
 		<div class="btn-group">
