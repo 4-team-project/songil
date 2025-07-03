@@ -15,6 +15,7 @@
 	display: flex;
 	justify-content: flex-start;
 	gap: 10px;
+	padding-left: 27px;
 }
 
 .content-box {
@@ -28,7 +29,7 @@
 .content-text {
 	color: #FF9670;
 	font-weight: 700;
-	font-size: 26px;
+	font-size: 25px;
 	font-family: 'Spoqa Han Sans Neo';
 	line-height: 1.5;
 }
@@ -155,7 +156,7 @@
 .complete-back-btn-box {
 	display: flex;
 	gap: 9px;
-	margin-left: 3px;
+	margin-left: 30px;
 	margin-bottom: 12px;
 	justify-content: space-between;
 }

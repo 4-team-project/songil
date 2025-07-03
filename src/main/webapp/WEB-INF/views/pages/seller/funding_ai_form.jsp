@@ -48,12 +48,12 @@
 	<p class="example">예: 푸짐한 한 끼, 집밥 느낌, 인기 메뉴</p>
 
 	<div class="input-group">
-		<input type="text" name="keywords" placeholder="떠오르는 단어를 적어주세요" required />
+		<input type="text" name="keywords" placeholder="떠오르는 단어를 적어주세요" required class="form-input" />
 	</div>
 
 	<div class="menu-label" name="fundingName">원하시는 타겟층을 입력해주세요.</div>
 	<div class="input-group">
-		<input type="text" name="target" placeholder="예: 20대 여성, 직장인, 커플" required />
+		<input type="text" name="target" placeholder="예: 20대 여성, 직장인, 커플" required class="form-input"/>
 	</div>
 
 	<div class="btn-group">
