@@ -18,7 +18,7 @@ $(document).ready(function() {
     }
 
     $.ajax({
-        url: `/seller/stores/byUser?userId=${userId}`,
+        url: `/seller/store/stores/byUser?userId=${userId}`,
         method: 'GET',
         dataType: 'json',
         success: function(stores) {
@@ -95,7 +95,7 @@ $(document).ready(function() {
     // --- 펀딩 로드 및 표시 함수 ---
     function loadAndDisplayFundings(storeId, initialStatus = 'all') {
         $.ajax({
-            url: `/seller/fundings/byStore?storeId=${storeId}`,
+            url: `/seller/store/fundings/byStore?storeId=${storeId}`,
             method: 'GET',
             dataType: 'json',
             success: function(fundings) {
@@ -180,7 +180,7 @@ $(document).ready(function() {
             fundingCard.addEventListener('click', function() {
                 const id = this.dataset.fundingId;
                 if (id) {
-                    window.location.href = `/seller/stats?fundingId=${id}`;
+                    window.location.href = `/seller/store/stats?fundingId=${id}`;
                 }
             });
 
