@@ -119,7 +119,7 @@ public class StoreController {
 		return (Integer) session.getAttribute("loggedInUserId"); // 로그인 세션에서 ID 가져오기
 	}
 
-// 상점 펀딩 현황 (초기 페이지 로드 시)
+	// 상점 펀딩 현황 (초기 페이지 로드 시)
 	@GetMapping("/list")
 	public String findFundingByStoreId(@RequestParam(value = "userId") Integer userId, Model model) {
 		// 실제 서비스에서는 @RequestParam으로 받은 userId를 사용하여 동적으로 처리하는 것이 좋습니다.

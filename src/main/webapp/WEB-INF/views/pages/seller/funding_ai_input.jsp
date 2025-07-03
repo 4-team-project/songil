@@ -54,11 +54,11 @@
 	});
 </script>
 
-	<h3 style="padding-left: 60px; margin-top: 60px;">
+	<h3 style="padding-left: 20px; margin-top: 30px;">
 		아래는 AI가 자동으로 만든 펀딩 제목과 설명, 관련 단어입니다.<br> 원하는 문장이 아니라면 아래 [다시 생성]
 		버튼으로 다시 요청해보세요!
 	</h3>
-	<p style="color: #ff9670; font-size: 20px; padding-left: 60px; font-weight: bold;">※ AI 생성 기회: ${3 - sessionScope.aiRetryCount}
+	<p style="color: #ff9670; font-size: 20px; padding-left: 20px; font-weight: bold;">※ AI 생성 기회: ${3 - sessionScope.aiRetryCount}
 		/ 3 남음</p>
 
 	<form action="${cpath}/seller/fundings/submit-funding" method="post">
