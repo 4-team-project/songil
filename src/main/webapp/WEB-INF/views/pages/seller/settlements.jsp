@@ -29,25 +29,34 @@
 				</div>
 
 				<!-- 정보 -->
-				<div class="settlement-info">
-					<p>
-						<strong>펀딩 이름 : </strong> ${settlement.funding.fundingName}
-					</p>
-					<p>
-						<strong>정산 금액 : </strong>
-						<fmt:formatNumber value="${settlement.amount}" type="number" />
-						원
-					</p>
-					<p>
-						<strong>수수료 : </strong>
+				<div class="settlement-info-grid">
+					<div>
+						<strong>펀딩 이름 :</strong>
+					</div>
+					<div>${settlement.funding.fundingName}</div>
+					<div>
+						<strong>수 수 료 :</strong>
+					</div>
+					<div>
 						<fmt:formatNumber value="${settlement.fee}" type="number" />
 						원
-					</p>
-					<p>
-						<strong>정산 상태 : </strong> ${settlement.status}
-					</p>
-					<p>
-						<strong>정산 날짜 : </strong>
+					</div>
+					<div>
+						<strong>정산 금액 :</strong>
+					</div>
+					<div>
+						<fmt:formatNumber value="${settlement.amount}" type="number" />
+						원
+					</div>
+					<div>
+						<strong>정산 상태 :</strong>
+					</div>
+					<div>${settlement.status}</div>
+
+					<div>
+						<strong>정산 날짜 :</strong>
+					</div>
+					<div>
 						<c:choose>
 							<c:when test="${not empty settlement.settledAt}">
 								<fmt:formatDate value="${settlement.settledAt}"
@@ -55,7 +64,7 @@
 							</c:when>
 							<c:otherwise>-</c:otherwise>
 						</c:choose>
-					</p>
+					</div>
 				</div>
 
 				<!-- 상세보기 버튼 -->

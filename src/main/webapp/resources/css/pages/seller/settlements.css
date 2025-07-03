@@ -34,14 +34,22 @@ h2 {
 	border: 1px solid #eee;
 }
 
-.settlement-info strong {
-	color: #ff9670;
-}
-
 .settlement-info p {
 	margin: 6px 0;
 	font-size: 18px;
 	color: #444;
+}
+
+.settlement-info-grid {
+	display: grid;
+	grid-template-columns: 90px 1fr;
+	row-gap: 8px;
+	font-size: 18px;
+}
+
+.settlement-info-grid strong {
+	font-weight: bold;
+	color: #ff9670;
 }
 
 .settlement-action {
@@ -53,8 +61,8 @@ h2 {
 }
 
 .settlement-action button {
-	padding: 12px 24px;         /* 버튼 크기 키움 */
-	font-size: 16px;            /* 글자 크기 키움 */
+	padding: 12px 24px; /* 버튼 크기 키움 */
+	font-size: 16px; /* 글자 크기 키움 */
 	background-color: #ff9670;
 	color: white;
 	border: none;
