@@ -6,8 +6,7 @@
 
 <h3>어떤 펀딩을 만들고 싶으신가요?</h3>
 <form id="fundingForm"
-	action="${pageContext.request.contextPath}/seller/fundings/create-step2"
-	onsubmit="return validateSelection();">
+	action="${pageContext.request.contextPath}/seller/fundings/create-step2" onsubmit="return validateSelection();">
 	<input type="hidden" id="fundingTypeInput" name="type" value="">
 
 	<div class="funding-type-select">
@@ -25,18 +24,17 @@
 	<!-- submit 버튼 -->
 	<button type="submit" class = "btn-next">다음</button>
 </form>
-
 <script>
 
-	function validateSelection() {
+ 	function validateSelection() {
 		const selected = document.getElementById('fundingTypeInput').value;
 		if (!selected) {
-			alert("펀딩 종류를 선택해주세요.");
+		alert("펀딩 종류를 선택해주세요");
 			return false;
 		}
 		return true;
-	}
-	
+	} 
+ 	
 	function selectFundingType(type) {
 		  const btnLimited = document.getElementById('btnLimited');
 		  const btnGeneral = document.getElementById('btnGeneral');

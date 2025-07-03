@@ -13,7 +13,6 @@ $(document).ready(function () {
   // 메뉴 목록 불러오기
 $('#menuSelect').on('focus', function() {
     const storeId = ${storeDTO.storeId}; 
-    console.log("storeId: ", storeId);
 
     $.ajax({
       url: '${pageContext.request.contextPath}/seller/product/list',
@@ -111,6 +110,23 @@ $(document).on('click', '#btn-edit', function(){
 });
 
 </script>
+
+<div class="step-progress">
+  <div class="step active">
+    <div class="circle">1</div>
+    <div class="label">상품 정보</div>
+  </div>
+  <div class="line"></div>
+  <div class="step">
+    <div class="circle">2</div>
+    <div class="label">기간 및 이미지</div>
+  </div>
+  <div class="line"></div>
+  <div class="step">
+    <div class="circle">3</div>
+    <div class="label">상세 내용</div>
+  </div>
+</div>
 
 <form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 	<div class="menuName">

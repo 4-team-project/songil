@@ -20,6 +20,7 @@ p {
 	font-size: 17px;
 }
 
+
 /* 날짜 입력 영역 */
 #dateArea {
   display: flex;
@@ -29,7 +30,7 @@ p {
 
 /* 시작일/종료일 텍스트 */
 #dateArea span {
-  font-size: 15px;
+  font-size: 19px;
   color: #555;
 }
 
@@ -189,4 +190,60 @@ align-items: center;
 	background: rgba(0, 0, 0, 0.4);
 	z-index: 9998;
 	display: none;
+}
+
+/*progress bar*/
+.step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  width: 100px; 
+  position: relative;
+}
+
+.circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  color: #999;
+  text-align: center;
+  line-height: 24px;
+  font-weight: bold;
+  background-color: #fff;
+  z-index: 2;
+}
+
+.step.active .circle {
+  background-color: #FF9670;
+  border: none;
+  color: white;
+}
+
+.label {
+  margin-top: 6px;
+}
+
+.line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0 10px;
+  position: relative;
+  top: -12px;
+}
+
+.step.active ~ .step .circle {
+  background-color: #fff;
+  color: #999;
+  border: 1px solid #ccc;
 }

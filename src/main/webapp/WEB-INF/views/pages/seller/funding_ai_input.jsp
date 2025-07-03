@@ -54,6 +54,23 @@
 	});
 </script>
 
+<div class="step-progress">
+  <div class="step">
+    <div class="circle">1</div>
+    <div class="label">상품 정보</div>
+  </div>
+  <div class="line"></div>
+  <div class="step">
+    <div class="circle">2</div>
+    <div class="label">기간 및 이미지</div>
+  </div>
+  <div class="line"></div>
+  <div class="step active">
+    <div class="circle">3</div>
+    <div class="label">상세 내용</div>
+  </div>
+</div>
+
 	<h3 style="padding-left: 20px; margin-top: 30px;">
 		아래는 AI가 자동으로 만든 펀딩 제목과 설명, 관련 단어입니다.<br> 원하는 문장이 아니라면 아래 [다시 생성]
 		버튼으로 다시 요청해보세요!

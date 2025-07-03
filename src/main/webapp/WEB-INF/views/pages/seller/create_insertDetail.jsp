@@ -11,6 +11,23 @@
 <input type="hidden" id="fundingId"
 	value="${sessionScope.fundingDTO.fundingId}" />
 
+<div class="step-progress">
+  <div class="step">
+    <div class="circle">1</div>
+    <div class="label">상품 정보</div>
+  </div>
+  <div class="line"></div>
+  <div class="step active">
+    <div class="circle">2</div>
+    <div class="label">기간 및 이미지</div>
+  </div>
+  <div class="line"></div>
+  <div class="step">
+    <div class="circle">3</div>
+    <div class="label">상세 내용</div>
+  </div>
+</div>
+
 <div class="fundingDate">
 	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
 	<div id="dateArea">
@@ -136,10 +153,10 @@ function submitDate() {
 		return;
 	}
 
-	const formattedStart = `${startDateObj.getFullYear()}년 ${startDateObj.getMonth() + 1}월 ${startDateObj.getDate()}일`;
-	const formattedEnd = `${endDateObj.getFullYear()}년 ${endDateObj.getMonth() + 1}월 ${endDateObj.getDate()}일`;
+	const formattedStart = `\${startDateObj.getFullYear()}년 \${startDateObj.getMonth() + 1}월 \${startDateObj.getDate()}일`;
+	const formattedEnd = `\${endDateObj.getFullYear()}년 \${endDateObj.getMonth() + 1}월 \${endDateObj.getDate()}일`;
 	document.getElementById("dateInfo").innerText =
-		`${formattedStart} 0시 ~ ${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
+		`\${formattedStart} 0시 ~ \${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
 	isDateConfirmed = true;
 	showModalMessage("날짜가 확인되었습니다!");
 }
