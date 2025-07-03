@@ -1,179 +1,185 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
-<form
-	action="${pageContext.request.contextPath}/seller/fundings/create-step4"
-	method="post" onsubmit="return checkConfirmed();">
-	
-	<input type="hidden" id="fundingId" value="${sessionScope.fundingDTO.fundingId}" />
+    href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
+    
+<!-- 날짜 및 이미지 업로드 영역 -->
+<input type="hidden" id="fundingId" value="${sessionScope.fundingDTO.fundingId}" />
 
-	<div class="fundingDate">
-		<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
-
-		<div id="dateArea">
-			<span style="font-size: 20px;">시작일</span> <input type="date"
-				id="startDate" name="startDate" required /> <span
-				style="font-size: 20px;">종료일</span> <input type="date" id="endDate"
-				name="endDate" required />
-
-			<button type="button" class="btn-check" onclick="submitDate()">확인</button>
-		</div>
-
-		<!-- 날짜 출력 -->
-		<div id="dateInfo"
-			style="margin-top: 10px; font-size: 20px; color: #ff9670; font-weight: bold;"></div>
-	</div>
-
-
-	<!-- 사진 추가 -->
-	<div class="menuPicture">
-		<div class="menu-label">펀딩 사진을 선택해 주세요.</div>
-		<p>
-			<strong>최대 2개까지</strong> 메뉴 사진을 넣어주세요! <strong>사진 추가하기</strong> 버튼을
-			누르면 사진을 선택할 수 있어요. <br> 사진을 삭제하려면, 사진 밑에 있는 <strong>취소하기</strong>
-			버튼을 눌러주세요.
-		</p>
-
-		<div class="pictureBtn">
-			<button type="button" id="btnAddPhoto">펀딩 사진 추가하기</button>
-			<input type="file" id="inputPhoto" accept="image/*" multiple
-				style="display: none" />
-			<!-- 업로드된 이미지 url을 담을 hidden input -->
-			<div id="hiddenImageInputs"></div>
-		
-			<button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
+<!-- 날짜 입력 -->
+<div class="fundingDate">
+  <div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
+  <div id="dateArea">
+    <span style="font-size: 20px;">시작일</span>
+    <input type="date" id="startDate" required />
+    <span style="font-size: 20px;">종료일</span>
+    <input type="date" id="endDate" required />
+    <button type="button" class="btn-check" onclick="submitDate()">확인</button>
+  </div>
+  <div id="dateInfo" style="margin-top: 10px; font-size: 20px; color: #ff9670; font-weight: bold;"></div>
 </div>
-			<!-- 사진 미리보기 -->
-			<div id="previewContainer" class="preview-container"></div>
 
-	</div>
+<!-- 이미지 업로드 -->
+<div class="menuPicture">
+  <div class="menu-label">펀딩 사진을 선택해 주세요.</div>
+  <p><strong>최대 2개까지</strong> 사진을 등록해 주세요!</p>
+  <div class="content-input" id="image-preview-container">
+    <div class="menu-img-upload-wrapper">
+      <label for="images" class="menu-img-btn">사진 추가하기</label>
+      <input type="file" id="images" accept="image/*" multiple onchange="handleFiles(this.files)" />
+      <button type="button" id="btnDefaultPhoto">메뉴 사진과 동일</button>
+    </div>
+    <div id="hiddenImageInputs" style="display: none;"></div>
+    <div id="previewContainer" class="preview-list"></div>
+    <div id="file-count-text" class="file-count-text" style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진</div>
+  </div>
+</div>
 
-	<div class="btn-container">
-		<c:set var="type" value="${sessionScope.fundingType}" />
-		<button class="btn" type="button"
-			onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
-		<button class="btn" type="submit">다음</button>
-	</div>
-</form>
+<!-- 다음 단계 -->
+<div class="btn-container">
+  <c:set var="type" value="${sessionScope.fundingType}" />
+  <button class="btn" type="button" onclick="location.href='${pageContext.request.contextPath}/seller/fundings/create-step2?type=${type}'">이전</button>
+  <button class="btn" type="button" onclick="submitAndMove()">다음</button>
+</div>
 
-<!-- 모달 영역 -->
+<!-- 모달 -->
 <div id="resultModal">
-	<p id="modalMsg"></p>
-	<button id="closeModalBtn">확인</button>
+  <p id="modalMsg"></p>
+  <button id="closeModalBtn">확인</button>
 </div>
 
-<!-- 모달 배경 -->
-<div id="modalBackdrop"></div>
-
+<!-- 스크립트 -->
 <script>
 let isDateConfirmed = false;
 
-function showModalMessage(message) {
-	  $("#modalMsg").text(message);
-	  $("#resultModal, #modalBackdrop").fadeIn();
-	}
-
 function submitDate() {
-	  const start = document.getElementById("startDate").value;
-	  const end = document.getElementById("endDate").value;
+  const start = document.getElementById("startDate").value;
+  const end = document.getElementById("endDate").value;
+  if (!start || !end) return showModalMessage("시작일과 종료일을 모두 입력해 주세요.");
 
-	  if (!start || !end) {
-		showModalMessage("시작일과 종료일을 모두 입력해 주세요.");
-	    return;
-	  }
+  const startObj = new Date(start);
+  const endObj = new Date(end);
+  if (endObj < startObj) return showModalMessage("종료일은 시작일 이후여야 합니다.");
 
-	  const startDateObj = new Date(start);
-	  const endDateObj = new Date(end);
+  document.getElementById("dateInfo").innerText = `${startObj.getFullYear()}년 ${startObj.getMonth()+1}월 ${startObj.getDate()}일 0시 ~ ${endObj.getFullYear()}년 ${endObj.getMonth()+1}월 ${endObj.getDate()}일 23시 59분까지 펀딩이 진행됩니다.`;
+  isDateConfirmed = true;
+  showModalMessage("날짜가 확인되었습니다!");
+}
 
-	  // 종료일이 시작일보다 이전일 경우
-	  if (endDateObj < startDateObj) {
-		showModalMessage("종료일은 시작일보다 이후여야 합니다.");
-	    return;
-	  }
+function showModalMessage(msg) {
+  $("#modalMsg").text(msg);
+  $("#resultModal").fadeIn();
+}
 
-	  const formattedStart = `\${startDateObj.getFullYear()}년 \${startDateObj.getMonth() + 1}월 \${startDateObj.getDate()}일`;
-	  const formattedEnd = `\${endDateObj.getFullYear()}년 \${endDateObj.getMonth() + 1}월 \${endDateObj.getDate()}일`;
+$("#closeModalBtn").click(() => $("#resultModal").fadeOut());
 
-	  document.getElementById("dateInfo").innerText =
-	    `\${formattedStart} 0시 ~ \${formattedEnd} 23시 59분까지 펀딩이 진행됩니다.`;
+function submitAndMove() {
+  if (!isDateConfirmed) return showModalMessage("날짜를 확인해 주세요.");
 
-	  isDateConfirmed = true;
-	  showModalMessage("날짜가 확인되었습니다!");
-	}
+  const imageUrls = Array.from(document.querySelectorAll("#hiddenImageInputs input")).map(i => i.value);
+  if (imageUrls.length === 0) return showModalMessage("이미지를 1장 이상 선택해 주세요.");
 
+  const payload = {
+    fundingId: document.getElementById("fundingId").value,
+    startDate: document.getElementById("startDate").value,
+    endDate: document.getElementById("endDate").value,
+    images: imageUrls
+  };
 
-function checkConfirmed() {
-	  if (!isDateConfirmed) {
-	    showModalMessage("먼저 '확인' 버튼을 눌러 날짜를 제출해 주세요.");
-	    return false;
-	  }
-	  return true;
-	}
+  fetch(`${cpath}/seller/fundings/create-step4`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(res => {
+    if (!res.ok) throw new Error("전송 실패");
+    return res.text();
+  }).then(() => {
+    location.href = `${cpath}/seller/fundings/create-step4`;
+  }).catch(err => {
+    alert("전송 실패: " + err.message);
+  });
+}
 
+function handleFiles(fileList) {
+  const preview = document.getElementById("previewContainer");
+  const hiddenInputs = document.getElementById("hiddenImageInputs");
+  const fileCountText = document.getElementById("file-count-text");
 
-//기존 메뉴로 사진 불러오기
-btnDefaultPhoto.addEventListener('click', () => {
-	const fundingId = document.getElementById("fundingId").value;
+  const files = Array.from(fileList);
+  const max = 2 - hiddenInputs.children.length;
+  if (files.length > max) return alert("최대 2개의 이미지만 선택 가능합니다.");
 
- $.ajax({
-   url: "${pageContext.request.contextPath}/seller/fundings/loadDefaultImages",
-   type: "POST",
-   data: { fundingId: fundingId },
-   success: function(response) {
-     const hiddenContainer = document.getElementById("hiddenImageInputs");
-     const previewContainer = document.getElementById("previewContainer");
+  files.forEach(file => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    // 기존 내용 초기화
-    previewContainer.innerHTML = '';
-    hiddenContainer.innerHTML = '';
-    
-	  // 이미지 없을 경우
-	if (!response || response.length === 0) {
-		alert("등록된 메뉴 이미지가 없습니다.");
-		return;
-	}
+    fetch(`${cpath}/seller/fundings/uploadImage`, {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.text())
+    .then(url => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "preview-item";
+      const img = document.createElement("img");
+      img.src = url;
+      const delBtn = document.createElement("div");
+      delBtn.className = "delete-btn";
+      delBtn.innerText = "x";
+      delBtn.onclick = () => {
+        wrapper.remove();
+        hiddenInputs.querySelector(`input[value='${url}']`)?.remove();
+        fileCountText.textContent = `선택한 사진 ${hiddenInputs.children.length} / 2`;
+      };
+      wrapper.appendChild(img);
+      wrapper.appendChild(delBtn);
+      preview.appendChild(wrapper);
 
-      response.forEach((url, index) => {
-        const div = document.createElement('div');
-        div.classList.add('preview-item');
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.value = url;
+      hiddenInputs.appendChild(hiddenInput);
+      fileCountText.textContent = `선택한 사진 ${hiddenInputs.children.length} / 2`;
+    })
+    .catch(err => alert("이미지 업로드 실패: " + err.message));
+  });
 
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = "default";
+  document.getElementById("images").value = "";
+}
 
-        const btnCancel = document.createElement('button');
-        btnCancel.textContent = '취소하기';
-        btnCancel.classList.add('btn-cancel');
+btnDefaultPhoto.addEventListener("click", () => {
+  const fundingId = document.getElementById("fundingId").value;
+  $.post("${pageContext.request.contextPath}/seller/fundings/loadDefaultImages", { fundingId }, (response) => {
+    const preview = document.getElementById("previewContainer");
+    const hiddenInputs = document.getElementById("hiddenImageInputs");
+    preview.innerHTML = "";
+    hiddenInputs.innerHTML = "";
+    if (!response || response.length === 0) return alert("기본 이미지 없음");
 
-        btnCancel.addEventListener('click', () => {
-          div.remove();
-          hiddenContainer.querySelector(`input[value='${url}']`)?.remove();
-        });
+    response.forEach(url => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "preview-item";
+      const img = document.createElement("img");
+      img.src = url;
+      const btn = document.createElement("button");
+      btn.innerText = "취소하기";
+      btn.className = "btn-cancel";
+      btn.onclick = () => {
+        wrapper.remove();
+        hiddenInputs.querySelector(`input[value='${url}']`)?.remove();
+      };
+      wrapper.appendChild(img);
+      wrapper.appendChild(btn);
+      preview.appendChild(wrapper);
 
-        div.appendChild(img);
-        div.appendChild(btnCancel);
-        previewContainer.appendChild(div);
-
-        const hiddenInput = document.createElement("input");
-        hiddenInput.type = "hidden";
-        hiddenInput.name = `images[\${index}].imageUrl`;
-        hiddenInput.value = url;
-        hiddenContainer.appendChild(hiddenInput);
-      });
-    }
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.value = url;
+      hiddenInputs.appendChild(input);
+    });
   });
 });
-
-$(function () {
-	  $("#closeModalBtn").on("click", function () {
-	    $("#resultModal, #modalBackdrop").fadeOut();
-	  });
-	});
-
 </script>

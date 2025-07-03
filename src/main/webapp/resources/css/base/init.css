@@ -8,8 +8,9 @@ html, body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Spoqa Han Sans Neo';
-	width: 1920px;
-	height: 1080px;
+	height: 100%;         
+	width: auto;         
+	overflow-y: auto;      
 }
 
 #sellerBody {
@@ -17,9 +18,9 @@ html, body {
 	padding: 40px;
 	box-sizing: border-box;
 	background-color: white;
-	display: flex;
+	display: flex; 
 	flex-direction: column;
-	max-width: 900px;
+	max-width: 800px;
 }
 
 .container {
@@ -34,7 +35,7 @@ html, body {
 	flex-direction: row;
 	min-height: 100vh;
 	max-width: 1920px;
-	padding: 0 0 0 320px;
+	padding: 0 0 0 350px;
 }
 
 @media screen and (max-width: 1024px) {

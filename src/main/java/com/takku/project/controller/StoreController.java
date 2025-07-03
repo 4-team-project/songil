@@ -8,12 +8,15 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +24,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.UserDTO;
@@ -51,26 +57,43 @@ public class StoreController {
 	private StoreStatsService storeStatsService;
 
 	@GetMapping()
-	public String homePage() {
+    public String storeManagementPage() {
 		return "seller.storeManagement";
 	}
 
 	@GetMapping("/new")
 	public String showStoreForm() {
-		return "store_form";
+		return "seller.store";
 	}
 
-	// 상점 등록
-	@PostMapping()
-	public String insertStore(StoreDTO storeDTO, RedirectAttributes ra) {
-		int result = storeService.insertStore(storeDTO);
-		if (result > 0) {
-			ra.addFlashAttribute("resultMessage", "상점이 등록되었습니다.");
-		} else {
-			ra.addFlashAttribute("resultMessage", "상점 등록에 실패하였습니다.");
-		}
-		return "redirect:/seller/store/list";
+	//상점 등록 처리
+	@PostMapping(value = "/insert", consumes = "application/json")
+	@ResponseBody
+	public ResponseEntity<String> insertStoreJson(@RequestBody StoreDTO storeDTO) {
+	    try {
+	        if (storeDTO.getUserId() == null) {
+	            storeDTO.setUserId(1); // 임시 User ID
+	        }
+
+	        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+	        
+	        System.out.println("전달된 JSON:\n" + mapper.writeValueAsString(storeDTO));
+
+	        int result = storeService.insertStore(storeDTO);
+	        System.out.println("DB 저장 결과: " + result);
+	        if (result > 0) {
+	            return ResponseEntity.ok("상점 등록 성공");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상점 등록 실패");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생: " + e.getMessage());
+	    }
 	}
+
+
 
 	// 상점 수정 폼
 	@GetMapping("/{storeId}/edit")

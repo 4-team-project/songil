@@ -101,11 +101,11 @@
 }
 
 .store-menu-box {
-	margin-top: 20px;
-	display: block;
-	background-color: #FFF4ED;
-	padding: 54px 32px 32px 32px;
-	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
+  margin-top: 20px;
+  background-color: #FFF4ED;
+  padding: 54px 32px 32px 32px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
+  overflow: hidden;  
 }
 
 .store-menu-title {
@@ -128,28 +128,24 @@
 
 .store-menu-content-img-container {
 	width: 100%;
-	height: auto;
 	position: relative;
 	padding: 20px 0;
-}
-
-.swiper-wrapper {
-	display: flex;
+	overflow: visible;
+	height: 280px;
 }
 
 .swiper-slide {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	gap: 10px;
-	width: auto;
+  height: auto !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .store-menu-content-img {
 	width: 100%;
 	max-width: 320px;
-	height: 320px;
+	height: 200px;
 	object-fit: cover;
 	border-radius: 8px;
 	cursor: pointer;

@@ -223,6 +223,12 @@
 		<put-attribute name="title" value="메뉴" />
 	</definition>
 
+	<definition name="seller.store" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/store/storeDetail.jsp" />
+		<put-attribute name="title" value="메뉴" />
+	</definition>
+
 	<definition name="seller/stats" extends="sellerLayout">
 		<put-attribute name="title" value="상점 통계" />
 		<put-attribute name="body"

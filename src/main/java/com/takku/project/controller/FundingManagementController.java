@@ -1,19 +1,20 @@
 package com.takku.project.controller;
-
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,11 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
@@ -45,381 +47,344 @@ import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.TagService;
-
-
 @Controller
 @RequestMapping("/seller/fundings")
 public class FundingManagementController {
+    @Autowired
+    FundingService fundingService;
+    @Autowired
+    StoreService storeService;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    ImageService imageService;
+    
+    @Autowired
+    TagService tagService;
+    // 내 펀딩 목록
+    @GetMapping
+    public String sellerFundings(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
+        Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
+        if (storeId == null) {
+            model.addAttribute("fundingList", Collections.emptyList());
+            model.addAttribute("message", "상점이 등록되지 않았습니다.");
+            return "seller_fundings";
+        }
+        List<FundingDTO> fundingList = fundingService.findFundingByStoreId(storeId);
+        model.addAttribute("fundingList", fundingList);
+        return "seller_fundings";
+    }
+    // 펀딩 등록 처리(참고용임 지워야함)
+    @PostMapping
+    public String registerFunding(@ModelAttribute FundingDTO fundingDTO, @ModelAttribute("loginUser") UserDTO loginUser,
+            @RequestParam("images") List<MultipartFile> images, HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        // 1. 로그인 유저로부터 storeId 조회
+        Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
+        fundingDTO.setStoreId(storeId);
+        // 2. 기본값 설정 (status: 준비중, currentQty: 0)
+        fundingDTO.setStatus("준비중");
+        fundingDTO.setCurrentQty(0);
+        // 3. 펀딩 등록
+        int result = fundingService.insertFunding(fundingDTO); // keyProperty로 fundingId 생성
+        // 4. 파일 업로드 처리
+        String uploadPath = session.getServletContext().getRealPath("/resources/images");
+        if (result > 0) {
+            List<ImageDTO> imageDTOList = new ArrayList<>();
+            for (MultipartFile file : images) {
+                if (!file.isEmpty()) {
+                    try {
+                        // 고유 파일 이름 생성
+                        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                        String fullPath = uploadPath + File.separator + fileName;
+                        // 서버에 저장
+                        file.transferTo(new File(fullPath));
+                        // 이미지 DTO 생성
+                        ImageDTO imageDTO = new ImageDTO();
+                        imageDTO.setFundingId(fundingDTO.getFundingId()); // FK 연결
+                        imageDTO.setImageUrl("/resources/images/" + fileName);
+                        // DB 저장
+                        imageService.insertImageUrl(imageDTO);
+                        imageDTOList.add(imageDTO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        redirectAttributes.addFlashAttribute("resultMessage", "펀딩은 등록됐지만 이미지 업로드 중 오류 발생");
+                        return "redirect:/seller/fundings";
+                    }
+                }
+            }
+            // 5. DTO에 이미지 목록 추가 (필요시 뷰에서 활용)
+            fundingDTO.setImages(imageDTOList);
+            redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 성공!");
+        } else {
+            redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 실패");
+        }
+        return "redirect:/seller/fundings";
+    }
+    // 펀딩 상세 조회
+    @GetMapping("/{fundingId}")
+    public String fundingDetail(@PathVariable int fundingId, Model model) {
+        FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+        model.addAttribute("fundingDTO", funding);
+        return "seller_funding_detail";
+    }
+    // 펀딩 수정 폼
+    @GetMapping("/{fundingId}/edit")
+    public String editFundingForm(@PathVariable int fundingId, Model model) {
+        FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+        model.addAttribute("fundingDTO", funding);
+        return "seller_funding_edit";
+    }
+    // 펀딩 수정 처리
+    @PutMapping("/{fundingId}")
+    public String updateFunding(@ModelAttribute FundingDTO fundingDTO, @PathVariable int fundingId,
+            RedirectAttributes redirectAttributes) {
+        fundingDTO.setFundingId(fundingId); // ID 세팅
+        int result = fundingService.updateFunding(fundingDTO);
+        if (result > 0) {
+            redirectAttributes.addFlashAttribute("resultMessage", "펀딩이 수정되었습니다.");
+        } else {
+            redirectAttributes.addFlashAttribute("resultMessage", "수정 실패");
+        }
+        return "redirect:/seller/fundings";
+    }
+    // 펀딩 삭제
+    @DeleteMapping("/{fundingId}")
+    public String deleteFunding(@PathVariable int fundingId, RedirectAttributes redirectAttributes) {
+        int result = fundingService.deleteFunding(fundingId);
+        if (result > 0) {
+            redirectAttributes.addFlashAttribute("resultMessage", "펀딩이 삭제되었습니다.");
+        } else {
+            redirectAttributes.addFlashAttribute("resultMessage", "삭제 실패");
+        }
+        return "redirect:/seller/fundings";
+    }
+    // 펀딩 만들기 -> 한정 상품 펀딩 or 일반 펀딩
+    @GetMapping("/create-step1")
+    public String selectStoreNameByUserId(Model model, HttpSession session) {
+        int userId = 3; // 임시 사용자 ID
+        StoreDTO store = storeService.selectStoreNameByUserId(userId);
+        model.addAttribute("store", store);
+        FundingDTO fundingDTO = new FundingDTO();
+        fundingDTO.setStoreId(store.getStoreId());
+        //
+        fundingDTO.setFundingId(userId);
+        
+        session.setAttribute("fundingDTO", fundingDTO);
+        session.setAttribute("store", store);
+        session.removeAttribute("aiRetryCount");
+        
+        return "seller.createFunding";
+    }
+   
+    
+    // 상품 정보
+    @GetMapping("/create-step2")
+    public String createStep2(@RequestParam("type") String type, Model model, HttpSession session) {
+        
+        // 상점이름
+        StoreDTO store = (StoreDTO) session.getAttribute("store");
+        FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+        
+        model.addAttribute("store", store);
+        model.addAttribute("fundingDTO", fundingDTO);
+        
+        if ("general".equals(type)) {
+            fundingDTO.setFundingType("일반");
+            session.setAttribute("fundingDTO", fundingDTO);
+            session.setAttribute("fundingType", "general");
+            return "seller.normalFunding";
+        } else if ("limited".equals(type)) {
+            fundingDTO.setFundingType("한정");
+            session.setAttribute("fundingDTO", fundingDTO);
+            session.setAttribute("fundingType", "limited");
+            return "seller.existMenu";
+        } else {
+            return "seller.createFunding";
+        }
+    }
+    // 펀딩이름 판매가 최소 판매개수 최대판대매수 인당구매
+    @PostMapping ("/create-step3")
+    public String insertFundingMenuDetail(@ModelAttribute FundingDTO funding, HttpSession session, Model model) throws JsonProcessingException {
+        
+        FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        System.out.println("전달된 JSON:\n" + mapper.writeValueAsString(fundingDTO));
+        
+        
+        
+        StoreDTO store = (StoreDTO) session.getAttribute("store");
+        model.addAttribute("store", store);   
+        fundingDTO.setProductId(funding.getProductId()); // 상품ID
+        fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
+        if(fundingDTO.getFundingType().equals("한정")) {
+            fundingDTO.setTargetQty(0);
+        }else {
+            fundingDTO.setTargetQty(funding.getTargetQty()); // 최소 판매 개수
+        }
+        fundingDTO.setMaxQty(funding.getMaxQty()); // 최대 판매 개수
+        fundingDTO.setPerQty(funding.getPerQty()); // 인당 구매 가능 개수
+        session.setAttribute("fundingDTO", fundingDTO);
+        return "seller.insertDetail";
+    }
+    
+    //css test용 -> 지우기 !!!!!!!!!!!!필수!!!!!!!!!!!!!!!
+    @GetMapping("/create-step4") 
+    public String cssTest() {
+        return "seller.selectWriteType";
+    }
+    @GetMapping("/create-step5") 
+    public String cssTest5() {
+        return "seller.directInsert";
+    }
+    @GetMapping("/create-step6") 
+    public String cssTest52() {
+        return "seller.aiInsert";
+    }
+    @GetMapping("/create-step7") 
+    public String cssTest527() {
+        return "seller.result";
+    }
+    // ai, 직접입력 선택 창
+    @PostMapping("/create-step4")
+    @ResponseBody
+    public ResponseEntity<String> writeTypeJson(@RequestBody Map<String, Object> requestData, HttpSession session) {
+        try {
+            // 디버깅용 JSON 출력
+            ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+            String jsonString = mapper.writeValueAsString(requestData);
+            System.out.println("📦 클라이언트로부터 받은 JSON 데이터:\n" + jsonString);
 
-	@Autowired
-	FundingService fundingService;
+            // 날짜 파싱
+            String startDateStr = requestData.get("startDate").toString();
+            String endDateStr = requestData.get("endDate").toString();
+            List<String> imageUrls = (List<String>) requestData.get("images");
 
-	@Autowired
-	StoreService storeService;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = sdf.parse(startDateStr);
+            Date endDate = sdf.parse(endDateStr);
 
-	@Autowired
-	ProductService productService;
+            // 세션에서 fundingDTO 불러오기 및 값 설정
+            FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+            fundingDTO.setStartDate(new java.sql.Date(startDate.getTime()));
+            fundingDTO.setEndDate(new java.sql.Date(endDate.getTime()));
 
-	@Autowired
-	ImageService imageService;
-	
-	@Autowired
-	TagService tagService;
+            // 시작일 기준으로 상태 설정
+            Date today = new Date();
+            fundingDTO.setStatus(startDate.after(today) ? "준비중" : "진행중");
 
-	// 내 펀딩 목록
-	@GetMapping
-	public String sellerFundings(@ModelAttribute("loginUser") UserDTO loginUser, Model model) {
-		Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
-		if (storeId == null) {
-			model.addAttribute("fundingList", Collections.emptyList());
-			model.addAttribute("message", "상점이 등록되지 않았습니다.");
-			return "seller_fundings";
-		}
+            // DB에 펀딩 정보 저장
+            int result = fundingService.insertFunding(fundingDTO);
 
-		List<FundingDTO> fundingList = fundingService.findFundingByStoreId(storeId);
-		model.addAttribute("fundingList", fundingList);
-		return "seller_fundings";
-	}
+            // 이미지 URL 저장
+            if (result > 0 && imageUrls != null) {
+                for (String imageUrl : imageUrls) {
+                    ImageDTO imageDTO = ImageDTO.builder()
+                            .fundingId(fundingDTO.getFundingId())
+                            .imageUrl(imageUrl)
+                            .build();
+                    imageService.insertImageUrl(imageDTO);
+                }
+            }
 
-	// 펀딩 등록 처리(참고용임 지워야함)
-	@PostMapping
-	public String registerFunding(@ModelAttribute FundingDTO fundingDTO, @ModelAttribute("loginUser") UserDTO loginUser,
-			@RequestParam("images") List<MultipartFile> images, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+            // 세션 업데이트
+            session.setAttribute("fundingDTO", fundingDTO);
+            return ResponseEntity.ok("성공");
 
-		// 1. 로그인 유저로부터 storeId 조회
-		Integer storeId = storeService.findStoreIdByUserId(loginUser.getUserId());
-		fundingDTO.setStoreId(storeId);
-
-		// 2. 기본값 설정 (status: 준비중, currentQty: 0)
-		fundingDTO.setStatus("준비중");
-		fundingDTO.setCurrentQty(0);
-
-		// 3. 펀딩 등록
-		int result = fundingService.insertFunding(fundingDTO); // keyProperty로 fundingId 생성
-
-		// 4. 파일 업로드 처리
-		String uploadPath = session.getServletContext().getRealPath("/resources/images");
-
-		if (result > 0) {
-			List<ImageDTO> imageDTOList = new ArrayList<>();
-
-			for (MultipartFile file : images) {
-				if (!file.isEmpty()) {
-					try {
-						// 고유 파일 이름 생성
-						String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-						String fullPath = uploadPath + File.separator + fileName;
-
-						// 서버에 저장
-						file.transferTo(new File(fullPath));
-
-						// 이미지 DTO 생성
-						ImageDTO imageDTO = new ImageDTO();
-						imageDTO.setFundingId(fundingDTO.getFundingId()); // FK 연결
-						imageDTO.setImageUrl("/resources/images/" + fileName);
-
-						// DB 저장
-						imageService.insertImageUrl(imageDTO);
-
-						imageDTOList.add(imageDTO);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-						redirectAttributes.addFlashAttribute("resultMessage", "펀딩은 등록됐지만 이미지 업로드 중 오류 발생");
-						return "redirect:/seller/fundings";
-					}
-				}
-			}
-
-			// 5. DTO에 이미지 목록 추가 (필요시 뷰에서 활용)
-			fundingDTO.setImages(imageDTOList);
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 성공!");
-		} else {
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩 등록 실패");
-		}
-
-		return "redirect:/seller/fundings";
-	}
-
-	// 펀딩 상세 조회
-	@GetMapping("/{fundingId}")
-	public String fundingDetail(@PathVariable int fundingId, Model model) {
-		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		model.addAttribute("fundingDTO", funding);
-		return "seller_funding_detail";
-	}
-
-	// 펀딩 수정 폼
-	@GetMapping("/{fundingId}/edit")
-	public String editFundingForm(@PathVariable int fundingId, Model model) {
-		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-		model.addAttribute("fundingDTO", funding);
-		return "seller_funding_edit";
-	}
-
-	// 펀딩 수정 처리
-	@PutMapping("/{fundingId}")
-	public String updateFunding(@ModelAttribute FundingDTO fundingDTO, @PathVariable int fundingId,
-			RedirectAttributes redirectAttributes) {
-		fundingDTO.setFundingId(fundingId); // ID 세팅
-		int result = fundingService.updateFunding(fundingDTO);
-		if (result > 0) {
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩이 수정되었습니다.");
-		} else {
-			redirectAttributes.addFlashAttribute("resultMessage", "수정 실패");
-		}
-		return "redirect:/seller/fundings";
-	}
-
-	// 펀딩 삭제
-	@DeleteMapping("/{fundingId}")
-	public String deleteFunding(@PathVariable int fundingId, RedirectAttributes redirectAttributes) {
-		int result = fundingService.deleteFunding(fundingId);
-		if (result > 0) {
-			redirectAttributes.addFlashAttribute("resultMessage", "펀딩이 삭제되었습니다.");
-		} else {
-			redirectAttributes.addFlashAttribute("resultMessage", "삭제 실패");
-		}
-		return "redirect:/seller/fundings";
-	}
-
-	// 펀딩 만들기 -> 한정 상품 펀딩 or 일반 펀딩
-	@GetMapping("/create-step1")
-	public String selectStoreNameByUserId(Model model, HttpSession session) {
-		int userId = 3; // 임시 사용자 ID
-
-		StoreDTO store = storeService.selectStoreNameByUserId(userId);
-		model.addAttribute("store", store);
-
-		FundingDTO fundingDTO = new FundingDTO();
-		fundingDTO.setStoreId(store.getStoreId());
-		//
-		fundingDTO.setFundingId(userId);
-		
-		session.setAttribute("fundingDTO", fundingDTO);
-		session.setAttribute("store", store);
-		session.removeAttribute("aiRetryCount");
-		
-		return "seller.createFunding";
-	}
-
-	// 상품 정보
-	@GetMapping("/create-step2")
-	public String createStep2(@RequestParam("type") String type, Model model, HttpSession session) {
-		
-		// 상점이름
-		StoreDTO store = (StoreDTO) session.getAttribute("store");
-		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-		
-		model.addAttribute("store", store);
-		model.addAttribute("fundingDTO", fundingDTO);
-		
-		if ("general".equals(type)) {
-			fundingDTO.setFundingType("일반");
-			session.setAttribute("fundingDTO", fundingDTO);
-			session.setAttribute("fundingType", "general");
-			return "seller.normalFunding";
-		} else if ("limited".equals(type)) {
-			fundingDTO.setFundingType("한정");
-			session.setAttribute("fundingDTO", fundingDTO);
-			session.setAttribute("fundingType", "limited");
-			return "seller.existMenu";
-		} else {
-			return "seller.createFunding";
-		}
-	}
-
-	// 펀딩이름 판매가 최소 판매개수 최대판대매수 인당구매
-	@PostMapping("/create-step3")
-	public String insertFundingMenuDetail(@ModelAttribute FundingDTO funding, HttpSession session, Model model) {
-
-		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-
-		StoreDTO store = (StoreDTO) session.getAttribute("store");
-		model.addAttribute("store", store);	
-
-		fundingDTO.setProductId(funding.getProductId()); // 상품ID
-		fundingDTO.setSalePrice(funding.getSalePrice()); // 판매가
-		if(fundingDTO.getFundingType().equals("한정")) {
-			fundingDTO.setTargetQty(0);
-		}else {
-			fundingDTO.setTargetQty(funding.getTargetQty()); // 최소 판매 개수
-		}
-		fundingDTO.setMaxQty(funding.getMaxQty()); // 최대 판매 개수
-		fundingDTO.setPerQty(funding.getPerQty()); // 인당 구매 가능 개수
-
-		session.setAttribute("fundingDTO", fundingDTO);
-
-		return "seller.insertDetail";
-	}
-	
-	//css test용 -> 지우기 !!!!!!!!!!!!필수!!!!!!!!!!!!!!!
-	@GetMapping("/create-step4") 
-	public String cssTest() {
-		return "seller.selectWriteType";
-	}
-	@GetMapping("/create-step5") 
-	public String cssTest5() {
-		return "seller.directInsert";
-	}
-	@GetMapping("/create-step6") 
-	public String cssTest52() {
-		return "seller.aiInsert";
-	}
-	@GetMapping("/create-step7") 
-	public String cssTest527() {
-		return "seller.result";
-	}
-
-	// ai, 직접입력 선택 창
-		@PostMapping("/create-step4")
-		public String writeType(@ModelAttribute FundingDTO funding, HttpSession session, Model model) {
-			StoreDTO store = (StoreDTO) session.getAttribute("store");
-			FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-			
-			ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
-			
-			fundingDTO.setStartDate(funding.getStartDate()); // 시작일
-			fundingDTO.setEndDate(funding.getEndDate()); // 마감일
-			fundingDTO.setImages(funding.getImages()); //사진?
-			
-			System.out.println(fundingDTO);
-			
-			Date today = new Date(); // java.util.Date
-
-			// java.sql.Date → java.util.Date로 변환해서 비교
-			Date startDate = new Date(funding.getStartDate().getTime());
-
-			if (startDate.after(today)) {
-			    fundingDTO.setStatus("준비중");
-			} else {
-			    fundingDTO.setStatus("진행중");
-			}
-
-			session.setAttribute("fundingDTO", fundingDTO);
-			model.addAttribute("store", store);
-			model.addAttribute("product", product);
-			
-			//이미지
-			List<ImageDTO> images = fundingDTO.getImages();
-
-		    if (images != null) {
-		        for (ImageDTO image : images) {
-		        	image.setFundingId(fundingDTO.getFundingId());
-		           System.out.println("@@@imageDTO : " + images);
-		        }
-		    }
-		    
-			return "seller.selectWriteType";
-		}
-	
-	
-
-	// 선택 후 제목, 내용 입력 창
-	@PostMapping("/create-step5")
-	public String handleWriteType(@RequestParam("type") String type, HttpSession session, Model model) {
-		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-		ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
-
-		model.addAttribute("product", product);
-		
-		if ("directly".equals(type)) {
-			return "seller.directInsert";
-		} else if ("ai".equals(type)) {
-			return "seller.aiInsertForm";
-		}
-
-		// 잘못된 type 처리
-		return "redirect:/error";
-	}
-	
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
+        }
+    }
 
 
-	@PostMapping("/submit-funding")
-	public String handleFundingBasicInfo(@ModelAttribute FundingDTO funding, @RequestParam("keywords") String keywords, HttpSession session) {
-		// 세션에서 기존 fundingDTO 가져오기
-		FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
-
-		// 만약 세션에 없으면 새로 생성 (예외 처리 목적)
-		if (fundingDTO == null) {
-			fundingDTO = new FundingDTO();
-		}
-
-		// 입력된 값만 덮어쓰기
-		fundingDTO.setFundingName(funding.getFundingName());
-		fundingDTO.setFundingDesc(funding.getFundingDesc());
-
-		fundingService.insertFunding(fundingDTO);
-
-		int fundingId = fundingDTO.getFundingId();
-
-	    List<String> tagNames = extractTags(keywords); // 위에서 만든 메서드 사용
-
-	    for (String tagName : tagNames) {
-	        Integer tagId = tagService.getTagIdByName(tagName);
-
-	        if (tagId == null) {
-	        	TagDTO tagDTO = new TagDTO();
-	            tagDTO.setTagName(tagName);
-	            tagService.insertTag(tagDTO);
-	            tagId = tagDTO.getTagId();
-	        }
-
-	        tagService.insertFundingTag(fundingId, tagId);
-	    }
-		return "redirect:/seller/fundings/complete";
-	}
-
-	@GetMapping("/complete")
-	public String fundingComplete(HttpSession session, Model model) {
-		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
-
-		// 예외 처리 (없을 경우 홈으로)
-		if (funding == null) {
-			return "redirect:/seller/fundings/create-step1";
-		}
-
-		model.addAttribute("fundingName", funding.getFundingName());
-		model.addAttribute("startDate", funding.getStartDate());
-		model.addAttribute("fundingId", funding.getFundingId());
-		
-		session.removeAttribute("fundingDTO");
-		session.removeAttribute("aiRetryCount");
-		
-		return "seller.result";
-	}
-
-	// 기간 및 이미지
-	@GetMapping("/create-step3")
-	public String selectDateAndImage() {
-		return "seller.insertDetail";
-	}
-
-	//기존 메뉴로 사진 불러오기
-	@PostMapping("/loadDefaultImages")
-	@ResponseBody
-	public List<String> loadDefaultImages(@RequestParam("fundingId") int fundingId) {
-	    int productId = fundingService.selectProductIdByFundingId(fundingId);
-
-	    List<ImageDTO> productImages = imageService.selectImagesByProductId(productId);
-	    
-	    List<String> imageUrls = productImages.stream()
-	        .map(ImageDTO::getImageUrl)
-	        .collect(Collectors.toList());
-	   
-	    return imageUrls;
-	}
-	
-	public List<String> extractTags(String rawInput) {
-	    return Arrays.stream(
-	                rawInput
-	                .replaceAll("[\\[\\]#]", "") // 대괄호, # 제거
-	                .split("[,\\s]+")           // 쉼표 or 공백 기준 split
-	            )
-	            .map(String::trim)
-	            .filter(s -> !s.isBlank())
-	            .distinct()
-	            .collect(Collectors.toList());
-	}
+    
+    // 선택 후 제목, 내용 입력 창
+    @PostMapping("/create-step5")
+    public String handleWriteType(@RequestParam("type") String type, HttpSession session, Model model) {
+        FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+        ProductDTO product = productService.selectByProductId(fundingDTO.getProductId());
+        model.addAttribute("product", product);
+        
+        if ("directly".equals(type)) {
+            return "seller.directInsert";
+        } else if ("ai".equals(type)) {
+            return "seller.aiInsertForm";
+        }
+        // 잘못된 type 처리
+        return "redirect:/error";
+    }
+    
+    @PostMapping("/submit-funding")
+    public String handleFundingBasicInfo(@ModelAttribute FundingDTO funding, @RequestParam("keywords") String keywords, HttpSession session) {
+        // 세션에서 기존 fundingDTO 가져오기
+        FundingDTO fundingDTO = (FundingDTO) session.getAttribute("fundingDTO");
+        // 만약 세션에 없으면 새로 생성 (예외 처리 목적)
+        if (fundingDTO == null) {
+            fundingDTO = new FundingDTO();
+        }
+        // 입력된 값만 덮어쓰기
+        fundingDTO.setFundingName(funding.getFundingName());
+        fundingDTO.setFundingDesc(funding.getFundingDesc());
+        fundingService.insertFunding(fundingDTO);
+        int fundingId = fundingDTO.getFundingId();
+        List<String> tagNames = extractTags(keywords); // 위에서 만든 메서드 사용
+        for (String tagName : tagNames) {
+            Integer tagId = tagService.getTagIdByName(tagName);
+            if (tagId == null) {
+                TagDTO tagDTO = new TagDTO();
+                tagDTO.setTagName(tagName);
+                tagService.insertTag(tagDTO);
+                tagId = tagDTO.getTagId();
+            }
+            tagService.insertFundingTag(fundingId, tagId);
+        }
+        return "redirect:/seller/fundings/complete";
+    }
+    @GetMapping("/complete")
+    public String fundingComplete(HttpSession session, Model model) {
+        FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
+        // 예외 처리 (없을 경우 홈으로)
+        if (funding == null) {
+            return "redirect:/seller/fundings/create-step1";
+        }
+        model.addAttribute("fundingName", funding.getFundingName());
+        model.addAttribute("startDate", funding.getStartDate());
+        model.addAttribute("fundingId", funding.getFundingId());
+        
+        session.removeAttribute("fundingDTO");
+        session.removeAttribute("aiRetryCount");
+        
+        return "seller.result";
+    }
+    // 기간 및 이미지
+    @GetMapping("/create-step3")
+    public String selectDateAndImage() {
+        return "seller.insertDetail";
+    }
+    //기존 메뉴로 사진 불러오기
+    @PostMapping("/loadDefaultImages")
+    @ResponseBody
+    public List<String> loadDefaultImages(@RequestParam("fundingId") int fundingId) {
+        int productId = fundingService.selectProductIdByFundingId(fundingId);
+        List<ImageDTO> productImages = imageService.selectImagesByProductId(productId);
+        
+        List<String> imageUrls = productImages.stream()
+            .map(ImageDTO::getImageUrl)
+            .collect(Collectors.toList());
+       
+        return imageUrls;
+    }
+    
+    public List<String> extractTags(String rawInput) {
+        return Arrays.stream(
+                    rawInput
+                    .replaceAll("[\\[\\]#]", "") // 대괄호, # 제거
+                    .split("[,\\s]+")           // 쉼표 or 공백 기준 split
+                )
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }
