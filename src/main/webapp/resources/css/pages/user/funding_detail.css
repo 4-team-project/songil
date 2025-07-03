@@ -53,6 +53,7 @@
 	font-size: 24px;
 	margin: 0 5px;
 	color: #fff6f0;
+	cursor: pointer;
 }
 
 .dot:hover {
@@ -177,7 +178,7 @@
 }
 
 .qty-btn:hover {
-	background-color: #ff8759;
+	background-color: #fdd4c2;
 }
 
 .price-row {

@@ -72,15 +72,18 @@ public class AuthController {
 	// 로그인 처리
 	@PostMapping("/login")
 	public String login(String phone, String password, String userType, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, @RequestParam(required = false) String msg) {
 		// 입력된 번호를 010-0000-0000 형식으로 포맷팅
 		phone = formatPhone(phone);
 
 		UserDTO user = userService.selectByPhone(phone, password, userType);
 		if (user != null) {
 			session.setAttribute("loginUser", user); // 전역에서 사용 가능
-			redirectAttributes.addFlashAttribute("resultMessage", "로그인 성공");
-			return "redirect:/user/home"; // 로그인 성공 후 이동할 페이지
+			if(userType.equals("사용자")) {
+				return "redirect:/user/home"; // 사용자 홈 페이지
+			}else {
+				return "redirect:/seller/home"; // 소상공인 홈 페이지
+			}
 		} else {
 			redirectAttributes.addFlashAttribute("resultMessage", "로그인 실패: 정보를 확인해주세요");
 			return "redirect:/auth/login"; // 로그인 폼으로 다시 이동

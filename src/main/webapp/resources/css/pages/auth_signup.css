@@ -50,7 +50,7 @@
 }
 
 .auth-btn:hover {
-	background-color: #ff7a52;
+	background-color: #fdd4c2;
 }
 
 .modal-buttons {
@@ -88,7 +88,7 @@
 }
 
 .modal-btn.confirm:hover {
-	background: #ff7a52;
+	background: #fdd4c2;
 	color: white;
 }
 
@@ -170,7 +170,7 @@
 }
 
 #closeModalBtn:hover {
-	background-color: #ff7a52; /* 좀 더 밝은 주황색 호버 */
+	background-color: #fdd4c2; /* 좀 더 밝은 주황색 호버 */
 }
 
 .duplicate-msg-wrap {
@@ -223,7 +223,7 @@
 }
 
 #verifyAuthCodeBtn:hover {
-	background-color: #ff7a52;
+	background-color: #fdd4c2;
 }
 
 /*주소*/
