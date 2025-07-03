@@ -144,7 +144,6 @@
 	</aside>
 
 	<script>
-  const cpath = '${cpath}';
 
   function imgExists(url, callback) {
     const img = new Image();
