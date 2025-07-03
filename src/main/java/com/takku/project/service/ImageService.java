@@ -53,21 +53,21 @@ public class ImageService implements ImageMapper {
 	}
 
 	public String moveImageFromTemp(String oldFileName) throws IOException {
-		File tempFile = new File(tempDir + File.separator + oldFileName);
+	    File tempFile = new File(tempDir + File.separator + oldFileName);
 
-		String ext = getFileExtension(oldFileName);
-		String newFileName = UUID.randomUUID().toString() + ext; // 다시 새로운 이름 생성
+	    String ext = getFileExtension(oldFileName);
+	    String newFileName = UUID.randomUUID().toString() + ext;
 
-		File finalFile = new File(uploadDir + File.separator + newFileName);
+	    File finalFile = new File(uploadDir + File.separator + newFileName);
 
-		if (tempFile.exists()) {
-			boolean success = tempFile.renameTo(finalFile);
-			if (!success)
-				throw new IOException("파일 이동 실패: " + oldFileName);
-			return newFileName;
-		} else {
-			throw new IOException("임시 파일 존재하지 않음: " + oldFileName);
-		}
+	    if (tempFile.exists()) {
+	        boolean success = tempFile.renameTo(finalFile);
+	        if (!success)
+	            throw new IOException("파일 이동 실패: " + oldFileName);
+	        return "/image/" + newFileName; // 🔥 여기서 URL을 붙여줌
+	    } else {
+	        throw new IOException("임시 파일 존재하지 않음: " + oldFileName);
+	    }
 	}
 
 	public ImageDTO storeImage(MultipartFile file, Integer productId, Integer fundingId, Integer reviewId) {
