@@ -24,6 +24,7 @@
 	border-bottom: 2px solid #FF9670;
 	box-sizing: border-box;
 	padding-left: 454px;
+	padding-right: 320px;
 }
 
 .logo {
@@ -37,6 +38,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width:100%;
+	
 }
 
 .store-box {
@@ -51,4 +54,25 @@
 	font-family: 'Spoqa Han Sans Neo';
 	font-weight: 700;
 	font-size: 32px;
+}
+
+.lower-box {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 4px;
+}
+
+.nav-box {
+	display: flex;
+	gap: 50px;
+	justify-content: flex-end;
+}
+
+.nav-text {
+	font-family: 'Spoqa Han Sans Neo';
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+	margin-bottom: 20px;
 }

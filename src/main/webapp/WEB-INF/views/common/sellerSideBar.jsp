@@ -119,7 +119,7 @@
 					src="${cpath}/resources/images/sideBar/statistics.svg"
 					alt="statistics" /> <span>통계</span></li>
 				<li class="menu-item" data-name="money"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/settlements" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
 					<span>정산</span>
 				</li>
@@ -134,7 +134,7 @@
 					<span>펀딩 사이트로 이동</span>
 				</li>
 				<li class="menu-item" data-name="mypage"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/mypage" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/mypage.svg"
 					alt="mypage" /> <span>내 정보</span>
 				</li>
@@ -143,7 +143,6 @@
 	</aside>
 
 	<script>
-  const cpath = '${cpath}';
 
   function imgExists(url, callback) {
     const img = new Image();
