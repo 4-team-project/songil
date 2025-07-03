@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
 
 <div class="review-box">
@@ -48,7 +49,7 @@
 		<button type="submit" class="submit-btn">리뷰 등록</button>
 	</form>
 </div>
-<!-- 리쥬 작성 종료 모달 -->
+<!-- 리뷰 작성 종료 모달 -->
 <div class="modal-overlay" id="confirmModal" style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-header">
@@ -84,9 +85,17 @@
 		</div>
 		<div class="modal-buttons">
 			<button class="modal-cancel" onclick="closeSuccessModal()">닫기</button>
-			<button class="modal-confirm" onclick="goToReviewPage()">리뷰
-				보러 가기</button>
+			<button class="modal-confirm" onclick="goToReviewPage(this.dataset.fundingId)"
+				data-funding-id="${fundingDTO.fundingId}">리뷰 보러 가기</button>
 		</div>
 	</div>
 </div>
-
+<script>
+const reviewBtn = document.getElementById('goToReviewBtn');
+if (reviewBtn) {
+    const fundingId = reviewBtn.dataset.fundingId;
+    reviewBtn.addEventListener('click', () => {
+        goToReviewPage(fundingId);
+    });
+}
+</script>

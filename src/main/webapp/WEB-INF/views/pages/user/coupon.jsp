@@ -443,11 +443,19 @@
 	            // 모달 HTML이 DOM에 추가된 후, 스크립트를 초기화합니다.
 	            initializeStarRating(); // 별점 기능 초기화
 	            setupReviewFormSubmission(); // 폼 제출 이벤트 리스너 연결
-
-	            // 닫기 버튼 이벤트 리스너 재연결 (필요한 경우)
-	            // review-form-modal.jsp의 버튼에 onclick 속성이 있으므로 직접 재연결할 필요는 없지만,
-	            // 만약 동적으로 생성되는 버튼이라면 addEventListener로 연결해야 합니다.
-	            // 현재는 onclick이 있으므로 괜찮을 수 있습니다.
+	            
+	            const reviewBtn = document.getElementById('goToReviewBtn');
+	            if (reviewBtn) {
+	                reviewBtn.addEventListener('click', function () {
+	                    const fundingId = this.dataset.fundingId;
+	                    if (!fundingId) {
+	                        alert("productId가 없습니다.");
+	                        return;
+	                    }
+	                    window.location.href = cpath + "/review/product/" + fundingId + "/review";
+	                    closeModal();
+	                });
+	            }
 	        })
 	        .catch(error => {
 	            console.error("Error loading review modal:", error);
@@ -602,6 +610,15 @@
             });
         }
     }
+    
+    function goToReviewPage(fundingId) {
+        if (!fundingId) {
+            alert("fundingId가 없습니다.");
+            return;
+        }
+        window.location.href = cpath + "/review/product/" + fundingId + "/review";
+        closeModal(); // 페이지 이동 후에도 모달 닫기
+    }
 
 
     function closeSuccessModal() {
@@ -609,10 +626,7 @@
         closeModal(); // 성공 모달 닫을 때 최상위 모달도 닫기
     }
 
-    function goToReviewPage() {
-        window.location.href = cpath + "/user/reviews";
-        closeModal(); // 페이지 이동 후에도 모달 닫기
-    }
+   
     
 	//쿠폰 설명 더보기 클릭시 쿠폰 상세보기로 이동(시간 되면 쿠폰 설명 상세보기 페이지 작성)
     

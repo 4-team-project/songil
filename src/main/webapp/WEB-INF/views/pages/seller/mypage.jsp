@@ -47,7 +47,7 @@
 	});
 
 	$(function() {
-	<%-- 수정 완료 여부 체크 --%>
+<%-- 수정 완료 여부 체크 --%>
 	var updateSuccess = $
 		{
 			updateSuccess ? 'true' : 'false'
@@ -118,10 +118,13 @@
 </script>
 
 <div class="mypage-container">
-	<h2>
-		사장님의 기본 정보를 확인할 수 있습니다. <br> 정보가 바뀌었다면 수정 후 <strong
-			style="color: #ff9670">'수정하기'</strong> 버튼을 눌러주세요.
-	</h2>
+	<div style="display: flex; align-items: center; gap: 20px; padding-left: 20px;">
+		<img src="${cpath}/resources/images/mypage.svg" alt="mypage" />
+		<h2 style="margin: 0;">
+			사장님의 기본 정보를 확인할 수 있습니다. <br> 정보가 바뀌었다면 수정 후 <strong
+				style="color: #ff9670">'수정하기'</strong> 버튼을 눌러주세요.
+		</h2>
+	</div>
 
 	<form action="${cpath}/seller/mypage/update" method="post">
 		<input type="hidden" name="userId" value="${loginUser.userId}" />
@@ -211,7 +214,8 @@
 						<button class="btn side-btn" type="button" id="registerPartnerBtn">등록하기</button>
 					</c:when>
 					<c:when test="${loginUser.isPartner eq 'Y'}">
-						<button class="btn side-btn" type="button" id="cancelPartnerTriggerBtn">해지하기</button>
+						<button class="btn side-btn" type="button"
+							id="cancelPartnerTriggerBtn">해지하기</button>
 					</c:when>
 				</c:choose>
 			</div>

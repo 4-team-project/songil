@@ -5,7 +5,6 @@
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
 
-<div class="main-content">
 	<div class="main-title-box">
 		<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 	</div>
@@ -44,7 +43,6 @@
 		<div class="complete-back-btn" onclick="history.back()">이전</div>
 		<button onclick="submitProduct()" class="complete-back-btn">수정 완료</button>
 	</div>
-</div>
 
 <script>
 let selectedFiles = [];
@@ -113,7 +111,7 @@ function submitProduct() {
 	      }))
 	    };
 
-	  fetch("/takku/seller/product/insert", {
+	  fetch("${cpath}/seller/product/insert", {
 	    method: "POST",
 	    headers: {
 	      "Content-Type": "application/json"
