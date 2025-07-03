@@ -90,4 +90,9 @@
 		takku_store WHERE user_id = #{userId}
 	</select>
 
+	<select id="selectStoreListByUserId" resultType="StoreDTO"> 
+		SELECT * FROM
+		takku_store WHERE user_id = #{userId} 
+	</select>
+
 </mapper>

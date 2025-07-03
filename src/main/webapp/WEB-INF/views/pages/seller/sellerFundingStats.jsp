@@ -1,61 +1,181 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<h1>펀딩 상세 통계</h1>
+	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/sellerFundingStats.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<c:set var="rate"
+	value="${(funding.currentQty / funding.targetQty) * 100}" />
+<div class="main-content">
+	<div class="funding-title">
+		<span class="highlight">${funding.fundingName}</span> 펀딩의 오늘 현황입니다.
+	</div>
 
-    <c:if test="${not empty funding}">
-        <p><strong>펀딩명:</strong> ${funding.fundingName}</p>
-        <p><strong>판매가:</strong> <fmt:formatNumber value="${funding.salePrice}" type="number" groupingUsed="true" />원</p>
-        <p><strong>현재 판매 수량:</strong> <fmt:formatNumber value="${funding.currentQty}" type="number" groupingUsed="true" />개</p>
-        <p><strong>목표 수량:</strong> <fmt:formatNumber value="${funding.targetQty}" type="number" groupingUsed="true" />개</p>
+	<div class="stats-summary">
+		<div class="summary-card">
+			<h3>오늘 펀딩 금액</h3>
+			<span class="highlight">${todayFundingAmount}</span>
+		</div>
+		<div class="summary-card">
+			<h3>오늘 기준 남은 일수</h3>
+			<span class="highlight">${remainingDays}일</span> <span class="date">(
+				<fmt:formatDate value="${funding.endDate}" pattern="yyyy년 MM월 dd일" />
+				)
+			</span>
+		</div>
+	</div>
+	<div class="chart-container">
+		<c:choose>
+        <c:when test="${funding.status eq '준비중'}">
+       <div class="chart-area">
+                <p style="text-align: center; padding: 50px; font-size: 1.2em; color: #555;">
+                아직 펀딩이 시작하지 않았어요.
+            </p>
+            </div>
+            <div class="chart-area">
+                <p style="text-align: center; padding: 50px; font-size: 1.2em; color: #555;">
+                아직 펀딩이 시작하지 않았어요.
+            </p>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="chart-area">
+                <canvas id="genderChart" width="400" height="300"></canvas>
+            </div>
+            <div class="chart-area">
+                <canvas id="ageChart" width="400" height="400"></canvas>
+            </div>
+        </c:otherwise>
+    </c:choose>
+	</div>
+	<div class="stats-details">
+		<div class="summary-card-down">
+			<h3>결제 완료</h3>
+			<p>
+				<span class="highlight">${completeOrders} 건</span>
+			</p>
+		</div>
+		<div class="summary-card-down">
+			<h3>환불/취소</h3>
+			<p>
+				<span class="highlight">${refundOrders} 건</span>
+			</p>
+		</div>
 
-        <p><strong>현재까지 모인 총 금액:</strong> 
-            <fmt:formatNumber value="${funding.salePrice * funding.currentQty}" 
-                              type="number" 
-                              groupingUsed="true" />원
-        </p>
 
-        <c:set var="rate" value="${(funding.currentQty / funding.targetQty) * 100}" />
-        <p><strong>달성률:</strong> 
-            <fmt:formatNumber value="${rate}" maxFractionDigits="2" />%
-        </p>
+	</div>
+	<div class="total-stats">
+		<div class="summary-card-down">
+			<h3>총 펀딩 금액</h3>
+			<p>
+				<span class="highlight">${funding.salePrice * funding.currentQty}
+					원</span>
+			</p>
+		</div>
 
-        <p><strong>펀딩 상태:</strong> ${funding.status}</p>
-        <p><strong>시작일:</strong> <fmt:formatDate value="${funding.startDate}" pattern="yyyy년 MM월 dd일" /></p>
-        <p><strong>종료일:</strong> <fmt:formatDate value="${funding.endDate}" pattern="yyyy년 MM월 dd일" /></p>
+		<div class="summary-card-down">
+			<h3>달성률</h3>
+			<div class="rate-container">
+				<span class="highlight"> ${funding.currentQty} /
+					${funding.targetQty} </span> <span class="highlight percent"> <fmt:formatNumber
+						value="${rate}" maxFractionDigits="2" />%
+				</span>
+			</div>
+			<div class="funding-bar">
+				<div class="funding-bar-inner" style="width: ${rate}%;"></div>
+			</div>
+		</div>
 
-        <div class="info-box">
-            <p><strong>현재 날짜:</strong> <fmt:formatDate value="${today}" pattern="yyyy년 MM월 dd일" /></p>
-            
-            <c:choose>
-                <c:when test="${remainingDays != null}">
-                    <p><strong>펀딩 종료까지:</strong> 
-                        <span class="highlight">${fundingStatusMessage}</span>
-                    </p>
-                </c:when>
-                <c:otherwise>
-                    <p><strong>펀딩 종료일 정보:</strong> 종료일 정보가 유효하지 않습니다.</p>
-                </c:otherwise>
-            </c:choose>
-        </div>
 
-    </c:if>
-    <c:if test="${empty funding}">
-        <p>펀딩 정보를 찾을 수 없습니다.</p>
-    </c:if>
+		<div class="summary-card-down">
+			<h3>펀딩 기간</h3>
+			<span class="highlight"> <fmt:formatDate
+					value="${funding.startDate}" pattern="yyyy년 MM월 dd일" /> ~ <fmt:formatDate
+					value="${funding.endDate}" pattern="yyyy년 MM월 dd일" />
+			</span>
 
-    <div class="action-buttons">
-        <button type="button" onclick="location.href='/seller/detail?fundingId=${funding.fundingId}'">펀딩 상세보기</button>
-        <button type="button" onclick="window.history.back()" class="secondary">펀딩 목록으로 돌아가기</button>
-    </div>
 
-</body>
-</html>
+		</div>
+
+	</div>
+	<input type="hidden" id="userId" name="userId" value="${userId}">
+	<div class="action-buttons">
+		<button class="back-button" type="button"
+			onclick="window.history.back()">뒤로 가기</button>
+		<button type="button" class="button edit-button"
+        onclick="location.href='/seller/funding/edit/${funding.fundingId}'">수정하러 가기</button>
+	</div>
+</div>
+
+<script>
+//성별 차트 데이터
+const genderLabels = [
+    <c:forEach var="g" items="${fundingGenderStats}" varStatus="loop">
+        "${g.label}"<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+
+const genderData = [
+    <c:forEach var="g" items="${fundingGenderStats}" varStatus="loop">
+        ${g.value}<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+
+const genderChart = new Chart(document.getElementById('genderChart'), {
+    type: 'doughnut',
+    data: {
+        labels: genderLabels,
+        datasets: [{
+            data: genderData,
+            backgroundColor: ['#36a2eb', '#ff6384', '#ffcd56', '#4bc0c0'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// 연령대 차트 데이터
+const ageLabels = [
+    <c:forEach var="a" items="${fundingAgeStats}" varStatus="loop">
+        "${a.label}"<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+
+const ageData = [
+    <c:forEach var="a" items="${fundingAgeStats}" varStatus="loop">
+        ${a.value}<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+
+const ageChart = new Chart(document.getElementById('ageChart'), {
+    type: 'bar',
+    data: {
+        labels: ageLabels,
+        datasets: [{
+            label: '비율 (%)',
+            data: ageData,
+            backgroundColor: '#42a5f5'
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+</script>
