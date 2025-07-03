@@ -1,12 +1,11 @@
 @charset "UTF-8";
 
 .mypage-container {
-	padding: 40px;
+	padding-top: 20px;
 	width: 780px;
 }
 
 h2 {
-	padding-left: 20px;
 	font-size: 25px;
 }
 

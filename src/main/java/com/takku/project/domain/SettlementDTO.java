@@ -20,4 +20,5 @@ public class SettlementDTO {
     private Integer amount;
     private String status;
     private Date settledAt;
+    private FundingDTO funding;
 }
