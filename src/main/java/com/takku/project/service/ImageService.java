@@ -24,13 +24,59 @@ public class ImageService implements ImageMapper {
 	@Value("${file.upload.path}")
 	private String uploadDir;
 
+	// 임시 디렉토리 경로
+	@Value("${file.temp.path}")
+	private String tempDir;
+
+	private String getFileExtension(String fileName) {
+		if (fileName == null || !fileName.contains(".")) {
+			return ""; // 확장자 없을 경우
+		}
+		return fileName.substring(fileName.lastIndexOf("."));
+	}
+
+	public ImageDTO storeTempImage(MultipartFile file) {
+		if (file.isEmpty())
+			return null;
+
+		try {
+			String ext = getFileExtension(file.getOriginalFilename());
+			String fileName = UUID.randomUUID().toString() + ext; // 오리지널 이름 제거
+			File dest = new File(tempDir + File.separator + fileName);
+			file.transferTo(dest);
+
+			return ImageDTO.builder().imageUrl(fileName).build(); // 파일명만 저장
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public String moveImageFromTemp(String oldFileName) throws IOException {
+		File tempFile = new File(tempDir + File.separator + oldFileName);
+
+		String ext = getFileExtension(oldFileName);
+		String newFileName = UUID.randomUUID().toString() + ext; // 다시 새로운 이름 생성
+
+		File finalFile = new File(uploadDir + File.separator + newFileName);
+
+		if (tempFile.exists()) {
+			boolean success = tempFile.renameTo(finalFile);
+			if (!success)
+				throw new IOException("파일 이동 실패: " + oldFileName);
+			return newFileName;
+		} else {
+			throw new IOException("임시 파일 존재하지 않음: " + oldFileName);
+		}
+	}
+
 	public ImageDTO storeImage(MultipartFile file, Integer productId, Integer fundingId, Integer reviewId) {
 		if (file.isEmpty())
 			return null;
 
 		try {
-			String uuid = UUID.randomUUID().toString();
-			String fileName = uuid + "_" + file.getOriginalFilename();
+			String ext = getFileExtension(file.getOriginalFilename());
+			String fileName = UUID.randomUUID().toString() + ext; // 한글 없는 이름
 			File dest = new File(uploadDir + File.separator + fileName);
 			file.transferTo(dest);
 
@@ -72,15 +118,5 @@ public class ImageService implements ImageMapper {
 		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByProductId", productId);
 		return imagelist;
 	}
-	
-	//펀딩만들기 -> 이미지 저장
-	public void saveImages(List<ImageDTO> imageList, Integer fundingId) {
-	    for (ImageDTO image : imageList) {
-	    	System.out.println(image);
-	        image.setFundingId(fundingId);
-	        System.out.println("저장 전 확인 >> fundingId: " + image.getFundingId() + ", imageUrl: " + image.getImageUrl());
-	        sqlSession.insert(namespace + "insertImage", image);
-	    }
-	}
-	
+
 }
