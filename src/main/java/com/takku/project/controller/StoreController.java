@@ -63,9 +63,12 @@ public class StoreController {
 	@GetMapping()
 	public String showStoreManagement(Model model) {
 	    int storeId = 1; // 임시 상점 ID
+	    int userId = 1; // 임시 유저 ID
 	    StoreDTO store = storeService.selectStoreById(storeId); 
+	    UserDTO user = userService.selectByUserId(userId);
 	    List<ProductDTO> productList = productService.selectProductByStoreId(storeId);
 	    
+	    model.addAttribute("user", user);
 	    model.addAttribute("store", store);
 	    model.addAttribute("productList", productList);
 	    return "seller.storeManagement"; 
