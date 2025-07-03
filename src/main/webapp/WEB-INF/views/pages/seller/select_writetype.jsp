@@ -26,6 +26,23 @@
 	});
 </script>
 
+<div class="step-progress">
+  <div class="step">
+    <div class="circle">1</div>
+    <div class="label">상품 정보</div>
+  </div>
+  <div class="line"></div>
+  <div class="step">
+    <div class="circle">2</div>
+    <div class="label">기간 및 이미지</div>
+  </div>
+  <div class="line"></div>
+  <div class="step active">
+    <div class="circle">3</div>
+    <div class="label">상세 내용</div>
+  </div>
+</div>
+
 <form id="fundingForm"
 	action="${pageContext.request.contextPath}/seller/fundings/create-step5"
 	method="post">
@@ -39,13 +56,13 @@
 		<div class="funding-type-box" id="btnLimited" data-type="ai">
 			<h4>AI로 자동 생성</h4>
 			<p>
-				어떤 메뉴인지 간단히 알려주면,<br>AI가 알아서 펀딩 소개를 완성해요.
+				어떤 메뉴인지 간단히 알려주면,<br><strong>AI가 알아서</strong> 펀딩 소개를 <br>완성해요.
 			</p>
 		</div>
 		<div class="funding-type-box" id="btnGeneral" data-type="directly">
 			<h4>직접 작성할래요</h4>
 			<p>
-				펀딩 제목과 내용을 직접 입력해서<br>등록할 수 있어요.
+				펀딩 제목과 내용을 <br><strong>직접 입력해서</strong> 등록할 수 있어요.<br>
 			</p>
 		</div>
 	</div>
