@@ -119,6 +119,29 @@ button, button:hover, button:active, button:focus {
 	</c:otherwise>
 </c:choose>
 
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg">로그인이 필요합니다.</p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>
+
+<c:if test="${param.msg eq 'needStore'}">
+	<script>
+		$(function() {
+			const msg = '${param.msg}';
+			if (msg === 'needLogin') {
+				$("#resultModal, #modalBackdrop").fadeIn();
+				$("#closeModalBtn").on("click", function() {
+					$("#resultModal, #modalBackdrop").fadeOut();
+				});
+			}
+		});
+	</script>
+</c:if>
+
 <c:if test="${not empty storeDTO}">
 	<script>
   // ChartJS: 월별 주문 및 매출
@@ -195,5 +218,7 @@ button, button:hover, button:active, button:focus {
     },
     options: { responsive: true, cutout: '60%' }
   });
+  
+  
 </script>
 </c:if>

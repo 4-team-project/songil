@@ -1,5 +1,6 @@
 package com.takku.project.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +40,20 @@ public class SettlementService implements SettlementMapper{
 	public SettlementDTO selectSettlementById(Integer settlementId) {
 		SettlementDTO sett = sqlSession.selectOne(namespace + "selectSettlementById", settlementId);
 		return sett;
+	}
+	
+	//페이지 처리
+	@Override
+	public List<SettlementDTO> selectSettlementByStoreIdWithPaging(int storeId, int startRow, int endRow) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("storeId", storeId);
+	    param.put("startRow", startRow);
+	    param.put("endRow", endRow);
+	    return sqlSession.selectList(namespace + "selectSettlementByStoreIdWithPaging", param);
+	}
+
+	@Override
+	public int countSettlementByStoreId(int storeId) {
+	    return sqlSession.selectOne(namespace + "countSettlementByStoreId", storeId);
 	}
 }

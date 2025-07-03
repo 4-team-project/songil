@@ -136,8 +136,7 @@ $(function() {
 					<input type="number" id="usePoint" name="usePoint" placeholder="0"
 						min="0" max="${loginUser.point}" step="100"
 						style="width: 100px; height: 30px; font-size: 16px; border: 2px solid #ff9670; background: #fff6f0" /><br>
-					<button id="useAllPointBtn"
-						style="background-color: #ff9670; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+					<button id="useAllPointBtn">
 						전액 사용</button>
 				</div>
 			</h3>

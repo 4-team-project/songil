@@ -80,6 +80,20 @@
 	color: #ff9670;
 }
 
+#useAllPointBtn{
+	background-color: #ff9670;
+	color: white;
+	border: none;
+	padding: 6px 10px; 
+	border-radius: 6px; 
+	cursor: pointer; 
+	font-size: 14px;
+}
+
+#useAllPointBtn:hover{
+	background-color: #fdd4c2;
+}
+
 .buy-button {
 	margin-top: 20px;
 	width: 100%;
@@ -91,6 +105,10 @@
 	border: none;
 	border-radius: 8px;
 	cursor: pointer;
+}
+
+.buy-button:hover{
+	background-color: #fdd4c2;
 }
 
 .small-text {

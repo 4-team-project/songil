@@ -47,7 +47,7 @@ public class StoreStatsController {
 	private ProductService productService;
 
 	@GetMapping("/seller/home")
-	public String getMain(Model model) {
+	public String getMain(@RequestParam(required = false) String msg, Model model) {
 		Integer storeId = 1;
 		Integer userId = 1;
 
@@ -62,7 +62,7 @@ public class StoreStatsController {
 
 		// Model에 추가
 		model.addAttribute("userDTO", user);
-		model.addAttribute("storeDTO", store);
+		//model.addAttribute("storeDTO", store);
 		model.addAttribute("todayOrderCount", todayOrderCount);
 		model.addAttribute("todaySales", todaySales);
 		model.addAttribute("ongoingFundingCount", ongoingFundingCount);
