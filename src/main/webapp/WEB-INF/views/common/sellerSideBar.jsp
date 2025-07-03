@@ -108,7 +108,7 @@
 					<span>펀딩 만들기</span>
 				</li>
 				<li class="menu-item" data-name="funding"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/sellerFundingStats" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/funding.svg"
 					alt="funding" /> <span>펀딩 현황</span>
 				</li>
@@ -118,8 +118,9 @@
 					onclick="activateMenu(this)"><img
 					src="${cpath}/resources/images/sideBar/statistics.svg"
 					alt="statistics" /> <span>통계</span></li>
+					
 				<li class="menu-item" data-name="money"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/settlements" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
 					<span>정산</span>
 				</li>
@@ -134,7 +135,7 @@
 					<span>펀딩 사이트로 이동</span>
 				</li>
 				<li class="menu-item" data-name="mypage"
-					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
+					data-url="${cpath}/seller/mypage" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/mypage.svg"
 					alt="mypage" /> <span>내 정보</span>
 				</li>
@@ -196,9 +197,9 @@
 	  let menuName = 'home'; 
 
 	  if (path.includes('/seller/fundings/create-step1')) menuName = 'add';
-	  else if (path.includes('/seller/funding')) menuName = 'funding';
+	  else if (path.includes('/seller/sellerFundingStats')) menuName = 'funding';
 	  else if (path.includes('/seller/stats')) menuName = 'statistics';
-	  else if (path.includes('/seller/money')) menuName = 'money';
+	  else if (path.includes('/seller/settlements')) menuName = 'money';
 	  else if (path.includes('/seller/store')) menuName = 'store';
 	  else if (path.includes('/seller/move')) menuName = 'move';
 	  else if (path.includes('/seller/mypage')) menuName = 'mypage';
