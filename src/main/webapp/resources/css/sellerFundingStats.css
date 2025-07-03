@@ -7,7 +7,6 @@
 	background-color: white;
 }
 
-
 /* 제목 스타일 */
 .funding-title {
 	background-color: #fff;
@@ -18,13 +17,22 @@
 	margin-bottom: 30px;
 	font-size: 26px;
 	font-weight: bold;
-	width:720px;
+	width: 720px;
 }
 
 .highlight {
 	color: #FF9670;
 	font-weight: bold;
 	font-size: 26px;
+	padding-left: 10px;
+}
+
+.title {
+	display: block;
+	font-weight: bold;
+	font-size: 18px;
+	padding-left: 10px;
+	margin-top: 10px;
 }
 
 .date {
@@ -34,7 +42,7 @@
 
 .rate-container {
 	display: flex;
-	justify-content: space-between;  /* 양쪽 정렬 */
+	justify-content: space-between; /* 양쪽 정렬 */
 	align-items: center;
 	margin-bottom: 10px;
 }
@@ -121,7 +129,7 @@
 }
 
 .button {
-	background-color:#FF9670 ;
+	background-color: #FF9670;
 	color: #fff;
 	padding: 12px 25px;
 	border-radius: 8px;
@@ -154,7 +162,6 @@
 	background-color: #f57c00;
 }
 
-
 .stats-summary {
 	display: flex;
 	gap: 20px;
@@ -162,15 +169,14 @@
 	margin-bottom: 40px;
 }
 
-
 canvas {
 	max-width: 100%;
 	margin: 0 auto;
 }
 
 .total-stats {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr); /* 2개의 컬럼 */
-    gap: 20px; /* 카드 사이 간격 */
-    margin-bottom: 30px; /* 이 섹션 아래 다른 요소와의 간격 */
+	display: grid;
+	grid-template-columns: repeat(1, 1fr); /* 2개의 컬럼 */
+	gap: 20px; /* 카드 사이 간격 */
+	margin-bottom: 30px; /* 이 섹션 아래 다른 요소와의 간격 */
 }
