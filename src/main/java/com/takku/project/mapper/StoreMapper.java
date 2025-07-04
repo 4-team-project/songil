@@ -18,6 +18,7 @@ public interface StoreMapper {
 
 	Integer findStoreIdByUserId(int userId);
 
+	// 가장 먼저 등록된 상점 1개만 가져오기
 	StoreDTO selectStoreNameByUserId(int userId);
 
 	// 사용자 상점 전체 조회
