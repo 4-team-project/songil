@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.takku.project.domain.UserDTO;
+
 @WebFilter(urlPatterns = "/seller/*")
 public class SellerAuthenticationFilter implements Filter {
 
@@ -22,17 +24,26 @@ public class SellerAuthenticationFilter implements Filter {
 		String cpath = req.getContextPath();
 		String uri = req.getRequestURI();
 
-		// 로그인 안 되어있으면 로그인 페이지로
-		/*
-		 * if (session == null || session.getAttribute("loginUser") == null) {
-		 * res.sendRedirect(cpath + "/auth/login?msg=needLogin"); return; }
-		 */
+		// 1. 로그인 안 되어 있으면 로그인 페이지로
+		if (session == null || session.getAttribute("loginUser") == null) {
+			res.sendRedirect(cpath + "/auth/login?msg=needLogin");
+			return;
+		}
 
-		// 상점 선택 안 되어있으면 /seller/home으로 (단, 이미 /seller/home이면 무한 루프 방지)
-		/*
-		 * if (!uri.endsWith("/seller/home") && session.getAttribute("store") == null) {
-		 * res.sendRedirect(cpath + "/seller/home?msg=needStore"); return; }
-		 */
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+		// 2. 소상공인이 아닌 사용자가 /seller 경로 접근 시 로그인 페이지로
+		if (!"소상공인".equals(loginUser.getUserType())) {
+			res.sendRedirect(cpath + "/auth/login?msg=needLogin");
+			return;
+		}
+
+		// 3. 소상공인인데 store 정보가 없고 현재 uri가 /seller/home이 아니면 → /seller/home으로
+		Object store = session.getAttribute("store");
+		if (store == null && !uri.endsWith("/seller/home")) {
+			res.sendRedirect(cpath + "/seller/home?msg=needStore");
+			return;
+		}
 
 		// 조건 통과 시 다음 필터 또는 컨트롤러 실행
 		chain.doFilter(request, response);
@@ -40,9 +51,11 @@ public class SellerAuthenticationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		// 초기화 필요 시 작성
 	}
 
 	@Override
 	public void destroy() {
+		// 자원 해제 필요 시 작성
 	}
 }
