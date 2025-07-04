@@ -15,8 +15,9 @@ textarea::placeholder {
 /* 폼 컨테이너 */
 .edit-funding-container {
 	width: 100%;
-	max-width: 900px; /* 최대 너비 설정 (반응형) */
+	max-width: 800px; /* 최대 너비 설정 (반응형) */
 	box-sizing: border-box;
+	padding-left: 20px;
 }
 
 /* 폼 제목 */
@@ -151,7 +152,6 @@ textarea::placeholder {
 #dateRangePicker {
 	background-color: #e9ecef;
 	border-color: #e9ecef;
-	cursor: not-allowed;
 	box-shadow: none;
 }
 
@@ -160,7 +160,6 @@ textarea::placeholder {
 .input-with-unit-wrapper.disabled-wrapper {
 	background-color: #e9ecef;
 	border-color: #e9ecef;
-	cursor: not-allowed;
 	box-shadow: none;
 }
 
@@ -168,7 +167,6 @@ textarea::placeholder {
 .input-with-unit-wrapper.disabled-wrapper input[type="text"] {
 	/* ★ type="text"로 변경 */
 	background-color: transparent;
-	cursor: not-allowed;
 	color: #6c757d;
 }
 
@@ -198,59 +196,39 @@ textarea::placeholder {
 	min-height: 100px; /* 최소 높이 */
 }
 
-/* 액션 버튼 컨테이너 */
-.form-actions {
-	display: flex; /* ★ Flexbox 활성화 */
-	justify-content: center; /* ★ 버튼들을 수평 중앙 정렬 */
-	gap: 20px; /* ★ 버튼들 사이의 간격 (원하는 값으로 조절) */
-	margin-top: 40px; /* 폼 필드와 버튼 사이 간격 */
+.btn-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding-top: 20px;
+	padding-left: 20px;
 }
 
-/* 제출 버튼 */
-.submit-button {
-	background-color: #FF9670;
-	color: #ffffff;
-	padding: 15px 30px;
-	border: none;
-	border-radius: 8px;
-	font-size: 1.1em;
-	font-weight: 600;
+.btn {
+	border: 2px solid #ff9670;
+	background: transparent;
+	color: #ff9670;
+	width: 200px;
+	border-radius: 6px;
 	cursor: pointer;
-	transition: background-color 0.3s ease, transform 0.2s ease;
-	width: 70%;
+	font-size: 30px;
+	font-weight: bold;
 }
 
-.submit-button:hover {
-	background-color: #e67c54;
-	transform: translateY(-2px); /* 약간 위로 떠오르는 효과 */
+.btn:hover {
+	background-color: #ff9670;
+	color: white;
 }
 
-.submit-button:active {
-	background-color: #cc6c48;
-	transform: translateY(0); /* 클릭 시 원위치 */
+.btn.filled {
+	background-color: #ff9670;
+	color: white;
 }
 
-.back-button {
-	width: 30%;
-	background-color: #ffffff;
-	color: #FF9670;
-	padding: 15px 30px;
-	border: 2px solid #FF9670;
-	border-radius: 8px;
-	font-size: 1.1em;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.back-button:hover {
-	background-color: #fff0eb; /* 호버 시 아주 연한 배경색 */
-	transform: translateY(-2px);
-}
-
-.back-button:active {
-	background-color: #ffe0d5; /* 클릭 시 더 진한 연한 배경색 */
-	transform: translateY(0);
+.btn.filled:hover {
+	background-color: #fdd4c2;
+	color: white;
 }
 
 /* 추가적인 요소 스타일 (예: 에러 메시지) */
@@ -284,11 +262,166 @@ textarea::placeholder {
 	border: none;
 	border-radius: 0 0 0 5px; /* 오른쪽 위만 둥글게 */
 	padding: 2px 6px;
-	cursor: pointer;
 	font-weight: bold;
 	line-height: 1; /* x 버튼 세로 가운데 정렬 */
 }
 
 .remove-image-btn:hover {
 	background: rgba(255, 0, 0, 1);
+}
+
+.pictureBtn {
+	display: flex;
+	align-items: center;
+	gap: 10px; /* 버튼 사이 간격 */
+	margin-top: 10px;
+}
+
+/* 버튼 스타일 통일 */
+#btnAddPhoto, #btnDefaultPhoto {
+	padding: 8px 16px;
+	background-color: #ff9670;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 20px;
+	transition: background-color 0.2s ease;
+}
+
+#btnAddPhoto:hover, #btnDefaultPhoto:hover {
+	background-color: #ff783e;
+}
+
+#previewContainer {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.preview-image {
+	display: flex;
+	flex-direction: column;
+	width: 250px;
+	margin: 10px;
+}
+
+.preview-image img {
+	flex-wrap: wrap;
+	width: 250px;
+	height: 250px;
+	border-radius: 8px;
+	object-fit: contain;
+	background-color: #f8f8f8;
+	margin-bottom: 5px;
+}
+
+.preview-image button {
+	background-color: #ff7675;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 6px;
+	font-size: 13px;
+}
+
+.btn-check {
+	padding: 12px 14px;
+	border: 2px solid #ff9670;
+	background-color: transparent;
+	color: #ff9670;
+	border-radius: 6px;
+	font-size: 24px;
+	font-weight: bold;
+	transition: background-color 0.2s;
+}
+
+.btn-check:hover {
+	background-color: #ff9670;
+	color: white;
+}
+
+.btn-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding-top: 20px;
+	padding-left: 20px;
+}
+
+.btn {
+	border: 2px solid #ff9670;
+	background: transparent;
+	color: #ff9670;
+	width: 200px;
+	border-radius: 6px;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.btn:hover {
+	background-color: #ff9670;
+	color: white;
+}
+
+#resultModal {
+	display: none;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #ffffff;
+	padding: 30px 30px 20px 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(255, 150, 112, 0.5); /* 주황색 느낌 그림자 */
+	z-index: 9999;
+	width: 400px;
+	text-align: center;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+#resultModal p {
+	margin: 0;
+	font-size: 18px;
+	color: #ff9670; /* 진한 주황색 글씨 */
+	font-weight: bold;
+}
+
+#closeModalBtn {
+	margin-top: 20px;
+	padding: 8px 18px;
+	background-color: #ff9670; /* 주황색 버튼 */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 20px;
+	transition: background-color 0.3s ease;
+}
+
+#closeModalBtn:hover {
+	background-color: #fdd4c2; /* 좀 더 밝은 주황색 호버 */
+}
+
+/* 모달 배경 */
+#modalBackdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 9998;
+	display: none;
+}
+
+.menu-label {
+	font-weight: bold;
+	font-size: 25px;
+	margin-bottom: 10px;
+	color: #ff9670;
+}
+
+p {
+	font-size: 20px;
 }

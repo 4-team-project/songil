@@ -45,7 +45,7 @@
     <c:set var="target" value="${funding.targetQty != null && funding.targetQty != 0 ? funding.targetQty : 1}" />
     <c:set var="rate" value="${(current * 100) / target}" />
 
-    <div class="funding-card" onclick="location.href='/seller/store/stats?fundingId=${funding.fundingId}'">
+    <div class="funding-card" onclick="location.href='/seller/store/funding/stats?fundingId=${funding.fundingId}'">
         <div class="funding-info">
             <h3 class="funding-title">
                 ${status.index + 1}. ${funding.fundingName}

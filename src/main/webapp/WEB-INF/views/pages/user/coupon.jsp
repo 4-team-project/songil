@@ -2,14 +2,16 @@
 <meta charset="UTF-8">
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 빈 파비콘 (브라우저 요청 방지) -->
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/my_coupon_page.css" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/review-form.css" />
-
+<link rel="stylesheet" href="${cpath}/resources/css/coupon_detail.css" />
+<script>
+const cpath = "${pageContext.request.contextPath}";
+</script>
 <div class="coupon-container">
 	<!-- 사이드 메뉴 -->
 	<div class="sidebar">
@@ -105,13 +107,10 @@
 								</button>
 							</c:when>
 							<c:when test="${coupon.useStatus == '미사용'}">
-								<form action="${cpath}/user/coupon/detail" method="post"
-									style="display: inline;">
 									<input type="hidden" name="couponId" value="${coupon.couponId}" />
-									<button type="submit" class="use-btn unused-btn">
-										<span class="btn-word">사용하기</span>
+									<button data-coupon-id="${coupon.couponId}" class="btn-show-detail">
+										<span class="btn-show-detail">사용하기</span>
 									</button>
-								</form>
 								<div class="coupon-date">
 									~
 									<fmt:formatDate value="${coupon.expiredAt}"
@@ -129,7 +128,19 @@
 	</div>
 
 </div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop" class="modal-backdrop" style="display: none;"></div>
+
+<!-- 모달 본체 -->
+<div id="couponModal" class="modal-container" style="display: none;">
+	<div id="modalContent" class="modal-content"></div>
+</div>
 <script>
+
+function exitDetail() {
+	$("#couponModal, #modal-backdrop, #modal-content").fadeOut();
+}
 	
 	let currentPage = 1;
 	const itemsPerPage = 5;
@@ -644,6 +655,29 @@
       document.body.appendChild(form);
       form.submit();
     }
+	
+    $(document).on("click", ".btn-show-detail", function () {
+    	const couponId = $(this).data("coupon-id");
+
+    	// Ajax로 쿠폰 상세 JSP 조각을 불러옴
+    	$.ajax({
+    		url: `${cpath}/user/coupon/detail`,
+    		data: { couponId },
+    		type: "GET",
+    		success: function (html) {
+    			$("#modalContent").html(html);
+    			$("#modalBackdrop, #couponModal").fadeIn();
+    		},
+    		error: function () {
+    			alert("쿠폰 상세 정보를 불러오지 못했습니다.");
+    		}
+    	});
+    });
+
+    // 모달 닫기
+    $(document).on("click", "#modalBackdrop", function () {
+    	$("#modalBackdrop, #couponModal").fadeOut();
+    });
     
   </script>
 

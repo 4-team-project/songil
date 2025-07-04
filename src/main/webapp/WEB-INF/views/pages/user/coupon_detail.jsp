@@ -1,21 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="cpath" value="${pageContext.request.contextPath}" />
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html>
-<html>
-<head>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://kit.fontawesome.com/5db5b8890b.js" crossorigin="anonymous"></script>
-<meta charset="UTF-8">
-<title>쿠폰 보기</title>
 <c:set var="qrBaseUrl" value="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2F192.168.0.22%3A9999%2Fcoupon%2FsellerCheck%3FcouponCode%3D" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/coupon_detail.css" />
 <c:set var="qrUrl" value="${qrBaseUrl}${coupon.couponCode}" />
-</head>
-<body>
-
-	<div class="coupon-card" id="couponCard" data-funding-name="${fn:escapeXml(funding.fundingName)}">
+	<div class="coupon-card-qr" id="couponCard" data-funding-name="${fn:escapeXml(funding.fundingName)}">
 	<button class="detail-close-btn" onclick="exitDetail()">✕</button>
 		<h1><strong>${store.storeName}</strong></h1>
 		<h2>${product.productName}</h2>
@@ -37,9 +30,7 @@
 	</div>
 	<script>
 	
-	function exitDetail() {
-		window.history.back();
-	}
+	
 	
 	
 	function sanitizeFileName(name) {
@@ -79,5 +70,3 @@
 			  });
 		}
 	</script>
-</body>
-</html>

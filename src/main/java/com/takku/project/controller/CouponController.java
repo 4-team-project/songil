@@ -164,8 +164,8 @@ public class CouponController {
 	/**
 	 * [6] 쿠폰 상세 페이지
 	 */
-	@PostMapping("/user/coupon/detail")
-	public String couponDetailPage(Model model, @RequestParam("couponId") int couponId) {
+	@GetMapping("/user/coupon/detail")
+	public String couponDetailPage(Model model, @RequestParam("couponId") Integer couponId) {
 
 		model.addAttribute("pageName", "쿠폰 상세정보");
 
@@ -181,4 +181,5 @@ public class CouponController {
 
 		return "user.coupon_detail";
 	}
+	
 }

@@ -180,7 +180,7 @@ $(document).ready(function() {
             fundingCard.addEventListener('click', function() {
                 const id = this.dataset.fundingId;
                 if (id) {
-                    window.location.href = `/seller/store/stats?fundingId=${id}`;
+                    window.location.href = `/seller/store/funding/stats?fundingId=${id}`;
                 }
             });
 
