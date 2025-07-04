@@ -2,6 +2,7 @@ package com.takku.project.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
+import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.ReviewDTO;
 import com.takku.project.mapper.ImageMapper;
 
 @Service
@@ -88,6 +92,40 @@ public class ImageService implements ImageMapper {
 			return null;
 		}
 	}
+
+	//로컬 사진 저장 + DB 사진 저장 
+	  public List<ImageDTO> storeImages(MultipartFile[] files, Integer productId, Integer fundingId, Integer reviewId) {
+	        List<ImageDTO> savedImages = new ArrayList<>();
+
+	        if (files != null) {
+	            for (MultipartFile file : files) {
+	                if (!file.isEmpty()) {
+	                    try {
+	                        String ext = getFileExtension(file.getOriginalFilename());
+	                        String fileName = UUID.randomUUID().toString() + ext;
+	                        File dest = new File(uploadDir + File.separator + fileName);
+	                        file.transferTo(dest);
+
+	                        ImageDTO image = ImageDTO.builder()
+	                                .productId(productId)
+	                                .fundingId(fundingId)
+	                                .reviewId(reviewId)
+	                                .imageUrl("/image/" + fileName)
+	                                .build();
+
+	                        this.insertImageUrl(image);
+	                        savedImages.add(image);
+
+	                    } catch (IOException e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+	        }
+
+	        return savedImages;
+	    }
+	
 
 	@Override
 	public int insertImageUrl(ImageDTO image) {
