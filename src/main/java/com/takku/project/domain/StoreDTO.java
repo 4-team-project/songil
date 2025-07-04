@@ -26,4 +26,5 @@ public class StoreDTO {
 	private String description;
 	private Date createdAt;
 	private String categoryName;
+	private Integer postCode;
 }
