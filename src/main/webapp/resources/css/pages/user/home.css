@@ -3,27 +3,34 @@
 #filteredFundingListBox {
 	display: flex;
 	width: 1076px;
-	flex-direction: column; 
+	flex-direction: column;
 }
 
 .filteredFundingList {
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: 32px;
-  column-gap: 20px;
-  width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	row-gap: 32px;
+	column-gap: 20px;
+	width: 100%;
 }
 
 .content-box {
 	display: flex;
-	justify-content: flex-start;
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .main-contents {
-	flex-grow: 1;
-	padding-left: 48px;
-	padding-top: 30px;
-	font-family: 'Spoqa Han Sans Neo';
+	padding: 40px;
+}
+
+}
+@media screen and (max-width: 768px) {
+	.main-contents {
+		margin-left: 0;
+	}
 }
 
 .main-contents p {
@@ -41,35 +48,35 @@
 .recommend-funding-list-wrapper {
 	display: flex;
 	flex-wrap: wrap;
-	width: 1076px;
-	row-gap: 32px;
+	row-gap: 20px;
 	column-gap: 20px;
+	width: 1120px;
 }
 
 .funding-list-wrapper {
 	display: flex;
 	flex-wrap: wrap;
-	width: 1076px;
 	row-gap: 32px;
 	column-gap: 20px;
+	width: 1120px;
 }
 
 .funding-box {
-	width: 254px;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	cursor: pointer;
+	width: 250px;
 }
 
 .funding-recommend-image {
-	width: 254px;
 	height: 140px;
 	object-fit: cover;
 	background-color: #f0f0f0;
 	z-index: 2;
 	border-radius: 18px;
 	position: relative;
+	width: 250px;
 }
 
 .funding-recommend-contents {
@@ -78,7 +85,6 @@
 	padding-left: 10px;
 	font-family: 'Spoqa Han Sans Neo';
 	border: 1px solid #DDE1E6;
-	width: 254px;
 	height: 133px;
 	margin-top: -20px;
 	background-color: white;
