@@ -9,6 +9,9 @@
 <head>
 <meta charset="UTF-8">
 </head>
+<script>
+  const cpath = "${pageContext.request.contextPath}";
+</script>
 <style>
 .sidebar {
 	width: 320px;
