@@ -45,7 +45,7 @@
 		<c:out value="${store.addressDetail}" />
 	</div>
 	<div class="store-info-content">전화번호: <c:out value="${user.phone}" /></div>
-	<div class="store-edit-btn">상점 정보 수정</div>
+	<div class="store-edit-btn" onclick="location.href='${cpath}/seller/store/edit/${store.storeId}'">상점 정보 수정</div>
 </div>
 
 <div class="store-menu-box">
@@ -54,7 +54,7 @@
 
 	<div class="store-menu-content-img-container swiper">
 	<div class="swiper-wrapper">
-		<c:forEach var="product" items="${productList}">
+		<c:forEach var="product" items="${productList}" onclick="location.href='${cpath}/seller/product/edit/${product.productId}'">
 			<div class="swiper-slide">
 				<img class="store-menu-content-img"
 					src="${cpath}${product.thumbnailImageUrl != null ? product.thumbnailImageUrl : '/resources/images/category/default.svg'}"
