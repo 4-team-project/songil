@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  	document.querySelector('.editMypage').addEventListener('click', e => {
 	    e.preventDefault();
 	    document.getElementById('user-info-modal').style.display = 'block';
+	    document.getElementById('modalBackdrop').style.display = 'block';
 	    
 	    //수정저장하고 다시 모달창 들어가면 비밀번호 칸 빈칸으로
 	    const passwordInput = document.getElementById('password');
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	    if (parseInt(result) > 0) {
 	      alert("수정이 완료되었습니다.");
 	      document.getElementById('user-info-modal').style.display = 'none';
+	      document.getElementById('modalBackdrop').style.display = 'none';
 	    } else if (result === '-1') {
 	      alert("비밀번호가 일치하지 않습니다.");
 	    } else {
@@ -97,10 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // X 버튼 클릭 시 모달 닫기
   document.querySelector('#user-info-modal .close-btn').addEventListener('click', () => {
     document.getElementById('user-info-modal').style.display = 'none';
+    document.getElementById('modalBackdrop').style.display = 'none';
   });
 	//"확인" 버튼
   document.querySelector('.modal-btn.Ucheck').addEventListener('click', () => {
     document.getElementById('user-info-modal').style.display = 'none';
+    document.getElementById('modalBackdrop').style.display = 'none';
   });
 });
 	
