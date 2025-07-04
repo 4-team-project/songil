@@ -7,6 +7,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
 import com.takku.project.domain.ReviewDTO;
 import com.takku.project.domain.StoreDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
@@ -242,7 +245,7 @@ public class FundingController {
 	// 기존 - 전체리스트
 	@GetMapping("/list")
 	public String selectFundingListByStatus(@RequestParam("status") String status, Model model) {
-		int userId = 5; // 임시 userId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		int userId = 5;
 
 		if ("allfundinglist".equals(status)) {
 			status = null; // 전체 조회 - 조건에서 status 제외

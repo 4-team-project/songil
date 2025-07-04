@@ -28,7 +28,7 @@
   </div>
 </div>
 
-<h3>기간 및 이미지를 입력해주세요</h3>
+<h3>기간 및 이미지를 입력해주세요.</h3>
 <div class="fundingDate">
 	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
 	<p> 달력 사진(
