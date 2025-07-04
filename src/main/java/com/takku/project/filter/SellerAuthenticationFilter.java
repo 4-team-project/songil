@@ -23,16 +23,18 @@ public class SellerAuthenticationFilter implements Filter {
 		String uri = req.getRequestURI();
 
 		// 로그인 안 되어있으면 로그인 페이지로
-		/*
-		 * if (session == null || session.getAttribute("loginUser") == null) {
-		 * res.sendRedirect(cpath + "/auth/login?msg=needLogin"); return; }
-		 */
-
-		// 상점 선택 안 되어있으면 /seller/home으로 (단, 이미 /seller/home이면 무한 루프 방지)
-		/*
-		 * if (!uri.endsWith("/seller/home") && session.getAttribute("store") == null) {
-		 * res.sendRedirect(cpath + "/seller/home?msg=needStore"); return; }
-		 */
+//
+//		if (session == null || session.getAttribute("loginUser") == null) {
+//			res.sendRedirect(cpath + "/auth/login?msg=needLogin");
+//			return;
+//		}
+//
+//		// 상점 선택 안 되어있으면 /seller/home으로 (단, 이미 /seller/home이면 무한 루프 방지)
+//
+//		if (!uri.endsWith("/seller/home") && session.getAttribute("store") == null) {
+//			res.sendRedirect(cpath + "/seller/home?msg=needStore");
+//			return;
+//		}
 
 		// 조건 통과 시 다음 필터 또는 컨트롤러 실행
 		chain.doFilter(request, response);
