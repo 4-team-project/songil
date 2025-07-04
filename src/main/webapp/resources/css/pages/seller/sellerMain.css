@@ -13,7 +13,6 @@
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 12px;
-	margin-bottom: 20px;
 }
 
 .summary-box {
@@ -22,6 +21,8 @@
 	padding: 10px;
 	color: #000;
 	text-align: left;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	background-color: #fffdfb;
 }
 
 .summary-box p {
@@ -56,6 +57,7 @@ button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	font-size: 16px;
 }
 
 button:hover {
@@ -71,12 +73,13 @@ button:hover {
 
 .sales-box {
 	border: 2px solid #fdbfa8;
-	background-color: #fff8f5;
+	background-color: #fffdfb;
 	padding: 20px;
 	border-radius: 10px;
 	margin-top: 10px;
 	text-align: center;
 	width: 100%;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .tips {
@@ -163,7 +166,6 @@ canvas {
 	z-index: 9999;
 	width: 400px;
 	text-align: center;
-	font-family: 'Noto Sans KR', sans-serif;
 }
 
 #resultModal p {
@@ -200,4 +202,41 @@ canvas {
 	background: rgba(0, 0, 0, 0.4);
 	z-index: 9998;
 	display: none;
+}
+
+/* 연령대 · 성별별 인기 태그 스타일 */
+.tag-group-list {
+	list-style: none;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	font-size: 19px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 0;
+}
+
+.tag-group-item {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.tag-label {
+	font-weight: 600;
+	color: #444;
+	margin-right: 8px;
+	white-space: nowrap;
+}
+
+.tag-badge {
+	background-color: #FF9670;
+	color: white;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 15px;
+	margin-right: 6px;
+	margin-bottom: 4px;
+	display: inline-block;
+	white-space: nowrap;
 }
