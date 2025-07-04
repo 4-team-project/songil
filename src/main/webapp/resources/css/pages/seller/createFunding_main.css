@@ -10,7 +10,10 @@ h3 {
 	display: flex;
 	justify-content: center;
 	gap: 24px;
-	
+}
+
+.funding-btn {
+  cursor: inherit;
 }
 
 /* 버튼 선택 시 스타일 */
@@ -38,7 +41,6 @@ button.funding-btn.selected-general {
 	border-radius: 12px;
 	background: transparent;
 	border: 3px solid #eee;
-	cursor: pointer;
 	transition: all 0.3s ease; /* 크기 변경 부드럽게 */
 	transform: scale(1); /* 기본 크기 */
 }
@@ -62,7 +64,7 @@ p {
 	align-content: flex-end;
 	width: 250px;
 	border-radius: 6px;
-	cursor: pointer;
+	cursor: inherit;
 	font-size: 30px;
 	display: block;
 

@@ -85,14 +85,22 @@
 		#{userId}
 	</select>
 
+	<!-- 가장 먼저 등록된 상점 1개만 가져오기 -->
 	<select id="selectStoreNameByUserId" resultType="StoreDTO">
-		SELECT * FROM
-		takku_store WHERE user_id = #{userId}
+		SELECT *
+		FROM (
+		SELECT *
+		FROM takku_store
+		WHERE user_id = #{userId}
+		ORDER BY created_at ASC
+		)
+		WHERE ROWNUM = 1
 	</select>
 
-	<select id="selectStoreListByUserId" resultType="StoreDTO"> 
+
+	<select id="selectStoreListByUserId" resultType="StoreDTO">
 		SELECT * FROM
-		takku_store WHERE user_id = #{userId} 
+		takku_store WHERE user_id = #{userId}
 	</select>
 
 </mapper>

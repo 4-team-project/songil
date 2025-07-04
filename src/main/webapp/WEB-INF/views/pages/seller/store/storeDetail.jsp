@@ -3,6 +3,7 @@
 	pageEncoding="UTF-8"%>
 
 <script src="${cpath}/resources/js/address.js"></script>
+<input type="hidden" id="storeId" value="${storeDTO.storeId}" />
 <script
 	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <link rel="stylesheet"
@@ -28,9 +29,9 @@
 			<button type="button" class="auth-btn" onclick="execDaumPostcode()">주소
 				검색</button>
 			<button type="button" class="auth-btn" id="clearAddressBtn">지우기</button>
-			<input type="text" name="postcode" id="postcode"
-				class="content-input" placeholder="우편번호" readonly>
+	
 		</p>
+		<input type="hidden" id="postcode" name="postcode">
 		<input type="hidden" id="sido" name="sido"> <input
 			type="hidden" id="sigungu" name="sigungu"> <input
 			type="hidden" id="bname" name="bname"> <input type="hidden"
@@ -128,12 +129,14 @@ window.onload = function () {
 
 <script>
 function submitStore() {
+	const storeId = document.getElementById("storeId").value;
 	console.log(document.getElementById('bname'))
 	console.log(document.getElementById('sido'))
 	console.log(document.getElementById('sigungu'))
 	console.log(document.getElementById('detailAddr'))
 	console.log(document.getElementById('storeDescription'))
 	const storeData = {
+		storeId: storeId || null,
 			  storeName: document.getElementById('storeName').value,
 			  sido: document.getElementById('sido').value,
 			  sigungu: document.getElementById('sigungu').value,
@@ -146,14 +149,58 @@ function submitStore() {
 			  categoryId: parseInt(document.getElementById('selectedCategoryId').value),
 			};
 
-
-  fetch("${cpath}/seller/store/insert", {
-    method: "POST",
+	console.log(storeData);
+	  const url = storeId
+	    ? `${cpath}/seller/store/update/${storeId}`
+	    : `${cpath}/seller/store/insert`;
+	    
+	    const method = storeId ? "PUT" : "POST";
+	    
+  fetch(url, {
+    method: method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(storeData)
   })
   .then(res => res.text())
-  .then(msg => alert("전송 완료: " + msg))
-  .catch(err => alert("전송 오류: " + err));
+  .then(msg => {
+	  alert((storeId ? "수정" : "등록") + " 결과: " + msg);
+  })
+  .catch(err => alert("오류: " + err));
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+	  const storeId = document.getElementById("storeId")?.value;
+
+	  if (storeId) {
+	    fetch(`${cpath}/seller/store/info/${storeId}`)
+	      .then(res => res.json())
+	      .then(store => {
+	        console.log("불러온 상점:", store);
+
+	        document.getElementById('storeName').value = store.storeName;
+	       
+	        document.getElementById('roadAddress').value = store.roadAddress;
+	        document.getElementById('detailAddr').value = store.addressDetail;
+	        document.getElementById('storeDescription').value = store.description;
+	        document.getElementById('accountNumber').value = store.bankAccount;
+	        document.getElementById('businessRegistrationNumber').value = store.businessNumber;
+	        
+	        document.getElementById('roadAddress').value = 
+	            [store.sido, store.sigungu, store.dong].filter(Boolean).join(' ');
+
+	        const selectedId = store.categoryId;
+	        document.getElementById("selectedCategoryId").value = selectedId;
+
+	        setTimeout(() => {
+	          const cards = document.querySelectorAll('.category-card');
+	          cards.forEach(card => {
+	            if (card.getAttribute('data-category-id') == selectedId) {
+	              card.classList.add('selected');
+	            }
+	          });
+	        }, 300); 
+	      });
+	  }
+	});
+
 </script>

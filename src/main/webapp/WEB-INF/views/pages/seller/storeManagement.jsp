@@ -24,7 +24,8 @@
 		<div class="store-btn-icon">
 			<img src="${cpath}/resources/images/sideBar/add_active.svg" alt="add" />
 		</div>
-		<div class="store-btn-text" onclick="location.href='${cpath}/seller/store/new'">상점 추가하기</div>
+		<div class="store-btn-text"
+			onclick="location.href='${cpath}/seller/store/new'">상점 추가하기</div>
 	</div>
 	<div class="store-btn">
 		<div class="store-btn-text">상점 목록보기</div>
@@ -36,40 +37,32 @@
 		<div class="highlight">[현재 상점]</div>
 		${store.storeName}
 	</div>
-	<div class="store-info-content">주소: 서울시 중구 세종대로</div>
-	<div class="store-info-content">전화번호: 02-1234-5678</div>
-	<div class="store-edit-btn">상점 정보 수정</div>
+	<div class="store-info-content">
+		주소:
+		<c:out value="${store.sido}" />
+		<c:out value="${store.sigungu}" />
+		<c:out value="${store.dong}" />
+		<c:out value="${store.addressDetail}" />
+	</div>
+	<div class="store-info-content">전화번호: <c:out value="${user.phone}" /></div>
+	<div class="store-edit-btn" onclick="location.href='${cpath}/seller/store/edit/${store.storeId}'">상점 정보 수정</div>
 </div>
 
 <div class="store-menu-box">
-	<div class="store-menu-title">불고기 정식집 메뉴</div>
+	<div class="store-menu-title">${store.storeName} 메뉴</div>
 	<div class="store-menu-content">메뉴 사진을 눌러주시면 메뉴 정보를 보실 수 있어요</div>
 
 	<div class="store-menu-content-img-container swiper">
-		<div class="swiper-wrapper">
+	<div class="swiper-wrapper">
+		<c:forEach var="product" items="${productList}">
 			<div class="swiper-slide">
 				<img class="store-menu-content-img"
-					src="${cpath}/resources/images/category/cake.svg" alt="사진 1" />
-				<div class="store-menu-content-name">불고기1</div>
+					src="${cpath}${product.thumbnailImageUrl != null ? product.thumbnailImageUrl : '/resources/images/category/default.svg'}"
+					alt="${product.productName}" />
+				<div class="store-menu-content-name">${product.productName}</div>
 			</div>
-			<div class="swiper-slide">
-				<img class="store-menu-content-img"
-					src="${cpath}/resources/images/category/cake.svg" alt="사진 2" />
-			</div>
-			<div class="swiper-slide">
-				<img class="store-menu-content-img"
-					src="${cpath}/resources/images/category/cake.svg" alt="사진 3" />
-			</div>
-			<div class="swiper-slide">
-				<img class="store-menu-content-img"
-					src="${cpath}/resources/images/category/cake.svg" alt="사진 3" />
-			</div>
-			<div class="swiper-slide">
-				<img class="store-menu-content-img"
-					src="${cpath}/resources/images/category/cake.svg" alt="사진 3" />
-			</div>
-		</div>
-
+		</c:forEach>
+	</div>
 		<div class="swiper-button-circle swiper-button-circle-prev">
 			<div class="swiper-button-prev"></div>
 		</div>
