@@ -28,17 +28,6 @@
 
 	<div class="login-box">
 		<form action="${cpath}/auth/login" method="post">
-			<!-- 핸드폰 번호 입력 -->
-			<div class="input-group">
-				<input type="text" name="phone" placeholder="휴대폰 번호 (숫자만 입력)"
-					required />
-			</div>
-
-			<!-- 비밀번호 입력 -->
-			<div class="input-group">
-				<input type="password" name="password" placeholder="비밀번호" required />
-			</div>
-
 			<!-- 사용자 / 소상공인 선택 -->
 			<div class="user-type-select">
 				<label> <input type="radio" name="userType" value="사용자"
@@ -46,6 +35,17 @@
 				</label> <label> <input type="radio" name="userType" value="소상공인" />
 					<span>소상공인</span>
 				</label>
+			</div>
+			
+			<!-- 핸드폰 번호 입력 -->
+			<div class="input-group">
+				<input type="text" name="phone" placeholder="휴대폰 번호 (숫자만 입력)"
+					required class="form-input" />
+			</div>
+
+			<!-- 비밀번호 입력 -->
+			<div class="input-group">
+				<input type="password" name="password" placeholder="비밀번호" required class="form-input" />
 			</div>
 
 			<!-- 로그인 버튼 -->

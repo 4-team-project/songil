@@ -2,15 +2,16 @@
 
 .mypage-container {
 	padding-top: 20px;
-	width: 780px;
+	min-width: 600px;
 }
 
 h2 {
 	font-size: 25px;
+	min-width: 100%;
 }
 
 .user-info {
-	padding: 20px 0px 15px 20px;
+	padding: 20px 0px 15px 0px;
 }
 
 .user-info label {
@@ -49,7 +50,6 @@ h2 {
 	color: #ff9670;
 	width: 200px;
 	border-radius: 6px;
-	cursor: pointer;
 	font-size: 30px;
 	font-weight: bold;
 }
@@ -84,13 +84,21 @@ h2 {
 	background: transparent;
 	color: #ff9670;
 	border-radius: 6px;
-	cursor: pointer;
 	font-weight: bold;
+	white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .btn.side-btn:hover {
 	background-color: #ff9670;
 	color: white;
+}
+
+.readonly-text {
+	font-size: 20px;
+	padding: 10px 0;
+	display: inline-block;
+	width: 100%;
+	color: #333;
 }
 
 #resultModal {
@@ -123,7 +131,6 @@ h2 {
 	color: white;
 	border: none;
 	border-radius: 8px;
-	cursor: pointer;
 	font-weight: bold;
 	font-size: 20px;
 	transition: background-color 0.3s ease;
@@ -134,8 +141,7 @@ h2 {
 }
 
 /* 모달 기본 숨김 */
-#partnerModal,
-#modalBackdrop {
+#partnerModal, #modalBackdrop {
 	display: none;
 	position: fixed;
 	z-index: 9999;
@@ -160,43 +166,79 @@ h2 {
 	padding: 30px 30px 20px 30px;
 	border-radius: 12px;
 	box-shadow: 0 4px 12px rgba(255, 150, 112, 0.5);
-	width: 400px;
+	width: 450px;
+	height: 400px;
 	text-align: center;
-	font-family: 'Noto Sans KR', sans-serif;
+}
+
+.close {
+	position: absolute;
+	top: 18px;
+	right: 24px;
+	font-size: 24px;
+	font-weight: bold;
+	color: #333;
 }
 
 /* 모달 제목 */
 #partnerModal #modalTitle {
-	font-size: 18px;
-	color: #ff9670;
+	font-size: 20px;
 	font-weight: bold;
-	margin-bottom: 12px;
+	margin-bottom: 16px;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 12px;
 }
 
 /* 본문 텍스트 */
 #partnerModal #modalDesc {
-	font-size: 15px;
-	color: #444;
-	line-height: 1.6;
-	margin: 0;
+	background: #fff6f0;
+	border-radius: 12px;
+	padding: 30px 20px 30px 20px;
+	margin-bottom: 20px;
+	height: 170px;
 }
 
-/* 버튼 공통 */
-#partnerModal button {
-	margin: 0 5px;
-	padding: 8px 18px;
+.modal-btn {
+	flex: 1;
+	padding: 12px;
+	border-radius: 8px;
+	font-size: 15px;
+	font-weight: bold;
+	border: none;
+}
+
+.modal-buttons {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.modal-btn.confirm {
+	background: #ff9670;
+	color: white;
+}
+
+.modal-btn.cancel {
+	background: #fff;
+	border: 1px solid #ff9670;
+	color: #ff9670;
+}
+
+.modal-btn.cancel:hover {
 	background-color: #ff9670;
 	color: white;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	font-weight: bold;
-	font-size: 16px;
-	transition: background-color 0.3s ease;
 }
 
-/* 버튼 호버 */
-#partnerModal button:hover {
-	background-color: #fff6f0;
-	color: #ff9670;
+.modal-btn.confirm:hover {
+	background-color: #fdd4c2;
+}
+
+.line {
+	border: 1px solid #ccc;
+}
+
+input:focus {
+	border-color: #FF9670;
+	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
+	outline: none;
 }
