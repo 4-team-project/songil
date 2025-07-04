@@ -32,7 +32,8 @@
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
-			<label for="images" class="menu-img-btn">사진 추가하기</label> <input
+			<label for="images" class="menu-img-btn">사진 추가하기</label> 
+			<input
 				type="file" id="images" name="images" multiple accept="image/*"
 				onchange="handleFiles(this.files)" />
 		</div>
@@ -48,8 +49,15 @@
 		완료</button>
 </div>
 
+
 <script>
 let selectedFiles = [];
+
+const productImages = [
+	<c:forEach var="img" items="${productDTO.images}" varStatus="loop">
+		"${img.imageUrl}"<c:if test="${!loop.last}">,</c:if>
+	</c:forEach>
+];
 
 function handleFiles(fileList) {
   const preview = document.getElementById('preview-list');
@@ -119,19 +127,22 @@ function submitProduct() {
 	    	})  
 	  };
 	  
-	  console.log(productData);
+	  const formData = new FormData();
+	  formData.append("product", JSON.stringify(productData));
+	  selectedFiles.forEach(file => {
+		  if (!file.isExisting) formData.append("images", file);
+		});
+	  
+	  console.log(formData);
 	  const url = productId
 	    ? `${cpath}/seller/product/update/${productId}`
 	    : `${cpath}/seller/product/insert`;
 
-	  const method = productId ? "PUT" : "POST";
+	  const method = "POST";
 
 	  fetch(url, {
 	    method: method,
-	    headers: {
-	      "Content-Type": "application/json"
-	    },
-	    body: JSON.stringify(productData)
+	    body: formData,
 	  })
 	  .then(res => res.text())
 	  .then(msg => {

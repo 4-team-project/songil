@@ -54,7 +54,7 @@
 
 	<div class="store-menu-content-img-container swiper">
 	<div class="swiper-wrapper">
-		<c:forEach var="product" items="${productList}" onclick="location.href='${cpath}/seller/product/edit/${product.productId}'">
+		<c:forEach var="product" items="${productList}">
 			<div class="swiper-slide">
 				<img class="store-menu-content-img"
 					src="${cpath}${product.thumbnailImageUrl != null ? product.thumbnailImageUrl : '/resources/images/category/default.svg'}"
