@@ -24,6 +24,7 @@ public class SellerAuthenticationFilter implements Filter {
 		String cpath = req.getContextPath();
 		String uri = req.getRequestURI();
 
+
 		// 1. 로그인 안 되어 있으면 로그인 페이지로
 		if (session == null || session.getAttribute("loginUser") == null) {
 			res.sendRedirect(cpath + "/auth/login?msg=needLogin");

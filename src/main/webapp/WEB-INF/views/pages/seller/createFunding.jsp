@@ -13,11 +13,11 @@
 		<!-- 버튼 클릭 시 hidden input 값 설정 -->
 		<button type="button" id="btnLimited" class="funding-btn" onclick="selectFundingType('limited')">
 			<p>한정 상품 펀딩</p><br>
-			<span class="description"><strong>딱쿠에서만</strong> 만나볼 수 있는 메뉴에 대한 펀딩이에요</span>
+			<span class="description"><strong>딱쿠에서만</strong> 만나볼 수 있는 메뉴에 대한 펀딩이에요.</span>
 		</button>
 		<button type="button" id="btnGeneral" class="funding-btn" onclick="selectFundingType('general')">
 			<p>일반 펀딩</p><br>
-			<span class="description"><strong>상시 판매</strong> 되는 메뉴에 대한 펀딩이에요</span>
+			<span class="description"><strong>상시 판매</strong> 되는 메뉴에 대한 펀딩이에요.</span>
 		</button>
 	</div>
 

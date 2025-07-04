@@ -59,9 +59,14 @@
 }
 .logout {
 	font-size: 15px;
-	color: #555;
-	text-decoration: underline;
-	margin-top: auto;
+  color: #555;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: auto;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 /**********************************************************/
@@ -396,7 +401,7 @@
 	padding-top: 20px;
 	padding-left: 60px;
 	padding-right: 40px;
-	font-size: 17px;
+	font-size: 15px;
 	width: 300px;
 	color: #555;
 }

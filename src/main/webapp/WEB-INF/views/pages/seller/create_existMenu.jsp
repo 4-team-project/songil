@@ -110,7 +110,7 @@ $(document).on('click', '#btn-edit', function(){
 <h3>상품 정보를 입력해주세요.</h3>
 <form action="${pageContext.request.contextPath}/seller/fundings/create-step3" method="post">
 <div class="menuName">
-  <div class="menu-label">펀딩할 메뉴를 선택해주세요</div>
+  <div class="menu-label">펀딩할 메뉴를 선택해주세요.</div>
   <div class="menu-select">
 
     <select id="menuSelect" name="productId" required>
@@ -133,7 +133,7 @@ $(document).on('click', '#btn-edit', function(){
 <!-- 판매 가능한 최대 개수 -->
 <div class="form-group">
   <div class="menu-label">펀딩 이벤트로 판매 가능한 최대 개수를 입력해 주세요.</div>
-  <div class="description">예: 50개가 가능하면, 50개 판매시 사용자가 펀딩 참여 불가능.</div>
+  <div class="description">예: 50개가 가능하면, 50개 판매시 사용자가 펀딩 참여 불가능</div>
   <input type="number" id="maxSales" name="maxQty"
     placeholder="최대 판매 개수 입력" required class="form-input"/> <span class="unit-text">&nbsp개</span>
 </div>
