@@ -43,25 +43,29 @@ public class SellerController {
 	@ApiOperation(value = "판매자 마이페이지", notes = "판매자의 기본 정보를 확인할 수 있는 마이페이지입니다.")
 	public String myPage(HttpSession session, Model model) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-		// TODO 세션에서만 읽어오도록 수정
-		UserDTO user = userService.selectByUserId(3); // 테스트용
-		model.addAttribute("loginUser", user);
+		model.addAttribute("loginUser", loginUser);
 		return "seller.mypage";
 	}
 
 	@PostMapping("/mypage/update")
 	@ApiOperation(value = "판매자 정보 수정", notes = "판매자의 프로필 정보를 수정합니다.")
-	public String updateMyPage(@ModelAttribute UserDTO updatedUser, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+	public String updateMyPage(@RequestParam(required = false) String nickname,
+	        @RequestParam(required = false) String newPassword,
+	        HttpSession session,
+	        RedirectAttributes redirectAttributes) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-		// TODO 세션에서만 읽어오도록 수정
-		UserDTO user = userService.selectByUserId(3); // 테스트용
-		if (loginUser == null) {
-			return "redirect:/auth/login";
-		}
-		updatedUser.setUserId(user.getUserId());
-		userService.updateUser(updatedUser);
-		session.setAttribute("loginUser", updatedUser);
+
+		// 변경 사항만 반영
+	    if (nickname != null && !nickname.trim().isEmpty()) {
+	        loginUser.setNickname(nickname.trim());
+	    }
+
+	    if (newPassword != null && !newPassword.trim().isEmpty()) {
+	        loginUser.setPassword(newPassword.trim());
+	    }
+
+		userService.updateUser(loginUser);
+		session.setAttribute("loginUser", loginUser);
 		redirectAttributes.addFlashAttribute("updateSuccess", true);
 		return "redirect:/seller/mypage";
 	}
@@ -71,11 +75,9 @@ public class SellerController {
 	@ApiOperation(value = "파트너 상태 변경", notes = "판매자의 파트너 등록/해제를 처리합니다.")
 	public String changePartnerStatus(@RequestParam("action") String action, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-		// TODO 세션에서만 읽어오도록 수정
-		UserDTO user = userService.selectByUserId(3); // 테스트용
 		String newStatus = action.equals("register") ? "Y" : "N";
-		user.setIsPartner(newStatus);
-		userService.updateUser(user);
+		loginUser.setIsPartner(newStatus);
+		userService.updateUser(loginUser);
 		session.setAttribute("loginUser", loginUser);
 		return "success";
 	}

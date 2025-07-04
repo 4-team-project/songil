@@ -13,16 +13,16 @@
 		// 모달 열기 함수
 		function showModal(message, callback) {
 			$("#modalMsg").html(message);
-			$("#resultModal").fadeIn();
+			$("#resultModal, #modalBackdrop").fadeIn();
 
 			$("#closeModalBtn").off("click").on("click", function() {
-				$("#resultModal").fadeOut(function() {
+				$("#resultModal, #modalBackdrop").fadeOut(function() {
 					if (callback)
 						callback();
 				});
 			});
 		}
-		
+
 		// 인증번호 전송
 		$("#sendAuthCodeBtn").on("click", function() {
 			const phone = $("input[name='phone']").val();
@@ -69,32 +69,41 @@
 		});
 
 		// 비밀번호 찾기 버튼 클릭 시 본인인증 확인
-		$("#joinForm").on("submit", function(e) {
-			const authVerified = $("#authVerified").val();
-			e.preventDefault();
-			if (authVerified !== "true") {
-				showModal("본인인증이 완료되어야 <br> 비밀번호를 찾을 수 있습니다.", function() {
-					$("#sendAuthCodeBtn").focus();
-				});
-				return;
-			}
+		$("#joinForm")
+				.on(
+						"submit",
+						function(e) {
+							const authVerified = $("#authVerified").val();
+							e.preventDefault();
+							if (authVerified !== "true") {
+								showModal("본인인증이 완료되어야 <br> 비밀번호를 찾을 수 있습니다.",
+										function() {
+											$("#sendAuthCodeBtn").focus();
+										});
+								return;
+							}
 
-			const name = $("input[name='name']").val();
-			const phone = $("input[name='phone']").val();
-			const userType = $("input[name='userType']:checked").val();
+							const name = $("input[name='name']").val();
+							const phone = $("input[name='phone']").val();
+							const userType = $("input[name='userType']:checked")
+									.val();
 
-			$.post("${cpath}/auth/findPassword", {
-				name: name,
-				phone: phone,
-				userType: userType
-			}, function(res) {
-				if (res === "not-found") {
-					showModal("입력하신 정보로 등록된 계정이 없습니다.");
-				} else {
-					showModal(`비밀번호는 <strong style="color:#ff9670">\${res}</strong> 입니다.`);
-				}
-			});
-		});
+							$
+									.post(
+											"${cpath}/auth/findPassword",
+											{
+												name : name,
+												phone : phone,
+												userType : userType
+											},
+											function(res) {
+												if (res === "not-found") {
+													showModal("입력하신 정보로 등록된 계정이 없습니다.");
+												} else {
+													showModal(`비밀번호는 <strong style="color:#ff9670">\${res}</strong> 입니다.`);
+												}
+											});
+						});
 	});
 </script>
 
@@ -152,4 +161,7 @@
 		<p id="modalMsg"></p>
 		<button id="closeModalBtn">확인</button>
 	</div>
+
+	<!-- 모달 배경 -->
+	<div id="modalBackdrop"></div>
 </div>

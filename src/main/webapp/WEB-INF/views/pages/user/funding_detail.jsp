@@ -94,6 +94,19 @@
 	  createImageSlider(fundingImages, "#fundingMainImage", "#fundingPrevBtn", "#fundingNextBtn", ".funding-dot");
 	  createImageSlider(productImages, "#productMainImage", "#productPrevBtn", "#productNextBtn");
 	});
+	
+	// 모달 열기 함수
+	function showModal(message, callback) {
+		$("#modalMsg").html(message);
+		$("#resultModal, #modalBackdrop").fadeIn();
+
+		$("#closeModalBtn").off("click").on("click", function() {
+			$("#resultModal, #modalBackdrop").fadeOut(function() {
+				if (callback)
+					callback();
+			});
+		});
+	}
 	//구매 개수, 총 가격 증가 감소
 	$(function () {
 		const salePrice = parseInt("${funding.salePrice}");
@@ -115,7 +128,7 @@
 	        $("#quantity").val(qty);
 	        updateTotal(qty);
 	      } else {
-	        alert("최대 구매 가능 수량은 " + maxBuyable + "개입니다.");
+	        showModal("최대 구매 가능 수량은 " + maxBuyable + "개입니다.");
 	      }
 	    });
 
@@ -130,8 +143,9 @@
 	$(function () {
 		  $(".buy-button").click(function () {
 			  if (!isLoggedIn) {
-			      alert("로그인 후 이용 가능합니다.");
-			      location.href = "${cpath}/auth/login"; 
+				  showModal("로그인 후 이용 가능합니다.", function() {
+					    location.href = "${cpath}/auth/login";
+					  });
 			      return;
 			    }
 		    const quantity = $("#quantity").val();
@@ -242,7 +256,7 @@
 
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
-	
+
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
@@ -371,3 +385,13 @@
 
 	<!-- 리뷰 탭 영역 -->
 	<div id="review-tab" style="display: none;"></div>
+</div>
+
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg">로그인이 필요합니다.</p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>

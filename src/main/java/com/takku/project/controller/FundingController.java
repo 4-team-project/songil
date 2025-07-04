@@ -173,7 +173,6 @@ public class FundingController {
 			review.setImages(imageList);
 		}
 		List<String> taglist = tagService.selectTagNamesByFundingId(fundingId);
-		System.out.println(reviewlist);
 		double avgRating = reviewlist.stream().mapToInt(ReviewDTO::getRating).average().orElse(0.0);
 		int reviewCount = reviewlist.size();
 

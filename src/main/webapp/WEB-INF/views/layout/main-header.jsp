@@ -14,10 +14,14 @@
 		<div class="nav-box">
 			<c:choose>
 				<c:when test="${not empty loginUser}">
-					<div class="nav-text"
-						onclick="location.href='${cpath}/user/coupon'">내 쿠폰함</div>
-					<div class="nav-text"
-						onclick="location.href='${cpath}/user/mypage'">마이페이지</div>
+					<c:if test="${loginUser.userType == '사용자'}">
+						<div class="nav-text"
+							onclick="location.href='${cpath}/user/coupon'">내 쿠폰함</div>
+					</c:if>
+					<c:if test="${loginUser.userType == '사용자'}">
+						<div class="nav-text"
+							onclick="location.href='${cpath}/user/mypage'">마이페이지</div>
+					</c:if>
 					<c:if test="${loginUser.userType == '소상공인'}">
 						<div class="nav-text"
 						onclick="location.href='${cpath}/seller/home'">소상공인 페이지</div>
