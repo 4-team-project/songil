@@ -9,8 +9,6 @@
 		<h2>리뷰 작성</h2>
 		<button class="review-close-btn" onclick="openConfirmModal()">✕</button>
 	</div>
-	<hr>
-
 
 	<div class="info">
 		<p>
@@ -46,7 +44,10 @@
 			onchange="handleFiles(this.files)" />
 		<div id="preview-container"
 			style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
-		<button type="submit" class="submit-btn">리뷰 등록</button>
+		<div class="modal-buttons">
+				<button type="button" class="modal-btn Ucheck">취소하기</button>
+				<button type="button" class="modal-btn Uedit">리뷰 등록</button>			
+			</div>
 	</form>
 </div>
 <!-- 리뷰 작성 종료 모달 -->

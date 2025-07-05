@@ -6,6 +6,7 @@
 	margin: 0 auto;
 	box-sizing: border-box;
 }
+
 .sidebar {
 	width: 200px;
 	padding: 16px;
@@ -14,25 +15,27 @@
 	background-color: #FFF6F0;
 	text-align: center;
 	flex-shrink: 0;
-	display: flex;           
+	display: flex;
 	flex-direction: column;
 }
+
 .user-icon {
 	font-size: 80px;
 }
+
 .username {
 	font-weight: bold;
 	font-size: 25px;
 	margin-bottom: 5px;
 }
-.buylist,
-.activeFunding {
+
+.buylist, .activeFunding {
 	display: inline-block;
 	padding: 10px;
 	width: 100%;
 }
-.buylist.active,
-.activeFunding.active {
+
+.buylist.active, .activeFunding.active {
 	font-weight: bold;
 	color: #FFFFFF;
 	background-color: #FF9670;
@@ -47,26 +50,29 @@
 	color: #555;
 	font-size: 14px;
 }
+
 .menulist {
 	padding-top: 40px;
 }
+
 .menulist a {
-	text-decoration: none; 
-	font-size: 18px; 
-	color: #ff9670; 
+	text-decoration: none;
+	font-size: 18px;
+	color: #ff9670;
 	font-weight: bold;
 	margin-bottom: 12px;
 }
+
 .logout {
 	font-size: 15px;
-  color: #555;
-  text-decoration: underline;
-  background: none;
-  border: none;
-  padding: 0;
-  margin-top: auto;
-  cursor: pointer;
-  font-family: inherit;
+	color: #555;
+	text-decoration: underline;
+	background: none;
+	border: none;
+	padding: 0;
+	margin-top: auto;
+	cursor: pointer;
+	font-family: inherit;
 }
 
 /**********************************************************/
@@ -74,7 +80,7 @@
 .tab-search-container {
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 3px solid #ffe1ce; 
+	border-bottom: 3px solid #ffe1ce;
 	align-items: center;
 	height: 67px;
 	font-weight: 500;
@@ -129,8 +135,8 @@
 .tab-menu li a.active {
 	color: #ff9670;
 	font-weight: bold;
-	margin-bottom:-6px;
-	border-bottom: 3px solid #ff9670; 
+	margin-bottom: -6px;
+	border-bottom: 3px solid #ff9670;
 }
 
 .funding_nav li a.active {
@@ -141,7 +147,7 @@
 
 .tab-wrapper.fundinglist .menulist {
 	display: flex;
-	flex-direction: row; 
+	flex-direction: row;
 	gap: 40px;
 	align-items: center;
 }
@@ -193,7 +199,6 @@
 	flex: 2 3 auto;
 	max-width: 400px;
 	padding-left: 120px;
-	
 }
 
 .fundinglist-header .col-period {
@@ -424,7 +429,7 @@
 .modal {
 	position: fixed;
 	top: 50%;
-	left: 50%;
+	left: 55%;
 	transform: translate(-50%, -50%);
 	display: none;
 	z-index: 1000;
@@ -435,10 +440,54 @@
 	background: white;
 	padding: 30px;
 	border-radius: 12px;
-	width: 470px;
+	width: 550px;
 	max-width: 90%;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 	position: relative;
+	z-index: 9999;	
+	box-shadow: 0 4px 12px rgba(255, 150, 112, 0.5);
+}
+
+.modal-title {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 16px;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 12px;
+	text-align: center;
+}
+
+#user-info-form {
+	background: #fff6f0;
+	border-radius: 12px;
+	padding: 20px;
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+#user-info-form p {
+	font-size: 13px;
+	margin-bottom: 12px;
+	display: flex;
+	align-items: flex-start;
+}
+
+#user-info-form strong {
+	width: 110px;
+	color: #ff9670;
+	flex-shrink: 0;
+	font-size: 15px;
+}
+
+#user-info-form input {
+	word-break: break-word;
+	flex: 1;
+	font-size: 15px;
+}
+
+input:focus {
+	border-color: #FF9670;
+	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
+	outline: none;
 }
 
 /* 닫기 버튼 */
@@ -450,107 +499,54 @@
 	cursor: pointer;
 }
 
-h2 {
-	text-align: center;
-}
-
-.modal-info, #user-info-form {
-	background-color: #fff7f2;
-	padding: 10px;
-	border-radius: 5px;
-}
-
-/* 텍스트 영역 */
-.modal-info p {
-	font-size: 16px;
-	color: #ff9670;
-}
-
-.modal-info p span {
-	color: #333;
-	font-weight: 500;
-}
-
-/* 버튼 영역 */
 .modal-buttons {
 	display: flex;
 	justify-content: space-between;
-	margin-top: 20px;
+	gap: 12px;
 }
 
 .modal-btn {
-	padding: 10px 20px;
-	border-radius: 6px;
-	font-weight: 500;
+	flex: 1;
+	padding: 12px;
+	border-radius: 8px;
+	font-size: 15px;
+	font-weight: bold;
 	cursor: pointer;
-}
-
-.modal-btn.cancel {
-	background-color: #fff;
-	border: 1.5px solid #f37041;
-	text-align: center;
-	color: #f37041;
-}
-
-.modal-btn.confirm {
-	margin-left: auto;
-	text-align: center;
-	background-color: #f37041;
 	border: none;
-	color: white;
-}
-
-.modal-btn.cancel:hover {
-	background-color: #fff0ea;
-}
-
-.modal-btn.confirm:hover {
-	background-color: #e95f30;
-}
-
-/*****************************************/
-/*내 정보 수정하기*/
-#user-info-form label {
-	font-weight: 600;
-	color: #f37041;
-	font-size: 17px;
-}
-
-/* 입력창 스타일 */
-#user-info-form input[type="text"], #user-info-form input[type="tel"], #user-info-form input[type="password"],
-	#user-info-form select {
-	width: 60%;
-	padding: 8px 12px;
-	padding-top: 10px;
-	border: 1px solid #f37041;
-	border-radius: 6px;
-	font-size: 17px;
-	background-color: white;
-}
-
-/* 저장 버튼 */
-.modal-btn.Uedit {
-	background-color: #f37041;
-	color: white;
-	border: 1px solid #f37041;
-	margin-left: 15px;
-}
-
-.modal-btn.Uconfirm:hover {
-	background-color: #e95f30;
 }
 
 .modal-btn.Ucheck {
-	background-color: white;
-	border: 1px solid #f37041;
-	color: #f37041;
-	margin-right: 15px;
+	background: #fff;
+	border: 1px solid #ff9670;
+	color: #ff9670;
+}
+
+.modal-btn.Uedit {
+	background: #ff9670;
+	color: white;
 }
 
 .modal-btn.Ucheck:hover {
-	background-color: #fff0ea;
+	background-color: #ff9670;
+	color: white;
 }
 
+.modal-btn.Uedit:hover {
+	background-color: #ffe8d9;
+}
+
+/* 모달 배경 */
+#modalBackdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 999;
+	display: none;
+}
+/*****************************************/
 .input-no-border {
 	border: none !important;
 	outline: none !important;
