@@ -1,11 +1,10 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
 <input type="hidden" id="productId" value="${productDTO.productId}" />
-
+<input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
 	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
@@ -32,8 +31,7 @@
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
-			<label for="images" class="menu-img-btn">사진 추가하기</label> 
-			<input
+			<label for="images" class="menu-img-btn">사진 추가하기</label> <input
 				type="file" id="images" name="images" multiple accept="image/*"
 				onchange="handleFiles(this.files)" />
 		</div>
@@ -110,7 +108,7 @@ function handleFiles(fileList) {
 
   document.getElementById('images').value = '';
 }
-
+const redirectUrl = document.getElementById("redirectUrl")?.value;
 function submitProduct() {
 	  const productId = document.getElementById("productId").value;
 	  const productData = {
@@ -141,14 +139,19 @@ function submitProduct() {
 	  const method = "POST";
 
 	  fetch(url, {
-	    method: method,
-	    body: formData,
-	  })
-	  .then(res => res.text())
-	  .then(msg => {
-	    alert((productId ? "수정" : "등록") + " 결과: " + msg);
-	    
-	  })
+		  method: "POST",
+		  body: formData
+		})
+		.then(res => res.text())
+		.then(msg => {
+		  alert((productId ? "수정" : "등록") + " 결과: " + msg);
+
+		  if (redirectUrl) {
+		    location.href = redirectUrl;
+		  } else {
+		    location.href = `${cpath}/seller/product`;
+		  }
+		})
 	  .catch(err => alert("오류: " + err));
 	}
 
