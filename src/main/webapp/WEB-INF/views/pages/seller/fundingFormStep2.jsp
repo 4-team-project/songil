@@ -33,7 +33,10 @@
 				value="${tempFunding.fundingId}"> <input type="hidden"
 				id="currentProcessingUserId" name="currentProcessingUserId"
 				value="${currentProcessingUserId}">
-
+			<c:forEach var="img" items="${tempFunding.images}" varStatus="status">
+				<input type="hidden" name="images[${status.index}].imageUrl"
+					value="${img.imageUrl}" />
+			</c:forEach>
 			<div class="form-group">
 				<c:choose>
 					<c:when test="${isNotReadyStatus && tempFunding.status eq '진행중'}">
@@ -163,17 +166,19 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div class="form-actions">
-			<button type="button" onclick="location.href='/seller/store/edit/step1'" class="back-button">뒤로가기</button>
-			<c:choose>
-			<c:when test="${!isNotReadyStatus}">
-			<button type="submit" class="submit-button">펀딩 저장</button>
-			</c:when>
-			<c:when test="${isNotReadyStatus}">
-			<button type="submit" class="submit-button">확인 완료</button>
-			</c:when>
+			<div class="btn-container">
+				<button type="button"
+					onclick="location.href='/seller/store/edit/step1'"
+					class="btn">이전</button>
+				<c:choose>
+					<c:when test="${!isNotReadyStatus}">
+						<button type="submit" class="btn filled">펀딩 저장</button>
+					</c:when>
+					<c:when test="${isNotReadyStatus}">
+						<button type="submit" class="btn filled">확인 완료</button>
+					</c:when>
 				</c:choose>
-				</div>
+			</div>
 		</form>
 	</div>
 </div>

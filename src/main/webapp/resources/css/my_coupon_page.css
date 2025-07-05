@@ -6,6 +6,7 @@
 
 .sidebar {
   width: 200px;
+  min-width: 200px;
   padding: 16px;
   border-right: 1px solid #eee;
   color: #FF9670;
@@ -81,6 +82,7 @@ padding-top: 30px;
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
+  max-height: 150px;
 }
 
 .coupon-left {
@@ -90,6 +92,9 @@ padding-top: 30px;
   font-weight: bold;
   flex-grow: 1;
   max-width: 160px;
+  min-width: 160px;
+  min-height: 100px;
+  max-height: 100px;
   align-self: stretch;
   text-align: center;
 }
@@ -154,6 +159,7 @@ padding-top: 30px;
   padding: 10px 15px;
   border-radius: 6px;
   cursor: pointer;
+  min-width: 100px;
   
 }
 
@@ -244,6 +250,28 @@ padding-top: 30px;
 .usedAt, .use {
 	font-size: 20px;
 	font-weigth: bold;
+}
+
+.modal-backdrop {
+	position: fixed;
+	top: 0; left: 0;
+	width: 100vw; height: 100vh;
+	background: rgba(0,0,0,0.5);
+	z-index: 998;
+}
+.modal-container {
+	position: fixed;
+	top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+	z-index: 999;
+	max-width: 500px;
+	width: 90%;
+}
+.modal-content {
+	padding: 20px;
 }
 
 .more {

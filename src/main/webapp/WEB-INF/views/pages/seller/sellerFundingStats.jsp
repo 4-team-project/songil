@@ -47,27 +47,27 @@
 		<c:choose>
         <c:when test="${funding.status eq '준비중'}">
        <div class="chart-area">
-                <p style="text-align: center; padding: 30px; font-size: 1.2em; color: #555;">
+                <p style="text-align: center;  font-size: 1.2em; color: #555;">
                 아직 펀딩이 시작하지 않았어요.
             </p>
             </div>
             <div class="chart-area">
-                <p style="text-align: center; padding: 30px; font-size: 1.2em; color: #555;">
+                <spam style="text-align: center;  font-size: 1.2em; color: #555;">
                 아직 펀딩이 시작하지 않았어요.
-            </p>
+            </spam>
             </div>
         </c:when>
         <c:otherwise>
             <div class="chart-area">
-            <p style="text-align: center; font-size: 1.2em; color: #555; margin: -30px; font-weight: bold; font-style: normal;">
+            <span style="text-align: center; font-size: 1.2em; color: #555; font-weight: bold; font-style: normal;">
             남녀 선호도
-            </p>
+            </span>
                 <canvas id="genderChart" width="400" height="300"></canvas>
             </div>
             <div class="chart-area">
-             <p style="text-align: center; font-size: 1.2em; color: #555; margin: -30px; font-weight: bold; font-style: normal;">
+             <span style="text-align: center; font-size: 1.2em; color: #555; font-weight: bold; font-style: normal;">
             연령별 선호도
-            </p>
+            </span>
                 <canvas id="ageChart" width="400" height="400"></canvas>
             </div>
         </c:otherwise>
@@ -97,7 +97,7 @@
 			</p>
 		</div>
 
-		<div class="summary-card-down">
+		<div class="summary-card-down-per">
 			<span class="title">달성률</span>
 			<div class="rate-container">
 				<span class="highlight"> ${funding.currentQty} /
@@ -111,7 +111,7 @@
 		</div>
 
 
-		<div class="summary-card-down">
+		<div class="summary-card-down-date">
 			<span class="title">펀딩 기간</span>
 			<span class="highlight"> <fmt:formatDate
 					value="${funding.startDate}" pattern="yyyy년 MM월 dd일" /> ~ <fmt:formatDate
