@@ -92,7 +92,8 @@
 		SELECT *
 		FROM takku_store
 		WHERE user_id = #{userId}
-		ORDER BY created_at ASC
+		ORDER BY created_at
+		ASC
 		)
 		WHERE ROWNUM = 1
 	</select>
@@ -102,5 +103,23 @@
 		SELECT * FROM
 		takku_store WHERE user_id = #{userId}
 	</select>
+
+	<!-- productId로 상점 평점 계산 -->
+	<select id="getAverageRatingByUserId" resultType="map">
+		SELECT
+		s.store_id AS storeId,
+		ROUND(AVG(r.rating), 1) AS averageRating
+		FROM
+		takku_review r
+		JOIN
+		takku_product p ON r.product_id = p.product_id
+		JOIN
+		takku_store s ON p.store_id = s.store_id
+		WHERE
+		s.user_id = #{userId}
+		GROUP BY
+		s.store_id
+	</select>
+
 
 </mapper>
