@@ -4,6 +4,7 @@
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
+
 	<!-- 기본 레이아웃 정의 -->
 	<definition name="defaultLayout"
 		template="/WEB-INF/views/layout/layout.jsp">
@@ -211,10 +212,18 @@
 		<put-attribute name="title" value="메뉴" />
 	</definition>
 
+	<!-- 상점 추가/수정 -->
 	<definition name="seller.store" extends="sellerLayout">
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/store/storeDetail.jsp" />
-		<put-attribute name="title" value="메뉴" />
+		<put-attribute name="title" value="상점" />
+	</definition>
+	
+	<!-- 상점 목록 -->
+	<definition name="seller.storeList" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/store/storeList.jsp" />
+		<put-attribute name="title" value="상점목록" />
 	</definition>
 
 	<definition name="seller/stats" extends="sellerLayout">

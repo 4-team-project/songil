@@ -28,7 +28,7 @@
 			onclick="location.href='${cpath}/seller/store/new'">상점 추가하기</div>
 	</div>
 	<div class="store-btn">
-		<div class="store-btn-text">상점 목록보기</div>
+		<div class="store-btn-text" onclick="location.href='${cpath}/seller/store/storeList'">상점 목록보기</div>
 	</div>
 </div>
 
