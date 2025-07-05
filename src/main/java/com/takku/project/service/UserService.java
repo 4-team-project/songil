@@ -2,6 +2,7 @@
 package com.takku.project.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -99,10 +100,14 @@ public class UserService implements UserMapper {
 		map.put("userType", userType);
 		map.put("name", name);
 		map.put("phone", phone);
-		
+
 		UserDTO user = sqlSession.selectOne(namespace + "findUserPassword", map);
 		return user;
 	}
-	
-	
+
+	@Override
+	public List<UserDTO> selectUsersByFundingId(int fundingId) {
+		return sqlSession.selectList(namespace + "selectUsersByFundingId", fundingId);
+	}
+
 }

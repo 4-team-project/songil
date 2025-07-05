@@ -157,7 +157,8 @@ function submitProduct() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const productId = document.getElementById("productId")?.value;
-
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get('redirect');
   if (productId) {
     fetch(`${cpath}/seller/product/info/${productId}`)
       .then(res => res.json())
@@ -200,6 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
       });
+  }
+  
+  const backBtn = document.querySelector('.complete-back-btn');
+  if (redirect && backBtn) {
+    backBtn.onclick = function () {
+      location.href = redirect;
+    };
   }
 });
 </script>

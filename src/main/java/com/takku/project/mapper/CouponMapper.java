@@ -24,4 +24,7 @@ public interface CouponMapper {
 
 	// coupon_id로 단건 조회
 	CouponDTO selectByCouponId(Integer couponId);
+
+	List<Map<String, Object>> selectParticipantsWithQtyByFundingId(int fundingId);
+
 }
