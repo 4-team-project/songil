@@ -7,87 +7,110 @@
 <script>
 let basePrice = null;
 
-$(document).ready(function() {
-  // 메뉴 목록 불러오기
-  $('#menuSelect').on('focus', function() {
-    const storeId = ${storeDTO.storeId};
+function getSelectedProductIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('selectedProductId');
+}
 
-    $.ajax({
-      url: '${pageContext.request.contextPath}/seller/product/list',
-      method: 'GET',
-      data: { storeId: storeId },
-      success: function(productList) {
-        $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
-        $.each(productList, function(i, product) {
-          $('#menuSelect').append(
-            $('<option></option>').val(product.productId).text(product.productName)
-          );
-        });
+$(document).ready(function () {
+  const storeId = ${storeDTO.storeId};
+  const selectedId = getSelectedProductIdFromURL();
+
+  // 메뉴 목록 불러오기
+  $.ajax({
+    url: '${pageContext.request.contextPath}/seller/product/list',
+    method: 'GET',
+    data: { storeId: storeId },
+    success: function(productList) {
+      $('#menuSelect').html('<option value="" disabled selected>메뉴를 선택해주세요.</option>');
+      $.each(productList, function(i, product) {
+        const option = $('<option></option>').val(product.productId).text(product.productName);
+        if (selectedId && product.productId == selectedId) {
+          option.prop('selected', true);
+        }
+        $('#menuSelect').append(option);
+      });
+
+      if (selectedId) {
+        $('#menuSelect').trigger('change');
+        history.replaceState({}, document.title, window.location.pathname); // URL 깔끔하게
       }
-    });
+    }
   });
 
-  // 상품 선택 시 가격 정보 표시 및 할인율 계산 준비
-  $('#menuSelect').on('change', function() {
+  // 정가 불러오기
+  $('#menuSelect').on('change', function () {
     const productId = $(this).val();
     $.ajax({
       url: '${pageContext.request.contextPath}/seller/product/info',
       method: 'GET',
       data: { productId: productId },
       dataType: 'json',
-      success: function(product) {
+      success: function (product) {
         if (product && product.price != null) {
           basePrice = product.price;
           $('#menuPrice').attr('placeholder', basePrice);
           $('#menuPrice').val('');
           $('#discountRate').text('할인율은 %입니다.');
+          updateMinPrice();
+        } else {
+          basePrice = null;
+          $('#menuPrice').attr('placeholder', '가격 정보를 불러오지 못했습니다.');
         }
       }
     });
   });
 
-  // 판매가 입력 시 할인율 계산
-  $('#menuPrice').on('input', function() {
+  // 할인율 계산
+  $('#menuPrice').on('input', function () {
     const sellingPrice = Number($(this).val());
-
     if (basePrice && sellingPrice > 0 && sellingPrice <= basePrice) {
       let discount = ((1 - (sellingPrice / basePrice)) * 100).toFixed(1);
-      $('#discountRate').text(`할인율은 \${discount}%입니다.`);
+      $('#discountRate').text(`할인율은 ${discount}%입니다.`);
     } else if (sellingPrice > basePrice) {
       $('#discountRate').text('판매가는 정가보다 클 수 없습니다.');
+    } else {
+      $('#discountRate').text('할인율은 %입니다.');
     }
+    updateMinPrice();
   });
 
-  // 판매가가 정가보다 높을 경우 form 제출 방지
-  $('form').on('submit', function(e) {
+  // 최소 펀딩 금액 계산
+  $('#minSales').on('input', updateMinPrice);
+
+  function updateMinPrice() {
+    const price = Number($('#menuPrice').val());
+    const quantity = Number($('#minSales').val());
+    const minAmount = price > 0 && quantity > 0 ? price * quantity : 0;
+    $('#amount').text(minAmount.toLocaleString());
+  }
+
+  // 정가보다 높은 경우 차단
+  $('form').on('submit', function (e) {
     const sellingPrice = Number($('#menuPrice').val());
     if (basePrice && sellingPrice > basePrice) {
       e.preventDefault();
       $('#resultModal, #modalBackdrop').fadeIn();
     }
   });
-  
-	//모달 닫기 및 포커스 이동
- 	$('#closeModalBtn').on('click', function () {
+
+  $('#closeModalBtn').on('click', function () {
     $('#resultModal, #modalBackdrop').fadeOut();
-    $('#menuPrice').focus(); // 판매가 입력 칸으로 포커스 이동
+    $('#menuPrice').focus();
   });
-	
-	
-$(document).on('click', '#btn-edit', function(){
-	const productId = $('#menuSelect').val();
-	
-	if(productId) {
-		window.location.href='${pageContext.request.contextPath}/seller/product/' + productId + '/edit';
-	}else {
-		alert("수정할 메뉴를 선택해주세요");
-	}
+
+  // 수정 버튼 클릭 시 redirect 포함
+  $('#btn-edit').on('click', function () {
+    const productId = $('#menuSelect').val();
+    if (productId) {
+      const redirectUrl = encodeURIComponent(window.location.pathname + '?type=limited&selectedProductId=' + productId);
+      const base = '${pageContext.request.contextPath}';
+      window.location.href = base + '/seller/product/edit/' + productId + '?redirect=' + redirectUrl;
+    } else {
+      alert('수정할 메뉴를 선택해주세요.');
+    }
+  });
 });
-});
-
-	
-
-
 </script>
 
 <div class="step-progress">
