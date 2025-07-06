@@ -1,40 +1,39 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 
-<link rel="stylesheet" href="${cpath}/resources/css/layout/seller-header.css" />
+<link rel="stylesheet"
+	href="${cpath}/resources/css/layout/seller-header.css" />
 
 <div class="box"></div>
 <div class="header-box">
-  <div class="logo" onclick="location.href='${cpath}/seller/home'">
-    <img src="${cpath}/resources/images/logo.svg" alt="logo" />
+	<div class="logo" onclick="location.href='${cpath}/seller/home'">
+		<img src="${cpath}/resources/images/logo.svg" alt="logo" />
+	</div>
+	
+	<div class="store-dropdown-container">
+  <div class="current-store-name">
+    <c:choose>
+      <c:when test="${not empty currentStore}">
+        ${currentStore.storeName}
+      </c:when>
+      <c:otherwise>상점 없음</c:otherwise>
+    </c:choose>
   </div>
-  <div class="lower-box">
-    <div class="store-box">
-      <span class="store-text">
-        <c:choose>
-          <c:when test="${not empty currentStore}">
-            ${currentStore.storeName}
-          </c:when>
-          <c:otherwise>상점 없음</c:otherwise>
-        </c:choose>
-      </span>
-      <div class="dropdown">
-        <img 
-          src="${cpath}/resources/images/icons/drop-down.svg" 
-          class="dropdown-icon" 
-          onclick="toggleDropdown()" 
-        />
-        <ul class="dropdown-menu" id="storeDropdown" style="display: none;">
-          <c:forEach var="store" items="${storeList}">
-            <li onclick="changeStore('${store.storeId}')">${store.storeName}</li>
-          </c:forEach>
-        </ul>
-      </div>
-    </div>
-    <div class="nav-box">
-      <div class="nav-text" onclick="location.href='${cpath}/auth/login'">로그아웃</div>
-    </div>
+
+  <div class="dropdown">
+    <img src="${cpath}/resources/images/icons/drop-down.svg"
+      class="dropdown-icon" onclick="toggleDropdown()" />
+    <ul class="dropdown-menu" id="storeDropdown" style="display: none;">
+      <c:forEach var="store" items="${storeList}">
+        <li onclick="selectStore('${store.storeId}', '${store.storeName}')">
+          ${store.storeName}
+        </li>
+      </c:forEach>
+    </ul>
   </div>
+  <button class="store-change-btn" onclick="changeSelectedStore()">변경</button>
+</div>
+	
 </div>
 
 <script>
@@ -159,4 +158,43 @@ function handleOutsideClick(event) {
       console.log("드롭다운 닫힘");
     }
   });
+  
+  let selectedStoreId = null;
+
+  function selectStore(storeId, storeName) {
+    selectedStoreId = storeId;
+
+    // 드롭다운 닫기
+    document.getElementById('storeDropdown').style.display = 'none';
+    dropdownVisible = false;
+
+    // 선택된 이름 표시
+    const nameBox = document.querySelector('.current-store-name');
+    nameBox.textContent = storeName;
+
+    console.log(`선택된 상점: ${storeId}, 이름: ${storeName}`);
+  }
+
+  function changeSelectedStore() {
+    if (!selectedStoreId) {
+      alert("변경할 상점을 선택해주세요.");
+      return;
+    }
+
+    fetch(`${cpath}/seller/store/changeStore`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ storeId: selectedStoreId })
+    })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        location.reload();
+      })
+      .catch(err => {
+        console.error("상점 변경 실패:", err);
+        alert("상점 변경 실패: " + err);
+      });
+  }
+
 </script>
