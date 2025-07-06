@@ -44,6 +44,9 @@ import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
 import com.takku.project.service.StoreService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "상품 관련 API")
 @Controller
 @RequestMapping("/seller/product")
 public class ProductManagementController {

@@ -71,6 +71,26 @@ public class StoreController {
 	@Autowired
 	private ImageService imageService;
 
+	@PostMapping("/changeStore")
+	@ResponseBody
+	public String changeStore(@RequestBody Map<String, Integer> data, HttpSession session) {
+	    Integer storeId = data.get("storeId");
+	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+	    if (storeId != null && loginUser != null) {
+	        StoreDTO selectedStore = storeService.selectStoreById(storeId);
+
+	        if (selectedStore != null && selectedStore.getUserId().equals(loginUser.getUserId())) {
+	            session.setAttribute("currentStore", selectedStore);
+	            return "상점이 변경되었습니다.";
+	        } else {
+	            return "상점 권한이 없습니다.";
+	        }
+	    }
+	    return "상점 변경 실패";
+	}
+
+	
 	@GetMapping()
 	public String showStoreManagement(HttpSession session, Model model) {
 		UserDTO userDTO = (UserDTO) session.getAttribute("loginUser");

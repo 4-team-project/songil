@@ -2,6 +2,7 @@
 package com.takku.project.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.UserDTO;
 import com.takku.project.service.SmsService;
+import com.takku.project.service.StoreService;
 import com.takku.project.service.UserService;
 
 @Controller
@@ -27,9 +30,11 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 
-	@Autowired 
+	@Autowired
 	private SmsService smsService;
-	 
+
+	@Autowired
+	private StoreService storeService;
 
 	// 회원가입 폼
 	@GetMapping("/signup")
@@ -75,18 +80,32 @@ public class AuthController {
 			RedirectAttributes redirectAttributes, @RequestParam(required = false) String msg) {
 		// 입력된 번호를 010-0000-0000 형식으로 포맷팅
 		phone = formatPhone(phone);
-
 		UserDTO user = userService.selectByPhone(phone, password, userType);
+
 		if (user != null) {
 			session.setAttribute("loginUser", user); // 전역에서 사용 가능
-			if(userType.equals("사용자")) {
+
+			if (userType.equals("사용자")) {
 				return "redirect:/user/home"; // 사용자 홈 페이지
-			}else {
-				return "redirect:/seller/home"; // 소상공인 홈 페이지
+			}
+
+			// 소상공인
+			else {
+				List<StoreDTO> storeList = storeService.selectStoreListByUserId(user.getUserId());
+				
+				session.setAttribute("storeList", storeList);
+
+				if (storeList != null && !storeList.isEmpty()) {
+					session.setAttribute("currentStore", storeList.get(0)); // 첫 번째 상점을 기본값으로 저장
+				} else {
+					session.setAttribute("currentStore", null); // 상점 없음
+				}
+
+				return "redirect:/seller/home"; // 소상공인 홈으로 이동
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("resultMessage", "로그인 실패: 정보를 확인해주세요");
-			return "redirect:/auth/login"; // 로그인 폼으로 다시 이동
+			return "redirect:/auth/login";
 		}
 	}
 
@@ -133,34 +152,32 @@ public class AuthController {
 		}
 		return phone;
 	}
-	
+
 	@PostMapping("/addr")
 	public String registerUser(UserDTO user) {
-	    userService.insertUser(user);
-	    return "redirect:/user/login";
+		userService.insertUser(user);
+		return "redirect:/user/login";
 	}
-	
+
 	// 비밀번호 찾기
 	@GetMapping("/findPassword")
 	public String findPassword(Model model) {
 		model.addAttribute("pageName", "비밀번호 찾기");
-	    return "auth.findPassword";
+		return "auth.findPassword";
 	}
-	
+
 	@PostMapping("/findPassword")
 	@ResponseBody
-	public String findPassword(@RequestParam String phone,
-	                           @RequestParam String userType,
-	                           @RequestParam String name) {
+	public String findPassword(@RequestParam String phone, @RequestParam String userType, @RequestParam String name) {
 		phone = formatPhone(phone);
 		// 사용자 찾기
-	    UserDTO user = userService.findUserPassword(userType, name, phone);
+		UserDTO user = userService.findUserPassword(userType, name, phone);
 
-	    if (user != null) {
-	        // 복호화 없이 평문 저장이라면 그대로 전달 (주의!)
-	        return user.getPassword(); // 또는 JSON으로 {"password": "abc123"} 등
-	    } else {
-	        return "not-found";
-	    }
+		if (user != null) {
+			// 복호화 없이 평문 저장이라면 그대로 전달 (주의!)
+			return user.getPassword(); // 또는 JSON으로 {"password": "abc123"} 등
+		} else {
+			return "not-found";
+		}
 	}
 }
