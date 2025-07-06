@@ -120,6 +120,10 @@ function bindSortButtons() {
 function loadFundings(params) {
   if (!params) params = {};
 
+  if (!isFullList && (params.categoryId || params.keyword || params.sido || params.sigungu)) {
+	    isFullList = true;
+	  }
+  
   if (Object.keys(params).length > 0 || currentPage > 1) {
     hideInitialContent();
   } else {
