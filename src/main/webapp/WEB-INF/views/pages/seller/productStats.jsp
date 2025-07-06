@@ -58,10 +58,11 @@ button, button:hover, button:active, button:focus {
 	border: none;
 	color: white;
 	font-size: 20px;
-	width: 30px !important;
-	height: 35px;
+	width: 40px !important;
+	height: 40px;
 	text-align: center;
-	border-radius: 50%; /* 👈 동그랗게 */
+	border-radius: 50%;
+	line-height: 40px;
 }
 
 .prev-btn:hover, .next-btn:hover {
@@ -222,8 +223,11 @@ button, button:hover, button:active, button:focus {
 		</div>
 
 		<div class="edit-btn-wrap">
-			<button>메뉴 정보 수정</button>
+			<button
+				onclick="location.href='${cpath}/seller/product/edit/${productDTO.productId}'">
+				메뉴 정보 수정</button>
 		</div>
+
 	</div>
 
 	<div class="summary-box">

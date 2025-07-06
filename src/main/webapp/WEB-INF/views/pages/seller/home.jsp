@@ -91,7 +91,7 @@ button, button:hover, button:active, button:focus {
 		</div>
 
 		<div class="tips">
-			<h2>
+			<h2 style="padding: 0px; margin: 0px;">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/check.svg"
 					alt="운영 꿀팁" class="icon" /> 운영 꿀팁
@@ -106,12 +106,13 @@ button, button:hover, button:active, button:focus {
 					<canvas id="genderChart"></canvas>
 				</div>
 				<div class="summary-box tag-box">
-					<h4>연령대 · 성별별 인기 태그</h4>
-					<ul style="padding-left: 20px; font-size: 14px;">
+					<h2 style="margin-left: 20px;">연령대 · 성별별 인기 태그</h2>
+					<ul class="tag-group-list">
 						<c:forEach var="entry" items="${topTagsByGroup}">
-							<li><strong>${entry.ageGroup} ${entry.gender}:</strong> <c:forEach
-									var="tag" items="${entry.topTags}" varStatus="s">
-                    ${tag}<c:if test="${!s.last}">, </c:if>
+							<li class="tag-group-item"><span class="tag-label">
+									${entry.ageGroup} ${entry.gender} </span> <c:forEach var="tag"
+									items="${entry.topTags}">
+									<span class="tag-badge">#${tag}</span>
 								</c:forEach></li>
 						</c:forEach>
 					</ul>
@@ -146,7 +147,6 @@ button, button:hover, button:active, button:focus {
 
 <c:if test="${not empty storeDTO}">
 	<script>
-  // ChartJS: 월별 주문 및 매출
   new Chart(document.getElementById('orderChart'), {
     type: 'bar',
     data: {
@@ -175,10 +175,23 @@ button, button:hover, button:active, button:focus {
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       scales: {
-        y: { beginAtZero: true, title: { display: true, text: '주문 수' } },
-        y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: '매출 (원)' } }
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: '주문 수' },
+          ticks: { font: { size: 16 } } // ✅ Y축 폰트
+        },
+        y1: {
+          beginAtZero: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: '매출 (원)' },
+          ticks: { font: { size: 16 } } // ✅ Y1축 폰트
+        }
       },
       plugins: {
+        legend: {
+          labels: { font: { size: 16 } } // ✅ 범례 폰트
+        },
         tooltip: {
           callbacks: {
             label: function(context) {
@@ -191,6 +204,7 @@ button, button:hover, button:active, button:focus {
     }
   });
 
+  // 연령대 차트
   new Chart(document.getElementById('ageChart'), {
     type: 'bar',
     data: {
@@ -204,11 +218,24 @@ button, button:hover, button:active, button:focus {
     options: {
       responsive: true,
       scales: {
-        y: { beginAtZero: true, max: 100 }
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { font: { size: 16} } // ✅ Y축 폰트
+        },
+        x: {
+          ticks: { font: { size: 16 } } // ✅ X축 폰트
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { font: { size: 16 } } // ✅ 범례 폰트
+        }
       }
     }
   });
 
+  // 성별 비율 도넛 차트
   new Chart(document.getElementById('genderChart'), {
     type: 'doughnut',
     data: {
@@ -218,9 +245,16 @@ button, button:hover, button:active, button:focus {
         backgroundColor: ['rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)']
       }]
     },
-    options: { responsive: true, cutout: '60%' }
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: {
+        legend: {
+          labels: { font: { size: 16 } } // ✅ 범례 폰트
+        }
+      }
+    }
   });
-  
-  
 </script>
 </c:if>
+

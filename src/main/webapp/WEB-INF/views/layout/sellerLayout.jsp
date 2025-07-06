@@ -7,12 +7,25 @@
 <title><tiles:getAsString name="title" /></title>
 </head>
 
+<style>
+* {
+  cursor: url('${cpath}/resources/images/cursor_green.svg') 2 2, auto !important;
+}
 
+input, textarea {
+  cursor: text !important;
+}
+
+button, a, .btn, [style*="cursor: pointer"] {
+  cursor: url('/project/resources/images/cursor_click.svg') 2 2, pointer !important;
+}
+
+</style>
 <body class="layout-wrapper">
 	<div id="header">
 		<tiles:insertAttribute name="header" />
 	</div>
-	<div class="seller-container" style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto !important;">
+	<div class="seller-container">
 		<%@ include file="/WEB-INF/views/common/sellerSideBar.jsp"%>
 		<div id="sellerBody">
 			<tiles:insertAttribute name="body" />

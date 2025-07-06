@@ -1,6 +1,7 @@
 package com.takku.project.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -17,6 +18,7 @@ public class StoreService implements StoreMapper {
 	SqlSession sqlSession;
 	String namespace = "com.takku.project.mapper.StoreMapper.";
 
+	
 	@Override
 	public int insertStore(StoreDTO store) {
 		int result = sqlSession.insert(namespace + "insertStore", store);
@@ -63,5 +65,11 @@ public class StoreService implements StoreMapper {
 	public List<StoreDTO> selectStoreListByUserId(int userId) {
 		return sqlSession.selectList(namespace + "selectStoreListByUserId", userId);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getAverageRatingByUserId(int userId) {
+		return sqlSession.selectList(namespace + "getAverageRatingByUserId", userId);
+	}
+
 
 }

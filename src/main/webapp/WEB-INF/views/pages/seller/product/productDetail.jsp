@@ -1,11 +1,11 @@
-<%@ include file="/WEB-INF/views/common/init.jsp"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
+<input type="hidden" id="storeId" value="${storeId}" />
 <input type="hidden" id="productId" value="${productDTO.productId}" />
-
+<input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
 	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
@@ -32,8 +32,7 @@
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
-			<label for="images" class="menu-img-btn">사진 추가하기</label> 
-			<input
+			<label for="images" class="menu-img-btn">사진 추가하기</label> <input
 				type="file" id="images" name="images" multiple accept="image/*"
 				onchange="handleFiles(this.files)" />
 		</div>
@@ -48,37 +47,35 @@
 	<button onclick="submitProduct()" class="complete-back-btn">수정
 		완료</button>
 </div>
-
-
 <script>
-let selectedFiles = [];
 
-const productImages = [
-	<c:forEach var="img" items="${productDTO.images}" varStatus="loop">
-		"${img.imageUrl}"<c:if test="${!loop.last}">,</c:if>
-	</c:forEach>
-];
+let selectedFiles = []; // 새로 추가될 파일 객체들 (multipart/form-data로 전송)
+let keptExistingImageUrls = []; // 유지될 기존 이미지 URL (JSON payload로 전송, cpath 없음)
 
 function handleFiles(fileList) {
   const preview = document.getElementById('preview-list');
   const fileCountText = document.getElementById('file-count-text');
   const maxFiles = 3;
 
-  const files = Array.from(fileList);
-  const remainingSlots = maxFiles - selectedFiles.length;
+  const currentTotalImages = selectedFiles.length + keptExistingImageUrls.length;
+  const remainingSlots = maxFiles - currentTotalImages;
   
   if (remainingSlots <= 0) {
-    alert("사진은 최대 3개까지 선택할 수 있습니다.");
+    alert("사진은 최대 " + maxFiles + "개까지 선택할 수 있습니다.");
+    document.getElementById('images').value = '';
     return;
   }
   
-  if (files.length > remainingSlots) {
-	    alert("사진은 최대 3개까지 선택할 수 있습니다.");
-	  }
-
-  const filesToAdd = files.slice(0, remainingSlots); 
+  const filesToAdd = Array.from(fileList).slice(0, remainingSlots); 
 
   filesToAdd.forEach((file) => {
+    if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+        console.warn("Skipping duplicate file:", file.name);
+        return;
+    }
+
+    selectedFiles.push(file);
+    console.log("handleFiles - selectedFiles 추가:", file.name, "현재 selectedFiles:", selectedFiles);
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -86,7 +83,7 @@ function handleFiles(fileList) {
       wrapper.className = 'preview-item';
 
       const img = document.createElement('img');
-      img.src = e.target.result;
+      img.src = e.target.result; // 미리보기 URL
 
       const delBtn = document.createElement('div');
       delBtn.className = 'delete-btn';
@@ -95,15 +92,15 @@ function handleFiles(fileList) {
       delBtn.onclick = () => {
         wrapper.remove();
         selectedFiles = selectedFiles.filter(f => f !== file);
-        fileCountText.textContent = `선택한 사진 \${selectedFiles.length} / \${maxFiles}`;
+        updateFileCountText();
+        console.log("delBtn click (new) - selectedFiles 제거:", file.name, "현재 selectedFiles:", selectedFiles);
       };
 
       wrapper.appendChild(img);
       wrapper.appendChild(delBtn);
       preview.appendChild(wrapper);
-
-      selectedFiles.push(file);
-      fileCountText.textContent = `선택한 사진 \${selectedFiles.length} / \${maxFiles}`;
+      
+      updateFileCountText();
     };
     reader.readAsDataURL(file);
   });
@@ -111,94 +108,134 @@ function handleFiles(fileList) {
   document.getElementById('images').value = '';
 }
 
+function updateFileCountText() {
+    const fileCountText = document.getElementById('file-count-text');
+    const maxFiles = 3;
+    fileCountText.textContent = `선택한 사진 ${selectedFiles.length + keptExistingImageUrls.length} / ${maxFiles}`;
+    console.log("updateFileCountText - 총 이미지 개수:", selectedFiles.length + keptExistingImageUrls.length);
+}
+
+const redirectUrl = document.getElementById("redirectUrl")?.value;
+
 function submitProduct() {
-	  const productId = document.getElementById("productId").value;
-	  const productData = {
-	    productId: productId || null,
-	    productName: document.getElementById('productName').value,
-	    price: parseInt(document.getElementById('productPrice').value),
-	    description: document.getElementById('productDescription').value,
-	    storeId: 1,
-	    images: selectedFiles.map(file => {
-	    	  const name = file.name || file.imageUrl; 
-	    	  return {
-	    	    imageUrl: name.startsWith("/image/") ? name : "/image/" + name
-	    	  };
-	    	})  
-	  };
-	  
-	  const formData = new FormData();
-	  formData.append("product", JSON.stringify(productData));
-	  selectedFiles.forEach(file => {
-		  if (!file.isExisting) formData.append("images", file);
-		});
-	  
-	  console.log(formData);
-	  const url = productId
-	    ? `${cpath}/seller/product/update/${productId}`
-	    : `${cpath}/seller/product/insert`;
+  const productId = document.getElementById("productId").value;
+  const storeId = document.getElementById("storeId").value;
+  
+  const productData = {
+    productId: productId || null,
+    productName: document.getElementById('productName').value,
+    price: parseInt(document.getElementById('productPrice').value),
+    description: document.getElementById('productDescription').value,
+    storeId: parseInt(storeId),
+    // ⭐️ 핵심 변경: 백엔드로 보내기 전에 keptExistingImageUrls에서 cpath 제거
+    images: keptExistingImageUrls.map(url => ({
+      imageUrl: url.startsWith(cpath) ? url.replace(cpath, '') : url // cpath 제거
+    }))
+  };
+  
+  console.log("submitProduct - 전송할 productData (JSON):", productData);
+  console.log("submitProduct - 전송할 새 파일 (selectedFiles):", selectedFiles);
 
-	  const method = "POST";
+  const formData = new FormData();
+  formData.append("product", JSON.stringify(productData));
+  
+  selectedFiles.forEach(file => {
+    formData.append("images", file);
+  });
+  
+  const url = productId
+    ? `${cpath}/seller/product/update/${productId}`
+    : `${cpath}/seller/product/insert`;
 
-	  fetch(url, {
-	    method: method,
-	    body: formData,
-	  })
-	  .then(res => res.text())
-	  .then(msg => {
-	    alert((productId ? "수정" : "등록") + " 결과: " + msg);
-	    
-	  })
-	  .catch(err => alert("오류: " + err));
-	}
+  fetch(url, {
+      method: "POST",
+      body: formData
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.text().then(text => Promise.reject(new Error(text)));
+        }
+        return res.text();
+    })
+    .then(msg => {
+      alert((productId ? "수정" : "등록") + " 결과: " + msg);
+
+      if (redirectUrl) {
+        location.href = redirectUrl;
+      } else {
+        location.href = `${cpath}/seller/store?storeId=${storeId}`;
+      }
+    })
+    .catch(err => {
+      console.error("오류:", err);
+      alert("오류 발생: " + err.message);
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const productId = document.getElementById("productId")?.value;
-
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get('redirect');
+  
   if (productId) {
     fetch(`${cpath}/seller/product/info/${productId}`)
       .then(res => res.json())
       .then(product => {
-    	  console.log("불러온 상품:", product);
+        console.log("DOMContentLoaded - 불러온 상품 데이터:", product);
         document.getElementById('productName').value = product.productName;
         document.getElementById('productPrice').value = product.price;
         document.getElementById('productDescription').value = product.description;
 
         if (product.images && product.images.length > 0) {
           const preview = document.getElementById('preview-list');
-          const fileCountText = document.getElementById('file-count-text');
-
+          
           product.images.forEach(img => {
-        	  const wrapper = document.createElement('div');
-        	  wrapper.className = 'preview-item';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'preview-item';
 
-        	  const image = document.createElement('img');
-        	  image.src = img.imageUrl;
-        	  image.alt = '기존 이미지';
+            const image = document.createElement('img');
+            image.src = img.imageUrl; 
+            image.alt = '기존 이미지';
 
-        	  const delBtn = document.createElement('div');
-        	  delBtn.className = 'delete-btn';
-        	  delBtn.innerHTML = '×';
-        	  delBtn.onclick = () => {
-        	    wrapper.remove();
-        	    selectedFiles = selectedFiles.filter(f => f.name !== img.imageUrl && f.imageUrl !== img.imageUrl);
-        	    fileCountText.textContent = `선택한 사진 ${selectedFiles.length} / 3`;
-        	  };
+            const delBtn = document.createElement('div');
+            delBtn.className = 'delete-btn';
+            delBtn.innerHTML = '×';
+            
+            keptExistingImageUrls.push(img.imageUrl);
+            console.log("DOMContentLoaded - keptExistingImageUrls 추가:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
 
-        	  wrapper.appendChild(image);
-        	  wrapper.appendChild(delBtn);
-        	  preview.appendChild(wrapper);
+            delBtn.onclick = () => {
+              wrapper.remove();
+              keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
+              updateFileCountText();
+              console.log("delBtn click (existing) - keptExistingImageUrls 제거:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
+            };
 
-        	  selectedFiles.push({ name: img.imageUrl, isExisting: true });
-        	});
-         console.log(selectedFiles);
-
-        	fileCountText.textContent = `선택한 사진 \${selectedFiles.length} / 3`;
-
+            wrapper.appendChild(image);
+            wrapper.appendChild(delBtn);
+            preview.appendChild(wrapper);
+          });
+          
+          updateFileCountText();
+        } else {
+            console.log("DOMContentLoaded - 불러온 상품에 이미지가 없습니다.");
+            updateFileCountText();
         }
+      })
+      .catch(err => {
+          console.error("상품 정보를 불러오는 중 오류 발생:", err);
+          alert("상품 정보를 불러오는데 실패했습니다.");
       });
+  } else {
+      console.log("DOMContentLoaded - 신규 상품 등록 모드입니다.");
+      updateFileCountText();
+  }
+  
+  const backBtn = document.querySelector('.complete-back-btn');
+  if (redirect && backBtn) {
+    backBtn.onclick = function () {
+      location.href = redirect;
+    };
   }
 });
 </script>
-
-

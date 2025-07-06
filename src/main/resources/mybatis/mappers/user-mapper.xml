@@ -44,7 +44,8 @@
 		SET
 		password = #{password},
 		nickname = #{nickname},
-		is_partner = #{isPartner}
+		is_partner =
+		#{isPartner}
 		WHERE user_id = #{userId}
 	</update>
 
@@ -92,16 +93,29 @@
 		resultType="int">
 		SELECT COUNT(*)
 		FROM takku_user
-		WHERE phone = #{phone} AND user_type = #{userType}
+		WHERE phone = #{phone} AND
+		user_type = #{userType}
 	</select>
-	
+
 	<!-- 비밀번호 찾기 -->
-	<select id="findUserPassword" parameterType="map" resultType="UserDTO">
+	<select id="findUserPassword" parameterType="map"
+		resultType="UserDTO">
 		SELECT * FROM takku_user
-		WHERE user_type = #{userType} 
+		WHERE user_type = #{userType}
 		AND phone = #{phone}
 		AND name = #{name}
 	</select>
+
+	<!-- 특정 펀딩 참여자 조회 (결제 완료 사용자만) -->
+	<select id="selectUsersByFundingId" parameterType="int"
+		resultType="UserDTO">
+		SELECT DISTINCT u.*
+		FROM takku_order o
+		JOIN takku_user u ON o.user_id = u.user_id
+		WHERE o.funding_id = #{fundingId}
+		AND o.status = '결제완료'
+	</select>
+
 </mapper>
 
 

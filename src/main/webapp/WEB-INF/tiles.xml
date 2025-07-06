@@ -4,6 +4,7 @@
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
+
 	<!-- 기본 레이아웃 정의 -->
 	<definition name="defaultLayout"
 		template="/WEB-INF/views/layout/layout.jsp">
@@ -89,11 +90,8 @@
 	</definition>
 
 	<!-- 쿠폰 상세 정보 -->
-	<definition name="user.coupon_detail" extends="subLayout">
-		<put-attribute name="title" value="쿠폰 상세보기" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/pages/user/coupon_detail.jsp" />
-	</definition>
+	<definition name="user.coupon_detail"
+		template="/WEB-INF/views/pages/user/coupon_detail.jsp" />
 
 	<!-- 마이페이지 -->
 	<definition name="user.mypage" extends="subLayout">
@@ -120,18 +118,9 @@
 	<definition name="user.review"
 		template="/WEB-INF/views/pages/user/review.jsp" />
 
-	<!-- 쿠폰 발급 완료 QR 출력 -->
-	<definition name="coupon.issuedQR" extends="subLayout">
-		<put-attribute name="title" value="쿠폰 발급 완료" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/pages/coupon/issuedQR.jsp" />
-	</definition>
-
-	<definition name="coupon.sellerCheck" extends="subLayout">
-		<put-attribute name="title" value="쿠폰 확인" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/pages/coupon/sellerCheck.jsp" />
-	</definition>
+	<!-- qr로 메뉴확인화면 -->
+	<definition name="coupon.sellerCheck"
+		template="/WEB-INF/views/pages/coupon/sellerCheck.jsp" />
 
 	<!-- 에러 -->
 	<definition name="error.error" extends="defaultLayout">
@@ -223,10 +212,25 @@
 		<put-attribute name="title" value="메뉴" />
 	</definition>
 
+	<!-- 상점 추가/수정 -->
 	<definition name="seller.store" extends="sellerLayout">
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/store/storeDetail.jsp" />
-		<put-attribute name="title" value="메뉴" />
+		<put-attribute name="title" value="상점" />
+	</definition>
+	
+	<!-- 상점 목록 -->
+	<definition name="seller.storeList" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/store/storeList.jsp" />
+		<put-attribute name="title" value="상점목록" />
+	</definition>
+	
+	<!-- 상품 목록 -->
+	<definition name="seller.productList" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/product/productList.jsp" />
+		<put-attribute name="title" value="상품목록" />
 	</definition>
 
 	<definition name="seller/stats" extends="sellerLayout">
@@ -237,7 +241,7 @@
 
 	<definition name="seller/platformStats"
 		extends="sellerLayout">
-		<put-attribute name="title" value="상점 통계" />
+		<put-attribute name="title" value="플랫폼 통계" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/platformStats.jsp" />
 	</definition>
@@ -269,7 +273,8 @@
 			value="/WEB-INF/views/pages/seller/sellerFundingDetail.jsp" />
 	</definition>
 	<!-- 소상공인 펀딩 통계 -->
-	<definition name="seller/sellerFundingStats" extends="sellerLayout">
+	<definition name="seller/sellerFundingStats"
+		extends="sellerLayout">
 		<put-attribute name="title" value="펀딩 통계" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/sellerFundingStats.jsp" />

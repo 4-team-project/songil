@@ -145,6 +145,10 @@
 	</aside>
 
 	<script>
+  const cpath = '${cpath}';
+</script>
+
+	<script>
 
   function imgExists(url, callback) {
     const img = new Image();
@@ -200,7 +204,7 @@
 	  else if (path.includes('/seller/store/list')) menuName = 'funding';
 	  else if (path.includes('/seller/stats')) menuName = 'statistics';
 	  else if (path.includes('/seller/settlements')) menuName = 'money';
-	  else if (path.includes('/seller/store')) menuName = 'store';
+	  else if (path.includes('/store')) menuName = 'store';
 	  else if (path.includes('/seller/move')) menuName = 'move';
 	  else if (path.includes('/seller/mypage')) menuName = 'mypage';
 	  else if (path.includes('/seller/home')) menuName = 'home'; 

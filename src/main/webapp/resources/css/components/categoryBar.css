@@ -1,11 +1,19 @@
 @import url('../base/fonts.css');
 
 .category-bar {
-	width: 142px;
-	height: 1533px;
+	width: 180px;
+	min-width: 160px;
+	max-width: 200px;
 	background-color: #FFF6F0;
-	filter: drop-shadow(0 2px 2px rgba(255, 150, 112, 0.1));
-	padding: 28px 30px 0 30px;
+	height: 100vh;
+	position: relative;
+	box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (max-width: 768px) {
+	.category-bar {
+		display: none;
+	}
 }
 
 .title {
@@ -38,19 +46,19 @@
 }
 
 .category-box-list {
-  display: flex;       
-  flex-direction: column; 
-  gap: 24px; 
-  margin-top: 20px;          
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	margin-top: 20px;
 }
 
 .category-box {
-  width: 85px;
-  height: 102px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;  
-  align-items: center;     
+	width: 85px;
+	height: 102px;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .category-box img {

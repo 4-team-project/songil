@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.takku.project.domain.FundingDTO;
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.OrderDTO;
 import com.takku.project.mapper.OrderMapper;
@@ -26,7 +24,7 @@ public class OrderService implements OrderMapper {
 	@Override
 	public List<OrderDTO> selectByUserId(Integer userId) {
 		List<OrderDTO> orderList = sqlSession.selectList(namespace + "selectByUserId", userId);
-		
+
 		for (OrderDTO order : orderList) {
 			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
 					order.getFundingId());
@@ -77,7 +75,7 @@ public class OrderService implements OrderMapper {
 		param.put("status", status);
 
 		List<OrderDTO> orderList = sqlSession.selectList(namespace + "getOrdersByUserAndStatus", param);
-	
+
 		for (OrderDTO order : orderList) {
 			List<ImageDTO> images = sqlSession.selectList(imageNamespace + "selectImagesByFundingId",
 					order.getFundingId());
@@ -85,7 +83,7 @@ public class OrderService implements OrderMapper {
 		}
 		return orderList;
 	}
-	
+
 	  @Override
 	    public List<OrderDTO> searchOrders(int userId, String keyword) {
 		  Map<String, Object> param = new HashMap<>();
@@ -94,4 +92,22 @@ public class OrderService implements OrderMapper {
 
 		  return sqlSession.selectList(namespace + "searchOrders", param);
 	    }
+
+
+	public void refundOrdersForFailedFunding(int fundingId) {
+		List<OrderDTO> orders = sqlSession.selectList(namespace + "selectCompletedOrdersByFundingId", fundingId);
+
+		for (OrderDTO order : orders) {
+			// 주문 상태를 환불로 변경하고 환불일 설정
+			order.setStatus("환불");
+			order.setRefundAt(new java.sql.Date(System.currentTimeMillis()));
+			sqlSession.update(namespace + "updateOrderRefundAtStatus", order);
+		}
+	}
+
+	@Override
+	public List<OrderDTO> selectCompletedOrdersByFundingId(int fundingId) {
+		return sqlSession.selectList(namespace + "selectCompletedOrdersByFundingId", fundingId);
+	}
+
 }

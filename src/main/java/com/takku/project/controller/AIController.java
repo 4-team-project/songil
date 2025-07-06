@@ -121,14 +121,12 @@ public class AIController {
 			return "seller.aiInsertResult";
 		}
 
-		// 카운트 증가 및 저장
 		session.setAttribute("aiRetryCount", retryCount + 1);
 
-		// ==== 🔸 기존 로직 ====
-		FundingDTO funding = (FundingDTO) session.getAttribute("fundingDTO");
+		FundingDTO funding = (FundingDTO) session.getAttribute("funding");
 		if (funding == null) {
 			model.addAttribute("aiError", "펀딩 정보가 없습니다. 처음부터 다시 진행해주세요.");
-			return "redirect:/seller/create-step1";
+			return "redirect:/seller/fundings/create-step1";
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

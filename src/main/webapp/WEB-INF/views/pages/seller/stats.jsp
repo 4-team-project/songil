@@ -2,143 +2,63 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-
-h1 {
-	text-align: left;
-	font-size: 2em;
-	margin-bottom: 40px;
-	color: #333;
-	font-weight: 700;
-}
-
-.stats-grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 12px;
-}
-
-.stats-grid canvas {
-	width: 100% !important;
-	height: 260px !important;
-	display: block;
-}
-
-.card {
-	border: 2px solid #fdbfa8;
-	background-color: #fff8f5;
-	border-radius: 10px;
-	padding: 20px;
-	box-sizing: border-box;
-}
-
-.card h2 {
-	font-size: 1.5em;
-	color: #f97c5d;
-	margin-bottom: 10px;
-	font-weight: 600;
+h2 {
+	padding-left: 20px;
 }
 
 .full-width {
-	grid-column: 1/-1;
-}
-
-.stats-grid canvas {
-	width: 100% !important;
-	height: 260px !important;
-	display: block;
-}
-
-canvas {
-	width: 100% !important;
-	height: auto !important;
-	max-height: 250px;
-	display: block;
-	margin: 0 auto;
-}
-
-.repurchase-list {
-	padding-left: 20px;
-	font-size: 14px;
-}
-
-.repurchase-list li {
-	margin-bottom: 10px;
-}
-
-.repurchase-list strong {
-	color: #333;
-	font-size: 14px;
-	font-weight: 500;
-}
-
-.tips {
-	background-color: #fff1ec;
-	border-left: 5px solid #f97c5d;
-	padding: 15px;
-	margin-top: 30px;
-	border-radius: 8px;
-	width: 100%;
-	box-sizing: border-box;
-	font-size: 13px;
-	color: #444;
-}
-
-.icon {
-	width: 30px;
-	height: 30px;
-	vertical-align: middle;
-	margin-right: 6px;
-}
-
-.highlight {
-	color: #f97c5d;
+	grid-column: span 2;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<h1>
-		<img src="${cpath}/resources/images/icons/solar_star-bold.svg"
-			alt="상점 통계" class="icon" />
-		<c:out value="${userDTO.nickname}" default="딱쿠" />
-		사장님의 <span class="highlight"><c:out
-				value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
-	</h1>
-
-	<div class="stats-grid">
-		<!-- 1. 월별 주문 및 매출 -->
-		<div class="card full-width">
-			<h2>1. 월별 주문 및 매출</h2>
-			<canvas id="orderChart"></canvas>
-		</div>
-
-		<!-- 2. 인기 상품 -->
-		<div class="card">
-			<h2>2. 인기 상품 Top 5</h2>
-			<canvas id="popularProductChart"></canvas>
-		</div>
-
-		<!-- 3. 태그별 주문 수 -->
-		<div class="card">
-			<h2>3. 태그별 주문 수</h2>
-			<canvas id="tagStatsChart"></canvas>
-		</div>
-
-		<!-- 4. 재구매 상품 -->
-		<div class="card full-width">
-			<h2>4. 재구매 Top 5</h2>
-			<p style="font-size: 15px; color: gray;">(재구매 횟수 기준)</p>
-			<ol class="repurchase-list">
-				<c:forEach var="item" items="${topRePurchased}">
-					<li><strong style="font-size: 18px;">${item.productName}</strong>
-						<span style="color: gray; font-size: 18px;">(${item.rePurchaseCount}회)</span>
-					</li>
-				</c:forEach>
-				<c:if test="${empty topRePurchased}">
-					<li>재구매 상품 정보가 없습니다.</li>
-				</c:if>
-			</ol>
-		</div>
+<h1>
+	<img src="${cpath}/resources/images/icons/solar_star-bold.svg"
+		alt="상점 통계" class="icon" />
+	<c:out value="${userDTO.nickname}" default="딱쿠" />
+	사장님의 <span class="highlight"><c:out
+			value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
+</h1>
+<div class="stats-grid">
+	<!-- 1개: 월별 주문 및 매출 -->
+	<div class="summary-box full-width">
+		<h2>월별 주문 및 매출</h2>
+		<canvas id="orderChart"></canvas>
 	</div>
+
+	<!-- 2개: 인기 상품 + 태그별 주문 수 -->
+	<div class="summary-box" style="background-color: #fff1ec">
+		<h2>인기 상품 Top 5</h2>
+		<canvas id="popularProductChart"></canvas>
+	</div>
+
+	<div class="summary-box" style="background-color: #fff1ec">
+		<h2>태그별 주문 수</h2>
+		<canvas id="tagStatsChart"></canvas>
+	</div>
+
+	<!-- 1개: 재구매 상품 → 전체 span 처리 -->
+	<div class="summary-box full-width">
+		<h2 style="padding-bottom: 0px; margin-bottom: 0px">재구매 Top 5</h2>
+		<p style="font-size: 15px; color: gray; padding-left: 20px">(재구매
+			횟수 기준)</p>
+		<ol class="repurchase-list">
+			<c:forEach var="item" items="${topRePurchased}">
+				<li><span
+					style="font-size: 20px; font-weight: 600; color: #333;">
+						${item.productName} </span> <span
+					style="color: gray; font-size: 18px; margin-left: 6px;">
+						(${item.rePurchaseCount}회) </span></li>
+			</c:forEach>
+			<c:if test="${empty topRePurchased}">
+				<li>재구매 상품 정보가 없습니다.</li>
+			</c:if>
+		</ol>
+	</div>
+</div>
+
 
 <script>
     // 1. 월별 주문/매출
