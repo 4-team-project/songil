@@ -3,9 +3,12 @@ package com.takku.project.controller;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
@@ -37,19 +40,27 @@ public class HomeController {
     AIService aiService; 
 
     @GetMapping("/user/home")
-    public String homePage(@RequestParam(defaultValue = "5") int userId, Model model, HttpSession session) {
+    public String homePage(@RequestParam(defaultValue = "5") int userId, @RequestParam(required = false) String status, Model model, HttpSession session) {
 
     	UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
         List<FundingDTO> recommendList = aiService.getRecommendations(userId); 
-        for (FundingDTO funding : recommendList) {
-            List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
-            funding.setImages(images);
-            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
-            funding.setDaysLeft((int) Math.max(days, 0));  
-        }
+        recommendList = recommendList.stream()
+        	    .filter(f -> f.getEndDate() != null && !LocalDate.now().isAfter(f.getEndDate().toLocalDate()))
+        	    .collect(Collectors.toList());
 
-        List<FundingDTO> ongoingFundingList = fundingService.getFundingsByConditionWithPaging(null, null, null, null, "popular", 1, 8);
+        	for (FundingDTO funding : recommendList) {
+        	    List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());
+        	    funding.setImages(images);
+        	    long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+        	    funding.setDaysLeft((int) Math.max(days, 0));  
+        }
+        
+        List<String> statusList = (status != null && !status.isBlank())
+		        ? Collections.singletonList(status)
+		        : Arrays.asList("진행중");
+
+        List<FundingDTO> ongoingFundingList = fundingService.getFundingsByConditionWithPaging(null, null, null, null, statusList, "popular", 1, 8);
 
         for (FundingDTO funding : ongoingFundingList) {
             List<ImageDTO> images = imageService.selectImagesByFundingId(funding.getFundingId());

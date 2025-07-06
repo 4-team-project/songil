@@ -34,7 +34,7 @@
 			</ul>
 		</div>
 
-		<button class="store-change-btn" onclick="changeSelectedStore()">변경</button>
+		<div class="store-change-btn" onclick="changeSelectedStore()">변경</div>
 	</div>
 </div>
 

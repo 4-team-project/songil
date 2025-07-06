@@ -31,7 +31,7 @@ public class FundingService {
 
 	// 조건 + 정렬 + 페이징 기반 펀딩 조회
 	public List<FundingDTO> getFundingsByConditionWithPaging(List<String> keywordList, Integer categoryId, String sido,
-			String sigungu, String sort, int page, int size) {
+			String sigungu, List<String> statusList, String sort, int page, int size) {
 		int startRow = (page - 1) * size + 1;
 		int endRow = page * size;
 
@@ -40,6 +40,7 @@ public class FundingService {
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
+		param.put("statusList", statusList);
 		param.put("sort", sort);
 		param.put("startRow", startRow);
 		param.put("endRow", endRow);
@@ -52,12 +53,13 @@ public class FundingService {
 	}
 
 	// 조건 기반 펀딩 개수 조회
-	public int getFundingCountByCondition(List<String> keywordList, Integer categoryId, String sido, String sigungu) {
+	public int getFundingCountByCondition(List<String> keywordList, Integer categoryId, String sido, String sigungu, List<String> statusList) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("keywordList", keywordList);
 		param.put("categoryId", categoryId);
 		param.put("sido", sido);
 		param.put("sigungu", sigungu);
+		param.put("statusList", statusList);
 		return sqlSession.selectOne(namespace + "countFundingByCondition", param);
 	}
 

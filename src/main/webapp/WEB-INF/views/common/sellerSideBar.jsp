@@ -11,7 +11,7 @@
 .sidebar {
 	width: 320px;
 	background-color: #FFF6F0;
-	padding: 20px;
+	padding: 60px 20px 20px 20px;
 	flex-shrink: 0;
 	box-sizing: border-box;
 	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
