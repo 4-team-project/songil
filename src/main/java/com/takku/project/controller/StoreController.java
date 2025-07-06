@@ -200,7 +200,17 @@ public class StoreController {
 
 	        if (result > 0) {
 	            List<StoreDTO> updatedList = storeService.selectStoreListByUserId(loginUser.getUserId());
-	            session.setAttribute("storeList", updatedList);
+	            session.setAttribute("storeList", updatedList); 
+
+	            StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
+	            if (currentStore != null && currentStore.getStoreId().equals(storeId)) {
+	                if (!updatedList.isEmpty()) {
+	                    session.setAttribute("currentStore", updatedList.get(0)); 
+	                } else {
+	                    session.removeAttribute("currentStore"); 
+	                }
+	            }
+
 	            return "삭제 성공";
 	        } else {
 	            return "삭제 실패 (DB 처리 실패)";
@@ -210,6 +220,7 @@ public class StoreController {
 	        return "삭제 실패 (서버 오류)";
 	    }
 	}
+
 
 
 	// 상점 목록 보기
