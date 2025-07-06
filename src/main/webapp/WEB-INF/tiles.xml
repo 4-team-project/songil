@@ -225,6 +225,13 @@
 			value="/WEB-INF/views/pages/seller/store/storeList.jsp" />
 		<put-attribute name="title" value="상점목록" />
 	</definition>
+	
+	<!-- 상품 목록 -->
+	<definition name="seller.productList" extends="sellerLayout">
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/seller/product/productList.jsp" />
+		<put-attribute name="title" value="상품목록" />
+	</definition>
 
 	<definition name="seller/stats" extends="sellerLayout">
 		<put-attribute name="title" value="상점 통계" />

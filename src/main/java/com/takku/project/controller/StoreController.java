@@ -72,16 +72,24 @@ public class StoreController {
 	private ImageService imageService;
 
 	@GetMapping()
-	public String showStoreManagement(Model model) {
-		int storeId = 1; // 임시 상점 ID
-		int userId = 1; // 임시 유저 ID
-		StoreDTO store = storeService.selectStoreById(storeId);
-		UserDTO user = userService.selectByUserId(userId);
-		List<ProductDTO> productList = productService.selectProductByStoreId(storeId);
+	public String showStoreManagement(HttpSession session, Model model) {
+		UserDTO userDTO = (UserDTO) session.getAttribute("loginUser");
+		
+		int userId = userDTO.getUserId(); 
+		List<StoreDTO> storeList = storeService.selectStoreListByUserId(userId);
 
-		model.addAttribute("user", user);
-		model.addAttribute("store", store);
-		model.addAttribute("productList", productList);
+		if (storeList != null && !storeList.isEmpty()) {
+		    StoreDTO storeDTO = storeList.get(0);
+		    int storeId = storeDTO.getStoreId();
+
+		    List<ProductDTO> productDTO = productService.selectProductByStoreId(storeId);
+
+		    model.addAttribute("storeDTO", storeDTO);
+		    model.addAttribute("productDTO", productDTO);
+		} else {
+		    model.addAttribute("message", "등록된 상점이 없습니다.");
+		}
+		model.addAttribute("userDTO", userDTO);
 		return "seller.storeManagement";
 	}
 
@@ -93,23 +101,24 @@ public class StoreController {
 	// 상점 등록 처리
 	@PostMapping(value = "/insert", consumes = "application/json")
 	@ResponseBody
-	public ResponseEntity<String> insertStoreJson(@RequestBody StoreDTO storeDTO) {
-		try {
-			if (storeDTO.getUserId() == null) {
-				storeDTO.setUserId(1); // 임시 User ID
-			}
-			int result = storeService.insertStore(storeDTO);
-			if (result > 0) {
-				return ResponseEntity.ok("상점 등록 성공");
-			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상점 등록 실패");
-			}
+	public ResponseEntity<String> insertStoreJson(HttpSession session, @RequestBody StoreDTO storeDTO) {
+	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생: " + e.getMessage());
-		}
+	    if (loginUser == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	    }
+
+	    storeDTO.setUserId(loginUser.getUserId()); 
+	    int result = storeService.insertStore(storeDTO);
+
+	    if (result > 0) {
+	        return ResponseEntity.ok("상점 등록 성공");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상점 등록 실패");
+	    }
 	}
+
+
 
 	// 상점 수정 폼
 	@GetMapping("/edit/{storeId}")

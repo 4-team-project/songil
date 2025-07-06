@@ -14,8 +14,7 @@
 	<img class="main-icon" src="${cpath}/resources/images/icons/store.svg"
 		alt="store" />
 	<div class="main-text">
-		<c:out value="${userDTO.nickname}" default="사장님" />
-		의
+		<c:out value="${userDTO.nickname} 사장님의" default="사장님" />
 		<div class="highlight">상점 관리</div>
 	</div>
 </div>
@@ -28,41 +27,48 @@
 			onclick="location.href='${cpath}/seller/store/new'">상점 추가하기</div>
 	</div>
 	<div class="store-btn">
-		<div class="store-btn-text" onclick="location.href='${cpath}/seller/store/storeList'">상점 목록보기</div>
+		<div class="store-btn-text"
+			onclick="location.href='${cpath}/seller/store/storeList'">상점
+			목록보기</div>
 	</div>
 </div>
 
 <div class="store-info-box">
 	<div class="store-info-title">
 		<div class="highlight">[현재 상점]</div>
-		${store.storeName}
+		${storeDTO.storeName}
 	</div>
 	<div class="store-info-content">
 		주소:
-		<c:out value="${store.sido}" />
-		<c:out value="${store.sigungu}" />
-		<c:out value="${store.dong}" />
-		<c:out value="${store.addressDetail}" />
+		<c:out value="${storeDTO.sido}" />
+		<c:out value="${storeDTO.sigungu}" />
+		<c:out value="${storeDTO.dong}" />
+		<c:out value="${storeDTO.addressDetail}" />
 	</div>
-	<div class="store-info-content">전화번호: <c:out value="${user.phone}" /></div>
-	<div class="store-edit-btn" onclick="location.href='${cpath}/seller/store/edit/${store.storeId}'">상점 정보 수정</div>
+	<div class="store-info-content">
+		전화번호:
+		<c:out value="${userDTO.phone}" />
+	</div>
+	<div class="store-edit-btn"
+		onclick="location.href='${cpath}/seller/store/edit/${storeDTO.storeId}'">상점
+		정보 수정</div>
 </div>
 
 <div class="store-menu-box">
-	<div class="store-menu-title">${store.storeName} 메뉴</div>
+	<div class="store-menu-title">${storeDTO.storeName}메뉴</div>
 	<div class="store-menu-content">메뉴 사진을 눌러주시면 메뉴 정보를 보실 수 있어요</div>
 
 	<div class="store-menu-content-img-container swiper">
-	<div class="swiper-wrapper">
-		<c:forEach var="product" items="${productList}">
-			<div class="swiper-slide">
-				<img class="store-menu-content-img"
-					src="${cpath}${product.thumbnailImageUrl != null ? product.thumbnailImageUrl : '/resources/images/category/default.svg'}"
-					alt="${product.productName}" />
-				<div class="store-menu-content-name">${product.productName}</div>
-			</div>
-		</c:forEach>
-	</div>
+		<div class="swiper-wrapper">
+			<c:forEach var="product" items="${productDTO}">
+				<div class="swiper-slide">
+					<img class="store-menu-content-img"
+						src="${cpath}${product.thumbnailImageUrl}"
+						alt="${product.productName}" />
+					<div class="store-menu-content-name">${product.productName}</div>
+				</div>
+			</c:forEach>
+		</div>
 		<div class="swiper-button-circle swiper-button-circle-prev">
 			<div class="swiper-button-prev"></div>
 		</div>
@@ -75,27 +81,34 @@
 	</div>
 	<div class="menu-btn-box">
 		<div class="menu-edit-btn"
-			onclick="location.href='${cpath}/seller/product/new'">메뉴 추가하기</div>
-		<div class="menu-edit-btn">메뉴 목록보기</div>
+			onclick="location.href='${cpath}/seller/product/new?storeId=${store.storeId}'">메뉴
+			추가하기</div>
+
+		<div class="menu-edit-btn" onclick="location.href='${cpath}/seller/product/productList?storeId=${store.storeId}'">메뉴 목록보기</div>
 	</div>
 </div>
 
 
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
-		new Swiper(".store-menu-content-img-container", {
-			slidesPerView : 3,
-			spaceBetween : 20,
-			loop : true,
-			pagination : {
-				el : ".swiper-pagination",
-				clickable : true,
-			},
-			navigation : {
-				nextEl : ".swiper-button-next",
-				prevEl : ".swiper-button-prev",
-			},
-		});
-	});
+	document
+			.addEventListener(
+					"DOMContentLoaded",
+					function() {
+						const slideCount = document
+								.querySelectorAll('.store-menu-content-img-container .swiper-slide').length;
+						new Swiper(".store-menu-content-img-container", {
+							slidesPerView : 3,
+							spaceBetween : 20,
+							loop : slideCount >= 4,
+							pagination : {
+								el : ".swiper-pagination",
+								clickable : true,
+							},
+							navigation : {
+								nextEl : ".swiper-button-next",
+								prevEl : ".swiper-button-prev",
+							},
+						});
+					});
 </script>
 

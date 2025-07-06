@@ -131,7 +131,6 @@ window.onload = function () {
 function submitStore() {
 	const storeId = document.getElementById("storeId").value;
 	console.log(document.getElementById('bname'));
-	console.log(sido);
 	console.log(document.getElementById('sigungu'));
 	console.log(document.getElementById('detailAddr'));
 	console.log(document.getElementById('storeDescription'));

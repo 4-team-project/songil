@@ -2,12 +2,15 @@ package com.takku.project.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +38,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.ProductDTO;
+import com.takku.project.domain.StoreDTO;
+import com.takku.project.domain.UserDTO;
 import com.takku.project.service.ImageService;
 import com.takku.project.service.ProductService;
+import com.takku.project.service.StoreService;
 
 @Controller
 @RequestMapping("/seller/product")
@@ -47,6 +53,9 @@ public class ProductManagementController {
 
 	@Autowired
 	private ImageService imageService;
+	
+	@Autowired
+	private StoreService storeService;
 
 	@Value("${file.upload.path}")
 	private String uploadDir;
@@ -60,8 +69,9 @@ public class ProductManagementController {
 
 	// 상품 등록 폼
 	@GetMapping("/new")
-	public String showForm() {
-		return "seller.product";
+	public String showForm(@RequestParam("storeId") int storeId, Model model) {
+	    model.addAttribute("storeId", storeId);
+	    return "seller.product"; 
 	}
 
 	private String getFileExtension(String filename) {
@@ -80,10 +90,6 @@ public class ProductManagementController {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			ProductDTO productDTO = mapper.readValue(productJson, ProductDTO.class);
-
-			if (productDTO.getStoreId() == null) {
-				productDTO.setStoreId(1);
-			}
 
 			// 상품 등록
 			int result = productService.insertProduct(productDTO);
@@ -182,16 +188,85 @@ public class ProductManagementController {
 	}
 
 	// 상품 삭제
-	@DeleteMapping("/{productId}")
-	public String deleteProduct(@PathVariable("productId") Integer productId, RedirectAttributes ra) {
-		int result = productService.deleteProduct(productId);
-		if (result > 0) {
-			ra.addFlashAttribute("resultMessage", "상품이 삭제되었습니다.");
-		} else {
-			ra.addFlashAttribute("resultMessage", "상품 삭제에 실패하였습니다.");
-		}
-		return "redirect:/seller/product";
+	@PostMapping("/delete/{productId}")
+	@ResponseBody
+	public String deleteProduct(@PathVariable("productId") Integer productId) {
+	    if (productId == null) return "삭제 실패 (ID 없음)";
+
+	    try {
+
+	        List<ImageDTO> imageList = imageService.selectImagesByProductId(productId);
+
+	        for (ImageDTO image : imageList) {
+	            String fileName = image.getImageUrl().replace("/image/", "");
+	            File file = new File(uploadDir + File.separator + fileName);
+	            if (file.exists()) {
+	                file.delete(); 
+	            }
+
+	            imageService.deleteImageUrl(image.getImageUrl());
+	        }
+
+	        int result = productService.deleteProduct(productId);
+
+	        return result > 0 ? "삭제 성공" : "삭제 실패 (DB 처리 실패)";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "삭제 실패 (서버 오류)";
+	    }
 	}
+
+	
+	//상품 목록 보기 
+	@GetMapping("/productList")
+	public String showProductList(@RequestParam("storeId") int storeId, HttpSession session, Model model) {
+	    UserDTO userDTO = (UserDTO) session.getAttribute("loginUser");
+
+	    StoreDTO storeDTO = storeService.selectStoreById(storeId);
+	    
+	    List<ProductDTO> productDTO = productService.selectProductByStoreId(storeId);
+
+	    model.addAttribute("userDTO", userDTO);
+	    model.addAttribute("storeDTO", storeDTO);
+	    model.addAttribute("productDTO", productDTO);
+
+	    return "seller.productList";
+	}
+	
+	@GetMapping("/list/byStoreId")
+	@ResponseBody
+	public Map<String, Object> getProductsByStoreId(
+		@RequestParam("storeId") int storeId,
+		@RequestParam(defaultValue = "1") int page) {
+
+		int pageSize = 5;
+
+		List<ProductDTO> allProducts = productService.selectProductByStoreId(storeId);
+
+		for (ProductDTO product : allProducts) {
+			List<ImageDTO> images = product.getImages();
+			if (images != null && !images.isEmpty()) {
+				product.setThumbnailImageUrl(images.get(0).getImageUrl()); // 첫 번째 이미지를 썸네일로
+			}
+		}
+
+		int total = allProducts.size();
+		int totalPages = (int) Math.ceil((double) total / pageSize);
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, total);
+		List<ProductDTO> pagedProducts = allProducts.subList(fromIndex, toIndex);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("productList", pagedProducts);
+		result.put("currentPage", page);
+		result.put("totalPages", totalPages);
+		result.put("storeId", storeId);
+
+		return result;
+	}
+
+
 
 	// 상품가져오기
 	@GetMapping(value = "/list", produces = "application/json")
