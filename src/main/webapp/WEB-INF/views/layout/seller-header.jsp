@@ -9,31 +9,33 @@
 	<div class="logo" onclick="location.href='${cpath}/seller/home'">
 		<img src="${cpath}/resources/images/logo.svg" alt="logo" />
 	</div>
-	
-	<div class="store-dropdown-container">
-  <div class="current-store-name">
-    <c:choose>
-      <c:when test="${not empty currentStore}">
-        ${currentStore.storeName}
-      </c:when>
-      <c:otherwise>상점 없음</c:otherwise>
-    </c:choose>
-  </div>
 
-  <div class="dropdown">
-    <img src="${cpath}/resources/images/icons/drop-down.svg"
-      class="dropdown-icon" onclick="toggleDropdown()" />
-    <ul class="dropdown-menu" id="storeDropdown" style="display: none;">
-      <c:forEach var="store" items="${storeList}">
-        <li onclick="selectStore('${store.storeId}', '${store.storeName}')">
-          ${store.storeName}
-        </li>
-      </c:forEach>
-    </ul>
-  </div>
-  <button class="store-change-btn" onclick="changeSelectedStore()">변경</button>
-</div>
-	
+	<div class="store-dropdown-container">
+		<div class="dropdown" onclick="toggleDropdown(event)">
+			<div class="current-store-container">
+				<div class="current-store-name">
+					<c:choose>
+						<c:when test="${not empty currentStore}">
+              ${currentStore.storeName}
+            </c:when>
+						<c:otherwise>상점 없음</c:otherwise>
+					</c:choose>
+				</div>
+				<img id="dropdownIcon" src="${cpath}/resources/images/icons/drop-down.svg"
+					class="dropdown-icon" />
+			</div>
+
+			<ul class="dropdown-menu" id="storeDropdown" style="display: none;">
+				<c:forEach var="store" items="${storeList}">
+					<li data-id="${store.storeId}" data-name="${store.storeName}"
+						onclick="selectStore(this, event)">${store.storeName}</li>
+
+				</c:forEach>
+			</ul>
+		</div>
+
+		<button class="store-change-btn" onclick="changeSelectedStore()">변경</button>
+	</div>
 </div>
 
 <script>
@@ -51,80 +53,71 @@
 
 <script>
 let dropdownVisible = false;
+let selectedStoreId = null;
 
-function toggleDropdown() {
+function toggleDropdown(event) {
+  event.stopPropagation();
   const dropdown = document.getElementById('storeDropdown');
-  console.log("toggleDropdown 호출됨");
-
-  if (!dropdown) {
-    console.warn("dropdown 요소 없음");
-    return;
-  }
-
+  const icon = document.getElementById('dropdownIcon');
   dropdownVisible = !dropdownVisible;
   dropdown.style.display = dropdownVisible ? 'block' : 'none';
-  console.log("드롭다운 상태 변경됨:", dropdown.style.display);
 
   if (dropdownVisible) {
-    // 외부 클릭 감지 등록
-    document.addEventListener("click", handleOutsideClick);
-  } else {
-    document.removeEventListener("click", handleOutsideClick);
-  }
+	    icon.src = `${cpath}/resources/images/icons/drop-up.svg`; 
+	    document.addEventListener("click", handleOutsideClick);
+	  } else {
+	    icon.src = `${cpath}/resources/images/icons/drop-down.svg`; 
+	    document.removeEventListener("click", handleOutsideClick);
+	  }
 }
 
 function handleOutsideClick(event) {
   const dropdown = document.getElementById("storeDropdown");
-  const icon = document.querySelector(".dropdown-icon");
+  const dropdownArea = document.querySelector(".dropdown");
 
-  console.log("document 클릭 발생");
-  console.log("클릭한 요소:", event.target);
-  const isClickInside = dropdown.contains(event.target);
-  const isClickIcon = icon.contains(event.target);
-
-  console.log("dropdown 내부 클릭?:", isClickInside);
-  console.log("아이콘 클릭?:", isClickIcon);
-
-  if (!isClickInside && !isClickIcon) {
+  if (!dropdownArea.contains(event.target)) {
     dropdown.style.display = "none";
     dropdownVisible = false;
     document.removeEventListener("click", handleOutsideClick);
-    console.log("드롭다운 닫힘");
   }
 }
 
+function selectStore(element, event) {
+  if (event) event.stopPropagation();
 
-	function handleOutsideClick(event) {
-	  const dropdown = document.getElementById("storeDropdown");
-	  const icon = document.querySelector(".dropdown-icon");
+  const storeId = element.getAttribute('data-id');
+  const storeName = element.getAttribute('data-name');
+  selectedStoreId = storeId;
 
-	  if (!dropdown || !icon) return;
+  // 드롭다운 닫기
+  const dropdown = document.getElementById('storeDropdown');
+  const icon = document.getElementById('dropdownIcon'); 
+  dropdown.style.display = 'none';
+  dropdownVisible = false;
+  icon.src = `${cpath}/resources/images/icons/drop-down.svg`; 
+  document.removeEventListener("click", handleOutsideClick);
 
-	  const isClickInsideDropdown = dropdown.contains(event.target);
-	  const isClickOnIcon = icon.contains(event.target);
+  // 이름 반영
+  const nameBox = document.querySelector('.current-store-name');
+  nameBox.textContent = storeName;
 
-	  if (!isClickInsideDropdown && !isClickOnIcon) {
-	    dropdown.style.display = "none";
-	    console.log("드롭다운 닫힘");
-	    document.removeEventListener("click", handleOutsideClick); // 한번만 실행
-	  }
-	}
+  console.log(`선택된 상점: ${storeId}, 이름: ${storeName}`);
+}
 
 
-  function changeStore(storeId) {
-    console.log("changeStore 호출됨, 전달받은 storeId:", storeId);
+function changeSelectedStore() {
+  if (!selectedStoreId) {
+    alert("변경할 상점을 선택해주세요.");
+    return;
+  }
 
-    fetch(`${cpath}/seller/store/changeStore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ storeId })
-    })
-    .then(res => {
-      console.log("서버 응답 수신");
-      return res.text();
-    })
+  fetch(`${cpath}/seller/store/changeStore`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storeId: selectedStoreId })
+  })
+    .then(res => res.text())
     .then(msg => {
-      console.log("서버 메시지:", msg);
       alert(msg);
       location.reload();
     })
@@ -132,69 +125,6 @@ function handleOutsideClick(event) {
       console.error("상점 변경 실패:", err);
       alert("상점 변경 실패: " + err);
     });
-  }
-
-  // 바깥 클릭 시 드롭다운 닫기
-  document.addEventListener("click", function(event) {
-    console.log("document 클릭 발생");
-
-    const dropdown = document.getElementById("storeDropdown");
-    const icon = document.querySelector(".dropdown-icon");
-
-    if (!dropdown || !icon) {
-      console.warn("dropdown 또는 icon 요소를 찾지 못함");
-      return;
-    }
-
-    const isClickInsideDropdown = dropdown.contains(event.target);
-    const isClickOnIcon = icon.contains(event.target);
-
-    console.log("클릭한 요소:", event.target);
-    console.log("dropdown 내부 클릭?:", isClickInsideDropdown);
-    console.log("아이콘 클릭?:", isClickOnIcon);
-
-    if (!isClickInsideDropdown && !isClickOnIcon) {
-      dropdown.style.display = "none";
-      console.log("드롭다운 닫힘");
-    }
-  });
-  
-  let selectedStoreId = null;
-
-  function selectStore(storeId, storeName) {
-    selectedStoreId = storeId;
-
-    // 드롭다운 닫기
-    document.getElementById('storeDropdown').style.display = 'none';
-    dropdownVisible = false;
-
-    // 선택된 이름 표시
-    const nameBox = document.querySelector('.current-store-name');
-    nameBox.textContent = storeName;
-
-    console.log(`선택된 상점: ${storeId}, 이름: ${storeName}`);
-  }
-
-  function changeSelectedStore() {
-    if (!selectedStoreId) {
-      alert("변경할 상점을 선택해주세요.");
-      return;
-    }
-
-    fetch(`${cpath}/seller/store/changeStore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ storeId: selectedStoreId })
-    })
-      .then(res => res.text())
-      .then(msg => {
-        alert(msg);
-        location.reload();
-      })
-      .catch(err => {
-        console.error("상점 변경 실패:", err);
-        alert("상점 변경 실패: " + err);
-      });
-  }
+}
 
 </script>

@@ -142,7 +142,6 @@ function submitStore() {
 			  dong : document.getElementById('bname').value,
 			  addressDetail: document.getElementById('detailAddr').value,
 			  description: document.getElementById('storeDescription').value,
-			  userId: 1,
 			  businessNumber: document.getElementById('businessRegistrationNumber').value,
 			  bankAccount: document.getElementById('accountNumber').value,
 			  categoryId: parseInt(document.getElementById('selectedCategoryId').value),
@@ -161,9 +160,14 @@ function submitStore() {
     body: JSON.stringify(storeData)
   })
   .then(res => res.text())
-  .then(msg => {
-	  alert((storeId ? "수정" : "등록") + " 결과: " + msg);
-  })
+.then(msg => {
+  if (!isNaN(msg)) {
+    alert("등록 성공! 상점 ID: " + msg);
+    location.href = document.referrer;
+  } else {
+    alert("등록 실패: " + msg);
+  }
+})
   .catch(err => alert("오류: " + err));
 }
 

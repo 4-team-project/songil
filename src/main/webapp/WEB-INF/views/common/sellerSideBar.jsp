@@ -91,10 +91,6 @@
 
 <body>
 	<aside class="sidebar">
-		<div class="store-info">
-			<span>[현재 상점]</span> <strong>김밥식 맛집(마포구)</strong>
-			<button class="change-store-btn">변경</button>
-		</div>
 
 		<nav class="menu">
 			<ul>

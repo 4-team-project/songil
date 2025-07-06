@@ -8,7 +8,13 @@
 
 	<!-- 1. 상점 등록 (store_id는 트리거에서 자동 생성) -->
 	<insert id="insertStore" parameterType="StoreDTO">
+		<selectKey keyProperty="storeId" resultType="int"
+			order="BEFORE">
+			SELECT takku_store_seq.NEXTVAL FROM dual
+		</selectKey>
+
 		INSERT INTO takku_store (
+		store_id,
 		user_id,
 		business_number,
 		bank_account,
@@ -21,6 +27,7 @@
 		description,
 		created_at
 		) VALUES (
+		#{storeId},
 		#{userId},
 		#{businessNumber},
 		#{bankAccount},
@@ -34,6 +41,7 @@
 		SYSDATE
 		)
 	</insert>
+
 
 	<!-- 2. 상점 상세 조회 -->
 	<select id="selectStoreById" parameterType="int"
