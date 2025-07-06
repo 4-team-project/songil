@@ -18,8 +18,6 @@
 		)
 	</insert>
 
-
-
 	<!-- 이미지 삭제 -->
 	<delete id="deleteImageUrl" parameterType="String">
 		DELETE FROM
