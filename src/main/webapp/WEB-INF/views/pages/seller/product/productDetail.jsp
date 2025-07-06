@@ -37,10 +37,10 @@
 				onchange="handleFiles(this.files)" />
 		</div>
 		<div id="preview-list" class="preview-list"></div>
-		<div id="file-count-text" class="file-count-text"
+	</div>
+	<div id="file-count-text" class="file-count-text"
 			style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
 			/ 3</div>
-	</div>
 </div>
 <div class="complete-back-btn-box">
 	<div class="complete-back-btn" onclick="history.back()">이전</div>
@@ -138,16 +138,14 @@ function handleFiles(fileList) {
       const img = document.createElement('img');
       img.src = e.target.result; // 미리보기 URL
 
-      const delBtn = document.createElement('div');
-      delBtn.className = 'delete-btn';
-      delBtn.innerHTML = '×';
-
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "취소하기";
+      delBtn.className = "btn-cancel";
       delBtn.onclick = () => {
-        wrapper.remove();
-        selectedFiles = selectedFiles.filter(f => f !== file);
-        updateFileCountText();
-        console.log("delBtn click (new) - selectedFiles 제거:", file.name, "현재 selectedFiles:", selectedFiles);
-      };
+    	  selectedFiles = selectedFiles.filter(f => !(f.name === file.name && f.size === file.size));
+          wrapper.remove();
+          updateFileCountText();
+		};
 
       wrapper.appendChild(img);
       wrapper.appendChild(delBtn);
@@ -250,9 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
             image.src = img.imageUrl; 
             image.alt = '기존 이미지';
 
-            const delBtn = document.createElement('div');
-            delBtn.className = 'delete-btn';
-            delBtn.innerHTML = '×';
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "취소하기";
+            delBtn.className = "btn-cancel";
+            delBtn.onclick = () => {
+    			const idx = imageList.findIndex(v => v.type === "url" && v.value === url);
+    			if (idx !== -1) imageList.splice(idx, 1);
+    			wrapper.remove();
+    		};
             
             keptExistingImageUrls.push(img.imageUrl);
             console.log("DOMContentLoaded - keptExistingImageUrls 추가:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);

@@ -26,12 +26,12 @@
 <div class="content-box">
 	<div class="content-text">상점 주소</div>
 	<div class="address-section">
-		<p class="address-row">
-			<button type="button" class="auth-btn" onclick="execDaumPostcode()">주소
+		<div class="address-btn-wrapper">
+			<button type="button" class="address-btn" onclick="execDaumPostcode()">주소
 				검색</button>
-			<button type="button" class="auth-btn" id="clearAddressBtn">지우기</button>
+			<button type="button" class="address-btn" id="clearAddressBtn">지우기</button>
 
-		</p>
+		</div>
 		<input type="hidden" id="postcode" name="postcode"> <input
 			type="hidden" id="sido" name="sido"> <input type="hidden"
 			id="sigungu" name="sigungu"> <input type="hidden" id="bname"
