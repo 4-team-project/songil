@@ -85,5 +85,13 @@ public class OrderService implements OrderMapper {
 		}
 		return orderList;
 	}
+	
+	  @Override
+	    public List<OrderDTO> searchOrders(int userId, String keyword) {
+		  Map<String, Object> param = new HashMap<>();
+		  param.put("userId", userId);
+		  param.put("keyword", keyword);
 
+		  return sqlSession.selectList(namespace + "searchOrders", param);
+	    }
 }

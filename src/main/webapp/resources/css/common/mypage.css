@@ -226,6 +226,9 @@
 	width: 100px;
 }
 /***********************************************/
+p {
+	margin: 35px;
+}
 .content {
 	width: 989px;
 	margin: 0 auto;
@@ -510,6 +513,13 @@ h2 {
 
 /*****************************************/
 /*내 정보 수정하기*/
+#user-info-modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
 #user-info-form label {
 	font-weight: 600;
 	color: #f37041;
@@ -522,17 +532,27 @@ h2 {
 	width: 60%;
 	padding: 8px 12px;
 	padding-top: 10px;
-	border: 1px solid #f37041;
+	border: 2px solid #bbbbbb;
 	border-radius: 6px;
 	font-size: 17px;
 	background-color: white;
 }
 
+#user-info-form input[type="text"]:focus,
+#user-info-form input[type="tel"]:focus,
+#user-info-form input[type="password"]:focus,
+#user-info-form select:focus {
+  outline: none; /* 기본 파란 외곽선 제거 */
+  border: 3px solid #ff9670; /* 테두리 주황색 */
+  box-shadow: 0 0 3px #ff9670; /* 선택 시 약간의 그림자 효과 */
+}
+
+
 /* 저장 버튼 */
 .modal-btn.Uedit {
 	background-color: #f37041;
 	color: white;
-	border: 1px solid #f37041;
+	border: 2px solid #f37041;
 	margin-left: 15px;
 }
 
@@ -542,9 +562,10 @@ h2 {
 
 .modal-btn.Ucheck {
 	background-color: white;
-	border: 1px solid #f37041;
+	border: 2px solid #f37041;
 	color: #f37041;
 	margin-right: 15px;
+	font-size: 16px;
 }
 
 .modal-btn.Ucheck:hover {

@@ -9,6 +9,7 @@
 
 <div class="mypage-container">
 
+
 	<!-- 사이드바 -->
 	<nav class="sidebar">
 		<div class="profile-section">
@@ -42,6 +43,7 @@
 							완료</a></li>
 					<li><a href="#" class="cancel" data-status="cancel">결제 취소</a></li>
 				</ul>
+				
 			</div>
 
 			<!-- 내가 참여한 펀딩 > nav-->
@@ -60,7 +62,7 @@
 
 			<!-- 검색하기 -->
 			<div class="search-wrapper">
-				<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>
+				<%@ include file="/WEB-INF/views/common/searchBox.jsp"%>	
 			</div>
 		</div>
 
@@ -80,6 +82,7 @@
 		<div id="order-list-container" class="content">
 			<jsp:include page="/WEB-INF/views/pages/user/mypage_orderList.jsp" />
 		</div>
+		
 
 		<!-- 내가 참여한 펀딩 리스트 -->
 		<div id="funding-list-container" class="content"
@@ -95,7 +98,6 @@
 
 <!-- 결제상세 -->
 <%@ include file="/WEB-INF/views/pages/user/mypage_paymentDetail.jsp"%>
-
 
 <script>
   // html 로딩 완료 후 실행되는 함수들
@@ -164,7 +166,6 @@ function bindBuyTabs() {
      tab.classList.add('active');
 
      const status = tab.getAttribute('data-status');
-     console.log("status", status);
     
      currentTabStatus = status;
 
@@ -177,9 +178,6 @@ function bindBuyTabs() {
          document.getElementById('order-list-container').innerHTML = html;
          bindModalEvents(); 
        })
-       .catch(err => {
-         alert('데이터를 불러오는 중 오류가 발생했습니다.');
-       });
    });
  });
 }
@@ -205,4 +203,86 @@ function bindFundingTabs() {
 	 });
  });
 } 
+
+//검색하기
+function sendSearchData() {
+  const keyword = document.getElementById("searchText").value.trim();
+  if (!keyword) return;
+
+  // 기존 리스트 숨기고 검색 결과만 보이게 
+  document.querySelector(".order-list").style.display = "none"; 
+
+  fetch(`${cpath}/order/search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ keyword: keyword })
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("서버 오류: " + response.status);
+      return response.json();
+    })
+    .then(data => {
+      renderSearchResults(data);
+    })
+    .catch(error => {
+      console.error("검색 중 오류 발생:", error);
+    });
+}
+
+function renderSearchResults(data) {
+  const container = document.getElementById("resultContainer");
+  container.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<p>검색 결과가 없습니다.</p>";
+    return;
+  }
+  data.forEach(order => {
+	  const formattedDate = formatDate(order.purchasedAt);
+	    const div = document.createElement("div");
+	    div.className = "payment-item order-card"; // 기존 스타일 유지
+	    div.innerHTML = `
+	    
+	        <div class="payment-left">
+	          <div class="payment-date">
+	            <span class="payment-label">구매일:</span> \${formattedDate}
+	          </div>
+	          <div class="payment-image">
+	            <img src="${cpath}${order.images[0].imageUrl}" alt="메뉴 이미지"/>
+	            
+	          </div>
+	        </div>
+
+	        <div class="payment-right">
+	          <div class="top-row">
+	            <div class="menu-name">\${order.productName}</div>
+	            <div class="payment-amount">\${order.amount}원</div>
+	            <div class="payment-status">\${order.status}</div>
+	            <div class="payment-detail-btn" data-orderid="\${order.orderId}">
+	              <span>결제상세</span>
+	            </div>
+	          </div>
+	          <div class="payment-qty">수량 : \${order.qty}</div>
+	        </div>
+	     
+	    `;
+    container.appendChild(div);
+  });
+  bindModalEvents();
+}
+
+document.getElementById("searchText").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") sendSearchData();
+});
+
+document.getElementById("searchButton").addEventListener("click", function () {
+  sendSearchData();
+});
+function formatDate(dateStr) {
+	  const date = new Date(dateStr);
+	  const year = date.getFullYear();
+	  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+	  const day = String(date.getDate()).padStart(2, '0');
+	  return `\${year}-\${month}-\${day}`;
+	}
 </script>

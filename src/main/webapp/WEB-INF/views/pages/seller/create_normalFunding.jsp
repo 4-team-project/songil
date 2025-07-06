@@ -102,7 +102,7 @@ $(document).on('click', '#btn-edit', function(){
 	const productId = $('#menuSelect').val();
 	
 	if(productId) {
-		window.location.href='${pageContext.request.contextPath}/seller/product/' + productId + '/edit';
+		window.location.href='${pageContext.request.contextPath}/seller/product/edit/' + productId;
 	}else {
 		alert("수정할 메뉴를 선택해주세요");
 	}

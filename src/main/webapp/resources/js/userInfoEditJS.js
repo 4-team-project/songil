@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  const conditionDiv = document.querySelector('.condition div');
 	  
 	  if (!passwordInput.value) {
-		    conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요";
+		    conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요.";
 		    conditionDiv.style.color = "black";
 		  }
 	
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	    const pwd = passwordInput.value;
 	
 	    if (!pwd) {
-	      conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요";
+	      conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요.";
 	      conditionDiv.style.color = "black";
 	      return;
 	    }
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        conditionDiv.style.color = "green";
 	        
 	      } else {
-	        conditionDiv.textContent = "비밀번호 형식이 올바르지 않습니다. 영어와 숫자 조합으로 6자 이상이어야 합니다.";
+	        conditionDiv.textContent = "영어와 숫자 조합으로 6자 이상이어야 합니다.";
 	        conditionDiv.style.color = "red";
 	      }
 	    })
@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
    .then(result => {
 	    if (parseInt(result) > 0) {
 	      alert("수정이 완료되었습니다.");
+	      location.reload(); //새로고침
 	      document.getElementById('user-info-modal').style.display = 'none';
 	    } else if (result === '-1') {
 	      alert("비밀번호가 일치하지 않습니다.");

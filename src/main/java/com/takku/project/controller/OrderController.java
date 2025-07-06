@@ -18,11 +18,13 @@ import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -183,5 +185,17 @@ public class OrderController {
 
 	    return result;
 	}
+	
+	//검색하기
+	@PostMapping("/search")
+	public ResponseEntity<List<OrderDTO>> searchOrders(@RequestBody Map<String, String> body,
+	    @SessionAttribute("loginUser") UserDTO loginUser) {
+	    
+	    String keyword = body.get("keyword");
+	    int userId = loginUser.getUserId();
 
+	    List<OrderDTO> list = orderService.searchOrders(userId, keyword);
+	    return ResponseEntity.ok(list);
+
+}
 }

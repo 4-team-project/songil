@@ -244,9 +244,10 @@ public class FundingController {
 
 	// 기존 - 전체리스트
 	@GetMapping("/list")
-	public String selectFundingListByStatus(@RequestParam("status") String status, Model model) {
-		int userId = 5;
-
+	public String selectFundingListByStatus(@RequestParam("status") String status, Model model,HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		
+		
 		if ("allfundinglist".equals(status)) {
 			status = null; // 전체 조회 - 조건에서 status 제외
 		} else if ("progressing".equals(status)) {
@@ -254,10 +255,10 @@ public class FundingController {
 		} else if ("achieved".equals(status)) {
 			status = "성공";
 		} else if ("failed".equals(status)) {
-			status = "미달성";
+			status = "실패";
 		}
 
-		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(userId, status);
+		List<FundingDTO> fundingList = fundingService.selectFundingListByStatus(loginUser.getUserId(), status);
 		model.addAttribute("fundingList", fundingList);
 
 		return "pages/user/myPage_fundingList";
