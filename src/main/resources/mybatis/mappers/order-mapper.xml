@@ -31,17 +31,21 @@
 
 	<!-- 주문 생성 -->
 	<insert id="insertOrder" parameterType="OrderDTO">
-		<selectKey keyProperty="orderId" resultType="int" order="BEFORE">
+		<selectKey keyProperty="orderId" resultType="int"
+			order="BEFORE">
 			SELECT takku_order_seq.NEXTVAL FROM dual
 		</selectKey>
 		INSERT INTO takku_order (
 		order_id, user_id,
-		funding_id, qty, amount, use_point,
+		funding_id, qty, amount,
+		use_point,
 		discount_amount, payment_method,
-		status, funding_status, purchased_at,
+		status, funding_status,
+		purchased_at,
 		refund_at, imp_uid, merchant_uid
 		) VALUES (
-		#{orderId}, #{userId}, #{fundingId},
+		#{orderId},
+		#{userId}, #{fundingId},
 		#{qty}, #{amount}, #{usePoint},
 		#{discountAmount},
 		'카드',
@@ -110,6 +114,13 @@
 		AND o.status =
 		#{status}
 		ORDER BY o.purchased_at DESC
+	</select>
+	
+	<select id="selectCompletedOrdersByFundingId"
+		parameterType="int" resultType="OrderDTO">
+		SELECT * FROM takku_order
+		WHERE funding_id = #{fundingId}
+		AND status = '결제완료'
 	</select>
 
 </mapper>
