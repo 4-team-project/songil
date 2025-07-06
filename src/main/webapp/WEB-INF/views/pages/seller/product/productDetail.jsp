@@ -3,6 +3,7 @@
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
+<input type="hidden" id="storeId" value="${storeId}" />
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
@@ -111,12 +112,13 @@ function handleFiles(fileList) {
 const redirectUrl = document.getElementById("redirectUrl")?.value;
 function submitProduct() {
 	  const productId = document.getElementById("productId").value;
+	  const storeId = document.getElementById("storeId").value;
 	  const productData = {
 	    productId: productId || null,
 	    productName: document.getElementById('productName').value,
 	    price: parseInt(document.getElementById('productPrice').value),
 	    description: document.getElementById('productDescription').value,
-	    storeId: 1,
+	    storeId: parseInt(storeId),
 	    images: selectedFiles.map(file => {
 	    	  const name = file.name || file.imageUrl; 
 	    	  return {
@@ -131,7 +133,6 @@ function submitProduct() {
 		  if (!file.isExisting) formData.append("images", file);
 		});
 	  
-	  console.log(formData);
 	  const url = productId
 	    ? `${cpath}/seller/product/update/${productId}`
 	    : `${cpath}/seller/product/insert`;
@@ -149,7 +150,7 @@ function submitProduct() {
 		  if (redirectUrl) {
 		    location.href = redirectUrl;
 		  } else {
-		    location.href = `${cpath}/seller/product`;
+			  location.href = `${cpath}/seller/store?storeId=${storeId}`;
 		  }
 		})
 	  .catch(err => alert("오류: " + err));
