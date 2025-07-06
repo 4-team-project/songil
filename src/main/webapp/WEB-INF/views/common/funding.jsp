@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="${cpath}/resources/css/pages/user/home.css">
 
 
-<div class="content-box">
-	<div id="main-contents">
+
 		<div id="initialContent">
 			<c:if test="${not empty recommendList}">
 
@@ -145,5 +144,4 @@
 				</c:forEach>
 			</div>
 		</div>
-	</div>
-</div>
+

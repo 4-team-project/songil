@@ -1,18 +1,18 @@
 @import url('../base/fonts.css');
 
 .category-bar {
-  width: 180px;
-  min-width: 160px;
-  background-color: #FFF6F0;
-  height: 100vh;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-  position: relative;
+	height : auto;
+	width: 160px;
+	min-width: 160px;
+	max-width: 160px;
+	flex-shrink: 0;
+	background-color: #FFF6F0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+	padding-top: 40px;
 }
-
 
 @media screen and (max-width: 768px) {
 	.category-bar {
@@ -24,7 +24,9 @@
 	width: 82px;
 	height: 20px;
 	display: flex;
-	justify-content: flex-start;
+	flex-direction: row; 
+	justify-content: center;   
+	align-items: center;     
 	cursor: pointer;
 }
 
