@@ -84,6 +84,16 @@ public class OrderService implements OrderMapper {
 		return orderList;
 	}
 
+	  @Override
+	    public List<OrderDTO> searchOrders(int userId, String keyword) {
+		  Map<String, Object> param = new HashMap<>();
+		  param.put("userId", userId);
+		  param.put("keyword", keyword);
+
+		  return sqlSession.selectList(namespace + "searchOrders", param);
+	    }
+
+
 	public void refundOrdersForFailedFunding(int fundingId) {
 		List<OrderDTO> orders = sqlSession.selectList(namespace + "selectCompletedOrdersByFundingId", fundingId);
 

@@ -32,6 +32,9 @@ public interface OrderMapper {
 	// userid랑 status 가져올거야
 	List<OrderDTO> getOrdersByUserAndStatus(@Param("userId") int userId, @Param("status") String status);
 
+
+	List<OrderDTO> searchOrders(int userId, String keyword);
+
 	List<OrderDTO> selectCompletedOrdersByFundingId(@Param("fundingId") int fundingId);
 
 }

@@ -2,7 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<div id="resultContainer"></div>
 <div class="order-list">
+
 	<c:forEach var="order" items="${orderList}">
 		<div class="payment-item order-card">
 
@@ -33,5 +35,6 @@
 		</div>
 	</c:forEach>
 </div>
+
 
 

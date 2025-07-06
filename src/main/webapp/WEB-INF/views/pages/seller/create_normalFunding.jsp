@@ -98,7 +98,17 @@ $(document).ready(function () {
     $('#resultModal, #modalBackdrop').fadeOut();
     $('#menuPrice').focus();
   });
-
+ 
+$(document).on('click', '#btn-edit', function(){
+	const productId = $('#menuSelect').val();
+	
+	if(productId) {
+		window.location.href='${pageContext.request.contextPath}/seller/product/edit/' + productId;
+	}else {
+		alert("수정할 메뉴를 선택해주세요");
+	}
+});
+});
   // 수정 버튼
   $('#btn-edit').on('click', function () {
     const productId = $('#menuSelect').val();
