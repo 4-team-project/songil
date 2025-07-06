@@ -1,7 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet" href="${cpath}/resources/css/pages/user/home.css">
+
 
 <div class="content-box">
 	<div id="main-contents">
@@ -61,7 +63,7 @@
 			</div>
 
 			<!-- 정렬 필터 -->
-			<div class="funding-filter-box" id="sortButtons"> 
+			<div class="funding-filter-box" id="sortButtons">
 				<div class="funding-filter selected" data-sort-id="popular">
 					<div class="funding-filter-text">인기순</div>
 				</div>

@@ -5,6 +5,9 @@
 <link rel="stylesheet"
 	href="${cpath}/resources/css/components/regionDropdown.css">
 
+<link rel="stylesheet"
+	href="${cpath}/resources/css/pages/seller/settlements.css">
+	
 <div class="content-box">
 	<%@ include file="/WEB-INF/views/common/categoryBar.jsp"%>
 	<div class="main-contents">
@@ -34,6 +37,7 @@
 			<div class="add-button" id="moreButton">
 				<div class="add-button-text">더보기</div>
 			</div>
+			<div class="pagination"></div>
 		</div>
 	</div>
 </div>

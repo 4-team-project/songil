@@ -120,7 +120,7 @@ public class FundingController {
 		}
 
 		List<String> keywordList = splitKeywords(keyword);
-		System.out.println("split된 키워드 목록: " + keywordList);
+
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
 				sigungu, sort, page, size);
 		for (FundingDTO funding : fundingList) {
