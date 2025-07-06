@@ -118,9 +118,17 @@ public class StoreController {
 		model.addAttribute("storeDTO", store);
 		return "seller.store";
 	}
+	
+	// storeId로 상점 정보 조회
+		@GetMapping(value = "/info/{storeId}", produces = "application/json")
+		@ResponseBody
+		public StoreDTO getStoreinfoByStoreId(@PathVariable int storeId, HttpServletRequest request) {
+			StoreDTO store = storeService.selectStoreById(storeId);
+		    return store;
+		}
 
 	// 상점 수정 처리
-	@PutMapping("/update/{storeId}")
+	@PostMapping("/update/{storeId}")
 	@ResponseBody
 	public String updateStore(@PathVariable("storeId") Integer storeId, @RequestBody StoreDTO storeDTO) {
 		storeDTO.setStoreId(storeId);
@@ -130,21 +138,25 @@ public class StoreController {
 	}
 
 	// 상점 삭제 처리
-	@PostMapping("/delete")
+	@PostMapping("/delete/{storeId}")
 	@ResponseBody
-	public ResponseEntity<String> deleteStore(@RequestParam("storeId") int storeId) {
-	    int result = storeService.deleteStore(storeId);
-	    if (result > 0) {
-	        return ResponseEntity.ok("삭제 성공");
-	    } else {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+	public String deleteStore(@PathVariable("storeId") Integer storeId) {
+	    if (storeId == null) return "삭제 실패 (ID 없음)";
+
+	    try {
+	        int result = storeService.deleteStore(storeId);
+	        return result > 0 ? "삭제 성공" : "삭제 실패 (DB 처리 실패)";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "삭제 실패 (서버 오류)";
 	    }
 	}
 
 	// 상점 목록 보기
 	@GetMapping("/storeList")
-	public String showStoreList(@RequestParam(name = "userId", defaultValue = "1") int userId, Model model) {
-		model.addAttribute("userId", userId);
+	public String showStoreList(HttpSession session, Model model) {
+		UserDTO userDTO = (UserDTO) session.getAttribute("loginUser");
+		model.addAttribute("userDTO", userDTO);
 	    return "seller.storeList"; 
 	}
 
@@ -153,8 +165,9 @@ public class StoreController {
 	@ResponseBody
 	public Map<String, Object> getPagedStoreList(
 		@RequestParam(defaultValue = "1") int page,
-		@RequestParam(defaultValue = "1") int userId) {
-
+		HttpSession session) {
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		int userId = loginUser.getUserId(); 
 		int pageSize = 5;
 
 		List<StoreDTO> allStores = storeService.selectStoreListByUserId(userId); 

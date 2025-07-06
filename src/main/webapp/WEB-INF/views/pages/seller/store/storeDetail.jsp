@@ -130,11 +130,11 @@ window.onload = function () {
 <script>
 function submitStore() {
 	const storeId = document.getElementById("storeId").value;
-	console.log(document.getElementById('bname'))
-	console.log(document.getElementById('sido'))
-	console.log(document.getElementById('sigungu'))
-	console.log(document.getElementById('detailAddr'))
-	console.log(document.getElementById('storeDescription'))
+	console.log(document.getElementById('bname'));
+	console.log(sido);
+	console.log(document.getElementById('sigungu'));
+	console.log(document.getElementById('detailAddr'));
+	console.log(document.getElementById('storeDescription'));
 	const storeData = {
 		storeId: storeId || null,
 			  storeName: document.getElementById('storeName').value,
@@ -154,7 +154,7 @@ function submitStore() {
 	    ? `${cpath}/seller/store/update/${storeId}`
 	    : `${cpath}/seller/store/insert`;
 	    
-	    const method = storeId ? "PUT" : "POST";
+	    const method = "POST";
 	    
   fetch(url, {
     method: method,
@@ -184,6 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	        document.getElementById('storeDescription').value = store.description;
 	        document.getElementById('accountNumber').value = store.bankAccount;
 	        document.getElementById('businessRegistrationNumber').value = store.businessNumber;
+	        document.getElementById('sido').value = store.sido;
+	        document.getElementById('sigungu').value = store.sigungu;
+	        document.getElementById('bname').value = store.dong;
 	        
 	        document.getElementById('roadAddress').value = 
 	            [store.sido, store.sigungu, store.dong].filter(Boolean).join(' ');
