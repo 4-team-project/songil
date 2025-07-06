@@ -125,67 +125,59 @@ public class ProductManagementController {
 	@PostMapping(value = "/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseBody
 	public String updateProductWithImages(@PathVariable("productId") Integer productId,
-			@RequestParam("product") String productJson,
-			@RequestPart(value = "images", required = false) MultipartFile[] files) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			ProductDTO productDTO = mapper.readValue(productJson, ProductDTO.class);
-			productDTO.setProductId(productId);
+	                                      @RequestParam("product") String productJson,
+	                                      @RequestPart(value = "images", required = false) MultipartFile[] files) {
+	    try {
+	        ObjectMapper mapper = new ObjectMapper();
+	        ProductDTO productDTO = mapper.readValue(productJson, ProductDTO.class);
+	        productDTO.setProductId(productId);
 
-			int result = productService.updateProduct(productDTO);
+	        // 1. 상품 정보 업데이트
+	        int result = productService.updateProduct(productDTO);
 
-			List<ImageDTO> existingImages = imageService.selectImagesByProductId(productId);
-			List<String> existingUrls = existingImages.stream().map(ImageDTO::getImageUrl).collect(Collectors.toList());
+	        // 2. 기존 이미지 목록 가져오기
+	        List<ImageDTO> existingImages = imageService.selectImagesByProductId(productId);
+	        List<String> existingUrls = existingImages.stream()
+	                                                  .map(ImageDTO::getImageUrl)
+	                                                  .collect(Collectors.toList());
 
-			List<String> newUrls = productDTO.getImages() != null
-					? productDTO.getImages().stream().map(ImageDTO::getImageUrl).collect(Collectors.toList())
-					: new ArrayList<>();
+	        // 3. 유지할 이미지 목록
+	        List<String> newUrls = productDTO.getImages() != null
+	                ? productDTO.getImages().stream().map(ImageDTO::getImageUrl).collect(Collectors.toList())
+	                : new ArrayList<>();
 
-			for (String oldUrl : existingUrls) {
-				if (!newUrls.contains(oldUrl)) {
-					imageService.deleteImageUrl(oldUrl);
-				}
-			}
+	        // 4. 삭제 대상 이미지 제거 (파일 + DB)
+	        for (String oldUrl : existingUrls) {
+	            if (!newUrls.contains(oldUrl)) {
+	                String fileName = oldUrl.replace("/image/", "");
+	                File file = new File(uploadDir, fileName);
+	                if (file.exists()) file.delete();
 
-			if (files != null) {
-				for (MultipartFile file : files) {
-					if (!file.isEmpty()) {
-						String ext = getFileExtension(file.getOriginalFilename());
-						String fileName = UUID.randomUUID().toString() + ext;
+	                imageService.deleteImageUrl(oldUrl);
+	            }
+	        }
 
-						File uploadPath = new File(uploadDir);
-						if (!uploadPath.exists())
-							uploadPath.mkdirs();
+	        // 5. 새 이미지 저장
+	        imageService.storeImages(files, productId, null, null);
 
-						File dest = new File(uploadDir + File.separator + fileName);
-						file.transferTo(dest);
+	        // 6. 유지 이미지 중 누락된 DB 이미지 추가
+	        for (String url : newUrls) {
+	            if (!existingUrls.contains(url)) {
+	                ImageDTO image = ImageDTO.builder()
+	                        .productId(productId)
+	                        .imageUrl(url.startsWith("/image/") ? url : "/image/" + url)
+	                        .build();
+	                imageService.insertImageUrl(image);
+	            }
+	        }
 
-						ImageDTO image = ImageDTO.builder().productId(productId).imageUrl("/image/" + fileName).build();
-
-						imageService.insertImageUrl(image);
-					}
-				}
-			}
-
-			for (String newUrl : newUrls) {
-				if (newUrl == null)
-					continue;
-				if (!existingUrls.contains(newUrl)) {
-					String correctedUrl = newUrl.startsWith("/image/") ? newUrl : "/image/" + newUrl;
-
-					ImageDTO image = ImageDTO.builder().productId(productId).imageUrl(correctedUrl).build();
-
-					imageService.insertImageUrl(image);
-				}
-			}
-
-			return result > 0 ? "상품이 수정되었습니다." : "상품 수정에 실패하였습니다.";
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "오류 발생: " + e.getMessage();
-		}
+	        return result > 0 ? "상품이 수정되었습니다." : "상품 수정에 실패하였습니다.";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "오류 발생: " + e.getMessage();
+	    }
 	}
+
 
 	// 상품 삭제
 	@PostMapping("/delete/{productId}")
