@@ -214,7 +214,7 @@
 			</select>
 			<button type="button" class="btn-edit" id="btn-edit">정보 수정</button>
 			<button type="button" class="btn-add"
-				onclick="location.href='${pageContext.request.contextPath}/seller/product/new'">메뉴
+				onclick="location.href='${pageContext.request.contextPath}/seller/product/new/${storeDTO.storeId }'">메뉴
 				추가</button>
 		</div>
 	</div>
