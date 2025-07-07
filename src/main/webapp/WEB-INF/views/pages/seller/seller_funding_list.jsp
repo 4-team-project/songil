@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="${cpath}/resources/css/seller_funding_list.css" />
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%-- userId 값을 숨겨진 필드에 저장 --%>
 <input type="hidden" id="currentUserId"
@@ -79,4 +76,7 @@
 </c:forEach>
 </div>
 </div>
-<script src="<c:url value="/resources/js/seller_funding_list.js"/>"></script>
+<script src="<c:url value="${cpath}/resources/js/seller_funding_list.js"/>"></script>
+<script>
+  const cpath = "${pageContext.request.contextPath}";
+</script>

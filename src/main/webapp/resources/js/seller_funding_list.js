@@ -3,17 +3,16 @@ const fundingListContainer = document.getElementById('fundingListContainer');
 const fundingTabs = document.querySelector('.funding-tabs');
 const fundingCountSummary = document.getElementById('fundingCountSummary'); // fundingCountSummary 요소도 전역으로 선언
 
-const cpath = '${cpath}';
+
 
 $(document).ready(function() {
-    console.log("jQuery document ready event fired! Starting initial data load.");
+
 
     // --- 초기 상점 목록 및 첫 번째 상점 펀딩 로드 로직 시작 ---
     const userId = document.getElementById('currentUserId').value;
 
     if (!userId || isNaN(Number(userId))) {
         alert("User ID가 유효하지 않아 초기 펀딩을 불러올 수 없습니다.");
-        console.error("오류: 유효하지 않은 userId 값:", userId);
         if (fundingListContainer) fundingListContainer.innerHTML = '<p>User ID가 없어 초기 펀딩을 불러올 수 없습니다.</p>';
         updateFundingCounts(); // 데이터가 없으므로 0으로 업데이트
         return;
@@ -26,7 +25,6 @@ $(document).ready(function() {
         success: function(stores) {
             const container = document.getElementById('storeListContainer');
             if (!container) {
-                console.error("오류: 'storeListContainer' 요소를 찾을 수 없습니다.");
                 return;
             }
             container.innerHTML = '<h4>다른 지점들:</h4>';
@@ -47,10 +45,8 @@ $(document).ready(function() {
                 btn.textContent = store.storeName;
                 btn.addEventListener('click', function() {
                     const selectedStoreId = store.storeId;
-                    console.log("DEBUG: 펀딩 요청에 사용될 storeId:", selectedStoreId);
                     if (!selectedStoreId || isNaN(Number(selectedStoreId))) {
                         alert("선택한 상점의 ID가 유효하지 않습니다.");
-                        console.error("오류: 유효하지 않은 selectedStoreId 값:", selectedStoreId);
                         return;
                     }
                     loadAndDisplayFundings(selectedStoreId);
@@ -59,7 +55,6 @@ $(document).ready(function() {
             });
         },
         error: function(xhr, status, error) {
-            console.error('AJAX 요청 실패 (상점 목록):', { xhr, status, error });
 
             let errorMessage = '상점 목록을 불러오지 못했습니다.';
             if (xhr && xhr.responseText) {
@@ -80,7 +75,7 @@ $(document).ready(function() {
 
     if (showStoresBtn && storeListContainer) {
         showStoresBtn.addEventListener('click', (event) => {
-            console.log("'다른 지점 보기' 버튼 클릭됨.");
+
             if (storeListContainer.style.display === 'none' || storeListContainer.style.display === '') {
                 storeListContainer.style.display = 'block';
                 if (!storeListContainer.querySelector('h4')) {
@@ -97,7 +92,7 @@ $(document).ready(function() {
     // --- 펀딩 로드 및 표시 함수 ---
     function loadAndDisplayFundings(storeId, initialStatus = 'all') {
         $.ajax({
-            url: `{cpath}/seller/store/fundings/byStore?storeId=${storeId}`,
+            url: `${cpath}/seller/store/fundings/byStore?storeId=${storeId}`,
             method: 'GET',
             dataType: 'json',
             success: function(fundings) {
@@ -107,7 +102,7 @@ $(document).ready(function() {
                 setActiveTab(initialStatus); // 초기 탭 활성화 (all)
             },
             error: function(xhr, status, error) {
-                console.error('AJAX 요청 실패 (펀딩 목록):', { xhr, status, error });
+
 
                 let errorMessage = '펀딩 정보를 불러오지 못했습니다.';
                 if (xhr && xhr.responseText) {
@@ -240,7 +235,6 @@ $(document).ready(function() {
     // --- 펀딩 개수 요약 정보 업데이트 함수 (모든 펀딩 기준) ---
     function updateFundingCounts() {
         if (!fundingCountSummary) {
-            console.error("오류: 'fundingCountSummary' 요소를 찾을 수 없습니다.");
             return;
         }
 

@@ -99,9 +99,7 @@
 							<div class="usedAt">
 								<br>
 								<fmt:formatDate value="${coupon.usedAt}" pattern="yyyy-MM-dd" />
-								<br>
 								<div class="use">사용</div>
-								<br>
 							</div>
 						</div>
 
@@ -241,10 +239,8 @@ function openReviewModal(url) {
             const reviewSuccessBtn = container.querySelector('#reviewSuccessBtn');
             if (reviewSuccessBtn) {
                 const fundingId = reviewSuccessBtn.dataset.fundingId;
-                console.log("💡 바인딩된 fundingId:", fundingId); // 디버깅용
                 reviewSuccessBtn.addEventListener('click', function () {
                     const fundingId = this.dataset.fundingId;
-                    console.log('🚀 클릭 시점 fundingId:', fundingId);
                     goToReviewPage(fundingId);
                 });
             }
