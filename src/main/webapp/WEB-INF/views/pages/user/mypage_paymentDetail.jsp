@@ -40,7 +40,7 @@
 			</div>
 
 			<div class="modal-buttons">
-				<button type="button" class="modal-btn cancel">취소하기</button>
+				<button type="button" class="modal-btn cancel">환불하기</button>
 				<button class="modal-btn confirm">확인</button>
 			</div>
 		</div>

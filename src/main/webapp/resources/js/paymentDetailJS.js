@@ -25,8 +25,7 @@
 	      cancelBtn.style.display = 'none';
 	    } else {
 	      cancelBtn.style.display = 'inline-block';
-	    }
-	 
+	    }	 
 	    document.getElementById('modal').style.display = 'block';
 	  }
 
@@ -50,11 +49,13 @@
 	        document.getElementById('modal').style.display = 'none';
 	      };
 	    });
+	    
 	    document.querySelectorAll('.modal-btn.confirm').forEach(btn => {
 	      btn.onclick = () => {
 	        document.getElementById('modal').style.display = 'none';
 	      };
 	    });
+	    
 	    document.querySelectorAll('.modal-btn.cancel').forEach(btn => {
 	    	  btn.onclick = function(event) {
 	    	    event.preventDefault();
@@ -76,7 +77,7 @@
 	    	    .then(response => response.text())
 		    	.then(result => {
 		      	if (parseInt(result) > 0) {
-		        	alert("결제가 취소되었습니다. 결제취소 탭에서 확인해주세요");
+		        	alert("결제가 완료되었습니다. 결제취소 탭에서 확인해주세요");
 		        	document.getElementById('modal').style.display = 'none';
 		        	
 		            // 현재 화면에서 상태만 '환불'로 업데이트
@@ -91,7 +92,8 @@
 		            const cancelBtn = document.querySelector('.modal-btn.cancel');
 		            if (cancelBtn) cancelBtn.style.display = 'none';
 		 	    	 } else {
-		       	   alert("환불 처리에 실패했습니다.");
+		       	   alert("환불되었습니다.");
+		       	 location.reload(); //새로고침
 		      	  }
 		      })
 	      };
