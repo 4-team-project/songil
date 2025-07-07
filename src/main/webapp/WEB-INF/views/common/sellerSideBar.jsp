@@ -196,7 +196,7 @@
 	  const path = window.location.pathname; 
 	  let menuName = 'home'; 
 
-	  if (path.includes('/seller/fundings/create-step1')) menuName = 'add';
+	  if (path.includes('/seller/fundings')) menuName = 'add';
 	  else if (path.includes('/seller/store/list')) menuName = 'funding';
 	  else if (path.includes('/seller/stats')) menuName = 'statistics';
 	  else if (path.includes('/seller/settlements')) menuName = 'money';
