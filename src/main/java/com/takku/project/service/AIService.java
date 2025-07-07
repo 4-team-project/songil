@@ -18,13 +18,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +51,34 @@ public class AIService implements DisposableBean {
 	private final StoreService storeService;
 
 	private final ObjectMapper mapper = new ObjectMapper();
-	private final OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
-			.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+	private final OkHttpClient client = createUnsafeClient();
+
+	private OkHttpClient createUnsafeClient() {
+		try {
+			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+				public void checkClientTrusted(X509Certificate[] chain, String authType) {
+				}
+
+				public void checkServerTrusted(X509Certificate[] chain, String authType) {
+				}
+
+				public X509Certificate[] getAcceptedIssuers() {
+					return new X509Certificate[0];
+				}
+			} };
+
+			SSLContext sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+			return new OkHttpClient.Builder()
+					.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+					.hostnameVerifier((hostname, session) -> true).connectTimeout(30, TimeUnit.SECONDS)
+					.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+
+		} catch (Exception e) {
+			throw new RuntimeException("💥 SSL 우회 클라이언트 생성 실패", e);
+		}
+	}
 
 	@Override
 	public void destroy() {
