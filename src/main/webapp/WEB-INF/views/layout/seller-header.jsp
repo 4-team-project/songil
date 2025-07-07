@@ -151,6 +151,6 @@ function showModalMessage(message, callback) {
 	    backdrop.style.display = 'none';
 	    if (typeof callback === 'function') callback();
 	  };
-	}
+	} 
 
 </script>
