@@ -85,6 +85,7 @@ public class StoreController {
 
 			if (selectedStore != null && selectedStore.getUserId().equals(loginUser.getUserId())) {
 				session.setAttribute("currentStore", selectedStore);
+				session.setAttribute("store", selectedStore);
 				return "상점이 변경되었습니다.";
 			} else {
 				return "상점 권한이 없습니다.";

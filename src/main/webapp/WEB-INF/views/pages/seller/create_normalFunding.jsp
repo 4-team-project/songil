@@ -6,7 +6,6 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_exist_normal.css">
 
-<!-- storeId hidden input -->
 <input type="hidden" id="storeIdHolder" value="${storeDTO.storeId}" />
 
 <script>

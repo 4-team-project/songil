@@ -37,19 +37,18 @@ public class SellerController {
 	@PostMapping("/mypage/update")
 	@ApiOperation(value = "판매자 정보 수정", notes = "판매자의 프로필 정보를 수정합니다.")
 	public String updateMyPage(@RequestParam(required = false) String nickname,
-	        @RequestParam(required = false) String newPassword,
-	        HttpSession session,
-	        RedirectAttributes redirectAttributes) {
+			@RequestParam(required = false) String newPassword, HttpSession session,
+			RedirectAttributes redirectAttributes) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 
 		// 변경 사항만 반영
-	    if (nickname != null && !nickname.trim().isEmpty()) {
-	        loginUser.setNickname(nickname.trim());
-	    }
+		if (nickname != null && !nickname.trim().isEmpty()) {
+			loginUser.setNickname(nickname.trim());
+		}
 
-	    if (newPassword != null && !newPassword.trim().isEmpty()) {
-	        loginUser.setPassword(newPassword.trim());
-	    }
+		if (newPassword != null && !newPassword.trim().isEmpty()) {
+			loginUser.setPassword(newPassword.trim());
+		}
 
 		userService.updateUser(loginUser);
 		session.setAttribute("loginUser", loginUser);
@@ -75,15 +74,29 @@ public class SellerController {
 	@ApiOperation(value = "판매자 홈 대시보드", notes = "소상공인의 홈 화면에서 통계 데이터를 확인합니다.")
 	public String getMain(@RequestParam(required = false) String msg, Model model, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login"; // 로그인 안 돼있으면 로그인 페이지로
+		}
+
 		UserDTO user = userService.selectByUserId(loginUser.getUserId());
 		model.addAttribute("userDTO", user);
 
-		StoreDTO store = storeService.selectStoreNameByUserId(user.getUserId());
+		// ✅ 세션에서 store 가져오기
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+
+		// 🔄 store가 세션에 없으면 DB에서 조회 (예: 첫 로그인 시)
+		if (store == null) {
+			store = storeService.selectStoreNameByUserId(user.getUserId());
+			if (store != null) {
+				session.setAttribute("store", store);
+				session.setAttribute("currentStore", store);
+			}
+		}
+
 		if (store != null) {
 			Integer storeId = store.getStoreId();
-			model.addAttribute("storeDTO", store);
-			session.setAttribute("store", store);
 
+			model.addAttribute("storeDTO", store);
 			model.addAttribute("todayOrderCount", statsService.countTodayOrdersByStoreId(storeId));
 			model.addAttribute("todaySales", statsService.sumTodaySalesByStoreId(storeId));
 			model.addAttribute("ongoingFundingCount", statsService.countOngoingFundingsByStoreId(storeId));
@@ -95,7 +108,11 @@ public class SellerController {
 			model.addAttribute("ageDistribution", statsService.getAgeDistribution());
 			model.addAttribute("genderRatio", statsService.getGenderRatio());
 			model.addAttribute("topTagsByGroup", statsService.getTopTagsByAgeGender());
+		} else {
+			// 상점이 아예 없을 경우
+			model.addAttribute("storeDTO", null); // JSP에서 empty 체크 가능하도록 명시적으로 null
 		}
+
 		return "seller.home";
 	}
 
@@ -112,7 +129,8 @@ public class SellerController {
 		}
 
 		Integer storeId = store.getStoreId();
-		model.addAttribute("storeDTO", store);
+		model.addAttribute("storeDTO", store); // 👉 JSP에 전달
+		session.setAttribute("store", store); // 👉 세션에도 저장
 		model.addAttribute("orderStats", statsService.getMonthlyOrderStats(storeId));
 		model.addAttribute("popularProducts", statsService.getPopularProducts(storeId));
 		model.addAttribute("tagStats", statsService.getTagStats(storeId));

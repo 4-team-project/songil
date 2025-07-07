@@ -8,8 +8,8 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
 
-<input type="hidden" id="fundingId"
-	value="${sessionScope.fundingDTO.fundingId}" />
+<!-- <input type="hidden" id="fundingId" -->
+<%-- 	value="${sessionScope.fundingDTO.fundingId}" /> --%>
 
 <div class="step-progress">
   <div class="step">
