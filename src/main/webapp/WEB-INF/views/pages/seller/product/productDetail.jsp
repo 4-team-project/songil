@@ -9,7 +9,7 @@
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
-	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
+	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴 이름</div>
@@ -244,13 +244,18 @@ function submitProduct() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	  const productId = document.getElementById("productId")?.value;
+	  const title = document.getElementById('formMainTitle');
 	  const urlParams = new URLSearchParams(window.location.search);
 	  const completeBtn = document.querySelectorAll('.complete-back-btn')[1];
 	  const redirect = urlParams.get('redirect');
 
-	  if (completeBtn) {
-	    completeBtn.textContent = productId ? "수정 완료" : "등록 완료";
-	  }
+	  if (title) {
+		  title.textContent = productId ? "메뉴 정보를 수정해주세요" : "상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요";
+		  }
+
+		  if (completeBtn) {
+		    completeBtn.textContent = productId ? "수정 완료" : "등록 완료";
+		  }
 
 	  if (productId) {
 	    fetch(`${cpath}/seller/product/info/${productId}`)

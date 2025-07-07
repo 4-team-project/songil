@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -72,9 +73,12 @@ public class ProductManagementController {
 
 	// 상품 등록 폼
 	@GetMapping("/new")
-	public String showForm(@RequestParam("storeId") int storeId, Model model) {
-		model.addAttribute("storeId", storeId);
-		return "seller.product";
+	public String showForm(@RequestParam("storeId") int storeId,
+	                       @RequestHeader(value = "Referer", required = false) String referer,
+	                       Model model) {
+	    model.addAttribute("storeId", storeId);
+	    model.addAttribute("redirectUrl", referer); 
+	    return "seller.product";
 	}
 
 	private String getFileExtension(String filename) {

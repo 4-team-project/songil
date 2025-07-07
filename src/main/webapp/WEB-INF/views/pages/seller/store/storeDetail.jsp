@@ -233,14 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	  if (submitBtn) {
 	    submitBtn.textContent = storeId ? "수정 완료" : "등록 완료";
 	  }
-	  const mainTitle = document.getElementById("formMainTitle");
+	 
 	  const subTitle = document.getElementById("formSubTitle");
 
-	  if (mainTitle) {
-	    mainTitle.firstChild.textContent = storeId
-	      ? `${currentStore.storeName} 상점의 상세정보입니다`
-	      : "새롭게 운영하실 상점의 이름, 주소, 전화번호 등을 입력해 주세요";
-	  }
 
 	  if (subTitle) {
 	    subTitle.textContent = storeId
@@ -270,6 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	        const selectedId = store.categoryId;
 	        document.getElementById("selectedCategoryId").value = selectedId;
 
+	        
+	        const mainTitle = document.getElementById("formMainTitle");
+	        if (mainTitle && mainTitle.firstChild?.nodeType === 3) {
+	          mainTitle.firstChild.textContent = `상점의 상세정보입니다`;
+	        }
+	        
 	        setTimeout(() => {
 	          const cards = document.querySelectorAll('.category-card');
 	          cards.forEach(card => {
