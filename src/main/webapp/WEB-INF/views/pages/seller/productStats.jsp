@@ -196,7 +196,7 @@ button, button:hover, button:active, button:focus {
 	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
 	<div class="main-title-box">
 		<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
-		<div class="main-title">${productDTO.productName}의통계</div>
+		<div class="main-title">${productDTO.productName} 통계</div>
 	</div>
 
 	<div class="menu-box">
