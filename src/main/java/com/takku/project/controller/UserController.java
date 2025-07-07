@@ -67,7 +67,6 @@ public class UserController {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
 	    model.addAttribute("user", loginUser);
 	    
-	    
 	    model.addAttribute("orderList", orderService.selectByUserId(loginUser.getUserId()));
 
 

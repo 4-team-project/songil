@@ -201,12 +201,12 @@ public class OrderController {
 	    int userId = loginUser.getUserId();
 
 	    List<OrderDTO> list = orderService.searchOrders(userId, keyword);
-		
+
 		  for (OrderDTO order : list) { 
 			  List<ImageDTO> images = imageService.selectImagesByFundingId(order.getFundingId()); 	
 			  order.setImages(images); 
 		}
-		 
+    
 	    return ResponseEntity.ok(list);
 
 }
