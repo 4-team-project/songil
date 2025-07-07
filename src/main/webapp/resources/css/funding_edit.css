@@ -69,6 +69,7 @@ textarea::placeholder {
 	transition: border-color 0.3s ease, box-shadow 0.3s ease;
 	/* 호버/포커스 시 부드러운 전환 */
 	box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+	font-family: 'Spoqa Han Sans Neo';
 }
 
 /* input-with-unit-wrapper 컨테이너 스타일 - 기존 유지 */

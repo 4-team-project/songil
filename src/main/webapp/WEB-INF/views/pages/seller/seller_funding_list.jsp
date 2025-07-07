@@ -16,7 +16,7 @@
 	<span class="page-description">보고 싶은 펀딩을 눌러보세요. 자세한 내용을 확인할 수 있습니다.</span><br>
 	<span class="funding-status-summary">${user.nickname} 사장님의
     <strong id="currentFilterStatus">전체</strong> 펀딩은
-        <strong id="currentFundingCount">${fn:length(fundingList)}</strong>개입니다
+        <strong id="currentFundingCount">${fn:length(fundingList)}</strong>개입니다.
     </span>
 </div>
 <%-- <h3>
