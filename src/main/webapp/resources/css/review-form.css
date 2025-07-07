@@ -315,7 +315,8 @@ input[type="file"] {
 .modal-cancel {
 	background-color: white;
 	border: 1px solid #ffb9a0;
-	color: #ff6b4d;
+	color: #ff9670;
+	margin: 0px 0px 20px 20px;
 }
 
 /* Ȯ��/��� ���� ��ư */
@@ -323,6 +324,7 @@ input[type="file"] {
 	background-color: #ff9670;
 	color: white;
 	border: none;
+	margin: 0px 20px 20px 0px;
 }
 
 .modal-confirm:hover {
