@@ -27,7 +27,7 @@
 			onclick="location.href='${cpath}/seller/store/new'">상점 추가하기</div>
 	</div>
 	<div class="store-btn">
-	<div class="store-btn-icon">
+		<div class="store-btn-icon">
 			<img src="${cpath}/resources/images/icons/list.svg" alt="list" />
 		</div>
 		<div class="store-btn-text" style="cursor: pointer"
@@ -56,7 +56,9 @@
 		onclick="location.href='${cpath}/seller/store/edit/${currentStore.storeId}'">
 		<div class="edit-btn-icon">
 			<img src="${cpath}/resources/images/icons/edit-black.svg" alt="edit" />
-		</div>상점 정보 수정</div>
+		</div>
+		상점 정보 수정
+	</div>
 </div>
 
 <div class="store-menu-box">
@@ -109,11 +111,12 @@
 			메뉴 추가하기
 		</div>
 		<div class="menu-edit-btn" style="cursor: pointer"
-			onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'"><div class="menu-edit-btn-icon">
-				<img src="${cpath}/resources/images/icons/list.svg"
-					alt="list" />
-			</div>메뉴
-			목록보기</div>
+			onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">
+			<div class="menu-edit-btn-icon">
+				<img src="${cpath}/resources/images/icons/list.svg" alt="list" />
+			</div>
+			메뉴 목록보기
+		</div>
 	</div>
 </div>
 
@@ -139,6 +142,12 @@
 								prevEl : ".swiper-button-prev",
 							},
 						});
+						if (slideCount <= 3) {
+							document
+									.querySelector('.swiper-button-circle-prev').style.display = 'none';
+							document
+									.querySelector('.swiper-button-circle-next').style.display = 'none';
+						}
 					});
 </script>
 
