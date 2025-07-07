@@ -62,7 +62,7 @@ public class CouponController {
 	@GetMapping("/coupon/use")
 	public String useCoupon(@RequestParam("couponCode") String couponCode) {
 		couponService.updateCouponUseStatus(couponCode, "사용");
-		return "coupon.useCheck";
+		return "user.home";
 	}
 
 	/**

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .coupon-card {
-  width: 400px;
+  width: auto;
   margin: 50px auto;
   padding: 24px;
   border-radius: 16px;
