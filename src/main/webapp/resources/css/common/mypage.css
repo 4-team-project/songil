@@ -227,7 +227,7 @@
 }
 /***********************************************/
 p {
-	margin: 35px;
+	margin: 5px;
 }
 .content {
 	width: 989px;
@@ -595,6 +595,7 @@ h2 {
 	width: 120px;
 	font-weight: 500;
 	color: #ff9670;
+	margin-right: 5px;
 }
 
 .form-row input {

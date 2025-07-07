@@ -17,7 +17,7 @@
 
 			<form id="user-info-form">
 				<p>
-				<strong for="name">이름</strong> <input type="text" id="name"
+				<strong for="name">이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input type="text" id="name"
 					name="name" class="input-no-border" value="${user.name}" readonly /><br>
 				</p>	
 				<p>
@@ -29,25 +29,26 @@
 					name="birth" class="input-no-border" value="${user.birth}" readonly /><br>		
 				</p>
 				<p>
-				<strong for="gender">성별</strong> <input type="text" name="gender"
+				<strong for="gender">성별&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input type="text" name="gender"
 					id="gender" class="input-no-border" value="${user.gender }자"
 					readonly /><br> 
 				</p>
 				<p>
-				<strong for="addr">지역</strong> <input
+				<strong for="addr">지역&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input
 					type="text" class="input-no-border" id="sido"
 					value="${user.sido } ${user.sigungu}"><br>
 				</p>
 				<hr>
 
 				<div class="form-row">
-					<strong for="nickname">닉네임</strong> <input type="text" id="nickname"
+					<strong for="nickname">닉네임&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> 
+					<input type="text" id="nickname"
 						name="nickname" value="${user.nickname}" /><br>
 				</div>
 
 	
 				<div class="form-row">
-					<strong for="password">새 비밀번호</strong> <input type="text"
+					<strong for="password">새 비밀번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input type="text"
 						id="password" name="password" autocomplete="off" />
 				</div>
 
@@ -56,7 +57,7 @@
 				</div>
 
 				<div class="form-row">
-					<strong for="passwordConfirm">비밀번호 확인</strong> <input type="password"
+					<strong for="passwordConfirm">비밀번호 확인&nbsp;</strong> <input type="password"
 						id="passwordConfirm" name="passwordConfirm" />
 				</div>
 

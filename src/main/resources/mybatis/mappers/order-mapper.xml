@@ -123,22 +123,16 @@
 		AND status = '결제완료'
 	</select>
 
-<select id="searchOrders" resultType="OrderDTO">
+
+<select id="searchOrders" resultType="orderDTO">
   SELECT
-    o.order_id,
-    o.purchased_at,
-    o.qty,
-    o.amount,
-    o.status,
+    o.*,
     p.product_name,
-    (
-      SELECT i.image_url
-      FROM takku_image i
-      WHERE i.product_id = p.product_id AND ROWNUM = 1
-    ) AS menu_image
+    i.image_url
   FROM takku_order o
   JOIN takku_funding f ON o.funding_id = f.funding_id
   JOIN takku_product p ON f.product_id = p.product_id
+  LEFT JOIN takku_image i ON i.funding_id = o.funding_id
   WHERE o.user_id = #{userId}
     AND (
       LOWER(p.product_name) LIKE '%' || LOWER(#{keyword}) || '%'
@@ -146,6 +140,5 @@
     )
   ORDER BY o.purchased_at DESC
 </select>
-
 
 </mapper>

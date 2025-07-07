@@ -234,23 +234,23 @@ function renderSearchResults(data) {
   container.innerHTML = "";
 
   if (!data || data.length === 0) {
-    container.innerHTML = "<p>검색 결과가 없습니다.</p>";
+    container.innerHTML = '<p style="margin:35px;">검색 결과가 없습니다.</p>';
     return;
   }
   data.forEach(order => {
 	  const formattedDate = formatDate(order.purchasedAt);
 	    const div = document.createElement("div");
-	    div.className = "payment-item order-card"; // 기존 스타일 유지
+	    div.className = "payment-item order-card";
+	       
 	    div.innerHTML = `
-	    
+	  
 	        <div class="payment-left">
 	          <div class="payment-date">
 	            <span class="payment-label">구매일:</span> \${formattedDate}
 	          </div>
-	          <div class="payment-image">
-	            <img src="${cpath}${order.images[0].imageUrl}" alt="메뉴 이미지"/>
-	            
-	          </div>
+        	  <div class="payment-image">
+        	 	 <img src= "\${cpath}\${order.images[0].imageUrl}" alt="메뉴 이미지"/>
+            	  </div>
 	        </div>
 
 	        <div class="payment-right">
