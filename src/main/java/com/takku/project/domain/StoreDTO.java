@@ -25,6 +25,6 @@ public class StoreDTO {
 	private Integer categoryId;
 	private String description;
 	private Date createdAt;
-	private String categoryName;
-	private Integer postCode;
+	private String categoryName; //db에는 x
+	private Integer postCode; //db에는 x
 }

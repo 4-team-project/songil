@@ -304,18 +304,10 @@
 
 	<select id="selectByFundingStatus" parameterType="String"
 		resultMap="FundingResultMap">
-		SELECT
-		f.funding_id,
-		f.funding_name,
-		f.start_date,
-		f.end_date,
-		f.target_qty,
-		f.current_qty,
-		f.status
+		SELECT *
 		FROM takku_funding f
 		WHERE f.status = #{status}
 	</select>
-
 
 	<select id="selectOngoingFundings" resultMap="FundingResultMap">
 		SELECT
