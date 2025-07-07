@@ -249,7 +249,7 @@ function renderSearchResults(data) {
 	            <span class="payment-label">구매일:</span> \${formattedDate}
 	          </div>
         	  <div class="payment-image">
-        	 	 <img src= "\${cpath}\${order.images[0].imageUrl}" alt="메뉴 이미지"/>
+        	 	 <img src= "${cpath}\${order.images[0].imageUrl}" alt="메뉴 이미지"/>
             	  </div>
 	        </div>
 

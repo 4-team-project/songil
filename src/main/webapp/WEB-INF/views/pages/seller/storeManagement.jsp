@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/storeManagement.css">
