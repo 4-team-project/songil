@@ -59,10 +59,10 @@
 							<div class="desc">
 								<c:choose>
 									<c:when test="${fn:length(funding.fundingDesc) > 40}">
-                    ${fn:substring(funding.fundingDesc, 0, 40)}...
-                    <span class="more"
-											onclick="goToCouponDetail('${cpath}/user/coupon/detail', '${coupon.couponId}')"
-											style="color: #FF9670; cursor: pointer;">더보기</span>
+                    ${fn:substring(funding.fundingDesc, 0, 40)}...				
+						<span class="more"
+											 onclick="location.href='${cpath}/fundings/${coupon.fundingId}'"
+											style="color: #FF9670; cursor: pointer;">더보기</span>	
 									</c:when>
 									<c:otherwise>
                     ${funding.fundingDesc}
@@ -77,8 +77,7 @@
 								<span class="btn-word">QR 보기</span>
 							</button>
 							<div class="coupon-date">
-								~
-								<fmt:formatDate value="${coupon.expiredAt}" pattern="yyyy.MM.dd" />
+								~<fmt:formatDate value="${coupon.expiredAt}" pattern="yyyy.MM.dd" />
 							</div>
 						</div>
 					</div>
@@ -97,9 +96,10 @@
 						data-reviewed="${coupon.reviewed}">
 						<div class="coupon-left">
 							<div class="usedAt">
-								<br>
+							<div class="use">사용완료</div>
+								
 								<fmt:formatDate value="${coupon.usedAt}" pattern="yyyy-MM-dd" />
-								<div class="use">사용</div>
+								
 							</div>
 						</div>
 
@@ -114,9 +114,10 @@
 							<c:choose>
 								<c:when test="${fn:length(funding.fundingDesc) > 40}">
                     ${fn:substring(funding.fundingDesc, 0, 40)}...
-                    <span class="more"
-										onclick="goToCouponDetail('${cpath}/user/coupon/detail', '${coupon.couponId}')"
-										style="color: #FF9670; cursor: pointer;">더보기</span>
+                   <span class="more"
+											 onclick="location.href='${cpath}/fundings/${coupon.fundingId}'"
+											style="color: #FF9670; cursor: pointer;">더보기</span>
+						
 								</c:when>
 								<c:otherwise>
                     ${funding.fundingDesc}
@@ -198,23 +199,7 @@ $(document).ready(function () {
   });
 });
 
-//쿠폰 설명 더보기 클릭시 쿠폰 상세보기로 이동(시간 되면 쿠폰 설명 상세보기 페이지 작성)
-
-function goToCouponDetail(url, couponId) {
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = url;
-
-  const input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = 'couponId';
-  input.value = couponId;
-
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-}
-
+//쿠폰 설명 더보기 클릭시 펀딩 상세보기
 function exitDetail() {
 	  const modal = document.getElementById('couponModal');
 	  const modalBack = document.getElementById('modalBackdrop');

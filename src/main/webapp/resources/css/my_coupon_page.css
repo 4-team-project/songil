@@ -90,6 +90,7 @@
 	max-height: 100px;
 	align-self: stretch;
 	text-align: center;
+	align-content: center;
 }
 
 .coupon-middle {
@@ -97,9 +98,7 @@
 	padding: 0 16px;
 }
 
-.coupon-right {
-	margin-right: 20px;
-}
+
 
 .store {
 	font-size: 15px;
@@ -133,16 +132,26 @@
 
 .sale {
 	font-size: 30px;
-	margin-top: 35px;
 }
 
 .coupon-right {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	margin-right: 20px;
 }
 
-.use-btn, .review-btn {
+.use-btn {
+	background-color: #ff9670;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 6px;
+	cursor: pointer;
+	min-width: 100px;
+}
+
+.review-btn {
 	background-color: #FF9670;
 	color: white;
 	border: none;
@@ -153,7 +162,7 @@
 }
 
 .btn-word {
-	font-size: 16px;
+	font-size: 20px;
 }
 
 .btn-show-qr {
@@ -185,10 +194,10 @@
 	color: white;
 }
 
-.coupon-date {
-	font-size: 15px;
-	color: #aaa;
-	margin-bottom: 4px;
+.coupon-right .coupon-date {
+	maring-top: 10px;
+	font-size: 17px;
+	color: #555;
 }
 
 .menu-title, .menu-sub {
@@ -244,7 +253,7 @@
 	margin-bottom: 10px;
 }
 
-.usedAt, .use {
+.usedAt {
 	font-size: 20px;
 	font-weigth: bold;
 }
