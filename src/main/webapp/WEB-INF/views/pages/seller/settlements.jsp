@@ -48,8 +48,9 @@ function loadSettlementPage(page) {
 									<div class="settlement-img">
 										<img src="${cpath}\${settlement.funding.images[0].imageUrl}" alt="펀딩 이미지" />
 									</div>		
-									` : `<img src="${cpath}/resources/images/noimage.jpg"`}
-			
+									` : `<div class="settlement-img">
+											<img src="${cpath}/resources/images/noimage.jpg"/>
+										 </div>`}
 							<!-- 정보 -->
 							<div class="settlement-info-grid">
 								<div><strong>펀딩 이름 :</strong></div>

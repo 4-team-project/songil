@@ -3,28 +3,25 @@
 h3 {
 	font-weight: bold;
 	font-size: 27px;
-	padding-left: 20px;
 	margin-bottom: 0px;
 }
 
 .form-input {
-  border: 3px solid #dddddd;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 24px;
-  transition: all 0.2s ease-in-out;
+	border: 3px solid #dddddd;
+	border-radius: 6px;
+	padding: 8px 12px;
+	font-size: 24px;
+	transition: all 0.2s ease-in-out;
 }
 
 .form-input:focus {
-  border-color: #FF9670;
-  box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
-  outline: none;
-  cursor: inherit;
+	border-color: #FF9670;
+	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
+	outline: none;
+	cursor: inherit;
 }
 
-
 h2, p {
-	padding-left: 20px;
 	margin-top: 0px;
 	margin-bottom: 5px;
 }
@@ -32,7 +29,7 @@ h2, p {
 .menu-label {
 	font-weight: bold;
 	font-size: 25px;
-	padding: 20px 0px 0px 20px;
+	padding: 20px 0px 0px 0px;
 	color: #ff9670;
 	cursor: inherit;
 }
@@ -53,16 +50,16 @@ input[type="text"] {
 	margin-bottom: 10px;
 	border: 3px solid #dddddd;
 	border-radius: 8px;
-	 cursor: inherit;
+	cursor: inherit;
 }
 
 input::placeholder {
-  color: #ccc;
-  opacity: 2;  
+	color: #ccc;
+	opacity: 2;
 }
 
 .input-group {
-	padding: 0px 0px 20px 20px;
+	padding: 0px 0px 20px 0px;
 	font-size: 24px;
 	font-family: 'Spoqa Han Sans Neo';
 	cursor: inherit;
@@ -74,7 +71,6 @@ input::placeholder {
 	align-items: center;
 	width: 100%;
 	padding-top: 20px;
-	padding-left: 20px;
 	cursor: inherit;
 }
 
@@ -147,7 +143,7 @@ input::placeholder {
 
 /* 모달 배경 */
 #modalBackdrop {
-	position: fixed;  
+	position: fixed;
 	display: none;
 	top: 0;
 	left: 0;
@@ -157,59 +153,72 @@ input::placeholder {
 	z-index: 9998;
 }
 
-
 /*progress bar*/
 .step-progress {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-bottom: 10px;
 }
 
 .step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 16px;
-  color: #333;
-  width: 100px; 
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 16px;
+	color: #333;
+	width: 100px;
+	position: relative;
 }
 
 .circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  color: #999;
-  text-align: center;
-  line-height: 24px;
-  font-weight: bold;
-  background-color: #fff;
-  z-index: 2;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 1px solid #ccc;
+	color: #999;
+	text-align: center;
+	line-height: 24px;
+	font-weight: bold;
+	background-color: #fff;
+	z-index: 2;
 }
 
 .step.active .circle {
-  background-color: #FF9670;
-  border: none;
-  color: white;
+	background-color: #FF9670;
+	border: none;
+	color: white;
 }
 
 .label {
-  margin-top: 6px;
+	margin-top: 6px;
 }
 
 .line {
-  flex-grow: 1;
-  height: 1px;
-  background-color: #ccc;
-  margin: 0 10px;
-  position: relative;
-  top: -12px;
+	flex-grow: 1;
+	height: 1px;
+	background-color: #ccc;
+	margin: 0 10px;
+	position: relative;
+	top: -12px;
 }
 
 .step.active ~ .step .circle {
-  background-color: #fff;
-  color: #999;
-  border: 1px solid #ccc;
+	background-color: #fff;
+	color: #999;
+	border: 1px solid #ccc;
+}
+
+.ai-info-bar {	
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+
+.ai-chance {
+	color: #ff9670;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 0;
 }

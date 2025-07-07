@@ -117,7 +117,7 @@
 			$("#partnerModal, #modalBackdrop").fadeIn();
 		});
 
-		$("#cancelPartnerBtn").on("click", function() {
+		$("#cancelPartnerBtn, #partnerCloseBtn").on("click", function() {
 			$("#partnerModal, #modalBackdrop").fadeOut();
 		});
 

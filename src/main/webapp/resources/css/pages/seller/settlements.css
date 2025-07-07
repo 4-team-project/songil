@@ -45,6 +45,7 @@ h2 {
 	grid-template-columns: 90px 1fr;
 	row-gap: 8px;
 	font-size: 18px;
+	max-width: 300px;
 }
 
 .settlement-info-grid strong {

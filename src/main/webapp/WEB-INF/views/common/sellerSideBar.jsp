@@ -135,11 +135,16 @@
 					data-url="${cpath}/seller/mypage" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/mypage.svg"
 					alt="mypage" /> <span>내 정보</span>
+				</li>				
+				<li class="menu-item" data-name="logout"
+					onclick="document.getElementById('logoutForm').submit();">
+					<img src="${cpath}/resources/images/sideBar/logout.svg"
+					alt="mypage" /> <span>로그아웃</span>
 				</li>
 			</ul>
 		</nav>
 	</aside>
-
+	<form id="logoutForm" action="${cpath}/auth/logout" method="post" style="display: none;"></form>
 	<script>
   const cpath = '${cpath}';
 </script>
