@@ -37,7 +37,6 @@ function loadProductListPage(page) {
     	    <div class="store-card">
     	      <div class="store-info-left">
     	        <div class="store-title" style="display:flex; align-items:center;">
-    	          <img src="${imageUrl}" alt="${product.productName}" style="width: 40px; height: 40px; margin-right: 8px;">
     	          \${product.productName}
     	        </div>
     	        <div class="store-info-middle">

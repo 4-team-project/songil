@@ -62,7 +62,7 @@
 		<div class="swiper-wrapper">
 			<c:forEach var="product" items="${productDTO}">
 				<div class="swiper-slide">
-					<img class="store-menu-content-img"
+					<img class="store-menu-content-img" onclick="location.href='${cpath}/seller/store/products?productId=${product.productId}'"
 						src="${cpath}${product.images[0].imageUrl}"
 						alt="${product.productName}" />
 					<div class="store-menu-content-name">${product.productName}</div>
