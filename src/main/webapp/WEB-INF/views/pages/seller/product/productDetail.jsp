@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/views/common/init.jsp"%> 
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet"
@@ -16,8 +16,8 @@
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴의 원래 가격(정가)</div>
-	<input type="text" id="productPrice" placeholder="메뉴 이름을 입력하세요"
-		class="content-input" />
+	<input type="text" id="productPrice" placeholder="메뉴 가격을 입력하세요"
+		class="content-input" inputmode="numeric" />
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴에 대한 설명</div>
@@ -37,16 +37,69 @@
 				onchange="handleFiles(this.files)" />
 		</div>
 		<div id="preview-list" class="preview-list"></div>
-		<div id="file-count-text" class="file-count-text"
+	</div>
+	<div id="file-count-text" class="file-count-text"
 			style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
 			/ 3</div>
-	</div>
 </div>
 <div class="complete-back-btn-box">
 	<div class="complete-back-btn" onclick="history.back()">이전</div>
-	<button onclick="submitProduct()" class="complete-back-btn">수정
-		완료</button>
+	<button onclick="if (validateProductForm()) submitProduct()"
+		class="complete-back-btn">수정 완료</button>
+
 </div>
+
+
+<script>
+
+function formatNumberWithCommas(value) {
+  const numbersOnly = value.replace(/[^0-9]/g, "");
+  return numbersOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+document.getElementById("productPrice").addEventListener("input", function (e) {
+  const cursorPosition = e.target.selectionStart;
+  const rawValue = e.target.value.replace(/[^0-9]/g, "");
+  const formattedValue = formatNumberWithCommas(rawValue);
+
+  e.target.value = formattedValue;
+
+  const diff = formattedValue.length - rawValue.length;
+  const newCursorPos = cursorPosition + diff;
+  e.target.value = formattedValue;
+  e.target.setSelectionRange(newCursorPos, newCursorPos);
+});
+
+</script>
+
+<script>
+function validateProductForm() {
+	  const productName = document.getElementById('productName').value.trim();
+	  const price = document.getElementById('productPrice').value.replace(/,/g, '').trim();
+	  const totalImages = selectedFiles.length + keptExistingImageUrls.length;
+
+	  if (!productName) {
+	    alert("메뉴 이름을 입력해주세요.");
+	    return false;
+	  }
+	  if (!price || isNaN(price) || parseInt(price) <= 0) {
+	    alert("올바른 가격을 입력해주세요.");
+	    return false;
+	  }
+	  if (totalImages < 1) {
+	    alert("메뉴 사진은 최소 1장 이상 등록해주세요.");
+	    return false;
+	  }
+
+	  return true;
+	}
+
+
+</script>
+
+
+
+
 <script>
 
 let selectedFiles = []; // 새로 추가될 파일 객체들 (multipart/form-data로 전송)
@@ -85,16 +138,14 @@ function handleFiles(fileList) {
       const img = document.createElement('img');
       img.src = e.target.result; // 미리보기 URL
 
-      const delBtn = document.createElement('div');
-      delBtn.className = 'delete-btn';
-      delBtn.innerHTML = '×';
-
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "취소하기";
+      delBtn.className = "btn-cancel";
       delBtn.onclick = () => {
-        wrapper.remove();
-        selectedFiles = selectedFiles.filter(f => f !== file);
-        updateFileCountText();
-        console.log("delBtn click (new) - selectedFiles 제거:", file.name, "현재 selectedFiles:", selectedFiles);
-      };
+    	  selectedFiles = selectedFiles.filter(f => !(f.name === file.name && f.size === file.size));
+          wrapper.remove();
+          updateFileCountText();
+		};
 
       wrapper.appendChild(img);
       wrapper.appendChild(delBtn);
@@ -124,7 +175,7 @@ function submitProduct() {
   const productData = {
     productId: productId || null,
     productName: document.getElementById('productName').value,
-    price: parseInt(document.getElementById('productPrice').value),
+    price: parseInt(document.getElementById('productPrice').value.replace(/,/g, '')),
     description: document.getElementById('productDescription').value,
     storeId: parseInt(storeId),
     // ⭐️ 핵심 변경: 백엔드로 보내기 전에 keptExistingImageUrls에서 cpath 제거
@@ -197,9 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
             image.src = img.imageUrl; 
             image.alt = '기존 이미지';
 
-            const delBtn = document.createElement('div');
-            delBtn.className = 'delete-btn';
-            delBtn.innerHTML = '×';
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "취소하기";
+            delBtn.className = "btn-cancel";
+            delBtn.onclick = () => {
+    			const idx = imageList.findIndex(v => v.type === "url" && v.value === url);
+    			if (idx !== -1) imageList.splice(idx, 1);
+    			wrapper.remove();
+    		};
             
             keptExistingImageUrls.push(img.imageUrl);
             console.log("DOMContentLoaded - keptExistingImageUrls 추가:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);

@@ -25,7 +25,7 @@ button, button:hover, button:active, button:focus {
 				<button onclick="alert('새 상점 만들기 클릭!')"
 					style="max-width: 200px; align-items: center; justify-content: center;">
 					<img
-						src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
+						src="${cpath}}/resources/images/icons/fluent_add-16-regular.svg"
 						alt="새 상점" class="icon" /> 새 상점 만들기
 				</button>
 			</div>
@@ -39,7 +39,7 @@ button, button:hover, button:active, button:focus {
 				alt="오늘의 펀딩" class="icon" />
 			<c:out value="${userDTO.nickname}" default="사장님" />
 			사장님의 <span class="highlight">오늘의 상점</span> -
-			<c:out value="${storeDTO.storeName}" default="상점" />
+			<c:out value="${currentStore.storeName}" default="상점" />
 		</h1>
 		<div class="summary">
 			<div class="summary-box">

@@ -62,38 +62,53 @@ public class FundingController {
 	}
 
 	@GetMapping("/search/fragment")
-	public String getSortedFundingFragment(@RequestParam String sort, @RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "8") int size, Model model) {
-		List<FundingDTO> list = fundingService.getFundingsByConditionWithPaging(null, null, null, null, sort, page,
-				size);
-		for (FundingDTO funding : list) {
-			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
-			funding.setDaysLeft((int) Math.max(days, 0));
-		}
-		model.addAttribute("fundinglist", list);
-		return "common/fundingFragment";
+	public String getSortedFundingFragment(
+			@RequestParam(required = false) String status,
+	        @RequestParam("sort") String sort,
+	        @RequestParam(name = "page", defaultValue = "1") int page,
+	        @RequestParam(name = "size", defaultValue = "8") int size,
+	        Model model) {
+
+		List<String> statusList = (status != null && !status.isBlank())
+		        ? Collections.singletonList(status)
+		        : Arrays.asList("진행중");
+	    List<FundingDTO> list = fundingService.getFundingsByConditionWithPaging(
+	        null, null, null, null, statusList, sort, page, size
+	    );
+
+	    for (FundingDTO funding : list) {
+	        long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+	        funding.setDaysLeft((int) Math.max(days, 0));
+	    }
+
+	    model.addAttribute("fundinglist", list);
+	    return "common/fundingFragment";
 	}
+
 
 	@ApiOperation(value = "펀딩 검색 (페이징)", notes = "검색 조건에 따라 펀딩을 필터링하고 페이징된 목록을 조회합니다.")
 	@GetMapping("/search")
 	public String searchFundingWithPaging(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
-			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
+			@RequestParam(required = false) String sigungu, @RequestParam(required = false) String status, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, Model model) {
 
 		if (size <= 0)
 			size = 10;
 
 		List<String> keywordList = splitKeywords(keyword);
+		List<String> statusList = (status != null && !status.isBlank())
+		        ? Collections.singletonList(status)
+		        : Arrays.asList("진행중");
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
-				sigungu, sort, page, size);
+				sigungu, statusList, sort, page, size);
 
 		for (FundingDTO funding : fundingList) {
 			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
 			funding.setDaysLeft((int) Math.max(days, 0));
 		}
 
-		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu, statusList);
 		int totalPages = (int) Math.ceil((double) total / size);
 
 		model.addAttribute("fundinglist", fundingList);
@@ -109,25 +124,31 @@ public class FundingController {
 	@ResponseBody
 	public Map<String, Object> searchFundingJson(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
-			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "latest") String sort,
+			@RequestParam(required = false) String sigungu, @RequestParam(required = false) String status, @RequestParam(defaultValue = "latest") String sort,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
 
 		if (size <= 0)
 			size = 10;
-		
+
 		if (keyword != null) {
-		    keyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8);
+			keyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8);
 		}
 
 		List<String> keywordList = splitKeywords(keyword);
-		System.out.println("split된 키워드 목록: " + keywordList);
+		List<String> statusList = (status != null && !status.isBlank())
+		        ? Collections.singletonList(status)
+		        : Arrays.asList("진행중");
+
 		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
-				sigungu, sort, page, size);
+				sigungu, statusList, sort, page, size);
+
 		for (FundingDTO funding : fundingList) {
 			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
 			funding.setDaysLeft((int) Math.max(days, 0));
 		}
-		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
+
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu, statusList);
+
 		int totalPages = (int) Math.ceil((double) total / size);
 
 		Map<String, Object> result = new HashMap<>();
@@ -143,13 +164,17 @@ public class FundingController {
 	@GetMapping
 	public String getFundings(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
-			@RequestParam(required = false) String sigungu, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(required = false) String sigungu, @RequestParam(required = false) String status, @RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size, Model model) {
 
 		List<String> keywordList = splitKeywords(keyword);
-		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
-				sigungu, "latest", page, size);
-		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu);
+		List<String> statusList = (status != null && !status.isBlank())
+		        ? Collections.singletonList(status)
+		        : Arrays.asList("진행중");
+		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(
+				keywordList, categoryId, sido, sigungu, statusList, "latest", page, size);
+		
+		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu, statusList);
 		int totalPages = (int) Math.ceil((double) total / size);
 
 		model.addAttribute("fundinglist", fundingList);
@@ -262,20 +287,17 @@ public class FundingController {
 
 		return "pages/user/myPage_fundingList";
 	}
-	
-	//시작일, 종료일 보여주기
 
-    @PostMapping("/showDates")
-    public String showDates(
-        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-        Model model) {
+	// 시작일, 종료일 보여주기
 
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
+	@PostMapping("/showDates")
+	public String showDates(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, Model model) {
 
-        return "pages/seller/create_insertDetail"; // 다시 step2.jsp 렌더링
-    }
-	
- 
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+
+		return "pages/seller/create_insertDetail"; // 다시 step2.jsp 렌더링
+	}
+
 }

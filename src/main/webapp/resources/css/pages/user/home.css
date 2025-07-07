@@ -2,35 +2,30 @@
 
 #filteredFundingListBox {
 	display: flex;
-	width: 1076px;
+	width: 100%;
 	flex-direction: column;
 }
 
-.filteredFundingList {
+.filteredFundingList, .funding-list-wrapper {
 	display: flex;
 	flex-wrap: wrap;
-	row-gap: 32px;
-	column-gap: 20px;
-	width: 100%;
+	gap: 20px;
+	justify-content: flex-start;
+	width: 100%; 
+	box-sizing: border-box;
 }
 
 .content-box {
 	display: flex;
-    position: relative;
-    max-width: 1280px;
-    margin: 0 auto;
-    box-sizing: border-box;
+	flex-direction: row;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .main-contents {
+	flex: 1;
+	min-width: 0;
 	padding: 40px;
-}
-
-}
-@media screen and (max-width: 768px) {
-	.main-contents {
-		margin-left: 0;
-	}
 }
 
 .main-contents p {
@@ -45,38 +40,23 @@
 	color: #FF9670
 }
 
-.recommend-funding-list-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	row-gap: 20px;
-	column-gap: 20px;
-	width: 1120px;
-}
-
-.funding-list-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	row-gap: 32px;
-	column-gap: 20px;
-	width: 1120px;
-}
-
 .funding-box {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	cursor: pointer;
-	width: 250px;
+	width: 244px;
+	box-sizing: border-box;
 }
 
 .funding-recommend-image {
-	height: 140px;
+	height: 160px;
 	object-fit: cover;
 	background-color: #f0f0f0;
 	z-index: 2;
 	border-radius: 18px;
 	position: relative;
-	width: 250px;
+	width: 244px;
 }
 
 .funding-recommend-contents {
@@ -85,7 +65,7 @@
 	padding-left: 10px;
 	font-family: 'Spoqa Han Sans Neo';
 	border: 1px solid #DDE1E6;
-	height: 133px;
+	height: 144px;
 	margin-top: -20px;
 	background-color: white;
 	border-radius: 0 0 18px 18px;
@@ -99,6 +79,12 @@
 	font-size: 14px;
 	color: #2E2E3A;
 	line-height: 1.4;
+	height: 39.2px;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .funding-desc {
@@ -169,7 +155,6 @@
 }
 
 .main-bar {
-	width: 1090px;
 	height: 50px;
 	border-radius: 8px;
 	background-color: #FF9670;
@@ -189,7 +174,7 @@
 }
 
 .funding-image {
-	width: 254px;
+	width: 244px;
 	height: 244px;
 	object-fit: cover;
 	background-color: #f0f0f0;
@@ -204,8 +189,8 @@
 	padding-left: 10px;
 	font-family: 'Spoqa Han Sans Neo';
 	border: 1px solid #DDE1E6;
-	width: 254px;
-	height: 219px;
+	width: 244px;
+	height: 270px;
 	margin-top: -20px;
 	background-color: white;
 	border-radius: 0 0 18px 18px;

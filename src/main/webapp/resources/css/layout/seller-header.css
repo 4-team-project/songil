@@ -9,72 +9,107 @@
 	width: 100%;
 }
 
-.header-container {
-	margin: 0;
-	padding: 0;
-}
-
 .header-box {
 	margin-top: 32px;
 	background-color: white;
 	height: 158px;
 	color: #2E2E3A;
 	display: flex;
-	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 200px 0 400px;
 	border-bottom: 2px solid #FF9670;
-	box-sizing: border-box;
-	padding-left: 454px;
-	padding-right: 320px;
-	overflow: hidden;
+	position: relative;
 }
 
 .logo {
 	width: 140px;
 	height: 130px;
-	margin-top: 16px;
+	margin-top: 0;
 	cursor: pointer;
 }
 
-.lower-box {
+.store-dropdown-container {
+	margin-top: 40px;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	width: 100%;
-}
-
-.store-box {
-	display: flex;
-	gap: 12px;
-	align-items: center;
-	justify-content: flex-end;
+	gap: 10px;
+	flex-shrink: 0;
 	display: flex;
 }
 
-.store-text {
-	font-family: 'Spoqa Han Sans Neo';
-	font-weight: 700;
-	font-size: 32px;
+.current-store-container {
+	display: inline-flex;
+	align-items: center;
+	position: relative;
+	justify-content: center;
+	padding: 6px 14px;
+	background-color: #fff2cc;
+	border: 2px solid #e07b39;
+	border-radius: 8px;
+	box-shadow: 1px 1px 0 #e07b39;
+	gap: 10px;
+	width: auto;
+	max-width: none;
+	white-space: nowrap;
 }
 
-.lower-box {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
+.current-store-name {
+	text-align: center;
+	font-size: 18px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.dropdown-icon {
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+}
+
+.dropdown-menu {
+	width: auto;
+	max-width: none;
+	white-space: nowrap;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: white;
+	border: 2px solid #e07b39;
+	border-radius: 8px;
+	list-style: none;
+	padding: 8px 0;
 	margin-top: 4px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000000;
+	font-size: 18px;
 }
 
-.nav-box {
-	display: flex;
-	gap: 50px;
-	flex-shrink: 1;
-	white-space: nowrap;
+.dropdown {
+	position: relative;
 }
 
-.nav-text {
-	font-family: 'Spoqa Han Sans Neo';
-	font-weight: 700;
-	font-size: 15px;
+.dropdown-menu li {
+	padding: 10px 16px;
 	cursor: pointer;
-	margin-bottom: 20px;
-	white-space: nowrap;
+	transition: background-color 0.2s;
+}
+
+.dropdown-menu li:hover {
+	background-color: #ffc2a1;
+}
+
+.store-change-btn {
+	background-color: #FF9670;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	padding: 6px 24px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.2s;
+}
+
+.store-change-btn:hover {
+	background-color: #ff7e4b;
 }

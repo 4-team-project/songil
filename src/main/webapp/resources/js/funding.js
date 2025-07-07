@@ -93,6 +93,11 @@ function renderFundingList(fundingList, append) {
   allFundingsHTML += '</div></div>';
   filteredWrapper.innerHTML += allFundingsHTML;
   bindSortButtons();
+  
+  var moreBtn = document.getElementById('moreButton');
+  if (moreBtn) {
+    moreBtn.style.display = (!isFullList && fundingList.length >= 8) ? 'flex' : 'none';
+  }
 }
 
 function bindSortButtons() {
@@ -115,11 +120,19 @@ function bindSortButtons() {
 function loadFundings(params) {
   if (!params) params = {};
 
+  if (!isFullList && (params.categoryId || params.keyword || params.sido || params.sigungu)) {
+	    isFullList = true;
+	  }
+  
   if (Object.keys(params).length > 0 || currentPage > 1) {
     hideInitialContent();
   } else {
     showInitialContent();
   }
+  
+  if (params.page) {
+	  currentPage = params.page;
+	}
 
   for (var key in params) {
     lastParams[key] = params[key];
@@ -128,7 +141,7 @@ function loadFundings(params) {
   if (!lastParams.sido || lastParams.sido === '시/도 선택') delete lastParams.sido;
   if (!lastParams.sigungu || lastParams.sigungu === '시/군/구 선택') delete lastParams.sigungu;
 
-  var pageSize = isFullList ? 9999 : 8;
+  var pageSize = isFullList ? 12 : 8;
   var query = '';
   for (var key2 in lastParams) {
     query += encodeURIComponent(key2) + '=' + encodeURIComponent(lastParams[key2]) + '&';
@@ -138,12 +151,19 @@ function loadFundings(params) {
   fetch(cpath + '/fundings/search/json?' + query)
   .then(function (res) { return res.json(); })
   .then(function (data) {
+	  
+	  console.log("펀딩 JSON 응답:", data);
+	    console.log("현재 페이지:", data.currentPage);
+	    console.log("총 페이지 수:", data.totalPages);
+	    console.log("펀딩 리스트:", data.fundinglist);
+	    
     const sido = lastParams.sido || '';
     const sigungu = lastParams.sigungu || '';
     const keyword = lastParams.keyword ? decodeURIComponent(lastParams.keyword) : '';
     updateRecommendTitle(sido, sigungu, keyword);
 
     renderFundingList(data.fundinglist, false);
+    renderPagination(data.totalPages, currentPage);
   })
   .catch(function (err) {
     console.error('펀딩 로딩 실패:', err);
@@ -162,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	    const sido = document.getElementById('sidoButton').textContent.trim();
 	    const sigungu = document.getElementById('sigunguButton').textContent.trim();
 	    currentPage = 1;
-	    isFullList = false;
+	    isFullList = true;
 	    updateRecommendTitle(sido, sigungu);
 	    loadFundings({ sido: sido, sigungu: sigungu });
 	  });
@@ -170,15 +190,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var moreBtn = document.getElementById('moreButton');
   if (moreBtn) {
+
     moreBtn.addEventListener('click', function () {
       currentPage = 1;
       isFullList = true;
+      moreBtn.style.display = 'none';
       var selectedSortEl = document.querySelector('.funding-filter.selected');
       var selectedSort = selectedSortEl ? selectedSortEl.getAttribute('data-sort-id') : 'popular';
       loadFundings({ sort: selectedSort });
     });
   }
+
 });
+
+//페이지네이션 처리 함수
+function renderPagination(totalPages, currentPage) {
+	  const paginationEl = document.querySelector('.pagination');
+	  if (!paginationEl) return;
+
+	  if (!isFullList || totalPages <= 1) {
+	    paginationEl.innerHTML = '';
+	    return;
+	  }
+
+	  let html = '<div class="pagination">'; 
+
+	  for (let i = 1; i <= totalPages; i++) {
+	    if (i === currentPage) {
+	      html += `<button class="page-link active" disabled>${i}</button>`;
+	    } else {
+	      html += `<button class="page-link" data-page="${i}">${i}</button>`;
+	    }
+	  }
+
+	  html += '</div>'; 
+
+	  paginationEl.innerHTML = html;
+
+	  document.querySelectorAll('.page-link[data-page]').forEach(btn => {
+	    btn.addEventListener('click', function () {
+	      currentPage = parseInt(this.dataset.page);
+	      loadFundings({ page: currentPage }); 
+	    });
+	  });
+	}
+
+
+// 버튼 클릭 이벤트 다시 바인딩
+document.querySelectorAll('.page-link[data-page]').forEach(btn => {
+ btn.addEventListener('click', function () {
+   currentPage = parseInt(this.dataset.page);
+   loadFundings({ page: currentPage });
+ });
+});
+
+
 
 function updateRecommendTitle(sido, sigungu, keyword) {
 	  const nickname = '${sessionScope.loginUser.nickname}'; 

@@ -11,8 +11,9 @@
 
 <div class="main-title-box">
 	<div class="main-title">
-		새롭게 운영하실 상점의 이름, 주소, 전화번호 등을 입력해 주세요<br /> 모든 정보를 다 입력하신 후 아래 [등록하기]
-		버튼을 눌러주시면 등록이 완료됩니다
+		새롭게 운영하실 상점의 이름, 주소, 전화번호 등을 입력해 주세요
+		<div class="sub-title">모든 정보를 다 입력하신 후 아래 [등록하기] 버튼을 눌러주시면 등록이
+			완료됩니다</div>
 	</div>
 </div>
 
@@ -25,17 +26,17 @@
 <div class="content-box">
 	<div class="content-text">상점 주소</div>
 	<div class="address-section">
-		<p class="address-row">
-			<button type="button" class="auth-btn" onclick="execDaumPostcode()">주소
+		<div class="address-btn-wrapper">
+			<button type="button" class="address-btn" onclick="execDaumPostcode()">주소
 				검색</button>
-			<button type="button" class="auth-btn" id="clearAddressBtn">지우기</button>
-	
-		</p>
-		<input type="hidden" id="postcode" name="postcode">
-		<input type="hidden" id="sido" name="sido"> <input
-			type="hidden" id="sigungu" name="sigungu"> <input
-			type="hidden" id="bname" name="bname"> <input type="hidden"
-			id="jibunAddress" name="jibunAddress">
+			<button type="button" class="address-btn" id="clearAddressBtn">지우기</button>
+
+		</div>
+		<input type="hidden" id="postcode" name="postcode"> <input
+			type="hidden" id="sido" name="sido"> <input type="hidden"
+			id="sigungu" name="sigungu"> <input type="hidden" id="bname"
+			name="bname"> <input type="hidden" id="jibunAddress"
+			name="jibunAddress">
 		<p>
 			<strong>&nbsp&nbsp&nbsp&nbsp&nbsp</strong> <input type="text"
 				name="roadAddress" id="roadAddress" class="content-input"
@@ -60,13 +61,13 @@
 <div class="content-box">
 	<div class="content-text">계좌 번호</div>
 	<input type="text" id="accountNumber" placeholder="계좌번호를 입력하세요"
-		class="content-input" />
+		class="content-input" inputmode="numeric" maxlength="20"/>
 </div>
 
 <div class="content-box">
 	<div class="content-text">사업자등록번호</div>
 	<input type="text" id="businessRegistrationNumber"
-		placeholder="사업자등록번호를 입력하세요" class="content-input" />
+		placeholder="사업자등록번호를 입력하세요" class="content-input" inputmode="numeric" maxlength="12" />
 </div>
 
 <div class="complete-back-btn-box">
@@ -76,6 +77,31 @@
 </div>
 
 <input type="hidden" id="selectedCategoryId" value="">
+
+
+<script>
+function formatBusinessNumber(value) {
+	  return value
+	    .replace(/[^0-9]/g, '')        
+	    .replace(/^(\d{3})(\d{2})(\d{0,5})$/, '$1-$2-$3') 
+	    .replace(/(-)$/, '');            
+	}
+
+	function formatAccountNumber(value) {
+	  return value
+	    .replace(/[^0-9]/g, '')           
+	    .replace(/(\d{3})(\d{3})(\d{0,6})/, '$1-$2-$3') 
+	    .replace(/(-)$/, '');             
+	}
+
+	document.getElementById("businessRegistrationNumber").addEventListener("input", function (e) {
+	  e.target.value = formatBusinessNumber(e.target.value);
+	});
+
+	document.getElementById("accountNumber").addEventListener("input", function (e) {
+	  e.target.value = formatAccountNumber(e.target.value);
+	});
+</script>
 
 <script>
 window.onload = function () {
@@ -128,44 +154,78 @@ window.onload = function () {
 </script>
 
 <script>
-function submitStore() {
-	const storeId = document.getElementById("storeId").value;
-	console.log(document.getElementById('bname'));
-	console.log(document.getElementById('sigungu'));
-	console.log(document.getElementById('detailAddr'));
-	console.log(document.getElementById('storeDescription'));
-	const storeData = {
-		storeId: storeId || null,
-			  storeName: document.getElementById('storeName').value,
-			  sido: document.getElementById('sido').value,
-			  sigungu: document.getElementById('sigungu').value,
-			  dong : document.getElementById('bname').value,
-			  addressDetail: document.getElementById('detailAddr').value,
-			  description: document.getElementById('storeDescription').value,
-			  userId: 1,
-			  businessNumber: document.getElementById('businessRegistrationNumber').value,
-			  bankAccount: document.getElementById('accountNumber').value,
-			  categoryId: parseInt(document.getElementById('selectedCategoryId').value),
-			};
 
-	console.log(storeData);
+function validateStoreData() {
+	  const storeName = document.getElementById('storeName')?.value.trim();
+	  const sido = document.getElementById('sido')?.value.trim();
+	  const sigungu = document.getElementById('sigungu')?.value.trim();
+	  const dong = document.getElementById('bname')?.value.trim();
+	  const addressDetail = document.getElementById('detailAddr')?.value.trim();
+	  const businessNumber = document.getElementById('businessRegistrationNumber')?.value.trim();
+	  const bankAccount = document.getElementById('accountNumber')?.value.trim();
+	  const categoryIdStr = document.getElementById('selectedCategoryId')?.value;
+
+	  const missingFields = [];
+
+	  if (!storeName) missingFields.push("상점 이름");
+	  if (!sido || !sigungu || !dong) missingFields.push("주소");
+	  if (!addressDetail) missingFields.push("상세 주소");
+	  if (!businessNumber) missingFields.push("사업자등록번호");
+	  if (!bankAccount) missingFields.push("계좌번호");
+	  if (!categoryIdStr) missingFields.push("카테고리 선택");
+
+	  return missingFields;
+	}
+	
+function submitStoreData(storeData, storeId) {
 	  const url = storeId
 	    ? `${cpath}/seller/store/update/${storeId}`
 	    : `${cpath}/seller/store/insert`;
-	    
-	    const method = "POST";
-	    
-  fetch(url, {
-    method: method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(storeData)
-  })
-  .then(res => res.text())
-  .then(msg => {
-	  alert((storeId ? "수정" : "등록") + " 결과: " + msg);
-  })
-  .catch(err => alert("오류: " + err));
-}
+
+	  fetch(url, {
+	    method: "POST",
+	    headers: { "Content-Type": "application/json" },
+	    body: JSON.stringify(storeData)
+	  })
+	    .then(res => res.text())
+	    .then(msg => {
+	      if (!isNaN(msg)) {
+	        alert("등록 성공! 상점 ID: " + msg);
+	        location.href = document.referrer;
+	      } else {
+	        alert("등록 실패: " + msg);
+	      }
+	    })
+	    .catch(err => {
+	      alert("오류 발생: " + err);
+	    });
+	}
+	
+function submitStore() {
+	  const storeId = document.getElementById("storeId")?.value || null;
+
+	  const missingFields = validateStoreData();
+	  if (missingFields.length > 0) {
+	    alert("다음 항목을 입력해 주세요:\n- " + missingFields.join("\n- "));
+	    return;
+	  }
+
+	  const storeData = {
+	    storeId: storeId,
+	    storeName: document.getElementById('storeName').value.trim(),
+	    sido: document.getElementById('sido').value.trim(),
+	    sigungu: document.getElementById('sigungu').value.trim(),
+	    dong: document.getElementById('bname').value.trim(),
+	    addressDetail: document.getElementById('detailAddr').value.trim(),
+	    description: document.getElementById('storeDescription')?.value.trim() || "",
+	    businessNumber: document.getElementById('businessRegistrationNumber').value.trim(),
+	    bankAccount: document.getElementById('accountNumber').value.trim(),
+	    categoryId: parseInt(document.getElementById('selectedCategoryId').value)
+	  };
+
+	  submitStoreData(storeData, storeId);
+	}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 	  const storeId = document.getElementById("storeId")?.value;
@@ -174,7 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	    fetch(`${cpath}/seller/store/info/${storeId}`)
 	      .then(res => res.json())
 	      .then(store => {
-	        console.log("불러온 상점:", store);
 
 	        document.getElementById('storeName').value = store.storeName;
 	       

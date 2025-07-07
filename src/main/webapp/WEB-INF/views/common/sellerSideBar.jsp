@@ -11,7 +11,7 @@
 .sidebar {
 	width: 320px;
 	background-color: #FFF6F0;
-	padding: 20px;
+	padding: 60px 20px 20px 20px;
 	flex-shrink: 0;
 	box-sizing: border-box;
 	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
@@ -91,10 +91,6 @@
 
 <body>
 	<aside class="sidebar">
-		<div class="store-info">
-			<span>[현재 상점]</span> <strong>김밥식 맛집(마포구)</strong>
-			<button class="change-store-btn">변경</button>
-		</div>
 
 		<nav class="menu">
 			<ul>

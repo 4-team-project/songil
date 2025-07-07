@@ -7,16 +7,19 @@
 	href="${cpath}/resources/css/pages/seller/settlements.css">
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/storeList.css">
-<%@ include file="/WEB-INF/views/common/sellerModal.jsp" %>
+<%@ include file="/WEB-INF/views/common/sellerModal.jsp"%>
 
 
 <div class="main-title-box">
-	<div class="main-title" id="typingText">${userDTO.nickname} 사장님의 상점 목록입니다</div>
+	<div class="main-title" id="typingText">${userDTO.nickname}사장님의
+		상점 목록입니다</div>
 </div>
 
 <div class="store-list" id="store-list"></div>
 <input type="hidden" id="storeId" value="${storeDTO.storeId}" />
 <script>
+const currentStoreId = ${currentStore.storeId};
+
 let categoryJson = [];
 
 function getImageByCategory(name) {
@@ -37,25 +40,43 @@ function loadStoreListPage(page) {
       const ratingMap = data.ratingMap;
       let html = '';
 
-      list.forEach(store => {
+      // 정렬된 리스트
+      const sortedList = list.sort((a, b) => {
+        if (a.storeId === currentStoreId) return -1;
+        if (b.storeId === currentStoreId) return 1;
+        return 0;
+      });
+
+      sortedList.forEach(store => {
         const rating = ratingMap[String(store.storeId)] || 0.0;
         const imageUrl = getImageByCategory(store.categoryName);
         html += `
           <div class="store-card">
             <div class="store-info-left">
               <div class="store-title" style="display:flex; align-items:center;">
-                <img src="${cpath}/\${imageUrl}" alt="${store.categoryName}" style="width: 40px; height: 40px; margin-right: 8px;">
+                <img src="${cpath}/\${imageUrl}" alt="\${store.categoryName}" style="width: 40px; height: 40px; margin-right: 8px;">
                 \${store.storeName}
               </div>
-                <div class="store-info-middle">
+              <div class="store-info-middle">
                 <div class="store-info-middle-text">
-              <div class="store-detail">\${store.sido} \${store.sigungu} \${store.dong} · \${store.categoryName}</div>
-              <div class="store-detail"><div class="store-detail-color"><img src="${cpath}/resources/images/icons/solar_star-bold.svg" alt="star" style="width: 20px; height: 20px; margin-right: 4px;">\${rating}</div></div>
+                  <div class="store-detail">\${store.sido} \${store.sigungu} \${store.dong} · \${store.categoryName}</div>
+                  <div class="store-detail">
+                    <div class="store-detail-color">
+                      <img src="${cpath}/resources/images/icons/solar_star-bold.svg" alt="star" style="width: 20px; height: 20px; margin-right: 4px;">
+                      \${rating}
+                    </div>
+                  </div>
+                </div>`;
+        
+        // 현재 상점이 아닐 때만 버튼 보이게
+        if (store.storeId !== currentStoreId) {
+          html += `<button class="btn" onclick="changeSelectedStore()" data-store-id="\${store.storeId}">현재 상점으로 변경</button>`;
+        }
+
+        html += `
               </div>
-              <button class="btn">현재 상점으로 변경</button>
-              </div>
-              </div>
-              <div class="store-buttons">
+            </div>
+            <div class="store-buttons">
               <button class="btn" onclick="location.href='${cpath}/seller/store/edit/\${store.storeId}'">상세보기</button>
               <button class="btn-delete" data-store-id="\${store.storeId}">삭제하기</button>
             </div>
@@ -65,13 +86,12 @@ function loadStoreListPage(page) {
 
       html += `<div class="pagination">`;
       for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-          html += `<button class="page-link active" disabled>\${i}</button>`;
-        } else {
-          html += `<button class="page-link" data-page="\${i}">\${i}</button>`;
-        }
+        html += i === currentPage
+          ? `<button class="page-link active" disabled>\${i}</button>`
+          : `<button class="page-link" data-page="\${i}">\${i}</button>`;
       }
       html += `</div>`;
+
       $("#store-list").html(html);
     },
     error: function() {
@@ -100,7 +120,7 @@ $(document).on("click", ".page-link", function(e) {
   loadStoreListPage(page);
 });
 
-//삭제 버튼 클릭 시
+// 삭제 버튼 클릭 시
 $(document).on("click", ".btn-delete", function () {
   const storeId = $(this).data("storeId");
   const storeName = $(this).closest(".store-card").find(".store-title").text().trim();
@@ -120,23 +140,49 @@ $(document).on("click", ".btn-delete", function () {
   });
 });
 
-
+// 삭제 요청
 function deleteStore(storeId) {
-	  if (!storeId) {
-	    alert("삭제할 상점 ID가 없습니다.");
-	    return;
-	  }
+  if (!storeId) {
+    alert("삭제할 상점 ID가 없습니다.");
+    return;
+  }
 
-	  fetch(`${cpath}/seller/store/delete/\${storeId}`, {
-	    method: "POST"
-	  })
-	    .then(res => res.text())
-	    .then(msg => {
-	      alert("삭제 결과: " + msg);
-	      location.reload(); 
-	    })
-	    .catch(err => alert("오류 발생: " + err));
-	}
+  fetch(`${cpath}/seller/store/delete/${storeId}`, {
+    method: "POST"
+  })
+    .then(res => res.text())
+    .then(msg => {
+      alert("삭제 결과: " + msg);
+      location.reload(); 
+    })
+    .catch(err => alert("오류 발생: " + err));
+}
+
+function changeSelectedStore(storeId) {
+  if (!storeId) {
+    return;
+  }
+
+  fetch(`${cpath}/seller/store/changeStore`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storeId: storeId })
+  })
+    .then(res => res.text())
+    .then(msg => {
+      alert(msg);
+      location.reload(); 
+    })
+    .catch(err => {
+      console.error("상점 변경 실패:", err);
+      alert("상점 변경 실패: " + err);
+    });
+}
+
+$(document).on("click", ".btn[data-store-id]", function () {
+  const selectedStoreId = $(this).data("storeId");
+  changeSelectedStore(selectedStoreId);
+});
 
 
 

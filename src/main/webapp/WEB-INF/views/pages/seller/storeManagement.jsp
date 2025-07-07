@@ -36,26 +36,26 @@
 <div class="store-info-box">
 	<div class="store-info-title">
 		<div class="highlight">[현재 상점]</div>
-		${storeDTO.storeName}
+		${currentStore.storeName}
 	</div>
 	<div class="store-info-content">
 		주소:
-		<c:out value="${storeDTO.sido}" />
-		<c:out value="${storeDTO.sigungu}" />
-		<c:out value="${storeDTO.dong}" />
-		<c:out value="${storeDTO.addressDetail}" />
+		<c:out value="${currentStore.sido}" />
+		<c:out value="${currentStore.sigungu}" />
+		<c:out value="${currentStore.dong}" />
+		<c:out value="${currentStore.addressDetail}" />
 	</div>
 	<div class="store-info-content">
 		전화번호:
 		<c:out value="${userDTO.phone}" />
 	</div>
 	<div class="store-edit-btn"
-		onclick="location.href='${cpath}/seller/store/edit/${storeDTO.storeId}'">상점
+		onclick="location.href='${cpath}/seller/store/edit/${currentStore.storeId}'">상점
 		정보 수정</div>
 </div>
 
 <div class="store-menu-box">
-	<div class="store-menu-title">${storeDTO.storeName}메뉴</div>
+	<div class="store-menu-title">${currentStore.storeName} 메뉴</div>
 	<div class="store-menu-content">메뉴 사진을 눌러주시면 메뉴 정보를 보실 수 있어요</div>
 
 	<div class="store-menu-content-img-container swiper">
@@ -81,7 +81,7 @@
 	</div>
 	<div class="menu-btn-box">
 		<div class="menu-edit-btn"
-			onclick="location.href='${cpath}/seller/product/new?storeId=${store.storeId}'">메뉴
+			onclick="location.href='${cpath}/seller/product/new?storeId=${currentStore.storeId}'">메뉴
 			추가하기</div>
 
 		<div class="menu-edit-btn" onclick="location.href='${cpath}/seller/product/productList?storeId=${store.storeId}'">메뉴 목록보기</div>

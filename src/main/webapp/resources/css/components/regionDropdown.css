@@ -13,8 +13,11 @@
 }
 
 .dropbtn {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	border: 1px solid #AFAFAF;
+	gap: 6px; 
 	font-family: 'Spoqa Han Sans Neo';
 	border-radius: 6px;
 	background-color: #FFFFFF;
@@ -29,6 +32,12 @@
 	z-index: 1000;
 	position: relative;
 	width: 160px;
+}
+
+.dropdown-icon {
+	width: 24px;
+	height: 24px;
+	color: #AFAFAF;
 }
 
 .dropbtn.selected {

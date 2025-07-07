@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.FundingDTO;
 import com.takku.project.service.FundingService;
@@ -18,6 +20,9 @@ public class FundingSchedulerController {
 
 	@Autowired
 	private FundingService fundingService;
+	
+	@Autowired
+	private FundingSchedulerController fundingSchedulerController;
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void checkFundingResultsAndIssueCoupons() {
@@ -56,4 +61,7 @@ public class FundingSchedulerController {
 
 		log.info(">> 스케줄러 실행 종료");
 	}
+	
+	
+
 }
