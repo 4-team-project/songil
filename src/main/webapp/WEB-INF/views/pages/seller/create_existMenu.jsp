@@ -216,8 +216,8 @@
 			</select>
 			<button type="button" class="btn-edit" id="btn-edit">정보 수정</button>
 			<button type="button" class="btn-add"
-				onclick="location.href='${pageContext.request.contextPath}/seller/product/new'">메뉴
-				추가</button>
+			onclick="location.href='${cpath}/seller/product/new?storeId=${storeDTO.storeId}&redirectUrl=${cpath}/seller/fundings/create-step2?type=limited'">
+				메뉴 추가</button>
 		</div>
 	</div>
 
