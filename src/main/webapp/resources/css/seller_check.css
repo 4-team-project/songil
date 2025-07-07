@@ -19,10 +19,9 @@
   margin-bottom: 8px;
 }
 
-.product-image img {
+.productImages img {
   width: 100%;
   height: auto;
-  max-width: 300px;  /* 원하는 최대 크기 */
   display: block;
   margin: 0 auto;     /* 가운데 정렬 (선택사항) */
 }
