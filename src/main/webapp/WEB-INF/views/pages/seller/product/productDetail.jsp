@@ -9,8 +9,7 @@
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
-	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
-	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
+	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴 이름</div>
@@ -43,7 +42,7 @@
 	</div>
 	<div id="file-count-text" class="file-count-text"
 		style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
-		/ 3</div>
+		&#47; 3</div>
 </div>
 <div class="complete-back-btn-box">
 	<div class="complete-back-btn" style="cursor: pointer"
@@ -244,67 +243,72 @@ function submitProduct() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const productId = document.getElementById("productId")?.value;
-  const urlParams = new URLSearchParams(window.location.search);
-  const redirect = urlParams.get('redirect');
-  
-  if (productId) {
-    fetch(`${cpath}/seller/product/info/${productId}`)
-      .then(res => res.json())
-      .then(product => {
-        console.log("DOMContentLoaded - 불러온 상품 데이터:", product);
-        document.getElementById('productName').value = product.productName;
-        document.getElementById('productPrice').value = product.price;
-        document.getElementById('productDescription').value = product.description;
+	  const productId = document.getElementById("productId")?.value;
+	  const title = document.getElementById('formMainTitle');
+	  const urlParams = new URLSearchParams(window.location.search);
+	  const completeBtn = document.querySelectorAll('.complete-back-btn')[1];
+	  const redirect = urlParams.get('redirect');
 
-        if (product.images && product.images.length > 0) {
-          const preview = document.getElementById('preview-list');
-          
-          product.images.forEach(img => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'preview-item';
+	  if (title) {
+		  title.textContent = productId ? "메뉴 정보를 수정해주세요" : "상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요";
+		  }
 
-            const image = document.createElement('img');
-            image.src = img.imageUrl; 
-            image.alt = '기존 이미지';
+		  if (completeBtn) {
+		    completeBtn.textContent = productId ? "수정 완료" : "등록 완료";
+		  }
 
-            const delBtn = document.createElement("button");
-            delBtn.textContent = "취소하기";
-            delBtn.className = "btn-cancel";
-            delBtn.onclick = () => {
-    			const idx = imageList.findIndex(v => v.type === "url" && v.value === url);
-    			if (idx !== -1) imageList.splice(idx, 1);
-    			wrapper.remove();
-    		};
-            
-            keptExistingImageUrls.push(img.imageUrl);
+	  if (productId) {
+	    fetch(`${cpath}/seller/product/info/${productId}`)
+	      .then(res => res.json())
+	      .then(product => {
+	        console.log("DOMContentLoaded - 불러온 상품 데이터:", product);
+	        document.getElementById('productName').value = product.productName;
+	        document.getElementById('productPrice').value = product.price;
+	        document.getElementById('productDescription').value = product.description;
 
-            delBtn.onclick = () => {
-              wrapper.remove();
-              keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
-              updateFileCountText();
-            };
+	        if (product.images && product.images.length > 0) {
+	          const preview = document.getElementById('preview-list');
 
-            wrapper.appendChild(image);
-            wrapper.appendChild(delBtn);
-            preview.appendChild(wrapper);
-          });
-          
-          updateFileCountText();
-        } else {
-            updateFileCountText();
-        }
-      })
-      
-  } else {
-      updateFileCountText();
-  }
-  
-  const backBtn = document.querySelector('.complete-back-btn');
-  if (redirect && backBtn) {
-    backBtn.onclick = function () {
-      location.href = redirect;
-    };
-  }
-});
-</script>
+	          product.images.forEach(img => {
+	            const wrapper = document.createElement('div');
+	            wrapper.className = 'preview-item';
+
+	            const image = document.createElement('img');
+	            image.src = img.imageUrl;
+	            image.alt = '기존 이미지';
+
+	            const delBtn = document.createElement("button");
+	            delBtn.textContent = "취소하기";
+	            delBtn.className = "btn-cancel";
+
+	            keptExistingImageUrls.push(img.imageUrl);
+
+	            delBtn.onclick = () => {
+	              wrapper.remove();
+	              keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
+	              updateFileCountText();
+	            };
+
+	            wrapper.appendChild(image);
+	            wrapper.appendChild(delBtn);
+	            preview.appendChild(wrapper);
+	          });
+
+	          updateFileCountText();
+	        } else {
+	          updateFileCountText();
+	        }
+	      });
+	  } else {
+	    updateFileCountText();
+	  }
+
+	  const backBtn = document.querySelector('.complete-back-btn');
+	  if (redirect && backBtn) {
+	    backBtn.onclick = function () {
+	      location.href = redirect;
+	    };
+	  }
+	});
+	
+	</script>

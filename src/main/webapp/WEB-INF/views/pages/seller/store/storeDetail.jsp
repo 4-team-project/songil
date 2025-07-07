@@ -10,9 +10,9 @@
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
 
 <div class="main-title-box">
-	<div class="main-title">
+	<div class="main-title" id="formMainTitle">
 		새롭게 운영하실 상점의 이름, 주소, 전화번호 등을 입력해 주세요
-		<div class="sub-title">모든 정보를 다 입력하신 후 아래 [등록하기] 버튼을 눌러주시면 등록이
+		<div class="sub-title" id="formSubTitle">모든 정보를 다 입력하신 후 아래 [등록하기] 버튼을 눌러주시면 등록이
 			완료됩니다</div>
 	</div>
 </div>
@@ -72,7 +72,7 @@
 
 <div class="complete-back-btn-box">
 	<div class="complete-back-btn" style="cursor: pointer" onclick="history.back()">이전</div>
-	<button onclick="submitStore()" class="complete-back-btn">수정
+	<button id="submitBtn" onclick="submitStore()" class="complete-back-btn">수정
 		완료</button>
 </div>
 
@@ -229,6 +229,19 @@ function submitStore() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	  const storeId = document.getElementById("storeId")?.value;
+	  const submitBtn = document.getElementById("submitBtn");
+	  if (submitBtn) {
+	    submitBtn.textContent = storeId ? "수정 완료" : "등록 완료";
+	  }
+	 
+	  const subTitle = document.getElementById("formSubTitle");
+
+
+	  if (subTitle) {
+	    subTitle.textContent = storeId
+	      ? "수정할 내용을 입력하신 후 아래 [수정 완료] 버튼을 눌러주세요"
+	      : "모든 정보를 다 입력하신 후 아래 [등록 완료] 버튼을 눌러주시면 등록이 완료됩니다";
+	  }
 
 	  if (storeId) {
 	    fetch(`${cpath}/seller/store/info/${storeId}`)
@@ -252,6 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	        const selectedId = store.categoryId;
 	        document.getElementById("selectedCategoryId").value = selectedId;
 
+	        
+	        const mainTitle = document.getElementById("formMainTitle");
+	        if (mainTitle && mainTitle.firstChild?.nodeType === 3) {
+	          mainTitle.firstChild.textContent = `상점의 상세정보입니다`;
+	        }
+	        
 	        setTimeout(() => {
 	          const cards = document.querySelectorAll('.category-card');
 	          cards.forEach(card => {
