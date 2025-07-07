@@ -11,7 +11,7 @@ h2 {
 }
 
 .user-info {
-	padding: 20px 0px 15px 0px;
+	padding: 10px 0px 5px 0px;
 }
 
 .user-info label {
@@ -56,6 +56,7 @@ h2 {
 
 .btn:hover {
 	background-color: #ff9670;
+	border: 2px solid #fdd4c2;
 	color: white;
 }
 
@@ -65,7 +66,7 @@ h2 {
 }
 
 .btn.filled:hover {
-	background-color: #ff7a52;
+	background-color: #fdd4c2;
 	color: white;
 }
 
@@ -239,6 +240,6 @@ h2 {
 
 input:focus {
 	border-color: #FF9670;
-	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.2);
+	box-shadow: 0 0 0 3px rgba(255, 150, 112, 0.6);
 	outline: none;
 }
