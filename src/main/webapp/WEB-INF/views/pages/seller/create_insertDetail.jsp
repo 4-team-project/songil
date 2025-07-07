@@ -27,15 +27,14 @@
 
 <h3>기간 및 이미지를 입력해주세요.</h3>
 <div class="fundingDate">
-	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.(현재 스토어:
-		${currentStore.storeName})</div>
-	<p>
-		달력 사진( <img
-			src="${pageContext.request.contextPath}/resources/images/icons/calendar.svg"
-			alt="달력 아이콘" id="calendarIcon"
-			style="width: 24px; height: 24px; cursor: pointer; vertical-align: middle;" />
-		)을 누르면 달력이 나와요.
-	</p>
+<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
+	<p> 달력 사진(
+  	<img src="${pageContext.request.contextPath}/resources/images/icons/calendar.svg"
+       alt="달력 아이콘"
+       id="calendarIcon"
+       style="width:24px; height:24px; cursor:pointer; vertical-align:middle;" />
+       )을 누르면 달력이 나와요.
+</p>
 	<div id="dateArea">
 		<span>시작일</span> <input type="date" id="startDate" required
 			class="form-input" /> <span>종료일</span> <input type="date"
