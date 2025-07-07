@@ -60,7 +60,7 @@ function loadProductListPage(page) {
         if (i === currentPage) {
           html += `<button class="page-link active" disabled>\${i}</button>`;
         } else {
-          html += `<button class="page-link" data-page="${i}">\${i}</button>`;
+          html += `<button class="page-link" data-page="\${i}">\${i}</button>`;
         }
       }
       html += `</div>`;
