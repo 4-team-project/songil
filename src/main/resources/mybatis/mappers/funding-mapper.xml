@@ -24,6 +24,11 @@
 			column="THUMBNAIL_IMAGE_URL" />
 		<result property="storeName" column="STORE_NAME" />
 		<result property="price" column="PRICE" />
+		 <collection property="images"
+              ofType="com.takku.project.domain.ImageDTO"
+              select="com.takku.project.mapper.ImageMapper.selectImagesByFundingId"
+              column="FUNDING_ID"/>
+              
 	</resultMap>
 	<!-- 상세 조회 -->
 	<select id="selectFundingByFundingId" parameterType="int"
@@ -93,7 +98,7 @@
 				AND s.sigungu = #{sigungu}
 			</if>
 			<if test="statusList != null and statusList.size() > 0">
-				f.status IN
+				AND f.status IN
 				<foreach collection="statusList" item="st" open="("
 					separator="," close=")">
 					#{st}
@@ -165,7 +170,7 @@
 				AND s.sigungu = #{sigungu}
 			</if>
 			<if test="statusList != null and statusList.size() > 0">
-				f.status IN
+				AND f.status IN
 				<foreach collection="statusList" item="st" open="("
 					separator="," close=")">
 					#{st}
