@@ -55,14 +55,18 @@
 </div>
 
 <div class="store-menu-box">
-	<div class="store-menu-title">${currentStore.storeName} 메뉴</div>
-	<div class="store-menu-content">메뉴 사진을 눌러주시면 메뉴 정보를 보실 수 있어요</div>
+	<div class="store-menu-title">${currentStore.storeName}메뉴</div>
+	<div class="store-menu-content">
+		메뉴 사진을 눌러주시면
+		<div class="highlight">메뉴 통계</div>를 보실 수 있어요
+	</div>
 
 	<div class="store-menu-content-img-container swiper">
 		<div class="swiper-wrapper">
 			<c:forEach var="product" items="${productDTO}">
 				<div class="swiper-slide">
-					<img class="store-menu-content-img" onclick="location.href='${cpath}/seller/store/products?productId=${product.productId}'"
+					<img class="store-menu-content-img"
+						onclick="location.href='${cpath}/seller/store/products?productId=${product.productId}'"
 						src="${cpath}${product.images[0].imageUrl}"
 						alt="${product.productName}" />
 					<div class="store-menu-content-name">${product.productName}</div>
@@ -84,7 +88,9 @@
 			onclick="location.href='${cpath}/seller/product/new?storeId=${currentStore.storeId}'">메뉴
 			추가하기</div>
 
-		<div class="menu-edit-btn" onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">메뉴 목록보기</div>
+		<div class="menu-edit-btn"
+			onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">메뉴
+			목록보기</div>
 	</div>
 </div>
 

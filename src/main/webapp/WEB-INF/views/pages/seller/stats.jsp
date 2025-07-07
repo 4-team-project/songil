@@ -19,7 +19,7 @@ h2 {
 		alt="상점 통계" class="icon" />
 	<c:out value="${userDTO.nickname}" default="딱쿠" />
 	사장님의 <span class="highlight"><c:out
-			value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
+			value="${currentStore.storeName}" default="상점" /> 상점 통계</span>
 </h1>
 <div class="stats-grid">
 	<!-- 1개: 월별 주문 및 매출 -->

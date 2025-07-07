@@ -5,6 +5,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/sellerMain.css">
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/pages/seller/productDetail.css">
 <title>상품 통계</title>
 <style>
 button, button:hover, button:active, button:focus {
@@ -191,9 +194,9 @@ button, button:hover, button:active, button:focus {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="main-content"
 	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
-	<div class="menu-header">
-		<button class="menu-list-btn" onclick="alert('메뉴 목록 보기 클릭!')">메뉴
-			목록 보기</button>
+	<div class="main-title-box">
+		<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
+		<div class="main-title">${productDTO.productName}의통계</div>
 	</div>
 
 	<div class="menu-box">

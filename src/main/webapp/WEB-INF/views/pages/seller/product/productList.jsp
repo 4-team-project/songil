@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <link rel="stylesheet"
-    href="${cpath}/resources/css/pages/seller/productDetail.css">
+	href="${cpath}/resources/css/pages/seller/productDetail.css">
 <link rel="stylesheet"
-    href="${cpath}/resources/css/pages/seller/settlements.css">
+	href="${cpath}/resources/css/pages/seller/settlements.css">
 <link rel="stylesheet"
-    href="${cpath}/resources/css/pages/seller/storeList.css">
-<%@ include file="/WEB-INF/views/common/sellerModal.jsp" %>
+	href="${cpath}/resources/css/pages/seller/storeList.css">
+<%@ include file="/WEB-INF/views/common/sellerModal.jsp"%>
 
 <div class="main-title-box">
-    <div class="main-title" id="typingText">${currentStore.storeName} 의 상품 목록입니다</div>
+	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
+	<div style="margin-left: 20px;" class="main-title" id="typingText">
+		${currentStore.storeName}의 상품 목록입니다</div>
 </div>
 
 <div class="store-list" id="product-list"></div>
