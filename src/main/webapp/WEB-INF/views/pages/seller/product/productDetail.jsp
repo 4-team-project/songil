@@ -278,13 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
     		};
             
             keptExistingImageUrls.push(img.imageUrl);
-            console.log("DOMContentLoaded - keptExistingImageUrls 추가:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
 
             delBtn.onclick = () => {
               wrapper.remove();
               keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
               updateFileCountText();
-              console.log("delBtn click (existing) - keptExistingImageUrls 제거:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
             };
 
             wrapper.appendChild(image);
@@ -294,16 +292,11 @@ document.addEventListener('DOMContentLoaded', () => {
           
           updateFileCountText();
         } else {
-            console.log("DOMContentLoaded - 불러온 상품에 이미지가 없습니다.");
             updateFileCountText();
         }
       })
-      .catch(err => {
-          console.error("상품 정보를 불러오는 중 오류 발생:", err);
-          alert("상품 정보를 불러오는데 실패했습니다.");
-      });
+      
   } else {
-      console.log("DOMContentLoaded - 신규 상품 등록 모드입니다.");
       updateFileCountText();
   }
   
