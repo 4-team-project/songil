@@ -26,7 +26,10 @@
 						<div class="nav-text"
 							onclick="location.href='${cpath}/seller/home'">소상공인 페이지</div>
 					</c:if>
-					<div class="nav-text" onclick="location.href='${cpath}/auth/login'">로그아웃</div>
+					<form id="logoutForm" action="${cpath}/auth/logout" method="post"
+						style="display: none;"></form>
+					<div class="nav-text"
+						onclick="document.getElementById('logoutForm').submit();">로그아웃</div>
 				</c:when>
 				<c:otherwise>
 					<div class="nav-text" onclick="location.href='${cpath}/auth/login'">로그인</div>
