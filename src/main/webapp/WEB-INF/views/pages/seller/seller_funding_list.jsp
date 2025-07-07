@@ -43,7 +43,7 @@
     <c:set var="target" value="${funding.targetQty != null && funding.targetQty != 0 ? funding.targetQty : 1}" />
     <c:set var="rate" value="${(current * 100) / target}" />
 
-    <div class="funding-card" onclick="location.href='/seller/store/funding/stats?fundingId=${funding.fundingId}'">
+    <div class="funding-card" onclick="location.href='${cpath}/seller/store/funding/stats?fundingId=${funding.fundingId}'">
         <div class="funding-info">
             <h3 class="funding-title">
                 ${status.index + 1}. ${funding.fundingName}
@@ -76,7 +76,4 @@
 </c:forEach>
 </div>
 </div>
-<script src="<c:url value="${cpath}/resources/js/seller_funding_list.js"/>"></script>
-<script>
-  const cpath = "${pageContext.request.contextPath}";
-</script>
+<script src="${cpath}/resources/js/seller_funding_list.js"/></script>
