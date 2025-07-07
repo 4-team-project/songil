@@ -209,9 +209,6 @@
 		              </div>
 		              
 		              \${review.images && review.images.length > 0 ? `
-		            	        <div class="review-image">
-		            	          <img src="${cpath}\${review.images[0].imageUrl}" alt="리뷰 이미지" />
-		            	        </div>
 		            	      ` : ''}
 		            </div>
 		          </div>
