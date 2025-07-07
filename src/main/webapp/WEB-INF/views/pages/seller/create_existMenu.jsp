@@ -6,7 +6,6 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_exist_normal.css">
 
-<!-- storeId를 안전하게 전달 -->
 <input type="hidden" id="storeIdHolder" value="${storeDTO.storeId}" />
 
 <script>
