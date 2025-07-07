@@ -1,6 +1,8 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/sellerAlert.jsp"%>
+
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
 <input type="hidden" id="storeId" value="${storeId}" />
@@ -52,6 +54,7 @@
 </div>
 
 
+
 <script>
 
 function formatNumberWithCommas(value) {
@@ -81,19 +84,30 @@ function validateProductForm() {
 	  const totalImages = selectedFiles.length + keptExistingImageUrls.length;
 
 	  if (!productName) {
-	    alert("메뉴 이름을 입력해주세요.");
-	    return false;
-	  }
-	  if (!price || isNaN(price) || parseInt(price) <= 0) {
-	    alert("올바른 가격을 입력해주세요.");
-	    return false;
-	  }
-	  if (totalImages < 1) {
-	    alert("메뉴 사진은 최소 1장 이상 등록해주세요.");
-	    return false;
-	  }
+		    showPopupAlert({
+		      type: 'warning',
+		      message: '메뉴 이름을 입력해주세요.'
+		    });
+		    return false;
+		  }
 
-	  return true;
+		  if (!price || isNaN(price) || parseInt(price) <= 0) {
+		    showPopupAlert({
+		      type: 'error',
+		      message: '올바른 가격을 입력해주세요.'
+		    });
+		    return false;
+		  }
+
+		  if (totalImages < 1) {
+		    showPopupAlert({
+		      type: 'info',
+		      message: '메뉴 사진은 최소 1장 이상 등록해주세요.'
+		    });
+		    return false;
+		  }
+
+		  return true;
 	}
 
 
@@ -116,10 +130,13 @@ function handleFiles(fileList) {
   const remainingSlots = maxFiles - currentTotalImages;
   
   if (remainingSlots <= 0) {
-    alert("사진은 최대 " + maxFiles + "개까지 선택할 수 있습니다.");
-    document.getElementById('images').value = '';
-    return;
-  }
+	  showPopupAlert({
+	    type: 'info',
+	    message: "사진은 최대 " + maxFiles + "개까지 선택할 수 있습니다."
+	  });
+	  document.getElementById('images').value = ''; 
+	  return;
+	}
   
   const filesToAdd = Array.from(fileList).slice(0, remainingSlots); 
 
@@ -185,9 +202,6 @@ function submitProduct() {
       imageUrl: url.startsWith(cpath) ? url.replace(cpath, '') : url // cpath 제거
     }))
   };
-  
-  console.log("submitProduct - 전송할 productData (JSON):", productData);
-  console.log("submitProduct - 전송할 새 파일 (selectedFiles):", selectedFiles);
 
   const formData = new FormData();
   formData.append("product", JSON.stringify(productData));
@@ -210,15 +224,19 @@ function submitProduct() {
         }
         return res.text();
     })
-    .then(msg => {
-      alert((productId ? "수정" : "등록") + " 결과: " + msg);
-
+.then(msg => {
+  showPopupAlert({
+    type: 'info',
+    message: (productId ? "수정" : "등록") + " 결과: " + msg,
+    onConfirm: () => {
       if (redirectUrl) {
         location.href = redirectUrl;
       } else {
         location.href = `${cpath}/seller/store?storeId=${storeId}`;
       }
-    })
+    }
+  });
+})
     .catch(err => {
       console.error("오류:", err);
       alert("오류 발생: " + err.message);
