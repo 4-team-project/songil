@@ -127,6 +127,7 @@ public class FundingManagementController {
 			session.setAttribute("funding", funding);
 
 			ProductDTO product = productService.selectByProductId(funding.getProductId());
+
 			model.addAttribute("storeDTO", store);
 			model.addAttribute("product", product);
 
@@ -139,7 +140,10 @@ public class FundingManagementController {
 	}
 
 	@GetMapping("/create-step5")
-	public String redirectWriteTypePage() {
+	public String redirectWriteTypePage(HttpSession session, Model model) {
+		FundingDTO funding = (FundingDTO) session.getAttribute("funding");
+		ProductDTO product = productService.selectByProductId(funding.getProductId());
+		model.addAttribute("product", product);
 		return "seller.selectWriteType";
 	}
 

@@ -39,13 +39,13 @@
 </div>
 
 <!-- 모달 영역 -->
-<div id="resultModal">
-	<p id="modalMsg"></p>
-	<button id="closeModalBtn">확인</button>
+<div id="resultModal2">
+	<p id="modalMsg2"></p>
+	<button id="closeModalBtn2">확인</button>
 </div>
 
 <!-- 모달 배경 -->
-<div id="modalBackdrop"></div>
+<div id="modalBackdrop2"></div>
 
 <script>
   const storeList = [
@@ -136,10 +136,10 @@ function changeSelectedStore() {
 }
 
 function showModalMessage(message, callback) {
-	  const modal = document.getElementById('resultModal');
-	  const backdrop = document.getElementById('modalBackdrop');
-	  const modalMsg = document.getElementById('modalMsg');
-	  const closeBtn = document.getElementById('closeModalBtn');
+	  const modal = document.getElementById('resultModal2');
+	  const backdrop = document.getElementById('modalBackdrop2');
+	  const modalMsg = document.getElementById('modalMsg2');
+	  const closeBtn = document.getElementById('closeModalBtn2');
 
 	  modalMsg.textContent = message;
 	  modal.style.display = 'flex';
@@ -151,6 +151,6 @@ function showModalMessage(message, callback) {
 	    backdrop.style.display = 'none';
 	    if (typeof callback === 'function') callback();
 	  };
-	}
+	} 
 
 </script>

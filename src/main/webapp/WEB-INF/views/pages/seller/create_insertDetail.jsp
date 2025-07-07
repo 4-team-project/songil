@@ -9,25 +9,25 @@
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
 
 <div class="step-progress">
-  <div class="step">
-    <div class="circle">1</div>
-    <div class="label">상품 정보</div>
-  </div>
-  <div class="line"></div>
-  <div class="step active">
-    <div class="circle">2</div>
-    <div class="label">기간 및 이미지</div>
-  </div>
-  <div class="line"></div>
-  <div class="step">
-    <div class="circle">3</div>
-    <div class="label">상세 내용</div>
-  </div>
+	<div class="step">
+		<div class="circle">1</div>
+		<div class="label">상품 정보</div>
+	</div>
+	<div class="line"></div>
+	<div class="step active">
+		<div class="circle">2</div>
+		<div class="label">기간 및 이미지</div>
+	</div>
+	<div class="line"></div>
+	<div class="step">
+		<div class="circle">3</div>
+		<div class="label">상세 내용</div>
+	</div>
 </div>
 
 <h3>기간 및 이미지를 입력해주세요.</h3>
 <div class="fundingDate">
-	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
+<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
 	<p> 달력 사진(
   	<img src="${pageContext.request.contextPath}/resources/images/icons/calendar.svg"
        alt="달력 아이콘"
@@ -36,8 +36,9 @@
        )을 누르면 달력이 나와요.
 </p>
 	<div id="dateArea">
-		<span>시작일</span> <input type="date" id="startDate" required class="form-input"/> <span>종료일</span>
-		<input type="date" id="endDate" required class="form-input"/>
+		<span>시작일</span> <input type="date" id="startDate" required
+			class="form-input" /> <span>종료일</span> <input type="date"
+			id="endDate" required class="form-input" />
 		<button type="button" class="btn-check" onclick="submitDate()">확인</button>
 	</div>
 	<div id="dateInfo"
@@ -79,9 +80,9 @@ const imageLimit = 2;
 
 // productDTO.images를 JSTL로 넘겨받아 JS 배열로 만듦
 const productImages = [
-	<c:forEach var="img" items="${productDTO.images}" varStatus="loop">
-		"${img.imageUrl}"<c:if test="${!loop.last}">,</c:if>
-	</c:forEach>
+    <c:forEach var="img" items="${productDTO.images}" varStatus="loop">
+        "${pageContext.request.contextPath}${img.imageUrl}"<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
 ];
 
 function showModalMessage(message) {
@@ -175,7 +176,9 @@ async function submitFunding() {
 	const funding = {
 		startDate: document.getElementById("startDate").value,
 		endDate: document.getElementById("endDate").value,
-		fundingId: parseInt(document.getElementById("fundingId").value),
+
+		/* fundingId: parseInt(document.getElementById("fundingId").value), */
+
 		images: []
 	};
 

@@ -243,7 +243,6 @@
 
 .menu-btn-box {
 	display: flex;
-	justify-content: flex-end;
 	gap: 9px;
 	margin-left: 3px;
 	margin-bottom: 12px;

@@ -72,8 +72,10 @@ public class ProductManagementController {
 
 	// 상품 등록 폼
 	@GetMapping("/new")
-	public String showForm(@RequestParam("storeId") int storeId, Model model) {
+	public String showForm(@RequestParam("storeId") int storeId,
+			@RequestParam(value = "redirectUrl", required = false) String redirectUrl, Model model) {
 		model.addAttribute("storeId", storeId);
+		model.addAttribute("redirectUrl", redirectUrl);
 		return "seller.product";
 	}
 
@@ -143,7 +145,7 @@ public class ProductManagementController {
 			List<String> existingUrlsInDb = existingImagesInDb.stream().map(ImageDTO::getImageUrl)
 					.collect(Collectors.toList());
 
-			// 3. 클라이언트에서 '유지하겠다'고 보낸 이미지 목록 
+			// 3. 클라이언트에서 '유지하겠다'고 보낸 이미지 목록
 			List<String> keptImageUrlsFromClient = productDTO.getImages() != null
 					? productDTO.getImages().stream().map(ImageDTO::getImageUrl)
 							// .map(url -> url.replace(request.getContextPath(), "")) // ⭐️ 이 줄을 삭제해야 합니다!
