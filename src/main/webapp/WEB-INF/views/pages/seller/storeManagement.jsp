@@ -55,44 +55,51 @@
 </div>
 
 <div class="store-menu-box">
-	<div class="store-menu-title">${currentStore.storeName}메뉴</div>
-	<div class="store-menu-content">
-		메뉴 사진을 눌러주시면
-		<div class="highlight">메뉴 통계</div>를 보실 수 있어요
-	</div>
+  <div class="store-menu-title">${currentStore.storeName} 메뉴</div>
+  
+  <c:choose>
+    <c:when test="${empty productDTO}">
+      <div class="store-menu-content">아직 등록된 메뉴가 없습니다.</div>
+    </c:when>
 
-	<div class="store-menu-content-img-container swiper">
-		<div class="swiper-wrapper">
-			<c:forEach var="product" items="${productDTO}">
-				<div class="swiper-slide">
-					<img class="store-menu-content-img"
-						onclick="location.href='${cpath}/seller/store/products?productId=${product.productId}'"
-						src="${cpath}${product.images[0].imageUrl}"
-						alt="${product.productName}" />
-					<div class="store-menu-content-name">${product.productName}</div>
-				</div>
-			</c:forEach>
-		</div>
-		<div class="swiper-button-circle swiper-button-circle-prev">
-			<div class="swiper-button-prev"></div>
-		</div>
-		<div class="swiper-button-circle swiper-button-circle-next">
-			<div class="swiper-button-next"></div>
-		</div>
+    <c:otherwise>
+      <div class="store-menu-content">
+        메뉴 사진을 눌러주시면 <div class="highlight">메뉴 통계</div>를 보실 수 있어요
+      </div>
 
+      <div class="store-menu-content-img-container swiper">
+        <div class="swiper-wrapper">
+          <c:forEach var="product" items="${productDTO}">
+            <div class="swiper-slide">
+              <img class="store-menu-content-img"
+                   onclick="location.href='${cpath}/seller/store/products?productId=${product.productId}'"
+                   src="${cpath}${product.images[0].imageUrl}"
+                   alt="${product.productName}" />
+              <div class="store-menu-content-name">${product.productName}</div>
+            </div>
+          </c:forEach>
+        </div>
 
-		<div class="swiper-pagination"></div>
-	</div>
-	<div class="menu-btn-box">
-		<div class="menu-edit-btn"
-			onclick="location.href='${cpath}/seller/product/new?storeId=${currentStore.storeId}'">메뉴
-			추가하기</div>
+        <div class="swiper-button-circle swiper-button-circle-prev">
+          <div class="swiper-button-prev"></div>
+        </div>
+        <div class="swiper-button-circle swiper-button-circle-next">
+          <div class="swiper-button-next"></div>
+        </div>
 
-		<div class="menu-edit-btn"
-			onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">메뉴
-			목록보기</div>
-	</div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </c:otherwise>
+  </c:choose>
+
+  <div class="menu-btn-box">
+    <div class="menu-edit-btn"
+         onclick="location.href='${cpath}/seller/product/new?storeId=${currentStore.storeId}'">메뉴 추가하기</div>
+    <div class="menu-edit-btn"
+         onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">메뉴 목록보기</div>
+  </div>
 </div>
+
 
 
 <script>
