@@ -30,7 +30,7 @@
 
 <h3>기간 및 이미지를 입력해주세요.</h3>
 <div class="fundingDate">
-	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.</div>
+	<div class="menu-label">펀딩 시작일과 종료일을 입력해 주세요.(현재 스토어: ${currentStore.storeName})</div>
 	<p> 달력 사진(
   	<img src="${pageContext.request.contextPath}/resources/images/icons/calendar.svg"
        alt="달력 아이콘"

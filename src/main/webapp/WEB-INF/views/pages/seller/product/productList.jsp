@@ -10,7 +10,7 @@
 <%@ include file="/WEB-INF/views/common/sellerModal.jsp" %>
 
 <div class="main-title-box">
-    <div class="main-title" id="typingText">${storeDTO.storeName} 의 상품 목록입니다</div>
+    <div class="main-title" id="typingText">${currentStore.storeName} 의 상품 목록입니다</div>
 </div>
 
 <div class="store-list" id="product-list"></div>

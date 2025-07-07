@@ -101,9 +101,13 @@ public class StoreController {
 
 		if (currentStore != null) {
 			int storeId = currentStore.getStoreId();
-			List<ProductDTO> productDTO = productService.selectProductByStoreId(storeId);
 
-			model.addAttribute("productDTO", productDTO);
+			List<ProductDTO> productDTOList = productService.selectProductByStoreId(storeId);
+			for (ProductDTO product : productDTOList) {
+			    List<ImageDTO> imageList = imageService.selectImagesByProductId(product.getProductId());
+			    product.setImages(imageList); 
+			}
+			model.addAttribute("productDTO", productDTOList);
 		} else {
 			model.addAttribute("message", "등록된 상점이 없습니다.");
 		}

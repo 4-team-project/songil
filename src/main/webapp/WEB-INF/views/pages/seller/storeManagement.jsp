@@ -63,7 +63,7 @@
 			<c:forEach var="product" items="${productDTO}">
 				<div class="swiper-slide">
 					<img class="store-menu-content-img"
-						src="${cpath}${product.thumbnailImageUrl}"
+						src="${cpath}${product.images[0].imageUrl}"
 						alt="${product.productName}" />
 					<div class="store-menu-content-name">${product.productName}</div>
 				</div>
@@ -84,7 +84,7 @@
 			onclick="location.href='${cpath}/seller/product/new?storeId=${currentStore.storeId}'">메뉴
 			추가하기</div>
 
-		<div class="menu-edit-btn" onclick="location.href='${cpath}/seller/product/productList?storeId=${store.storeId}'">메뉴 목록보기</div>
+		<div class="menu-edit-btn" onclick="location.href='${cpath}/seller/product/productList?storeId=${currentStore.storeId}'">메뉴 목록보기</div>
 	</div>
 </div>
 

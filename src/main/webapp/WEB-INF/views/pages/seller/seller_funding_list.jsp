@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/resources/css/seller_funding_list.css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="${cpath}/resources/css/seller_funding_list.css" />
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%-- userId 값을 숨겨진 필드에 저장 --%>
 <input type="hidden" id="currentUserId"
@@ -11,7 +12,7 @@
 	<div class="seller-funding-content">
 <div class="header-section">
 	
-	<h2 class="page-title"><img alt="svg" class="image" src="/resources/images/icons/calendar.svg">${user.nickname} 사장님의 펀딩 현황</h2>
+	<h2 class="page-title"><img alt="svg" class="image" src="${cpath}/resources/images/icons/calendar.svg">${user.nickname} 사장님의 펀딩 현황</h2>
 	<span class="page-description">보고 싶은 펀딩을 눌러보세요. 자세한 내용을 확인할 수 있습니다.</span><br>
 	<span class="funding-status-summary">${user.nickname} 사장님의
     <strong id="currentFilterStatus">전체</strong> 펀딩은
