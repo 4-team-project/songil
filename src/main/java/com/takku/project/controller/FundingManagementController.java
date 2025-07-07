@@ -34,14 +34,14 @@ public class FundingManagementController {
 
 	@GetMapping("/create-step1")
 	public String selectStoreNameByUserId(Model model, HttpSession session) {
-		StoreDTO store = storeService.selectStoreById(1); // TODO: 임시 상점
+		StoreDTO store = (StoreDTO) session.getAttribute("store");
+
 		model.addAttribute("storeDTO", store);
 
 		FundingDTO funding = new FundingDTO();
 		funding.setStoreId(store.getStoreId());
 
 		session.setAttribute("funding", funding);
-		session.setAttribute("store", store);
 		session.removeAttribute("aiRetryCount");
 
 		return "seller.createFunding";
@@ -76,6 +76,7 @@ public class FundingManagementController {
 	public String insertFundingMenuDetail(@ModelAttribute FundingDTO fundingInput, HttpSession session, Model model) {
 		FundingDTO funding = (FundingDTO) session.getAttribute("funding");
 		StoreDTO store = (StoreDTO) session.getAttribute("store");
+		
 		model.addAttribute("storeDTO", store);
 
 		funding.setProductId(fundingInput.getProductId());

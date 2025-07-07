@@ -43,7 +43,7 @@ public class SettlementController {
 	        @RequestParam(defaultValue = "5") int size) {
 
 	    StoreDTO store = (StoreDTO) session.getAttribute("store");
-	    int storeId = 2;
+	    int storeId = store.getStoreId();
 
 	    int startRow = (page - 1) * size + 1;
 	    int endRow = page * size;
