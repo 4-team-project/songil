@@ -11,7 +11,9 @@
 
 
 <div class="main-title-box">
-	<div class="main-title" id="typingText">${userDTO.nickname}사장님의
+	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
+	<div style="margin-left: 20px;" class="main-title" id="typingText">
+		${userDTO.nickname}사장님의
 		상점 목록입니다</div>
 </div>
 

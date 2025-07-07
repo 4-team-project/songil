@@ -32,14 +32,20 @@
 
 .store-btn {
 	width: 266px;
-	height: 50px;
+	height: 60px;
 	background-color: #FF9670;
+	border: 2px solid #2e2e3a;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 8px;
 	border-radius: 8px;
 	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+	cursor: pointer;
+}
+
+.store-btn:hover {
+	background-color: #ffc2a1;
 }
 
 .store-btn:hover{
@@ -47,14 +53,15 @@
 }
 
 .store-btn-icon img {
-	width: 24px;
-	height: 24px;
+	width: 28px;
+	height: 28px;
 }
 
 .store-btn-text {
+	color: #FFFFFF;
 	font-family: 'Spoqa Han Sans Neo';
 	font-weight: 500;
-	font-size: 18px;
+	font-size: 20px;
 	color: white;
 }
 
@@ -62,9 +69,9 @@
 	display: block;
 	background-color: #fffdfb;
 	padding: 32px;
-	border: 1px solid #FF9670;
+	border: 3px solid #2e2e3a;
 	border-radius: 12px;
-	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
+	filter: drop-shadow(6px 6px 0px #FF9670);
 }
 
 .store-info-title {
@@ -79,6 +86,7 @@
 
 .highlight {
 	color: #f97c5d;
+	font-weight: 700;
 }
 
 .store-info-content {
@@ -93,7 +101,8 @@
 	width: 214px;
 	height: 60px;
 	border-radius: 8px;
-	background-color: #fff6f0;
+	background-color: #FFFFFF;
+	border: 2px solid #2e2e3a;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -110,13 +119,17 @@
 	color: white;
 }
 
+.store-edit-btn:hover {
+	background-color: #FFC3A3;
+}
+
 .store-menu-box {
   margin-top: 20px;
-  background-color: #fffdfb;
+  background-color: #fffdf2;
   padding: 54px 32px 32px 32px;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
+  filter: drop-shadow(6px 6px 0px #FF9670);
   overflow: hidden;  
-  border: 1px solid #ff9670;
+  border: 3px solid #2e2e3a;
   border-radius: 12px;
 }
 
@@ -136,6 +149,9 @@
 	font-size: 20px;
 	margin-bottom: 10px;
 	color: #828282;
+	display: flex;
+	justify-content: flex-start;
+	gap: 8px;
 }
 
 .store-menu-content-img-container {
@@ -144,6 +160,10 @@
 	padding: 20px 0;
 	overflow: visible;
 	height: 280px;
+}
+
+.swiper-wrapper{
+	margin-top: 10px;
 }
 
 .swiper-slide {
@@ -178,9 +198,10 @@
 	transform: translateY(-50%);
 	width: 60px;
 	height: 60px;
+	border: 3px solid #FFFFFF;
 	border-radius: 50%;
-	background-color: rgba(221, 221, 221, 0.6);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	background-color: #FF9670;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -197,9 +218,17 @@
 }
 
 .swiper-button-prev, .swiper-button-next {
-	color: #2E2E3A !important;
+	color: #FFFFFF !important;
 	position: static !important;
 	margin: 0 !important;
+}
+
+.swiper-button-circle-prev:hover {
+	background-color: #ffc2a1;
+}
+
+.swiper-button-circle-next:hover {
+	background-color: #ffc2a1;
 }
 
 .swiper-button-prev::after, .swiper-button-next::after {
@@ -220,10 +249,23 @@
 	margin-bottom: 12px;
 }
 
+.edit-btn-icon img {
+	width: 28px;
+	height: 28px;
+	margin-right: 4px;
+}
+
+.menu-edit-btn-icon img {
+	width: 20px;
+	height: 20px;
+	margin-right: 4px;
+}
+
 .menu-edit-btn {
 	width: 180px;
 	height: 60px;
 	border-radius: 8px;
+	border: 2px solid #2e2e3a;
 	background-color: #FF9670;
 	display: flex;
 	justify-content: center;
@@ -234,7 +276,7 @@
 	font-size: 18px;
 	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
 }
+.menu-edit-btn:hover {
+	background-color: #ffc2a1;
 
-.menu-edit-btn:hover{
-	background-color: #ffb199;
 }

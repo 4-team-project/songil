@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,17 +34,19 @@ public class SettlementController {
 
 	@GetMapping()
 	public String getSettlement(HttpSession session, Model model, Integer storeId) {
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		model.addAttribute("userDTO", loginUser);
 		return "seller.settlement";
 	}
 	
 	@GetMapping("/list")
 	@ResponseBody
-	public Map<String, Object> getSettlementsByStore(HttpSession session,
+	public Map<String, Object> getSettlementsByStore(
+	        @ModelAttribute("currentStore") StoreDTO currentStore,
 	        @RequestParam(defaultValue = "1") int page,
 	        @RequestParam(defaultValue = "5") int size) {
 
-	    StoreDTO store = (StoreDTO) session.getAttribute("store");
-	    int storeId = store.getStoreId();
+	    int storeId = currentStore.getStoreId(); 
 
 	    int startRow = (page - 1) * size + 1;
 	    int endRow = page * size;
@@ -63,5 +66,6 @@ public class SettlementController {
 	    result.put("totalPages", totalPages);
 	    return result;
 	}
+
 
 }

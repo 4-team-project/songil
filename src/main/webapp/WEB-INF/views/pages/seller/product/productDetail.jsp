@@ -1,12 +1,15 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/sellerAlert.jsp"%>
+
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/productDetail.css">
 <input type="hidden" id="storeId" value="${storeId}" />
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
+	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
 	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
 <div class="content-box">
@@ -32,22 +35,24 @@
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
-			<label for="images" class="menu-img-btn">사진 추가하기</label> <input
-				type="file" id="images" name="images" multiple accept="image/*"
-				onchange="handleFiles(this.files)" />
+			<label for="images" class="menu-img-btn" style="cursor: pointer">사진
+				추가하기</label> <input type="file" id="images" name="images" multiple
+				accept="image/*" onchange="handleFiles(this.files)" />
 		</div>
 		<div id="preview-list" class="preview-list"></div>
 	</div>
 	<div id="file-count-text" class="file-count-text"
-			style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
-			/ 3</div>
+		style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
+		/ 3</div>
 </div>
 <div class="complete-back-btn-box">
-	<div class="complete-back-btn" onclick="history.back()">이전</div>
+	<div class="complete-back-btn" style="cursor: pointer"
+		onclick="history.back()">이전</div>
 	<button onclick="if (validateProductForm()) submitProduct()"
 		class="complete-back-btn">수정 완료</button>
 
 </div>
+
 
 
 <script>
@@ -79,19 +84,30 @@ function validateProductForm() {
 	  const totalImages = selectedFiles.length + keptExistingImageUrls.length;
 
 	  if (!productName) {
-	    alert("메뉴 이름을 입력해주세요.");
-	    return false;
-	  }
-	  if (!price || isNaN(price) || parseInt(price) <= 0) {
-	    alert("올바른 가격을 입력해주세요.");
-	    return false;
-	  }
-	  if (totalImages < 1) {
-	    alert("메뉴 사진은 최소 1장 이상 등록해주세요.");
-	    return false;
-	  }
+		    showPopupAlert({
+		      type: 'warning',
+		      message: '메뉴 이름을 입력해주세요.'
+		    });
+		    return false;
+		  }
 
-	  return true;
+		  if (!price || isNaN(price) || parseInt(price) <= 0) {
+		    showPopupAlert({
+		      type: 'error',
+		      message: '올바른 가격을 입력해주세요.'
+		    });
+		    return false;
+		  }
+
+		  if (totalImages < 1) {
+		    showPopupAlert({
+		      type: 'info',
+		      message: '메뉴 사진은 최소 1장 이상 등록해주세요.'
+		    });
+		    return false;
+		  }
+
+		  return true;
 	}
 
 
@@ -114,10 +130,13 @@ function handleFiles(fileList) {
   const remainingSlots = maxFiles - currentTotalImages;
   
   if (remainingSlots <= 0) {
-    alert("사진은 최대 " + maxFiles + "개까지 선택할 수 있습니다.");
-    document.getElementById('images').value = '';
-    return;
-  }
+	  showPopupAlert({
+	    type: 'info',
+	    message: "사진은 최대 " + maxFiles + "개까지 선택할 수 있습니다."
+	  });
+	  document.getElementById('images').value = ''; 
+	  return;
+	}
   
   const filesToAdd = Array.from(fileList).slice(0, remainingSlots); 
 
@@ -183,9 +202,6 @@ function submitProduct() {
       imageUrl: url.startsWith(cpath) ? url.replace(cpath, '') : url // cpath 제거
     }))
   };
-  
-  console.log("submitProduct - 전송할 productData (JSON):", productData);
-  console.log("submitProduct - 전송할 새 파일 (selectedFiles):", selectedFiles);
 
   const formData = new FormData();
   formData.append("product", JSON.stringify(productData));
@@ -208,15 +224,19 @@ function submitProduct() {
         }
         return res.text();
     })
-    .then(msg => {
-      alert((productId ? "수정" : "등록") + " 결과: " + msg);
-
+.then(msg => {
+  showPopupAlert({
+    type: 'info',
+    message: (productId ? "수정" : "등록") + " 결과: " + msg,
+    onConfirm: () => {
       if (redirectUrl) {
         location.href = redirectUrl;
       } else {
         location.href = `${cpath}/seller/store?storeId=${storeId}`;
       }
-    })
+    }
+  });
+})
     .catch(err => {
       console.error("오류:", err);
       alert("오류 발생: " + err.message);
@@ -258,13 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
     		};
             
             keptExistingImageUrls.push(img.imageUrl);
-            console.log("DOMContentLoaded - keptExistingImageUrls 추가:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
 
             delBtn.onclick = () => {
               wrapper.remove();
               keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
               updateFileCountText();
-              console.log("delBtn click (existing) - keptExistingImageUrls 제거:", img.imageUrl, "현재 keptExistingImageUrls:", keptExistingImageUrls);
             };
 
             wrapper.appendChild(image);
@@ -274,16 +292,11 @@ document.addEventListener('DOMContentLoaded', () => {
           
           updateFileCountText();
         } else {
-            console.log("DOMContentLoaded - 불러온 상품에 이미지가 없습니다.");
             updateFileCountText();
         }
       })
-      .catch(err => {
-          console.error("상품 정보를 불러오는 중 오류 발생:", err);
-          alert("상품 정보를 불러오는데 실패했습니다.");
-      });
+      
   } else {
-      console.log("DOMContentLoaded - 신규 상품 등록 모드입니다.");
       updateFileCountText();
   }
   

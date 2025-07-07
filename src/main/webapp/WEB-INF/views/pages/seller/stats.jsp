@@ -19,28 +19,28 @@ h2 {
 		alt="상점 통계" class="icon" />
 	<c:out value="${userDTO.nickname}" default="딱쿠" />
 	사장님의 <span class="highlight"><c:out
-			value="${storeDTO.storeName}" default="상점" /> 상점 통계</span>
+			value="${currentStore.storeName}" default="상점" /> 상점 통계</span>
 </h1>
 <div class="stats-grid">
 	<!-- 1개: 월별 주문 및 매출 -->
-	<div class="summary-box full-width">
+	<div class="summary-box full-width" style="box-shadow: 6px 6px 0 #FFD600;">
 		<h2>월별 주문 및 매출</h2>
 		<canvas id="orderChart"></canvas>
 	</div>
 
 	<!-- 2개: 인기 상품 + 태그별 주문 수 -->
-	<div class="summary-box" style="background-color: #fff1ec">
+	<div class="summary-box" style="background-color: #fffdfb">
 		<h2>인기 상품 Top 5</h2>
 		<canvas id="popularProductChart"></canvas>
 	</div>
 
-	<div class="summary-box" style="background-color: #fff1ec">
+	<div class="summary-box" style="background-color: #fffdfb">
 		<h2>태그별 주문 수</h2>
 		<canvas id="tagStatsChart"></canvas>
 	</div>
 
 	<!-- 1개: 재구매 상품 → 전체 span 처리 -->
-	<div class="summary-box full-width">
+	<div class="summary-box full-width" style="box-shadow: 6px 6px 0 #FFD600;">
 		<h2 style="padding-bottom: 0px; margin-bottom: 0px">재구매 Top 5</h2>
 		<p style="font-size: 15px; color: gray; padding-left: 20px">(재구매
 			횟수 기준)</p>
