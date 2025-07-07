@@ -101,7 +101,7 @@
 
 <div class="btn-container">
 			<button type="button"
-				onclick="location.href='/seller/store/funding/stats?fundingId=${tempFunding.fundingId}'"
+				onclick="location.href='${cpath}/seller/store/funding/stats?fundingId=${tempFunding.fundingId}'"
 				class="btn">이전</button>
 			<button type="button" class="btn" onclick="submitFunding()">다음</button>
 		</div>
@@ -211,14 +211,14 @@ async function submitFunding() {
 
     // 펀딩 정보 JSON 전송
     
-    const res = await fetch(`${contextPath}/seller/store/edit/step1`, {
+    const res = await fetch(`${cpath}/seller/store/edit/step1`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(funding)
     });
 
     if (res.ok) {
-        location.href = `${contextPath}/seller/store/edit/step2`;
+        location.href = `${cpath}/seller/store/edit/step2`;
     } else {
         alert("펀딩 전송 실패");
     }

@@ -28,7 +28,7 @@
 			</c:when>
 		</c:choose>
 
-		<form action="/seller/store/edit/step2" method="post">
+		<form action="${cpath}/seller/store/edit/step2" method="post">
 			<input type="hidden" id="fundingId" name="fundingId"
 				value="${tempFunding.fundingId}"> <input type="hidden"
 				id="currentProcessingUserId" name="currentProcessingUserId"
@@ -168,7 +168,7 @@
 			</div>
 			<div class="btn-container">
 				<button type="button"
-					onclick="location.href='/seller/store/edit/step1'"
+					onclick="location.href='${cpath}/seller/store/edit/step1'"
 					class="btn">이전</button>
 				<c:choose>
 					<c:when test="${!isNotReadyStatus}">

@@ -130,12 +130,12 @@
         <%-- 펀딩 상태가 '진행중'이거나 '종료'일 경우 --%>
         <c:when test="${funding.status eq '진행중' || funding.status eq '성공' || funding.status eq '실패'}">
             <button type="button" class="button view-button"
-                onclick="location.href='/seller/store/funding/edit/${funding.fundingId}'">펀딩 정보 보기</button>
+                onclick="location.href='${cpath}/seller/store/funding/edit/${funding.fundingId}'">펀딩 정보 보기</button>
         </c:when>
         <%-- 그 외의 경우 (예: '준비중') --%>
         <c:otherwise>
             <button type="button" class="button edit-button"
-                onclick="location.href='/seller/store/funding/edit/${funding.fundingId}'">수정하러 가기</button>
+                onclick="location.href='${cpath}/seller/store/funding/edit/${funding.fundingId}'">수정하러 가기</button>
         </c:otherwise>
     </c:choose>
 	</div>
