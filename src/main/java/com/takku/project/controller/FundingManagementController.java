@@ -259,6 +259,7 @@ public class FundingManagementController {
 	public String editFundingForm(@PathVariable int fundingId, Model model) {
 		FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
 		model.addAttribute("fundingDTO", funding);
+		
 		return "seller_funding_edit";
 	}
 

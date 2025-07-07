@@ -4,7 +4,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100vh;
 	height: 60vh; /* 뷰포트 전체 높이 */
 }
 
