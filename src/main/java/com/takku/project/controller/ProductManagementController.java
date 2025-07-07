@@ -268,6 +268,7 @@ public class ProductManagementController {
 	@GetMapping(value = "/info", produces = "application/json")
 	@ResponseBody
 	public ProductDTO getProductInfo(@RequestParam int productId) {
+		System.out.println("productId" + productId);
 		return productService.selectByProductId(productId);
 	}
 

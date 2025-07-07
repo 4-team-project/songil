@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/sellerFundingStats.css" />
+	href="${cpath}/resources/css/sellerFundingStats.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <c:set var="rate"
 	value="${(funding.currentQty / funding.targetQty) * 100}" />

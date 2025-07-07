@@ -122,43 +122,57 @@ public class FundingController {
 	@ApiOperation(value = "펀딩 검색 (JSON 응답)", notes = "검색 조건에 따라 펀딩을 필터링하고 JSON 응답으로 반환합니다.")
 	@GetMapping("/search/json")
 	@ResponseBody
-	public Map<String, Object> searchFundingJson(@RequestParam(required = false) String keyword,
-			@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String sido,
-			@RequestParam(required = false) String sigungu, @RequestParam(required = false) String status, @RequestParam(defaultValue = "latest") String sort,
-			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+	public Map<String, Object> searchFundingJson(
+	    @RequestParam(required = false) String keyword,
+	    @RequestParam(required = false) Integer categoryId,
+	    @RequestParam(required = false) String sido,
+	    @RequestParam(required = false) String sigungu,
+	    @RequestParam(required = false) String status,
+	    @RequestParam(defaultValue = "latest") String sort,
+	    @RequestParam(defaultValue = "1") int page,
+	    @RequestParam(defaultValue = "10") int size
+	) {
+	    Map<String, Object> result = new HashMap<>();
+	    try {
+	        if (size <= 0) size = 10;
 
-		if (size <= 0)
-			size = 10;
+	        if (keyword != null) {
+	            keyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8);
+	        }
 
-		if (keyword != null) {
-			keyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8);
-		}
+	        List<String> keywordList = splitKeywords(keyword);
+	        List<String> statusList = (status != null && !status.isBlank())
+	                ? Collections.singletonList(status)
+	                : Arrays.asList("진행중");
 
-		List<String> keywordList = splitKeywords(keyword);
-		List<String> statusList = (status != null && !status.isBlank())
-		        ? Collections.singletonList(status)
-		        : Arrays.asList("진행중");
+	        List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(
+	                keywordList, categoryId, sido, sigungu, statusList, sort, page, size
+	        );
 
-		List<FundingDTO> fundingList = fundingService.getFundingsByConditionWithPaging(keywordList, categoryId, sido,
-				sigungu, statusList, sort, page, size);
+	        for (FundingDTO funding : fundingList) {
+	            long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
+	            funding.setDaysLeft((int) Math.max(days, 0));
+	        }
 
-		for (FundingDTO funding : fundingList) {
-			long days = ChronoUnit.DAYS.between(LocalDate.now(), funding.getEndDate().toLocalDate());
-			funding.setDaysLeft((int) Math.max(days, 0));
-		}
+	        int total = fundingService.getFundingCountByCondition(
+	                keywordList, categoryId, sido, sigungu, statusList
+	        );
+	        int totalPages = (int) Math.ceil((double) total / size);
 
-		int total = fundingService.getFundingCountByCondition(keywordList, categoryId, sido, sigungu, statusList);
+	        result.put("fundinglist", fundingList);
+	        result.put("currentPage", page);
+	        result.put("totalPages", totalPages);
+	        result.put("sort", sort);
 
-		int totalPages = (int) Math.ceil((double) total / size);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.clear();
+	        result.put("error", "서버 오류: " + e.getMessage());
+	    }
 
-		Map<String, Object> result = new HashMap<>();
-		result.put("fundinglist", fundingList);
-		result.put("currentPage", page);
-		result.put("totalPages", totalPages);
-		result.put("sort", sort);
-
-		return result;
+	    return result;
 	}
+
 
 	@ApiOperation(value = "펀딩 전체 목록 조회", notes = "기본 조건으로 펀딩 목록을 조회합니다.")
 	@GetMapping

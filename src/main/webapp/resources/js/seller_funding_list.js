@@ -3,6 +3,8 @@ const fundingListContainer = document.getElementById('fundingListContainer');
 const fundingTabs = document.querySelector('.funding-tabs');
 const fundingCountSummary = document.getElementById('fundingCountSummary'); // fundingCountSummary 요소도 전역으로 선언
 
+const cpath = '${cpath}';
+
 $(document).ready(function() {
     console.log("jQuery document ready event fired! Starting initial data load.");
 
@@ -18,7 +20,7 @@ $(document).ready(function() {
     }
 
     $.ajax({
-        url: `/seller/store/stores/byUser?userId=${userId}`,
+        url: `${cpath}/seller/store/stores/byUser?userId=${userId}`,
         method: 'GET',
         dataType: 'json',
         success: function(stores) {
@@ -95,7 +97,7 @@ $(document).ready(function() {
     // --- 펀딩 로드 및 표시 함수 ---
     function loadAndDisplayFundings(storeId, initialStatus = 'all') {
         $.ajax({
-            url: `/seller/store/fundings/byStore?storeId=${storeId}`,
+            url: `{cpath}/seller/store/fundings/byStore?storeId=${storeId}`,
             method: 'GET',
             dataType: 'json',
             success: function(fundings) {

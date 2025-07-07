@@ -13,7 +13,7 @@
 }
 
 input, textarea {
-  cursor: text !important;
+ cursor: url('${cpath}/resources/images/cursor_green.svg') 2 2, auto !important;
 }
 
 button, a, .btn, [style*="cursor: pointer"] {
