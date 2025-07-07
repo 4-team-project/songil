@@ -38,6 +38,15 @@
 	</div>
 </div>
 
+<!-- 모달 영역 -->
+<div id="resultModal">
+	<p id="modalMsg"></p>
+	<button id="closeModalBtn">확인</button>
+</div>
+
+<!-- 모달 배경 -->
+<div id="modalBackdrop"></div>
+
 <script>
   const storeList = [
     <c:forEach var="store" items="${storeList}" varStatus="status">
@@ -107,7 +116,7 @@ function selectStore(element, event) {
 
 function changeSelectedStore() {
   if (!selectedStoreId) {
-    alert("변경할 상점을 선택해주세요.");
+	  showModalMessage("변경할 상점을 선택해주세요.");
     return;
   }
 
@@ -118,13 +127,30 @@ function changeSelectedStore() {
   })
     .then(res => res.text())
     .then(msg => {
-      alert(msg);
-      location.reload();
+    	showModalMessage("상점이 변경되었습니다.", () => location.reload());
     })
     .catch(err => {
       console.error("상점 변경 실패:", err);
-      alert("상점 변경 실패: " + err);
+      showModalMessage("상점 변경 실패: " + err);
     });
 }
+
+function showModalMessage(message, callback) {
+	  const modal = document.getElementById('resultModal');
+	  const backdrop = document.getElementById('modalBackdrop');
+	  const modalMsg = document.getElementById('modalMsg');
+	  const closeBtn = document.getElementById('closeModalBtn');
+
+	  modalMsg.textContent = message;
+	  modal.style.display = 'flex';
+	  backdrop.style.display = 'block';
+
+	  // 확인 버튼 클릭 시 모달 닫고 콜백 실행 (있다면)
+	  closeBtn.onclick = function () {
+	    modal.style.display = 'none';
+	    backdrop.style.display = 'none';
+	    if (typeof callback === 'function') callback();
+	  };
+	}
 
 </script>

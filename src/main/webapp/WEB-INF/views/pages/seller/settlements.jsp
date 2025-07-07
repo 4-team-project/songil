@@ -8,7 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div
-	style="display: flex; align-items: center; gap: 20px; padding-left: 20px; margin-top: 20px;">
+	style="display: flex; align-items: center; gap: 20px; margin-top: 20px; min-width: 500px;">
 	<img src="${cpath}/resources/images/settlement.svg" alt="settlement" />
 	<h2 style="margin: 0;">사장님의 정산 현황을 확인하세요.</h2>
 </div>
@@ -39,6 +39,13 @@ function loadSettlementPage(page) {
 			const totalPages = data.totalPages;
 			let html = '';
 
+			if (!list || list.length === 0) {
+				html += `
+					<div class="no-settlement-message">
+						정산 내역이 존재하지 않습니다.
+					</div>
+				`;
+			}else{
 			list.forEach(settlement => {
 				html += `
 					<div class="settlement-card">
@@ -75,7 +82,7 @@ function loadSettlementPage(page) {
 						</div>
 					</div>
 				`;
-			});
+			});			
 
 			// 페이징 처리
 			html += `<div class="pagination">`;
@@ -87,7 +94,7 @@ function loadSettlementPage(page) {
 				}
 			}
 			html += `</div>`;
-
+		}
 			$("#settlementContainer").html(html);
 		},
 		error: function() {

@@ -3,7 +3,7 @@
 .main-title-box {
 	display: flex;
 	justify-content: flex-start;
-	align-items: flex-end;
+	align-items: center;
 	gap: 9px;
 	margin: 24px 0px;
 }
@@ -42,6 +42,10 @@
 	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
 }
 
+.store-btn:hover{
+	background-color: #ffb199;
+}
+
 .store-btn-icon img {
 	width: 24px;
 	height: 24px;
@@ -56,7 +60,7 @@
 
 .store-info-box {
 	display: block;
-	background-color: #FFF4ED;
+	background-color: #fffdfb;
 	padding: 32px;
 	border: 1px solid #FF9670;
 	border-radius: 12px;
@@ -89,7 +93,7 @@
 	width: 214px;
 	height: 60px;
 	border-radius: 8px;
-	background-color: #DDDDDD;
+	background-color: #fff6f0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -98,14 +102,22 @@
 	font-weight: 500;
 	font-size: 18px;
 	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+	border: 1px solid #ff9670;
+}
+
+.store-edit-btn:hover{
+	background-color: #ff9670;
+	color: white;
 }
 
 .store-menu-box {
   margin-top: 20px;
-  background-color: #FFF4ED;
+  background-color: #fffdfb;
   padding: 54px 32px 32px 32px;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
   overflow: hidden;  
+  border: 1px solid #ff9670;
+  border-radius: 12px;
 }
 
 .store-menu-title {
@@ -202,14 +214,13 @@
 
 .menu-btn-box {
 	display: flex;
-	justify-content: flex-start;
+	justify-content: flex-end;
 	gap: 9px;
 	margin-left: 3px;
 	margin-bottom: 12px;
 }
 
 .menu-edit-btn {
-	margin-top: 50px;
 	width: 180px;
 	height: 60px;
 	border-radius: 8px;
@@ -222,4 +233,8 @@
 	font-weight: 500;
 	font-size: 18px;
 	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+}
+
+.menu-edit-btn:hover{
+	background-color: #ffb199;
 }

@@ -111,3 +111,10 @@ h2 {
 	font-weight: bold;
 	border: 1px solid #ff9670;
 }
+
+.no-settlement-message {
+	text-align: center;
+	font-size: 18px;
+	color: #888;
+	padding: 40px 0;
+}
