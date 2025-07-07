@@ -85,4 +85,5 @@
 	</div>
 </div>
 
-<script src="${cpath}/resources/js/seller_funding_list.js" /></script>
+<script src="${cpath}/resources/js/seller_funding_list.js"></script>
+

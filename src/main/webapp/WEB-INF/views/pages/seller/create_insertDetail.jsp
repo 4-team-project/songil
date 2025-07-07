@@ -177,6 +177,9 @@ async function submitFunding() {
 	const funding = {
 		startDate: document.getElementById("startDate").value,
 		endDate: document.getElementById("endDate").value,
+
+		/* fundingId: parseInt(document.getElementById("fundingId").value), */
+
 		images: []
 	};
 
