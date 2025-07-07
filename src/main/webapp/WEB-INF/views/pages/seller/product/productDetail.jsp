@@ -7,6 +7,7 @@
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
+	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
 	<div class="main-title">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
 </div>
 <div class="content-box">
@@ -32,18 +33,19 @@
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
-			<label for="images" class="menu-img-btn">사진 추가하기</label> <input
-				type="file" id="images" name="images" multiple accept="image/*"
-				onchange="handleFiles(this.files)" />
+			<label for="images" class="menu-img-btn" style="cursor: pointer">사진
+				추가하기</label> <input type="file" id="images" name="images" multiple
+				accept="image/*" onchange="handleFiles(this.files)" />
 		</div>
 		<div id="preview-list" class="preview-list"></div>
 	</div>
 	<div id="file-count-text" class="file-count-text"
-			style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
-			/ 3</div>
+		style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
+		/ 3</div>
 </div>
 <div class="complete-back-btn-box">
-	<div class="complete-back-btn" onclick="history.back()">이전</div>
+	<div class="complete-back-btn" style="cursor: pointer"
+		onclick="history.back()">이전</div>
 	<button onclick="if (validateProductForm()) submitProduct()"
 		class="complete-back-btn">수정 완료</button>
 

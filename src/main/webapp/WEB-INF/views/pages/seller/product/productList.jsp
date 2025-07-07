@@ -46,7 +46,7 @@ function loadProductListPage(page) {
     	            <div class="store-detail">가격: \${product.price.toLocaleString()}원</div>
     	            <div class="store-detail">설명: \${product.description || '설명 없음'}</div>
     	          </div>
-    	          <button class="btn" onclick="location.href='${cpath}/seller/product/edit/\${product.productId}'">수정</button>
+    	          <button class="btn" onclick="location.href='${cpath}/seller/product/edit/\${product.productId}'">수정하기</button>
     	        </div>
     	      </div>
     	      <div class="store-buttons">
