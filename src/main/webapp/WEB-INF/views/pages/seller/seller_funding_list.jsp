@@ -76,7 +76,4 @@
 </c:forEach>
 </div>
 </div>
-<script src="<c:url value="${cpath}/resources/js/seller_funding_list.js"/>"></script>
-<script>
-  const cpath = "${pageContext.request.contextPath}";
-</script>
+<script src="${cpath}/resources/js/seller_funding_list.js"></script>

@@ -39,14 +39,14 @@
 </div>
 
 <!-- 모달 영역 -->
-<div id="resultModal">
+<!-- <div id="resultModal">
 	<p id="modalMsg"></p>
 	<button id="closeModalBtn">확인</button>
-</div>
+</div> -->
 
 <!-- 모달 배경 -->
-<div id="modalBackdrop"></div>
-
+<!-- <div id="modalBackdrop"></div>
+ -->
 <script>
   const storeList = [
     <c:forEach var="store" items="${storeList}" varStatus="status">
