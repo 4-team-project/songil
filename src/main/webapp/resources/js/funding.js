@@ -162,7 +162,7 @@ function loadFundings(params) {
     const keyword = lastParams.keyword ? decodeURIComponent(lastParams.keyword) : '';
     updateRecommendTitle(sido, sigungu, keyword);
 
-    renderFundingList(data.fundinglist, false);
+    renderFundingList(data.fundinglist, currentPage > 1);
     renderPagination(data.totalPages, currentPage);
   })
   .catch(function (err) {
@@ -192,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (moreBtn) {
 
     moreBtn.addEventListener('click', function () {
-      currentPage = 1;
       isFullList = true;
       moreBtn.style.display = 'none';
       var selectedSortEl = document.querySelector('.funding-filter.selected');
