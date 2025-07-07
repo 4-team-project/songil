@@ -2,9 +2,9 @@
 
 .coupon-card-qr {
 	width: 300px;
-	background-color: #fff4ed;
+	background-color: #fffaf7;
 	border-radius: 16px;
-	padding: 20px;
+	padding: 15px;
 	margin: 20px auto;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	font-family: 'Pretendard', sans-serif;
@@ -15,7 +15,6 @@
 .coupon-card h2 {
 	color: #ff6e40;
 	font-size: 20px;
-	margin-bottom: 16px;
 }
 
 .coupon-card img.qr {
@@ -41,6 +40,7 @@
 	margin-top: 10px;
 	font-size: 20px;
 	color: #ff6e40;
+	font-weight: bold;
 }
 
 .coupon-info {
@@ -49,8 +49,9 @@
 	border-top: 1px dashed #aaa;
 	text-align: left;
 	font-size: 13px;
-	line-height: 1.5;
 	color: #333;
+	height: 150px;
+	overflow-y: auto;
 }
 
 .coupon-info strong {

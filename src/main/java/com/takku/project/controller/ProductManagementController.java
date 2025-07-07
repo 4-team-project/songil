@@ -147,7 +147,7 @@ public class ProductManagementController {
 			List<String> existingUrlsInDb = existingImagesInDb.stream().map(ImageDTO::getImageUrl)
 					.collect(Collectors.toList());
 
-			// 3. 클라이언트에서 '유지하겠다'고 보낸 이미지 목록 
+			// 3. 클라이언트에서 '유지하겠다'고 보낸 이미지 목록
 			List<String> keptImageUrlsFromClient = productDTO.getImages() != null
 					? productDTO.getImages().stream().map(ImageDTO::getImageUrl)
 							// .map(url -> url.replace(request.getContextPath(), "")) // ⭐️ 이 줄을 삭제해야 합니다!

@@ -47,7 +47,6 @@
 	action="${pageContext.request.contextPath}/seller/fundings/create-step5"
 	method="post">
 	<input type="hidden" id="writeTypeInput" name="type" value="">
-
 	<h3>
 		마지막으로,<br> <strong style="color: #ff9670">${product.productName}</strong>에 대한 펀딩 제목과 내용을 입력해야 합니다.<br>어떤 방식으로 작성할까요?
 	</h3>

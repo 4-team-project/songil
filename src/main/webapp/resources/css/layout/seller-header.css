@@ -116,7 +116,7 @@
 }
 
 /* 모달 */
-#resultModal {
+#resultModal2 {
 	display: none;
 	position: fixed;
 	top: 40%;
@@ -134,14 +134,14 @@
 	align-items: center;
 }
 
-#resultModal p {
+#resultModal2 p {
 	margin: 0;
 	font-size: 18px;
 	color: #ff9670; /* 진한 주황색 글씨 */
 	font-weight: bold;
 }
 
-#closeModalBtn {
+#closeModalBtn2 {
 	margin-top: 20px;
 	padding: 8px 18px;
 	background-color: #ff9670; /* 주황색 버튼 */
@@ -154,12 +154,12 @@
 	transition: background-color 0.3s ease;
 }
 
-#closeModalBtn:hover {
+#closeModalBtn2:hover {
 	background-color: #fff6f0; /* 좀 더 밝은 주황색 호버 */
 }
 
 /* 모달 배경 */
-#modalBackdrop {
+#modalBackdrop2 {
 	position: fixed;
 	top: 0;
 	left: 0;
