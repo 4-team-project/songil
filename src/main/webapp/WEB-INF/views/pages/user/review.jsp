@@ -45,9 +45,10 @@
 		<div id="preview-container"
 			style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
 		<div class="modal-buttons">
-				<button type="button" class="modal-btn Ucheck">취소하기</button>
-				<button type="button" class="modal-btn Uedit">리뷰 등록</button>			
-			</div>
+			<button type="button" class="modal-btn Ucheck"
+				onclick="openConfirmModal()">취소하기</button>
+			<button type="submit" class="modal-btn Uedit">리뷰 등록</button>
+		</div>
 	</form>
 </div>
 <!-- 리뷰 작성 종료 모달 -->
@@ -86,17 +87,8 @@
 		</div>
 		<div class="modal-buttons">
 			<button class="modal-cancel" onclick="closeSuccessModal()">닫기</button>
-			<button class="modal-confirm" onclick="goToReviewPage(this.dataset.fundingId)"
+			<button class="modal-confirm" id="reviewSuccessBtn"
 				data-funding-id="${fundingDTO.fundingId}">리뷰 보러 가기</button>
 		</div>
 	</div>
 </div>
-<script>
-const reviewBtn = document.getElementById('goToReviewBtn');
-if (reviewBtn) {
-    const fundingId = reviewBtn.dataset.fundingId;
-    reviewBtn.addEventListener('click', () => {
-        goToReviewPage(fundingId);
-    });
-}
-</script>

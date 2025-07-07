@@ -26,6 +26,11 @@
 	border: 2px solid #eee;
 }
 
+.qr {
+	width: 100%;
+	height: auto;
+}
+
 .coupon-date {
 	margin-top: 10px;
 	font-size: 14px;

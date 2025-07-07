@@ -104,8 +104,8 @@ public class StoreController {
 
 			List<ProductDTO> productDTOList = productService.selectProductByStoreId(storeId);
 			for (ProductDTO product : productDTOList) {
-			    List<ImageDTO> imageList = imageService.selectImagesByProductId(product.getProductId());
-			    product.setImages(imageList); 
+				List<ImageDTO> imageList = imageService.selectImagesByProductId(product.getProductId());
+				product.setImages(imageList);
 			}
 			model.addAttribute("productDTO", productDTOList);
 		} else {
@@ -162,70 +162,67 @@ public class StoreController {
 	// 상점 수정 처리
 	@PostMapping("/update/{storeId}")
 	@ResponseBody
-	public ResponseEntity<String> updateStore(HttpSession session, 
-	                                          @PathVariable("storeId") Integer storeId, 
-	                                          @RequestBody StoreDTO storeDTO) {
-	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-	    storeDTO.setStoreId(storeId);
-	    storeDTO.setUserId(loginUser.getUserId()); 
+	public ResponseEntity<String> updateStore(HttpSession session, @PathVariable("storeId") Integer storeId,
+			@RequestBody StoreDTO storeDTO) {
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		storeDTO.setStoreId(storeId);
+		storeDTO.setUserId(loginUser.getUserId());
 
-	    int result = storeService.updateStore(storeDTO);
+		int result = storeService.updateStore(storeDTO);
 
-	    if (result > 0) {
-	      
-	        List<StoreDTO> updatedList = storeService.selectStoreListByUserId(loginUser.getUserId());
-	        session.setAttribute("storeList", updatedList);
+		if (result > 0) {
 
-	        StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
-	        if (currentStore != null && currentStore.getStoreId().equals(storeId)) {
-	            StoreDTO updatedStore = storeService.selectStoreById(storeId);
-	            session.setAttribute("currentStore", updatedStore);
-	        }
+			List<StoreDTO> updatedList = storeService.selectStoreListByUserId(loginUser.getUserId());
+			session.setAttribute("storeList", updatedList);
 
-	        return ResponseEntity.ok(String.valueOf(storeId));
-	    } else {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상점 수정 실패");
-	    }
+			StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
+			if (currentStore != null && currentStore.getStoreId().equals(storeId)) {
+				StoreDTO updatedStore = storeService.selectStoreById(storeId);
+				session.setAttribute("currentStore", updatedStore);
+			}
+
+			return ResponseEntity.ok(String.valueOf(storeId));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상점 수정 실패");
+		}
 	}
-
-
 
 	// 상점 삭제 처리
 	@PostMapping("/delete/{storeId}")
 	@ResponseBody
 	public String deleteStore(@PathVariable("storeId") Integer storeId, HttpSession session) {
-	    if (storeId == null) return "삭제 실패 (ID 없음)";
+		if (storeId == null)
+			return "삭제 실패 (ID 없음)";
 
-	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-	    if (loginUser == null) return "삭제 실패 (로그인 필요)";
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+		if (loginUser == null)
+			return "삭제 실패 (로그인 필요)";
 
-	    try {
-	        int result = storeService.deleteStore(storeId);
+		try {
+			int result = storeService.deleteStore(storeId);
 
-	        if (result > 0) {
-	            List<StoreDTO> updatedList = storeService.selectStoreListByUserId(loginUser.getUserId());
-	            session.setAttribute("storeList", updatedList); 
+			if (result > 0) {
+				List<StoreDTO> updatedList = storeService.selectStoreListByUserId(loginUser.getUserId());
+				session.setAttribute("storeList", updatedList);
 
-	            StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
-	            if (currentStore != null && currentStore.getStoreId().equals(storeId)) {
-	                if (!updatedList.isEmpty()) {
-	                    session.setAttribute("currentStore", updatedList.get(0)); 
-	                } else {
-	                    session.removeAttribute("currentStore"); 
-	                }
-	            }
+				StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
+				if (currentStore != null && currentStore.getStoreId().equals(storeId)) {
+					if (!updatedList.isEmpty()) {
+						session.setAttribute("currentStore", updatedList.get(0));
+					} else {
+						session.removeAttribute("currentStore");
+					}
+				}
 
-	            return "삭제 성공";
-	        } else {
-	            return "삭제 실패 (DB 처리 실패)";
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return "삭제 실패 (서버 오류)";
-	    }
+				return "삭제 성공";
+			} else {
+				return "삭제 실패 (DB 처리 실패)";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "삭제 실패 (서버 오류)";
+		}
 	}
-
-
 
 	// 상점 목록 보기
 	@GetMapping("/storeList")
@@ -289,14 +286,14 @@ public class StoreController {
 	// 유저 id (로그인 세션으로 받을 듯?)
 	@ModelAttribute("currentProcessingUserId")
 	public Integer createCurrentProcessingUserId(HttpSession session) {
-		// 새 펀딩 생성 시작 시, 로그인된 사용자의 userId를 가져와 초기 설정합니다.
-		// 수정 시작 시에는 startFundingEdit에서 해당 펀딩의 userId로 덮어씌울 것입니다.
-		return (Integer) session.getAttribute("loggedInUserId"); // 로그인 세션에서 ID 가져오기
+		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+
+		return loginUser.getUserId();
 	}
 
 	// 상점 펀딩 현황 (초기 페이지 로드 시)
 	@GetMapping("/list")
-	public String findFundingByStoreId(@RequestParam(value = "userId") Integer userId, Model model) {
+	public String findFundingByStoreId(@ModelAttribute("currentProcessingUserId") Integer userId, Model model) {
 		List<StoreDTO> userStore = storeService.selectStoreListByUserId(userId);
 
 		StoreDTO currentStore = null;
@@ -551,4 +548,5 @@ public class StoreController {
 		sessionStatus.setComplete(); // 세션에 저장된 "tempFunding" 객체를 비웁니다.
 		return "redirect:/seller/store/list?userId=" + userId; // 최종 펀딩 목록으로 리다이렉트
 	}
+
 }
