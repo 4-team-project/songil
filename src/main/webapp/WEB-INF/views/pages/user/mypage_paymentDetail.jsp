@@ -20,19 +20,19 @@
 			<hr>
 			<div class="modal-info">
 				<p>
-					펀딩명: <span id="modal-fundingName"></span>
+					<strong>펀딩명:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="modal-fundingName"></span>
 				</p>
 				<p>
-					수량: <span id="modal-qty"></span>
+					<strong>수량:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="modal-qty"></span>
 				</p>
 				<p>
-					결제날짜: <span id="modal-purchasedAt"></span>
+					<strong>결제날짜:</strong> <span id="modal-purchasedAt"></span>
 				</p>
 				<p>
-					결제수단: <span id="modal-paymentMethod"></span>
+					<strong>결제수단:</strong> <span id="modal-paymentMethod"></span>
 				</p>
 				<p>
-					결제상태: <span id="modal-status"></span>
+					<strong>결제상태:</strong> <span id="modal-status"></span>
 				</p>
 				<p>
 					<span id="modal-success"></span>

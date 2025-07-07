@@ -32,10 +32,12 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.takku.project.domain.FundingDTO;
+import com.takku.project.domain.ImageDTO;
 import com.takku.project.domain.OrderDTO;
 import com.takku.project.domain.StoreDTO;
 import com.takku.project.domain.UserDTO;
 import com.takku.project.service.FundingService;
+import com.takku.project.service.ImageService;
 import com.takku.project.service.OrderService;
 import com.takku.project.service.StoreService;
 import com.takku.project.service.UserService;
@@ -56,8 +58,12 @@ public class OrderController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private ImageService imageService;
+	
 	@Value("${iamport.api.key}")
     private String iamportApiKey;
+	
 
 	
 	// 주문 폼
@@ -196,6 +202,11 @@ public class OrderController {
 
 	    List<OrderDTO> list = orderService.searchOrders(userId, keyword);
 
+		  for (OrderDTO order : list) { 
+			  List<ImageDTO> images = imageService.selectImagesByFundingId(order.getFundingId()); 	
+			  order.setImages(images); 
+		}
+    
 	    return ResponseEntity.ok(list);
 
 }

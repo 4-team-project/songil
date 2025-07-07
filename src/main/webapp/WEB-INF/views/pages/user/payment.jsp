@@ -37,7 +37,7 @@
 					orderId : orderId
 				},
 				success : function(response) {
-					if (parseInt(response) > 0) {
+					if (response.success) {
 						$('#confirmCancelModal').fadeOut();
 						$('#paymentModal').fadeOut();
 						location.reload();

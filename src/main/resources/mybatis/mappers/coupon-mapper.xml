@@ -10,9 +10,11 @@
 		INSERT INTO takku_coupon
 		(
 		funding_id, user_id, store_id, coupon_code,
-		use_status, reviewed, created_at, expired_at
+		use_status, reviewed,
+		created_at, expired_at
 		) VALUES (
-		#{fundingId}, #{userId}, #{storeId}, #{couponCode},
+		#{fundingId}, #{userId}, #{storeId},
+		#{couponCode},
 		#{useStatus}, #{reviewed}, #{createdAt}, #{expiredAt}
 		)
 	</insert>
@@ -23,7 +25,8 @@
 		SELECT coupon_id, funding_id, user_id, store_id,
 		coupon_code,
 		use_status, reviewed, created_at, expired_at, used_at
-		FROM takku_coupon
+		FROM
+		takku_coupon
 		WHERE
 		user_id = #{userId}
 	</select>
@@ -34,7 +37,8 @@
 		takku_coupon
 		SET use_status = #{useStatus},
 		used_at = #{usedAt}
-		WHERE coupon_code = #{couponCode}
+		WHERE
+		coupon_code = #{couponCode}
 	</update>
 
 	<!-- 4. 리뷰 작성 후 reviewed 변경 -->
@@ -51,7 +55,8 @@
 		SELECT coupon_id, funding_id, user_id, store_id,
 		coupon_code,
 		use_status, reviewed, created_at, expired_at, used_at
-		FROM takku_coupon
+		FROM
+		takku_coupon
 		WHERE
 		coupon_code = #{couponCode}
 	</select>
@@ -62,7 +67,8 @@
 		SELECT coupon_id, funding_id, user_id, store_id,
 		coupon_code,
 		use_status, reviewed, created_at, expired_at, used_at
-		FROM takku_coupon
+		FROM
+		takku_coupon
 		WHERE
 		coupon_id = #{couponId}
 	</select>
@@ -70,10 +76,14 @@
 	<!-- 펀딩 성공 시 참여자별 주문 수량 조회 -->
 	<select id="selectParticipantsWithQtyByFundingId"
 		parameterType="int" resultType="map">
-		SELECT user_id AS userId, SUM(qty) AS totalQty
+		SELECT
+		user_id AS "userId",
+		SUM(qty) AS
+		"totalQty"
 		FROM takku_order
 		WHERE funding_id = #{fundingId}
-		AND status = '결제완료'
+		AND status =
+		'결제완료'
 		GROUP BY user_id
 	</select>
 
