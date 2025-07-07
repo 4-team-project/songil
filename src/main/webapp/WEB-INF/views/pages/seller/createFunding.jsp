@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/init.jsp"%>
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_main.css">
