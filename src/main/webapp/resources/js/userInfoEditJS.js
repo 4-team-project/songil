@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	    const passwordConfirmInput = document.getElementById('passwordConfirm');
 	    const conditionDiv = document.querySelector('.condition div');
 
+	    // 조건 문구 초기화
 	    passwordInput.value = '';
 	    passwordConfirmInput.value = '';
 	    
-	    // 조건 문구 초기화
-	    conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요";
+	    conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요.";
 	    conditionDiv.style.color = "black";
 	  	});
 	  	
@@ -24,22 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	  // 비밀번호 유효성 검사 이벤트 추가
 	  const passwordInput = document.getElementById('password');
 	  const conditionDiv = document.querySelector('.condition div');
-	  
-	  if (!passwordInput.value) {
-		    conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요.";
-		    conditionDiv.style.color = "black";
-		  }
 	
 	  passwordInput.addEventListener('input', () => {
 	    const pwd = passwordInput.value;
-	
-	    if (!pwd) {
-	      conditionDiv.textContent = "영어와 숫자조합으로 6자 이상 입력해주세요.";
-	      conditionDiv.style.color = "black";
-	      return;
-	    }
-	
-	    fetch('/api/v1/validations/password-format', {
+
+	    fetch(`${cpath}/api/v1/validations/password-format`, {
 	      method: 'POST',
 	      headers: { 'Content-Type': 'application/json' },
 	      body: JSON.stringify({ password: pwd })
@@ -49,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	      if (data.valid) {
 	        conditionDiv.textContent = "사용 가능한 비밀번호 형식입니다.";
 	        conditionDiv.style.color = "green";
-	        
 	      } else {
 	        conditionDiv.textContent = "영어와 숫자 조합으로 6자 이상이어야 합니다.";
 	        conditionDiv.style.color = "red";

@@ -71,7 +71,7 @@
 </div>
 
 <div class="complete-back-btn-box">
-	<div class="complete-back-btn" onclick="history.back()">이전</div>
+	<div class="complete-back-btn" style="cursor: pointer" onclick="history.back()">이전</div>
 	<button onclick="submitStore()" class="complete-back-btn">수정
 		완료</button>
 </div>

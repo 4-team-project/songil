@@ -8,9 +8,6 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
 
-<!-- <input type="hidden" id="fundingId" -->
-<%-- 	value="${sessionScope.fundingDTO.fundingId}" /> --%>
-
 <div class="step-progress">
   <div class="step">
     <div class="circle">1</div>
@@ -178,7 +175,9 @@ async function submitFunding() {
 	const funding = {
 		startDate: document.getElementById("startDate").value,
 		endDate: document.getElementById("endDate").value,
+
 		/* fundingId: parseInt(document.getElementById("fundingId").value), */
+
 		images: []
 	};
 

@@ -27,6 +27,7 @@
 		JOIN takku_product p ON
 		f.product_id = p.product_id
 		WHERE o.user_id = #{userId}
+		ORDER BY o.purchased_at DESC
 	</select>
 
 	<!-- 주문 생성 -->

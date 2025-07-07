@@ -102,16 +102,17 @@
 .store-change-btn {
 	background-color: #FF9670;
 	color: white;
-	border: none;
+	border: 2px solid #FF6E39;
 	border-radius: 6px;
 	padding: 6px 24px;
 	cursor: pointer;
 	font-weight: bold;
 	transition: background-color 0.2s;
+	box-shadow: 1px 1px 0 #FF4400;
 }
 
 .store-change-btn:hover {
-	background-color: #ff7e4b;
+	background-color: #ffc2a1;
 }
 
 /* 모달 */

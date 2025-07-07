@@ -10,7 +10,7 @@
 <div
 	style="display: flex; align-items: center; gap: 20px; margin-top: 20px; min-width: 500px;">
 	<img src="${cpath}/resources/images/settlement.svg" alt="settlement" />
-	<h2 style="margin: 0;">사장님의 정산 현황을 확인하세요.</h2>
+	<h2 style="margin: 0;">${userDTO.nickname} 사장님의 정산 현황을 확인하세요.</h2>
 </div>
 
 <div class="settlement-box" id="settlementContainer">

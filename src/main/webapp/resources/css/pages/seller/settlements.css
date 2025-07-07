@@ -12,11 +12,11 @@ h2 {
 }
 
 .settlement-card {
-	border: 1px solid #ddd;
+	border: 3px solid #2e2e3a;
 	border-radius: 12px;
 	padding: 20px;
-	background-color: #fffdfb;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	background-color: #fffbe6;
+	box-shadow: 6px 6px 0 #FF9670;
 }
 
 .settlement-inner {

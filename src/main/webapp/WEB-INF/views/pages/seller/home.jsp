@@ -42,38 +42,38 @@ button, button:hover, button:active, button:focus {
 			<c:out value="${currentStore.storeName}" default="상점" />
 		</h1>
 		<div class="summary">
-			<div class="summary-box">
+			<div class="summary-box" style="background-color:#FFFFFF; box-shadow: 3px 3px 0 #FF9670;">
 				<p>오늘 참여</p>
 				<strong><c:out value="${todayOrderCount}" />건</strong>
 			</div>
-			<div class="summary-box">
+			<div class="summary-box" style="background-color:#FFFFFF; box-shadow: 3px 3px 0 #FF9670;">
 				<p>오늘 매출</p>
 				<strong>₩<c:out value="${todaySales}" /></strong>
 			</div>
-			<div class="summary-box">
+			<div class="summary-box" style="background-color:#FFFFFF; box-shadow: 3px 3px 0 #FF9670;">
 				<p>진행 중인 펀딩</p>
 				<strong><c:out value="${ongoingFundingCount}" />개</strong>
 			</div>
-			<div class="summary-box">
+			<div class="summary-box" style="background-color:#FFFFFF; box-shadow: 3px 3px 0 #FF9670;">
 				<p>진행 예정인 펀딩</p>
 				<strong><c:out value="${upcomingFundingCount}" />개</strong>
 			</div>
 		</div>
 
 		<div class="buttons">
-			<button
+			<button style="cursor: pointer"
 				onclick="location.href='${cpath}/seller/fundings/create-step1'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/fluent_add-16-regular.svg"
 					alt="새 펀딩" class="icon" /> 새 펀딩 만들기
 			</button>
-			<button
+			<button style="cursor: pointer"
 				onclick="location.href='${cpath}/seller/stats?storeId=${storeDTO.storeId}'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/bar-chart.svg"
 					alt="통계" class="icon" /> 통계 보기
 			</button>
-			<button onclick="location.href='${cpath}/seller/settlements'">
+			<button style="cursor: pointer" onclick="location.href='${cpath}/seller/settlements'">
 				<img
 					src="${pageContext.request.contextPath}/resources/images/icons/Group.svg"
 					alt="정산" class="icon" /> 정산 현황보기

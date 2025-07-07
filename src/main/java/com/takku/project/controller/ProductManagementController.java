@@ -87,7 +87,7 @@ public class ProductManagementController {
 	}
 
 	// 상품 등록 & 이미지 저장
-	@PostMapping(value = "/insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/insert", produces = "text/plain; charset=UTF-8", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> insertProductWithImages(@RequestParam("product") String productJson,
 			@RequestPart(value = "images", required = false) MultipartFile[] files) {
@@ -127,7 +127,7 @@ public class ProductManagementController {
 	}
 
 	// 상품 수정 처리
-	@PostMapping(value = "/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,  produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String updateProductWithImages(@PathVariable("productId") Integer productId,
 			@RequestParam("product") String productJson,
@@ -183,7 +183,7 @@ public class ProductManagementController {
 	}
 
 	// 상품 삭제
-	@PostMapping("/delete/{productId}")
+	@PostMapping(value = "/delete/{productId}", produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String deleteProduct(@PathVariable("productId") Integer productId) {
 		if (productId == null)

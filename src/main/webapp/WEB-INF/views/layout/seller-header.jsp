@@ -11,7 +11,7 @@
 	</div>
 
 	<div class="store-dropdown-container">
-		<div class="dropdown" onclick="toggleDropdown(event)">
+		<div class="dropdown" style="cursor: pointer" onclick="toggleDropdown(event)">
 			<div class="current-store-container">
 				<div class="current-store-name">
 					<c:choose>
@@ -34,7 +34,7 @@
 			</ul>
 		</div>
 
-		<div class="store-change-btn" onclick="changeSelectedStore()">변경</div>
+		<div style="cursor: pointer" class="store-change-btn" onclick="changeSelectedStore()">변경</div>
 	</div>
 </div>
 
@@ -151,6 +151,6 @@ function showModalMessage(message, callback) {
 	    backdrop.style.display = 'none';
 	    if (typeof callback === 'function') callback();
 	  };
-	}
+	} 
 
 </script>

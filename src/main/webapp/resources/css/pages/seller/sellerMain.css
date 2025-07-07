@@ -16,13 +16,13 @@
 }
 
 .summary-box {
-	border: 2px solid #f97c5d;
+	border: 3px solid #2e2e3a;
 	border-radius: 8px;
 	padding: 10px;
 	color: #000;
 	text-align: left;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-	background-color: #fffdfb;
+	box-shadow: 6px 6px 0 #FF9670;
+	background-color: #fffdf2;
 }
 
 .summary-box p {
@@ -50,6 +50,7 @@ button {
 	padding: 10px;
 	border: none;
 	background-color: #FF9670;
+	border: 2px solid #2e2e3a;
 	color: #FFFFFF;
 	border-radius: 8px;
 	font-weight: bold;
@@ -61,7 +62,7 @@ button {
 }
 
 button:hover {
-	background-color: #fdd4c2;
+	background-color: #ffc2a1;
 }
 
 .icon {
@@ -72,14 +73,14 @@ button:hover {
 }
 
 .sales-box {
-	border: 2px solid #fdbfa8;
+	border: 3px solid #2e2e3a;
 	background-color: #fffdfb;
 	padding: 20px;
 	border-radius: 10px;
 	margin-top: 10px;
 	text-align: center;
 	width: 100%;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	box-shadow: 6px 6px 0 #FF9670;
 }
 
 .tips {
