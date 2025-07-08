@@ -9,28 +9,28 @@
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
-	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
+	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요.</div>
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴 이름</div>
-	<input type="text" id="productName" placeholder="메뉴 이름을 입력하세요"
+	<input type="text" id="productName" placeholder="메뉴 이름을 입력하세요."
 		class="content-input" />
 </div>
 <div class="content-box">
-	<div class="content-text">메뉴의 원래 가격(정가)</div>
-	<input type="text" id="productPrice" placeholder="메뉴 가격을 입력하세요"
+	<div class="content-text">메뉴의 원래 가격 (정가)</div>
+	<input type="text" id="productPrice" placeholder="메뉴 가격을 입력하세요."
 		class="content-input" inputmode="numeric" />
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴에 대한 설명</div>
 	<textarea id="productDescription" class="content-textarea"
-		placeholder="상품 설명은 비워도 괜찮아요
-		꼭 작성하지 않아도 등록할 수 있어요"></textarea>
+		placeholder="상품 설명은 비워도 괜찮아요.
+		꼭 작성하지 않아도 등록할 수 있어요."></textarea>
 </div>
 <div class="content-box">
 	<div class="content-text">
-		메뉴 사진을 넣어주세요!<br />[사진 추가하기] 버튼을 누르면 사진을 선택할 수 있어요<br />사진은 3개까지
-		가능합니다
+		메뉴 사진을 넣어주세요!<br />[사진 추가하기] 버튼을 누르면 사진을 선택할 수 있어요.<br />사진은 3개까지
+		가능합니다.
 	</div>
 	<div class="content-input" id="image-preview-container">
 		<div class="menu-img-upload-wrapper">
