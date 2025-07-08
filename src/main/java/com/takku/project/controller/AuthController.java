@@ -86,7 +86,7 @@ public class AuthController {
 			session.setAttribute("loginUser", user); // 전역에서 사용 가능
 
 			if (userType.equals("사용자")) {
-				return "redirect:/user/home"; // 사용자 홈 페이지
+				return "redirect:/takku"; // 사용자 홈 페이지
 			}
 
 			// 소상공인
@@ -101,7 +101,7 @@ public class AuthController {
 					session.setAttribute("currentStore", null); // 상점 없음
 				}
 
-				return "redirect:/seller/home"; // 소상공인 홈으로 이동
+				return "redirect:/seller/takku"; // 소상공인 홈으로 이동
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("resultMessage", "로그인 실패: 정보를 확인해주세요");

@@ -14,7 +14,6 @@
 	padding: 60px 20px 20px 20px;
 	flex-shrink: 0;
 	box-sizing: border-box;
-	cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;
 }
 
 .store-info {
@@ -65,9 +64,7 @@
 	padding: 18px 20px;
 	margin-bottom: 12px;
 	border-radius: 8px;
-	cursor:
-		url('${pageContext.request.contextPath}/resources/images/cursor.svg')
-		2 2, auto;
+	cursor: pointer;
 	font-size: 18px;
 	transition: background-color 0.2s, transform 0.2s;
 }
@@ -75,6 +72,7 @@
 .menu-item img {
 	width: 24px;
 	height: 24px;
+	cursor: pointer;
 }
 
 .menu-item:hover {
@@ -94,52 +92,52 @@
 
 		<nav class="menu">
 			<ul>
-				<li class="menu-item active" data-name="home"
+				<li class="menu-item active"  style="cursor: pointer" data-name="home"
 					data-url="${cpath}/seller/home" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/home_active.svg"
-					alt="home" /> <span>홈</span>
+					alt="home" /> <span style="cursor: pointer">홈</span>
 				</li>
-				<li class="menu-item" data-name="add"
+				<li class="menu-item" data-name="add" style="cursor: pointer"
 					data-url="${cpath}/seller/fundings/create-step1"
 					onclick="activateMenu(this)"><img
-					src="${cpath}/resources/images/sideBar/add.svg" alt="add" /> <span>펀딩
+					src="${cpath}/resources/images/sideBar/add.svg" alt="add" /> <span style="cursor: pointer">펀딩
 						만들기</span></li>
 				<!-- TODO:여기 유저 정보 세션에꺼 읽어서 넘겨주기 OR 컨트롤러 수정 -->
-				<li class="menu-item" data-name="funding"
+				<li class="menu-item" data-name="funding" style="cursor: pointer"
 					data-url="${cpath}/seller/store/list?userId=2"
 					onclick="activateMenu(this)"><img
 					src="${cpath}/resources/images/sideBar/funding.svg" alt="funding" />
-					<span>펀딩 현황</span></li>
+					<span style="cursor: pointer">펀딩 현황</span></li>
 				<!-- TODO:여기 storeId는 세션에꺼 읽어서 넘겨주기 OR 컨트롤러 수정 -->
-				<li class="menu-item" data-name="statistics"
+				<li class="menu-item" data-name="statistics" style="cursor: pointer"
 					data-url="${cpath}/seller/stats?storeId=2"
 					onclick="activateMenu(this)"><img
 					src="${cpath}/resources/images/sideBar/statistics.svg"
-					alt="statistics" /> <span>통계</span></li>
+					alt="statistics" /> <span style="cursor: pointer">통계</span></li>
 
-				<li class="menu-item" data-name="money"
+				<li class="menu-item" data-name="money" style="cursor: pointer"
 					data-url="${cpath}/seller/settlements" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/money.svg" alt="money" />
-					<span>정산</span>
+					<span style="cursor: pointer">정산</span>
 				</li>
-				<li class="menu-item" data-name="store"
+				<li class="menu-item" data-name="store" style="cursor: pointer"
 					data-url="${cpath}/seller/store" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/store.svg" alt="store" />
-					<span>상점 관리</span>
+					<span style="cursor: pointer">상점 관리</span>
 				</li>
-				<li class="menu-item" data-name="move" data-url="${cpath}/user/home"
-					onclick="activateMenu(this)"><img
-					src="${cpath}/resources/images/sideBar/move.svg" alt="move" /> <span>펀딩
+				<li class="menu-item" data-name="move" style="cursor: pointer" data-url="${cpath}/user/home"
+					onclick="activateMenu(this)">
+					<img src="${cpath}/resources/images/sideBar/move.svg" alt="move" /> <span style="cursor: pointer">펀딩
 						사이트로 이동</span></li>
-				<li class="menu-item" data-name="mypage"
+				<li class="menu-item" data-name="mypage" style="cursor: pointer"
 					data-url="${cpath}/seller/mypage" onclick="activateMenu(this)">
 					<img src="${cpath}/resources/images/sideBar/mypage.svg"
-					alt="mypage" /> <span>내 정보</span>
+					alt="mypage" /> <span style="cursor: pointer">내 정보</span>
 				</li>				
-				<li class="menu-item" data-name="logout"
+				<li class="menu-item" data-name="logout" style="cursor: pointer"
 					onclick="document.getElementById('logoutForm').submit();">
 					<img src="${cpath}/resources/images/sideBar/logout.svg"
-					alt="mypage" /> <span>로그아웃</span>
+					alt="mypage" /> <span style="cursor: pointer">로그아웃</span>
 				</li>
 			</ul>
 		</nav>

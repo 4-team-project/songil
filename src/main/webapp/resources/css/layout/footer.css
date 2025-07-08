@@ -17,7 +17,6 @@
 .footer-box {
   background-color: #F3EEEA;
   width: 100%;
-  max-width: 1280px;
   height: 294px;
   display: flex;
   flex-direction: column;
@@ -29,7 +28,7 @@
 
 .contents-box {
 	margin-top: 40px;
-	margin-left: 40px;
+	margin-left: 160px;
 	margin-right: 40px;
 }
 

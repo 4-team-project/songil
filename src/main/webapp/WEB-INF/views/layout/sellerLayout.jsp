@@ -5,6 +5,7 @@
 <html>
 <head>
 <title><tiles:getAsString name="title" /></title>
+<link rel="icon" href="${cpath}/resources/images/favicon.ico" type="image/x-icon" />
 </head>
 
 <style>
@@ -17,7 +18,7 @@ input, textarea {
 }
 
 button, a, .btn, [style*="cursor: pointer"] {
-  cursor: url('${cpath}/resources/images/cursor_click.svg') 2 2, pointer !important;
+  cursor: url('${cpath}/resources/images/cursor_click.svg') 3 3, pointer !important;
 }
 
 </style>

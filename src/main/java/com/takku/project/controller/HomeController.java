@@ -39,7 +39,7 @@ public class HomeController {
 	@Autowired
 	AIService aiService;
 
-	@GetMapping("/user/home")
+	@GetMapping({"/", "/user/home", "/takku", "/main"})
 	public String homePage(String status, Model model, HttpSession session) {
 
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");

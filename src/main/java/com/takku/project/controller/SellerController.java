@@ -70,7 +70,7 @@ public class SellerController {
 		return "success";
 	}
 
-	@GetMapping("/home")
+	@GetMapping({"/", "/home", "/main", "/takku"})
 	@ApiOperation(value = "판매자 홈 대시보드", notes = "소상공인의 홈 화면에서 통계 데이터를 확인합니다.")
 	public String getMain(@RequestParam(required = false) String msg, Model model, HttpSession session) {
 		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
