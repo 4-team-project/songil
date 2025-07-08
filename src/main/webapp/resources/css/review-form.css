@@ -118,7 +118,7 @@ input[type="file"] {
 
 /* ����� ���� ���� ���ε� ��ư */
 .custom-file-upload {
-	display: inline-block;
+	display: none;
 	border: 1px solid #ffa987;
 	color: #ff9670;
 	background-color: transparent;

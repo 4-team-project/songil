@@ -385,6 +385,7 @@ function goToReviewPage(fundingId) {
 function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
     closeModal();
+    location.reload();
 }
 
 function exitReview() {
