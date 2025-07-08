@@ -88,6 +88,6 @@ public class ReviewController {
 		 * review.setImages(imageList); } model.addAttribute("reviewList", reviewList);
 		 */
 		model.addAttribute(fundingId);
-		return "user.funding_detail";
+		return "redirect:/fundings/" + fundingId;
 	}
 }

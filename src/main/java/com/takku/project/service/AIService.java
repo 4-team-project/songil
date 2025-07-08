@@ -74,7 +74,7 @@ public class AIService implements DisposableBean {
 
 			// SSL 설정 - Railway 환경에 최적화
 			if (useHttps) {
-				// Trust all certificates for Railway 
+				// Trust all certificates for Railway
 				TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 					@Override
 					public void checkClientTrusted(X509Certificate[] chain, String authType) {
