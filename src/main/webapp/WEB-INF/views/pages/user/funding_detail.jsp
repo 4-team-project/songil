@@ -299,18 +299,42 @@
 				<c:set var="today" value="<%=new java.util.Date()%>" />
 				<c:set var="remaining"
 					value="${(funding.endDate.time - today.time) / (1000*60*60*24)}" />
-				<span class="remaining-day">${funding.status}</span>
-					
-				<br> <span class="period">${funding.startDate}~${funding.endDate}</span>
+				<span class="remaining-day">${funding.status}</span> <br> <span
+					class="period">${funding.startDate}~${funding.endDate}</span>
 			</p>
 		</div>
 
 		<div class="funding-contents">
-			<p>달성률</p>
-			<c:set var="percent"
-				value="${(funding.currentQty * 100.0) / funding.targetQty}" />
-			<fmt:formatNumber value="${percent}" type="number"
-				maxFractionDigits="0" var="percentInt" />
+			<!-- 달성률 텍스트 줄 -->
+			<div
+				style="display: flex; justify-content: space-between; align-items: center;">
+				<p style="margin: 0;">달성률</p>
+
+				<c:choose>
+					<c:when test="${funding.fundingType eq '한정'}">
+						<%-- 남은 수량 = maxQty - currentQty --%>
+						<c:set var="remainingQty"
+							value="${funding.maxQty - funding.currentQty}" />
+						<span style="font-size: 16px; font-weight: bold;">남은 수량:
+							${remainingQty}개</span>
+					</c:when>
+					<c:otherwise>
+						<span style="font-size: 16px; font-weight: bold;">
+							${funding.currentQty} / ${funding.targetQty} </span>
+					</c:otherwise>
+				</c:choose>
+			</div>
+			<c:choose>
+				<c:when test="${funding.targetQty == 0}">
+					<c:set var="percentInt" value="0" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="percent"
+						value="${(funding.currentQty * 100.0) / funding.targetQty}" />
+					<fmt:formatNumber value="${percent}" type="number"
+						maxFractionDigits="0" var="percentInt" />
+				</c:otherwise>
+			</c:choose>
 
 			<div class="funding-progress-box">
 				<span>${percentInt}%</span>
