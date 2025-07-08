@@ -13,6 +13,10 @@ import okhttp3.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,53 +38,161 @@ public class AIService implements DisposableBean {
 	@Value("${external.ai.api.url}")
 	private String aiApiBaseUrl;
 
+	@Value("${external.ai.api.timeout:30000}")
+	private int apiTimeout;
+
+	@Value("${external.ai.api.retry.max:3}")
+	private int maxRetries;
+
+	@Value("${external.ai.api.use-https:true}")
+	private boolean useHttps;
+
 	private final ProductService productService;
 	private final StoreService storeService;
 
 	private final ObjectMapper mapper = new ObjectMapper();
-	private final OkHttpClient client = createSafeClient(); // 🔄 변경됨
 
-	private OkHttpClient createSafeClient() {
+	private final OkHttpClient client = createDefaultClient();
+	private final OkHttpClient clientWithVerifier = createClientForRailway();
+
+	private OkHttpClient createDefaultClient() {
 		return new OkHttpClient.Builder().protocols(List.of(Protocol.HTTP_1_1)).connectTimeout(30, TimeUnit.SECONDS)
-				.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
-				.hostnameVerifier((hostname, session) -> {
-					return hostname.equals("takku-ai-api-production.up.railway.app"); // ✔️ Hostname 검증 우회
-				}).build();
+				.readTimeout(120, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+	}
+
+	private OkHttpClient createClientForRailway() {
+		try {
+			OkHttpClient.Builder builder = new OkHttpClient.Builder().protocols(List.of(Protocol.HTTP_1_1))
+					.connectTimeout(apiTimeout / 1000, TimeUnit.SECONDS).readTimeout(120, TimeUnit.SECONDS)
+					.writeTimeout(30, TimeUnit.SECONDS).retryOnConnectionFailure(true);
+
+			// Railway 도메인 패턴 허용
+			builder.hostnameVerifier((hostname, session) -> {
+				return hostname.endsWith(".railway.app") || hostname.endsWith(".up.railway.app")
+						|| hostname.equals("takku-ai-api-production.up.railway.app") || hostname.equals("localhost"); // 개발용
+			});
+
+			// SSL 설정 - Railway 환경에 최적화
+			if (useHttps) {
+				// Trust all certificates for Railway 
+				TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+					@Override
+					public void checkClientTrusted(X509Certificate[] chain, String authType) {
+					}
+
+					@Override
+					public void checkServerTrusted(X509Certificate[] chain, String authType) {
+					}
+
+					@Override
+					public X509Certificate[] getAcceptedIssuers() {
+						return new X509Certificate[] {};
+					}
+				} };
+
+				SSLContext sslContext = SSLContext.getInstance("TLS");
+				sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+				builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
+			}
+
+			return builder.build();
+		} catch (Exception e) {
+			System.err.println("⚠️ Railway SSL 설정 실패, 기본 설정 사용: " + e.getMessage());
+			return createDefaultClient();
+		}
 	}
 
 	@Override
 	public void destroy() {
-		System.out.println("🧹 AIService 종료 중 - OkHttp 정리");
+		System.out.println("🫹 AIService 종료 중 - OkHttp 정리");
 		client.connectionPool().evictAll();
 		client.dispatcher().executorService().shutdown();
+		clientWithVerifier.connectionPool().evictAll();
+		clientWithVerifier.dispatcher().executorService().shutdown();
+	}
+
+	/**
+	 * Railway API 헬스 체크
+	 */
+	public boolean isRailwayApiHealthy() {
+		try {
+			String healthUrl = getApiUrl() + "/health";
+			Request request = new Request.Builder().url(healthUrl).addHeader("User-Agent", "TakkuApp/1.0").get()
+					.build();
+
+			try (Response response = clientWithVerifier.newCall(request).execute()) {
+				return response.isSuccessful();
+			}
+		} catch (Exception e) {
+			System.err.println("🔍 Railway 헬스 체크 실패: " + e.getMessage());
+			return false;
+		}
+	}
+
+	/**
+	 * API URL 생성 (HTTP/HTTPS 설정 고려)
+	 */
+	private String getApiUrl() {
+		String baseUrl = aiApiBaseUrl;
+		if (!useHttps && baseUrl.startsWith("https://")) {
+			baseUrl = baseUrl.replace("https://", "http://");
+		}
+		return baseUrl;
 	}
 
 	public SummaryResponse getReviewSummary(int productId) {
-		String url = aiApiBaseUrl + "/summary/" + productId;
-		Request request = new Request.Builder().url(url).get().build();
+		String url = getApiUrl() + "/summary/" + productId;
 
-		try (Response response = client.newCall(request).execute()) {
-			if (!response.isSuccessful()) {
-				throw new RuntimeException("요약 FastAPI 호출 실패: HTTP " + response.code());
+		for (int attempt = 1; attempt <= maxRetries; attempt++) {
+			try {
+				Request request = new Request.Builder().url(url).addHeader("User-Agent", "TakkuApp/1.0").get().build();
+
+				try (Response response = clientWithVerifier.newCall(request).execute()) {
+					if (!response.isSuccessful()) {
+						if (isRetryableError(response.code()) && attempt < maxRetries) {
+							System.err.println("⚠️ 요약 API 재시도 중... (" + attempt + "/" + maxRetries + ") - HTTP "
+									+ response.code());
+							Thread.sleep(getBackoffDelay(attempt));
+							continue;
+						}
+						throw new RuntimeException("요약 FastAPI 호출 실패: HTTP " + response.code());
+					}
+
+					String responseBody = response.body().string();
+					JsonNode root = mapper.readTree(responseBody);
+
+					JsonNode summaryNode = root.path("summary");
+					if (summaryNode.isMissingNode() || !summaryNode.has("positive") || !summaryNode.has("negative")) {
+						throw new RuntimeException("요약 결과 형식이 올바르지 않습니다.");
+					}
+
+					List<String> positive = mapper.convertValue(summaryNode.get("positive"), new TypeReference<>() {
+					});
+					List<String> negative = mapper.convertValue(summaryNode.get("negative"), new TypeReference<>() {
+					});
+
+					return new SummaryResponse(productId, positive, negative);
+				}
+
+			} catch (Exception e) {
+				if (attempt == maxRetries) {
+					throw new RuntimeException(
+							"요약 API 처리 실패 - productId: " + productId + ", message: " + e.getMessage(), e);
+				}
+
+				System.err
+						.println("⚠️ 요약 API 호출 실패, 재시도 중... (" + attempt + "/" + maxRetries + ") - " + e.getMessage());
+				try {
+					Thread.sleep(getBackoffDelay(attempt));
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+					throw new RuntimeException("재시도 중 인터럽트 발생", ie);
+				}
 			}
-			String responseBody = response.body().string();
-			JsonNode root = mapper.readTree(responseBody);
-
-			JsonNode summaryNode = root.path("summary");
-			if (summaryNode.isMissingNode() || !summaryNode.has("positive") || !summaryNode.has("negative")) {
-				throw new RuntimeException("요약 결과 형식이 올바르지 않습니다.");
-			}
-
-			List<String> positive = mapper.convertValue(summaryNode.get("positive"), new TypeReference<>() {
-			});
-			List<String> negative = mapper.convertValue(summaryNode.get("negative"), new TypeReference<>() {
-			});
-
-			return new SummaryResponse(productId, positive, negative);
-
-		} catch (Exception e) {
-			throw new RuntimeException("요약 API 처리 실패 - productId: " + productId + ", message: " + e.getMessage(), e);
 		}
+
+		throw new IllegalStateException("요약 API 호출 실패: 모든 재시도 실패");
 	}
 
 	public List<FundingDTO> getRecommendations(int userId) {
@@ -89,17 +201,70 @@ public class AIService implements DisposableBean {
 	}
 
 	public String getRecommendationsAsString(int userId) {
-		String fullUrl = aiApiBaseUrl + "/recommend/" + userId;
-		Request request = new Request.Builder().url(fullUrl).get().build();
-
-		try (Response response = client.newCall(request).execute()) {
-			if (!response.isSuccessful()) {
-				throw new RuntimeException("추천 FastAPI API 호출 실패: HTTP " + response.code() + " - userId: " + userId);
-			}
-			return response.body().string();
-		} catch (Exception e) {
-			throw new RuntimeException("추천 FastAPI API 호출 실패 - userId: " + userId + ", message: " + e.getMessage(), e);
+		// 헬스 체크 (첫 번째 시도에만)
+		if (!isRailwayApiHealthy()) {
+			System.err.println("⚠️ Railway API 서버가 응답하지 않습니다.");
 		}
+
+		String fullUrl = getApiUrl() + "/recommend/" + userId;
+
+		for (int attempt = 1; attempt <= maxRetries; attempt++) {
+			try {
+				Request request = new Request.Builder().url(fullUrl).addHeader("User-Agent", "TakkuApp/1.0")
+						.addHeader("Accept", "application/json").get().build();
+
+				try (Response response = clientWithVerifier.newCall(request).execute()) {
+					if (!response.isSuccessful()) {
+						if (isRetryableError(response.code()) && attempt < maxRetries) {
+							System.err.println("⚠️ 추천 API 재시도 중... (" + attempt + "/" + maxRetries + ") - HTTP "
+									+ response.code());
+							Thread.sleep(getBackoffDelay(attempt));
+							continue;
+						}
+						throw new RuntimeException(
+								"추천 FastAPI API 호출 실패: HTTP " + response.code() + " - userId: " + userId);
+					}
+
+					String responseBody = response.body().string();
+					if (responseBody == null || responseBody.trim().isEmpty()) {
+						throw new RuntimeException("추천 API 응답이 비어있습니다.");
+					}
+
+					return responseBody;
+				}
+
+			} catch (Exception e) {
+				if (attempt == maxRetries) {
+					throw new RuntimeException(
+							"추천 FastAPI API 호출 실패 - userId: " + userId + ", message: " + e.getMessage(), e);
+				}
+
+				System.err
+						.println("⚠️ 추천 API 호출 실패, 재시도 중... (" + attempt + "/" + maxRetries + ") - " + e.getMessage());
+				try {
+					Thread.sleep(getBackoffDelay(attempt));
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+					throw new RuntimeException("재시도 중 인터럽트 발생", ie);
+				}
+			}
+		}
+
+		throw new IllegalStateException("추천 API 호출 실패: 모든 재시도 실패");
+	}
+
+	/**
+	 * 재시도 가능한 에러 코드 판별
+	 */
+	private boolean isRetryableError(int code) {
+		return code == 500 || code == 502 || code == 503 || code == 504 || code == 429;
+	}
+
+	/**
+	 * 백오프 지연 시간 계산
+	 */
+	private long getBackoffDelay(int attempt) {
+		return Math.min(1000 * (long) Math.pow(2, attempt - 1), 5000); // 최대 5초
 	}
 
 	public AIResponse generateFundingContent(FundingPromotionRequestDto req) {
@@ -112,16 +277,23 @@ public class AIService implements DisposableBean {
 			throw new IllegalArgumentException("상품에 연결된 상점이 존재하지 않습니다. storeId=" + product.getStoreId());
 
 		String prompt = buildPrompt(req, product, store);
-		int maxRetries = 10;
+		int maxGroqRetries = 10;
 
-		for (int attempts = 1; attempts <= maxRetries; attempts++) {
+		for (int attempts = 1; attempts <= maxGroqRetries; attempts++) {
 			try {
 				String requestBody = buildGroqRequestBody(prompt);
 				Request request = new Request.Builder().url(apiUrl).addHeader("Authorization", "Bearer " + apiKey)
+						.addHeader("User-Agent", "TakkuApp/1.0")
 						.post(RequestBody.create(requestBody, MediaType.parse("application/json"))).build();
 
 				try (Response response = client.newCall(request).execute()) {
 					if (!response.isSuccessful()) {
+						if (response.code() == 429 && attempts < maxGroqRetries) {
+							System.err
+									.println("⚠️ Groq API 레이트 리밋, 재시도 중... (" + attempts + "/" + maxGroqRetries + ")");
+							Thread.sleep(getBackoffDelay(attempts));
+							continue;
+						}
 						throw new RuntimeException("Groq API 호출 실패: HTTP " + response.code());
 					}
 					String responseBody = response.body().string();
@@ -129,17 +301,21 @@ public class AIService implements DisposableBean {
 				}
 
 			} catch (Exception e) {
-				if (attempts == maxRetries) {
+				if (attempts == maxGroqRetries) {
 					throw new RuntimeException("AI 홍보글 생성 실패 - 재시도 실패 (" + attempts + "회): " + e.getMessage(), e);
 				}
 				System.err.println("⚠️ Groq 응답 파싱 실패, 재시도 중... (" + attempts + "회)");
+				try {
+					Thread.sleep(getBackoffDelay(attempts));
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+					throw new RuntimeException("재시도 중 인터럽트 발생", ie);
+				}
 			}
 		}
 
 		throw new IllegalStateException("AI 홍보글 생성 실패: 알 수 없는 오류");
 	}
-
-	// ======= Helpers =======
 
 	private String buildPrompt(FundingPromotionRequestDto req, ProductDTO product, StoreDTO store) {
 		return String.join("\n", "다음 조건에 따라 홍보글을 작성하세요.", "", "[출력 조건]", "1. 출력은 반드시 JSON 형식입니다.",
