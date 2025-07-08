@@ -27,8 +27,9 @@
 		</p>
 	</div>
 	<form id="reviewForm" method="post" enctype="multipart/form-data"
-		action="${pageContext.request.contextPath}/review">
+		action="${cpath}/review">
 		<input type="hidden" name="productId" value="${fundingDTO.productId}" />
+		<input type="hidden" id="coupon-id-hidden" value="${couponDTO.couponId}">
 		<input type="hidden" name="userId" value="${couponDTO.userId}" /> <label>별점</label>
 		<div class="star-rating">
 			<span data-value="1">★</span><span data-value="2">★</span><span
