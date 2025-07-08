@@ -18,7 +18,6 @@
     </p>
 
     <div class="btn-group">
-        <a href="${cpath}/seller/store/funding/edit/${fundingId}" class="btn-outline">펀딩 수정하기</a>
         <a href="${cpath}/seller/home" class="btn-filled">홈으로 가기</a>
     </div>
 </div>

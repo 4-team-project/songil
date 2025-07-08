@@ -138,7 +138,7 @@ input[type="file"] {
 /* �̹��� �̸����� */
 .preview-image {
 	position: relative;
-	display: inline-block;
+	display: none;
 }
 
 .preview-image img {
@@ -147,6 +147,7 @@ input[type="file"] {
 	object-fit: cover;
 	border-radius: 10px;
 	border: 1px solid #ddd;
+	display: none;
 }
 
 .preview-image button {
@@ -164,6 +165,7 @@ input[type="file"] {
 	line-height: 20px;
 	padding: 0;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	display: none;
 }
 
 /* ��� ��ư */
