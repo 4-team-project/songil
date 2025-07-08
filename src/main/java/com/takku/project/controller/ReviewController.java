@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.takku.project.domain.CouponDTO;
@@ -49,7 +50,8 @@ public class ReviewController {
 	// 리뷰 등록 처리 - JSON 응답
 	@PostMapping(value = "/submit", consumes = "application/json")
 	@ResponseBody
-	public ResponseEntity<String> submitReview(@RequestBody ReviewDTO reviewDTO) {
+	public ResponseEntity<String> submitReview(@RequestBody ReviewDTO reviewDTO,
+			@RequestParam("couponId") Integer couponId) {
 
 // 로그인 구현하면 사용
 //		UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
@@ -67,6 +69,11 @@ public class ReviewController {
 				ImageDTO image = ImageDTO.builder().reviewId(reviewDTO.getReviewId()).imageUrl(newFilename).build();
 				imageService.insertImageUrl(image);
 			}
+
+		}
+		// ✅ 쿠폰 리뷰 완료 처리 (couponId가 ReviewDTO에 있어야 함)
+		if (reviewDTO != null) {
+			couponService.updateCouponReviewed(couponId);
 		}
 		return ResponseEntity.ok("등록 성공");
 	}
@@ -75,13 +82,11 @@ public class ReviewController {
 	@GetMapping("/product/{fundingId}/review")
 	public String productReviewList(@PathVariable("fundingId") Integer fundingId, Model model) {
 		/*
-		List<ReviewDTO> reviewList = reviewService.reviewByProductId(productId);
-		for (ReviewDTO review : reviewList) {
-			List<ImageDTO> imageList = imageService.selectImagesByReviewId(review.getReviewId());
-			review.setImages(imageList);
-		}
-		model.addAttribute("reviewList", reviewList);
-		*/
+		 * List<ReviewDTO> reviewList = reviewService.reviewByProductId(productId); for
+		 * (ReviewDTO review : reviewList) { List<ImageDTO> imageList =
+		 * imageService.selectImagesByReviewId(review.getReviewId());
+		 * review.setImages(imageList); } model.addAttribute("reviewList", reviewList);
+		 */
 		model.addAttribute(fundingId);
 		return "user.funding_detail";
 	}
