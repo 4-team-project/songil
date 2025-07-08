@@ -2,6 +2,8 @@ package com.takku.project.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.takku.project.domain.ImageDTO;
 
 public interface ImageMapper {
@@ -20,4 +22,7 @@ public interface ImageMapper {
 
 	// 상품 이미지 조회
 	List<ImageDTO> selectImagesByProductId(int productId);
+	
+	int updateFundingIdByImageId(@Param("imageId") Integer imageId, 
+            @Param("fundingId") Integer fundingId);
 }

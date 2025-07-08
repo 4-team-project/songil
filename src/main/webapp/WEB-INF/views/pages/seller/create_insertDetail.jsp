@@ -4,6 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<input type="hidden" id="productId" value="${productDTO.productId}" />
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/pages/seller/createFunding_insertDetail.css">
@@ -74,16 +76,21 @@
 <div id="modalBackdrop"></div>
 
 <script>
+const productImages = [
+	  <c:forEach var="img" items="${productDTO.images}" varStatus="loop">
+	    {
+	      imageId: ${img.imageId},
+	      imageUrl: "${pageContext.request.contextPath}${img.imageUrl}"
+	    }<c:if test="${!loop.last}">,</c:if>
+	  </c:forEach>
+	];
+	
 let isDateConfirmed = false;
 const imageList = []; // { type: "file" | "url", value: File | string }
 const imageLimit = 2;
 
 // productDTO.images를 JSTL로 넘겨받아 JS 배열로 만듦
-const productImages = [
-    <c:forEach var="img" items="${productDTO.images}" varStatus="loop">
-        "${pageContext.request.contextPath}${img.imageUrl}"<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
+
 
 function showModalMessage(message) {
 	$("#modalMsg").text(message);
@@ -176,9 +183,7 @@ async function submitFunding() {
 	const funding = {
 		startDate: document.getElementById("startDate").value,
 		endDate: document.getElementById("endDate").value,
-
-		/* fundingId: parseInt(document.getElementById("fundingId").value), */
-
+		productId: parseInt(document.getElementById("productId").value),
 		images: []
 	};
 
@@ -186,22 +191,30 @@ async function submitFunding() {
 		if (img.type === "file") {
 			const formData = new FormData();
 			formData.append("file", img.value);
-			console.log('${pageContext.request.contextPath}');
+
 			const res = await fetch("${pageContext.request.contextPath}/image/upload", {
 				method: "POST",
 				body: formData
 			});
+
 			if (!res.ok) {
 				alert("이미지 업로드 실패");
 				return;
 			}
-			const imageUrl = await res.text();
-			funding.images.push({ imageUrl });
+
+			const imageUrl = await res.text(); 
+			funding.images.push({ imageUrl: "/image/tmp/" + imageUrl });
 		} else if (img.type === "url") {
-			const fileName = img.value.split("/").pop(); // /image/abc.jpg → abc.jpg
-			funding.images.push({ imageUrl: fileName });
+			// 이미지 ID가 존재하면 함께 전달
+			const fileName = img.value.split("/").pop(); // ex) abc.jpg
+			funding.images.push({
+				imageId: img.imageId ?? null,
+				imageUrl: fileName // 서버에서는 /image/ 붙여서 저장함
+			});
 		}
 	}
+
+	console.log("전송할 funding 객체:", funding);
 
 	const res = await fetch("${pageContext.request.contextPath}/seller/fundings/create-step4", {
 		method: "POST",
@@ -225,23 +238,28 @@ document.getElementById("btnDefaultPhoto").addEventListener("click", () => {
 		return;
 	}
 
-	productImages.forEach(url => {
+	productImages.forEach(imgData => {
 		const wrapper = document.createElement("div");
 		wrapper.className = "preview-image";
 
 		const img = document.createElement("img");
-		img.src = url;
+		img.src = imgData.imageUrl;
 
 		const btn = document.createElement("button");
 		btn.textContent = "취소하기";
 		btn.className = "btn-cancel";
 		btn.onclick = () => {
-			const idx = imageList.findIndex(v => v.type === "url" && v.value === url);
+			const idx = imageList.findIndex(v => v.type === "url" && v.value === imgData.imageUrl);
 			if (idx !== -1) imageList.splice(idx, 1);
 			wrapper.remove();
 		};
 
-		imageList.push({ type: "url", value: url });
+		imageList.push({
+			type: "url",
+			value: imgData.imageUrl,
+			imageId: imgData.imageId
+		});
+
 		wrapper.appendChild(img);
 		wrapper.appendChild(btn);
 		preview.appendChild(wrapper);

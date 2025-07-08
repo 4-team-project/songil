@@ -3,7 +3,9 @@ package com.takku.project.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.ibatis.session.SqlSession;
@@ -19,7 +21,10 @@ import com.takku.project.domain.ReviewDTO;
 import com.takku.project.mapper.ImageMapper;
 
 @Service
-public class ImageService implements ImageMapper {
+public class ImageService {
+	
+	@Autowired
+	private ImageMapper imageMapper;
 
 	@Autowired
 	SqlSession sqlSession;
@@ -91,6 +96,13 @@ public class ImageService implements ImageMapper {
 			e.printStackTrace();
 			return null;
 		}
+	} 
+
+	public void updateFundingIdByImageId(Integer imageId, Integer fundingId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("imageId", imageId);
+		params.put("fundingId", fundingId);
+		imageMapper.updateFundingIdByImageId(imageId, fundingId);
 	}
 
 	//로컬 사진 저장 + DB 사진 저장 
@@ -127,31 +139,31 @@ public class ImageService implements ImageMapper {
 	    }
 	
 
-	@Override
+
 	public int insertImageUrl(ImageDTO image) {
 		int result = sqlSession.insert(namespace + "insertImageUrl", image);
 		return result;
 	}
 
-	@Override
+
 	public int deleteImageUrl(String imageUrl) {
 		int result = sqlSession.delete(namespace + "deleteImageUrl", imageUrl);
 		return result;
 	}
 
-	@Override
+
 	public List<ImageDTO> selectImagesByFundingId(int fundingId) {
 		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByFundingId", fundingId);
 		return imagelist;
 	}
 
-	@Override
+
 	public List<ImageDTO> selectImagesByReviewId(int reviewId) {
 		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByReviewId", reviewId);
 		return imagelist;
 	}
 
-	@Override
+	
 	public List<ImageDTO> selectImagesByProductId(int productId) {
 		List<ImageDTO> imagelist = sqlSession.selectList(namespace + "selectImagesByProductId", productId);
 		return imagelist;

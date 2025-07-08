@@ -46,4 +46,5 @@ public class FundingDTO {
 	private Double score;
   
 	private Integer daysLeft;
+	private String mainImageUrl; 
 }
