@@ -237,8 +237,7 @@ function submitProduct() {
     	showPopupAlert({
     	    type: 'error',
     	    message: msg,
-    	})
-    })
+    	});
     });
 }
 
