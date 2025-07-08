@@ -65,8 +65,6 @@
 
 </style>
 
-<!-- alertPopup.html -->
-<link rel="stylesheet" href="/resources/css/common/alertPopup.css" />
 
 <div id="alertPopup" class="alert-popup-overlay" style="display: none;">
   <div class="alert-popup">

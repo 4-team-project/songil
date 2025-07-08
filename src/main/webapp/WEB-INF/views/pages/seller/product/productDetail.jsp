@@ -9,7 +9,8 @@
 <input type="hidden" id="productId" value="${productDTO.productId}" />
 <input type="hidden" id="redirectUrl" value="${redirectUrl}" />
 <div class="main-title-box">
-	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를 입력해주세요</div>
+	<div class="main-title" id="formMainTitle">상점에 새롭게 추가할 메뉴에 대한 정보를
+		입력해주세요</div>
 </div>
 <div class="content-box">
 	<div class="content-text">메뉴 이름</div>
@@ -89,7 +90,7 @@ function validateProductForm() {
 
 		  if (!price || isNaN(price) || parseInt(price) <= 0) {
 		    showPopupAlert({
-		      type: 'error',
+		      type: 'warning',
 		      message: '올바른 가격을 입력해주세요.'
 		    });
 		    return false;
@@ -97,7 +98,7 @@ function validateProductForm() {
 
 		  if (totalImages < 1) {
 		    showPopupAlert({
-		      type: 'info',
+		      type: 'warning',
 		      message: '메뉴 사진은 최소 1장 이상 등록해주세요.'
 		    });
 		    return false;
@@ -178,7 +179,6 @@ function updateFileCountText() {
     const fileCountText = document.getElementById('file-count-text');
     const maxFiles = 3;
     fileCountText.textContent = `선택한 사진 ${selectedFiles.length + keptExistingImageUrls.length} / ${maxFiles}`;
-    console.log("updateFileCountText - 총 이미지 개수:", selectedFiles.length + keptExistingImageUrls.length);
 }
 
 const redirectUrl = document.getElementById("redirectUrl")?.value;
@@ -222,8 +222,8 @@ function submitProduct() {
     })
 .then(msg => {
   showPopupAlert({
-    type: 'info',
-    message: (productId ? "수정" : "등록") + " 결과: " + msg,
+    type: 'success',
+    message: msg,
     onConfirm: () => {
       if (redirectUrl) {
         location.href = redirectUrl;
@@ -234,8 +234,11 @@ function submitProduct() {
   });
 })
     .catch(err => {
-      console.error("오류:", err);
-      alert("오류 발생: " + err.message);
+    	showPopupAlert({
+    	    type: 'error',
+    	    message: msg,
+    	})
+    })
     });
 }
 
@@ -258,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	    fetch(`${cpath}/seller/product/info/${productId}`)
 	      .then(res => res.json())
 	      .then(product => {
-	        console.log("DOMContentLoaded - 불러온 상품 데이터:", product);
 	        document.getElementById('productName').value = product.productName;
 	        document.getElementById('productPrice').value = product.price;
 	        document.getElementById('productDescription').value = product.description;
