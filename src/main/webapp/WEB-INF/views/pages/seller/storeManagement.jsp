@@ -73,7 +73,7 @@
 			<div class="store-menu-content">
 				메뉴 사진을 눌러주시면
 				<div class="highlight">메뉴 통계</div>
-				를 보실 수 있어요
+				를 보실 수 있어요.
 			</div>
 
 			<div class="store-menu-content-img-container swiper">

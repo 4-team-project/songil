@@ -136,7 +136,7 @@
 									<button class="use-btn used-btn">
 										<span class="btn-word">사용완료</span>
 									</button>
-									<button type="button" class="review-btn"
+									<button type="button" class="review-btn" data-coupon-id="${coupon.couponId}"
 										onclick="openReviewModal('${cpath}/review/write/${coupon.couponId}')">
 										<span class="btn-word">리뷰쓰기</span>
 									</button>
@@ -234,6 +234,7 @@ function openReviewModal(url) {
 
             initializeStarRating();
             setupReviewFormSubmission();
+            
         })
         .catch(err => {
             console.error(err);
@@ -250,6 +251,7 @@ function closeModal() {
 
 function setupReviewFormSubmission() {
     const form = document.getElementById("reviewForm");
+    const couponId = document.querySelector('#coupon-id-hidden').value;
     if (!form) return;
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -272,7 +274,7 @@ function setupReviewFormSubmission() {
             json.imageUrls.push(await res.text());
         }
 
-        const result = await fetch(cpath + "/review/submit", {
+        const result = await fetch(cpath + '/review/submit?couponId=' + couponId, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(json)
