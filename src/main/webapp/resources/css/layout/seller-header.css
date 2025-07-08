@@ -17,12 +17,18 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 200px 0 400px;
+	padding: 0 380px 0 380px;
 	border-bottom: 2px solid #FF9670;
 	position: relative;
 }
 
 .logo {
+	width: 140px;
+	height: 130px;
+	cursor: pointer;
+}
+
+.logo img {
 	width: 140px;
 	height: 130px;
 	margin-top: 0;
@@ -129,7 +135,6 @@
 	z-index: 9999;
 	width: 400px;
 	text-align: center;
-
 	flex-direction: column;
 	align-items: center;
 }

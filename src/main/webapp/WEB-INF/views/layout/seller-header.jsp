@@ -6,7 +6,7 @@
 
 <div class="box"></div>
 <div class="header-box">
-	<div class="logo" onclick="location.href='${cpath}/seller/home'">
+	<div style="cursor: pointer" class="logo" onclick="location.href='${cpath}/seller/home'">
 		<img src="${cpath}/resources/images/logo.svg" alt="logo" />
 	</div>
 
@@ -56,7 +56,6 @@
       }<c:if test="${!status.last}">,</c:if>
     </c:forEach>
   ];
-  console.log("storeList:", storeList);
 </script>
 
 
@@ -110,7 +109,6 @@ function selectStore(element, event) {
   const nameBox = document.querySelector('.current-store-name');
   nameBox.textContent = storeName;
 
-  console.log(`선택된 상점: ${storeId}, 이름: ${storeName}`);
 }
 
 

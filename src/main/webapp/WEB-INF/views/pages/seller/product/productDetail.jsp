@@ -160,25 +160,17 @@ function handleFiles(fileList) {
       delBtn.onclick = () => {
     	  selectedFiles = selectedFiles.filter(f => !(f.name === file.name && f.size === file.size));
           wrapper.remove();
-          updateFileCountText();
 		};
 
       wrapper.appendChild(img);
       wrapper.appendChild(delBtn);
       preview.appendChild(wrapper);
       
-      updateFileCountText();
     };
     reader.readAsDataURL(file);
   });
 
   document.getElementById('images').value = '';
-}
-
-function updateFileCountText() {
-    const fileCountText = document.getElementById('file-count-text');
-    const maxFiles = 3;
-    fileCountText.textContent = `선택한 사진 ${selectedFiles.length + keptExistingImageUrls.length} / ${maxFiles}`;
 }
 
 const redirectUrl = document.getElementById("redirectUrl")?.value;
@@ -284,7 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	            delBtn.onclick = () => {
 	              wrapper.remove();
 	              keptExistingImageUrls = keptExistingImageUrls.filter(url => url !== img.imageUrl);
-	              updateFileCountText();
 	            };
 
 	            wrapper.appendChild(image);
@@ -292,14 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	            preview.appendChild(wrapper);
 	          });
 
-	          updateFileCountText();
-	        } else {
-	          updateFileCountText();
-	        }
+	        } 
 	      });
-	  } else {
-	    updateFileCountText();
-	  }
+	  } 
 
 	  const backBtn = document.querySelector('.complete-back-btn');
 	  if (redirect && backBtn) {

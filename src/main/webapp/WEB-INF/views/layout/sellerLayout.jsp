@@ -5,6 +5,7 @@
 <html>
 <head>
 <title><tiles:getAsString name="title" /></title>
+<link rel="icon" href="${cpath}/resources/images/favicon.ico" type="image/x-icon" />
 </head>
 
 <style>
