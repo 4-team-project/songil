@@ -52,9 +52,9 @@
             </p>
             </div>
             <div class="chart-area">
-                <spam style="text-align: center;  font-size: 1.2em; color: #555;">
+                <p style="text-align: center;  font-size: 1.2em; color: #555;">
                 아직 펀딩이 시작하지 않았어요.
-            </spam>
+            </p>
             </div>
         </c:when>
         <c:otherwise>
@@ -125,18 +125,18 @@
 	<input type="hidden" id="userId" name="userId" value="${userId}">
 	<div class="action-buttons">
 		<button class="back-button" type="button"
-			onclick="location.href='/seller/store/list?userId=${userId}'">뒤로 가기</button>
+			onclick="location.href='${cpath}/seller/store/list?userId=${userId}'">뒤로 가기</button>
 		 <c:choose>
         <%-- 펀딩 상태가 '진행중'이거나 '종료'일 경우 --%>
         <c:when test="${funding.status eq '진행중' || funding.status eq '성공' || funding.status eq '실패'}">
             <button type="button" class="button view-button"
-                onclick="location.href='${cpath}/seller/store/funding/edit/${funding.fundingId}'">펀딩 정보 보기</button>
+                onclick="location.href='${cpath}/fundings/${funding.fundingId}'">펀딩 상세 보기</button>
         </c:when>
-        <%-- 그 외의 경우 (예: '준비중') --%>
+       <%--  펀딩 진행중일 떄 수정 (삭제됨)
         <c:otherwise>
             <button type="button" class="button edit-button"
                 onclick="location.href='${cpath}/seller/store/funding/edit/${funding.fundingId}'">수정하러 가기</button>
-        </c:otherwise>
+        </c:otherwise> --%>
     </c:choose>
 	</div>
 </div>
