@@ -157,7 +157,7 @@ function loadFundings(params) {
     const keyword = lastParams.keyword ? decodeURIComponent(lastParams.keyword) : '';
     updateRecommendTitle(sido, sigungu, keyword);
 
-    renderFundingList(data.fundinglist, currentPage > 1);
+    renderFundingList(data.fundinglist, false);
     renderPagination(data.totalPages, currentPage);
   })
   .catch(function (err) {
@@ -207,7 +207,7 @@ function renderPagination(totalPages, currentPage) {
 	    return;
 	  }
 
-	  let html = '<div class="pagination">'; 
+	  let html = ''; 
 
 	  for (let i = 1; i <= totalPages; i++) {
 	    if (i === currentPage) {
@@ -217,26 +217,15 @@ function renderPagination(totalPages, currentPage) {
 	    }
 	  }
 
-	  html += '</div>'; 
-
 	  paginationEl.innerHTML = html;
 
-	  document.querySelectorAll('.page-link[data-page]').forEach(btn => {
+	  paginationEl.querySelectorAll('.page-link[data-page]').forEach(btn => {
 	    btn.addEventListener('click', function () {
 	      currentPage = parseInt(this.dataset.page);
-	      loadFundings({ page: currentPage }); 
+	      loadFundings({ page: currentPage });
 	    });
 	  });
 	}
-
-
-// 버튼 클릭 이벤트 다시 바인딩
-document.querySelectorAll('.page-link[data-page]').forEach(btn => {
- btn.addEventListener('click', function () {
-   currentPage = parseInt(this.dataset.page);
-   loadFundings({ page: currentPage });
- });
-});
 
 
 
