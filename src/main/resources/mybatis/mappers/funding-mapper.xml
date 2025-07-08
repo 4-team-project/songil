@@ -341,4 +341,22 @@
 		FROM takku_funding
 		WHERE funding_id = #{fundingId}
 	</select>
+	
+	<!-- 구매완료시 펀딩 현재 구매수 증가 -->
+	<update id="increaseCurrentQty" parameterType="map">
+        UPDATE
+        takku_funding
+        SET current_qty = current_qty + #{quantity}
+        WHERE
+        funding_id = #{fundingId}
+    </update>
+    
+	<!-- 구매취소시 펀딩 현재 구매수 감소 -->
+	<update id="decreaseCurrentQty" parameterType="map">
+        UPDATE
+        takku_funding
+        SET current_qty = current_qty - #{quantity}
+        WHERE
+        funding_id = #{fundingId}
+    </update>
 </mapper>

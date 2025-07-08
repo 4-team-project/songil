@@ -85,37 +85,37 @@ public class OrderController {
 		model.addAttribute("iamportApiKey", iamportApiKey);
 		return "user.order";
 	}
-
+	
 	// 주문 처리
-	@PostMapping("/payment")
-	public String processOrder(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
-			@RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid,
-			RedirectAttributes redirectAttributes, @SessionAttribute(name = "loginUser", required = false) UserDTO loginUser) {
-
-		   if (loginUser == null) {
-		        return "redirect:/auth/login";
-		    }
-
-		int finalPrice = totalPrice - usePoint;
-
-		OrderDTO order = new OrderDTO();
-		order.setUserId(loginUser.getUserId());
-		order.setFundingId(fundingId);
-		order.setQty(quantity);
-		order.setAmount(totalPrice);
-		order.setUsePoint(usePoint);
-		order.setDiscountAmount(finalPrice);
-		order.setStatus("결제완료");
-		order.setFundingStatus("펀딩 진행중");
-		order.setImpUid(imp_uid);
-		order.setMerchantUid(merchant_uid);
-
-		userService.updatePointAfterPayment(loginUser.getUserId(), usePoint);
-		int result = orderService.insertOrder(order);
-		redirectAttributes.addAttribute("orderId", order.getOrderId());
-		redirectAttributes.addAttribute("success", result > 0);
-		return "redirect:payment/result";
-	}
+    @PostMapping("/payment")
+    public String processOrder(@RequestParam int fundingId, @RequestParam int quantity, @RequestParam int totalPrice,
+            @RequestParam int usePoint, @RequestParam String imp_uid, @RequestParam String merchant_uid,
+            RedirectAttributes redirectAttributes,
+            @SessionAttribute(name = "loginUser", required = false) UserDTO loginUser) {
+        if (loginUser == null) {
+            return "redirect:/auth/login";
+        }
+        int finalPrice = totalPrice - usePoint;
+        OrderDTO order = new OrderDTO();
+        order.setUserId(loginUser.getUserId());
+        order.setFundingId(fundingId);
+        order.setQty(quantity);
+        order.setAmount(totalPrice);
+        order.setUsePoint(usePoint);
+        order.setDiscountAmount(finalPrice);
+        order.setStatus("결제완료");
+        order.setFundingStatus("펀딩 진행중");
+        order.setImpUid(imp_uid);
+        order.setMerchantUid(merchant_uid);
+        userService.updatePointAfterPayment(loginUser.getUserId(), usePoint);
+        int result = orderService.insertOrder(order);
+        if (result > 0) {
+            fundingService.increaseCurrentQty(fundingId, quantity); // ✅ 펀딩 수량 증가
+        }
+        redirectAttributes.addAttribute("orderId", order.getOrderId());
+        redirectAttributes.addAttribute("success", result > 0);
+        return "redirect:payment/result";
+    }
 
 	// 주문 결과
 	@GetMapping("/payment/result")
@@ -182,6 +182,7 @@ public class OrderController {
 	        if (order.getUsePoint() > 0) {
 	            userService.restorePointAfterCancel(order.getUserId(), order.getUsePoint());
 	        }
+	        fundingService.decreaseCurrentQty(order.getFundingId(), order.getQty());
 	        result.put("success", true);
 	        result.put("message", "주문이 성공적으로 취소되었습니다.");
 	    } else {
