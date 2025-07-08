@@ -151,18 +151,13 @@ function loadFundings(params) {
   fetch(cpath + '/fundings/search/json?' + query)
   .then(function (res) { return res.json(); })
   .then(function (data) {
-	  
-	  console.log("펀딩 JSON 응답:", data);
-	    console.log("현재 페이지:", data.currentPage);
-	    console.log("총 페이지 수:", data.totalPages);
-	    console.log("펀딩 리스트:", data.fundinglist);
 	    
     const sido = lastParams.sido || '';
     const sigungu = lastParams.sigungu || '';
     const keyword = lastParams.keyword ? decodeURIComponent(lastParams.keyword) : '';
     updateRecommendTitle(sido, sigungu, keyword);
 
-    renderFundingList(data.fundinglist, false);
+    renderFundingList(data.fundinglist, currentPage > 1);
     renderPagination(data.totalPages, currentPage);
   })
   .catch(function (err) {
@@ -192,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (moreBtn) {
 
     moreBtn.addEventListener('click', function () {
-      currentPage = 1;
       isFullList = true;
       moreBtn.style.display = 'none';
       var selectedSortEl = document.querySelector('.funding-filter.selected');

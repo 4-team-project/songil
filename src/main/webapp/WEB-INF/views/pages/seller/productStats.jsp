@@ -21,10 +21,15 @@ button, button:hover, button:active, button:focus {
 	margin: 10px 0;
 }
 
+.menu-container {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
 .menu-box {
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	grid-template-rows: auto auto;
+	display: flex;
+	flex-direction: column;
 	gap: 20px;
 	border: 1px solid #f1c5b3;
 	border-radius: 10px;
@@ -34,6 +39,7 @@ button, button:hover, button:active, button:focus {
 	position: relative;
 	width: 100%;
 	box-sizing: border-box;
+	gap: 20px;
 }
 
 /* ✅ 이미지: 1열 */
@@ -46,11 +52,12 @@ button, button:hover, button:active, button:focus {
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	border-radius: 8px;
 }
 
 .image-slider img {
-	width: 100%;
-	height: 100%;
+	width: 316px;
+	height: 236px;
 	object-fit: cover;
 }
 
@@ -95,9 +102,8 @@ button, button:hover, button:active, button:focus {
 }
 /* 수정 버튼: 2행 2열 */
 .edit-btn-wrap {
-	grid-column: 2;
-	grid-row: 2;
-	justify-self: end;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .product-name {
@@ -105,6 +111,7 @@ button, button:hover, button:active, button:focus {
 	font-weight: bold;
 	margin: 2;
 	color: #333;
+	width: 320px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -112,7 +119,7 @@ button, button:hover, button:active, button:focus {
 
 .rating-price {
 	display: flex;
-	align-items: center;
+	justify-content:space-between;
 	gap: 20px;
 	font-size: 18px;
 	color: #555;
@@ -125,6 +132,7 @@ button, button:hover, button:active, button:focus {
 	font-size: 22px;
 	font-weight: bold;
 	display: inline-block;
+	gap: 4px;
 }
 
 .price {
@@ -196,41 +204,41 @@ button, button:hover, button:active, button:focus {
 	style="cursor: url('${cpath}/resources/images/cursor.svg') 2 2, auto;">
 	<div class="main-title-box">
 		<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
-		<div class="main-title">${productDTO.productName} 통계</div>
+		<div class="main-title">${productDTO.productName}통계</div>
 	</div>
-
 	<div class="menu-box">
-		<div class="image-slider">
-			<div class="prev-btn" onclick="prevImage()">&lt;</div>
-			<img id="menu-image" src="" alt="메뉴 이미지">
-			<div class="next-btn" onclick="nextImage()">&gt;</div>
-		</div>
-
-		<div class="menu-info">
-			<h2 class="product-name">${productDTO.productName}</h2>
-			<div class="rating-price">
-				<c:choose>
-					<c:when
-						test="${not empty productDTO.averageRating and productDTO.averageRating > 0}">
-						<span class="rating">⭐ ${productDTO.averageRating}</span>
-					</c:when>
-					<c:otherwise>
-						<span class="rating-empty">리뷰가 없습니다</span>
-					</c:otherwise>
-				</c:choose>
-				<br> <span class="price"> <fmt:formatNumber
-						value="${productDTO.price}" type="currency" />
-				</span>
+		<div class="menu-container">
+			<div class="image-slider">
+				<div class="prev-btn" onclick="prevImage()">&lt;</div>
+				<img id="menu-image" src="" alt="메뉴 이미지">
+				<div class="next-btn" onclick="nextImage()">&gt;</div>
 			</div>
-			<p class="description">${productDTO.description}</p>
-		</div>
 
+			<div class="menu-info">
+				<h2 class="product-name">${productDTO.productName}</h2>
+				<div class="rating-price">
+					<c:choose>
+						<c:when
+							test="${not empty productDTO.averageRating and productDTO.averageRating > 0}">
+							<div class="rating">⭐ ${productDTO.averageRating}</div>
+						</c:when>
+						<c:otherwise>
+							<span class="rating-empty">리뷰가 없습니다</span>
+						</c:otherwise>
+					</c:choose>
+					<br> <span class="price"> <fmt:formatNumber
+							value="${productDTO.price}" type="currency" />
+					</span>
+				</div>
+				<p class="description">${productDTO.description}</p>
+			</div>
+
+		</div>
 		<div class="edit-btn-wrap">
 			<button
 				onclick="location.href='${cpath}/seller/product/edit/${productDTO.productId}'">
 				메뉴 정보 수정</button>
 		</div>
-
 	</div>
 
 	<div class="summary-box">
