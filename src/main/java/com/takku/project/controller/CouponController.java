@@ -100,34 +100,29 @@ public class CouponController {
 	/**
 	 * [5] 사용자 쿠폰 목록
 	 */
-	@GetMapping("/user/coupon")
-	public String userCouponList(Model model) {
-		model.addAttribute("pageName", "내 쿠폰함");
-
-		int userId = 5; // TODO: 로그인 사용자
-		List<CouponDTO> coupons = couponService.selectCouponByUserId(userId);
-		model.addAttribute("coupons", coupons);
-
-		Map<Integer, FundingDTO> fundingMap = new HashMap<>();
-		Map<Integer, ProductDTO> productMap = new HashMap<>();
-		Map<Integer, StoreDTO> storeMap = new HashMap<>();
-
-		for (CouponDTO coupon : coupons) {
-			int fundingId = coupon.getFundingId();
-			FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
-			fundingMap.put(fundingId, funding);
-
-			ProductDTO product = productService.selectByProductId(funding.getProductId());
-			productMap.put(funding.getProductId(), product);
-
-			StoreDTO store = storeService.selectStoreById(funding.getStoreId());
-			storeMap.put(funding.getStoreId(), store);
-		}
-
-		model.addAttribute("fundingMap", fundingMap);
-		model.addAttribute("productMap", productMap);
-		model.addAttribute("storeMap", storeMap);
-
-		return "user.coupon";
-	}
+	 @GetMapping("/user/coupon")
+	    public String userCouponList(HttpSession session, Model model) {
+	        model.addAttribute("pageName", "내 쿠폰함");
+	        // 세션에서 로그인한 사용자 정보 가져오기
+	        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+	        int userId = loginUser.getUserId(); // 로그인한 사용자 ID
+	        List<CouponDTO> coupons = couponService.selectCouponByUserId(userId);
+	        model.addAttribute("coupons", coupons);
+	        Map<Integer, FundingDTO> fundingMap = new HashMap<>();
+	        Map<Integer, ProductDTO> productMap = new HashMap<>();
+	        Map<Integer, StoreDTO> storeMap = new HashMap<>();
+	        for (CouponDTO coupon : coupons) {
+	            int fundingId = coupon.getFundingId();
+	            FundingDTO funding = fundingService.selectFundingByFundingId(fundingId);
+	            fundingMap.put(fundingId, funding);
+	            ProductDTO product = productService.selectByProductId(funding.getProductId());
+	            productMap.put(funding.getProductId(), product);
+	            StoreDTO store = storeService.selectStoreById(funding.getStoreId());
+	            storeMap.put(funding.getStoreId(), store);
+	        }
+	        model.addAttribute("fundingMap", fundingMap);
+	        model.addAttribute("productMap", productMap);
+	        model.addAttribute("storeMap", storeMap);
+	        return "user.coupon";
+	    }
 }

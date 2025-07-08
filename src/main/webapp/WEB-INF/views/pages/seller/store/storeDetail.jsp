@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/sellerAlert.jsp"%>
 
 <script src="${cpath}/resources/js/address.js"></script>
 <input type="hidden" id="storeId" value="${storeDTO.storeId}" />
@@ -12,8 +13,8 @@
 <div class="main-title-box">
 	<div class="main-title" id="formMainTitle">
 		새롭게 운영하실 상점의 이름, 주소, 전화번호 등을 입력해 주세요
-		<div class="sub-title" id="formSubTitle">모든 정보를 다 입력하신 후 아래 [등록하기] 버튼을 눌러주시면 등록이
-			완료됩니다</div>
+		<div class="sub-title" id="formSubTitle">모든 정보를 다 입력하신 후 아래
+			[등록하기] 버튼을 눌러주시면 등록이 완료됩니다</div>
 	</div>
 </div>
 
@@ -27,8 +28,8 @@
 	<div class="content-text">상점 주소</div>
 	<div class="address-section">
 		<div class="address-btn-wrapper">
-			<button type="button" class="address-btn" onclick="execDaumPostcode()">주소
-				검색</button>
+			<button type="button" class="address-btn"
+				onclick="execDaumPostcode()">주소 검색</button>
 			<button type="button" class="address-btn" id="clearAddressBtn">지우기</button>
 
 		</div>
@@ -61,19 +62,21 @@
 <div class="content-box">
 	<div class="content-text">계좌 번호</div>
 	<input type="text" id="accountNumber" placeholder="계좌번호를 입력하세요"
-		class="content-input" inputmode="numeric" maxlength="20"/>
+		class="content-input" inputmode="numeric" maxlength="20" />
 </div>
 
 <div class="content-box">
 	<div class="content-text">사업자등록번호</div>
 	<input type="text" id="businessRegistrationNumber"
-		placeholder="사업자등록번호를 입력하세요" class="content-input" inputmode="numeric" maxlength="12" />
+		placeholder="사업자등록번호를 입력하세요" class="content-input" inputmode="numeric"
+		maxlength="12" />
 </div>
 
 <div class="complete-back-btn-box">
-	<div class="complete-back-btn" style="cursor: pointer" onclick="history.back()">이전</div>
-	<button id="submitBtn" onclick="submitStore()" class="complete-back-btn">수정
-		완료</button>
+	<div class="complete-back-btn" style="cursor: pointer"
+		onclick="history.back()">이전</div>
+	<button id="submitBtn" onclick="submitStore()"
+		class="complete-back-btn">수정 완료</button>
 </div>
 
 <input type="hidden" id="selectedCategoryId" value="">
@@ -190,14 +193,28 @@ function submitStoreData(storeData, storeId) {
 	    .then(res => res.text())
 	    .then(msg => {
 	      if (!isNaN(msg)) {
-	        alert("등록 성공! 상점 ID: " + msg);
-	        location.href = document.referrer;
+	    	  const successMessage = storeId
+	          ? "상점 정보가 수정되었습니다!"
+	          : "상점 등록에 성공했습니다!";
+	        showPopupAlert({
+	          type: 'success',
+	          message: successMessage,
+	          onConfirm: () => {
+	            location.href = document.referrer;
+	          }
+	        });
 	      } else {
-	        alert("등록 실패: " + msg);
+	        showPopupAlert({
+	          type: 'error',
+	          message: msg,
+	        });
 	      }
 	    })
 	    .catch(err => {
-	      alert("오류 발생: " + err);
+	      showPopupAlert({
+	        type: 'error',
+	        message: '서버 오류입니다',
+	      });
 	    });
 	}
 	
@@ -206,7 +223,10 @@ function submitStore() {
 
 	  const missingFields = validateStoreData();
 	  if (missingFields.length > 0) {
-	    alert("다음 항목을 입력해 주세요:\n- " + missingFields.join("\n- "));
+		  showPopupAlert({
+			    type: 'warning',
+			    message: "다음 항목을 입력해 주세요:\n- " +missingFields.join("\n- "),
+	  })
 	    return;
 	  }
 

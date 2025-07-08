@@ -8,7 +8,7 @@
 <link rel="stylesheet"
 	href="${cpath}/resources/css/pages/seller/storeList.css">
 <%@ include file="/WEB-INF/views/common/sellerModal.jsp"%>
-
+<%@ include file="/WEB-INF/views/common/sellerAlert.jsp"%>
 
 <div class="main-title-box">
 	<%@ include file="/WEB-INF/views/common/sellerButton.jsp"%>
@@ -42,7 +42,6 @@ function loadStoreListPage(page) {
       const ratingMap = data.ratingMap;
       let html = '';
 
-      // 정렬된 리스트
       const sortedList = list.sort((a, b) => {
         if (a.storeId === currentStoreId) return -1;
         if (b.storeId === currentStoreId) return 1;
@@ -72,7 +71,7 @@ function loadStoreListPage(page) {
         
         // 현재 상점이 아닐 때만 버튼 보이게
         if (store.storeId !== currentStoreId) {
-          html += `<button class="btn" onclick="changeSelectedStore()" data-store-id="\${store.storeId}">현재 상점으로 변경</button>`;
+        	html += `<button type="button" class="btn" data-store-id="\${store.storeId}">현재 상점으로 변경</button>`;
         }
 
         html += `
@@ -97,12 +96,14 @@ function loadStoreListPage(page) {
       $("#store-list").html(html);
     },
     error: function() {
-      alert("상점 목록을 불러오는 데 실패했습니다.");
+    	showPopupAlert({
+	          type: 'error',
+	          message: "상점 목록을 불러오는 데 실패했습니다.",
+	        });
     }
   });
 }
 
-// 외부 JSON 먼저 로드 후 실행
 $(document).ready(function() {
   fetch('${cpath}/resources/data/categories.json')
     .then(res => res.json())
@@ -142,44 +143,63 @@ $(document).on("click", ".btn-delete", function () {
   });
 });
 
-// 삭제 요청
 function deleteStore(storeId) {
-  if (!storeId) {
-    alert("삭제할 상점 ID가 없습니다.");
-    return;
-  }
+	  if (!storeId) {
+	    showPopupAlert({
+	      type: 'error',
+	      message: "삭제할 상점 ID가 없습니다.",
+	    });
+	    return;
+	  }
 
-  fetch(`${cpath}/seller/store/delete/${storeId}`, {
-    method: "POST"
-  })
-    .then(res => res.text())
-    .then(msg => {
-      alert("삭제 결과: " + msg);
-      location.reload(); 
-    })
-    .catch(err => alert("오류 발생: " + err));
-}
+	  fetch(`${cpath}/seller/store/delete/${storeId}`, {
+	    method: "POST"
+	  })
+	    .then(res => res.text())
+	    .then(msg => {
+	      showPopupAlert({
+	        type: 'success',
+	        message: msg,
+	        onConfirm: () => {
+	          location.reload();
+	        }
+	      });
+	    }) 
+	    .catch(err => {
+	      showPopupAlert({
+	        type: 'error',
+	        message: "오류 발생",
+	      });
+	    });
+	}
+
 
 function changeSelectedStore(storeId) {
-  if (!storeId) {
-    return;
-  }
+	  if (!storeId) return;
 
-  fetch(`${cpath}/seller/store/changeStore`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storeId: storeId })
-  })
-    .then(res => res.text())
-    .then(msg => {
-      alert(msg);
-      location.reload(); 
-    })
-    .catch(err => {
-      console.error("상점 변경 실패:", err);
-      alert("상점 변경 실패: " + err);
-    });
-}
+	  fetch(`${cpath}/seller/store/changeStore`, {
+	    method: 'POST',
+	    headers: { 'Content-Type': 'application/json' },
+	    body: JSON.stringify({ storeId: storeId })
+	  })
+	    .then(res => res.text())
+	    .then(msg => {
+	      showPopupAlert({
+	        type: 'success',
+	        message: "상점 변경 성공!",
+	        onConfirm: () => {
+	          location.reload(); 
+	        }
+	      });
+	    })
+	    .catch(err => {
+	      showPopupAlert({
+	        type: 'error',
+	        message: "상점 변경 실패",
+	      });
+	    });
+	}
+
 
 $(document).on("click", ".btn[data-store-id]", function () {
   const selectedStoreId = $(this).data("storeId");
