@@ -40,9 +40,6 @@
 		</div>
 		<div id="preview-list" class="preview-list"></div>
 	</div>
-	<div id="file-count-text" class="file-count-text"
-		style="margin-top: 8px; color: #888; font-size: 15px;">선택한 사진 0
-		&#47; 3</div>
 </div>
 <div class="complete-back-btn-box">
 	<div class="complete-back-btn" style="cursor: pointer"
