@@ -18,6 +18,13 @@
 		)
 	</insert>
 
+	<!-- 펀딩 사진 업데이트 -->
+	<update id="updateFundingIdByImageId" parameterType="map">
+		UPDATE takku_image
+		SET funding_id = #{fundingId}
+		WHERE image_id = #{imageId}
+	</update>
+
 	<!-- 이미지 삭제 -->
 	<delete id="deleteImageUrl" parameterType="String">
 		DELETE FROM
@@ -49,11 +56,12 @@
 
 	<!-- 펀딩만들기 -> 이미지 등록 -->
 	<insert id="insertImage" parameterType="ImageDTO">
-			INSERT INTO image (funding_id, image_url)
-	VALUES (
+		INSERT INTO image
+		(funding_id, image_url)
+		VALUES (
 		#{fundingId, jdbcType=INTEGER},
 		#{imageUrl, jdbcType=VARCHAR}
-	)
+		)
 	</insert>
 
 </mapper>

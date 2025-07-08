@@ -115,16 +115,30 @@ public class FundingManagementController {
 				for (ImageDTO img : fundingInput.getImages()) {
 					String fileName = img.getImageUrl();
 					if (fileName != null && fileName.contains(".")) {
-						processedImages.add(ImageDTO.builder().imageUrl(fileName).build());
+						processedImages.add(
+							ImageDTO.builder()
+								.imageId(img.getImageId())  
+								.imageUrl(fileName)
+								.build()
+						);
 					}
 				}
 			}
+			
+			System.out.println("✔️ 이미지 목록 확인");
+			if (fundingInput.getImages() != null) {
+				for (ImageDTO img : fundingInput.getImages()) {
+					System.out.println("🖼️ imageId: " + img.getImageId() + ", imageUrl: " + img.getImageUrl());
+				}
+			}
+			
 			funding.setImages(processedImages);
 
 			Date today = new Date();
 			funding.setStatus(funding.getStartDate().after(today) ? "준비중" : "진행중");
 
 			session.setAttribute("funding", funding);
+			funding.setMainImageUrl(fundingInput.getMainImageUrl());
 
 			ProductDTO product = productService.selectByProductId(funding.getProductId());
 
@@ -187,28 +201,55 @@ public class FundingManagementController {
 		funding.setFundingName(fundingInput.getFundingName());
 		funding.setFundingDesc(fundingInput.getFundingDesc());
 
+		// 펀딩 등록 (fundingId 생성)
 		fundingService.insertFunding(funding);
+
 		int fundingId = funding.getFundingId();
+		System.out.println("🔥 펀딩 ID 확인: " + fundingId);
 
 		if (funding.getImages() != null) {
-			for (ImageDTO img : funding.getImages()) {
-				try {
-					String imageUrl = img.getImageUrl();
-					if (imageUrl != null && imageUrl.startsWith("/image/")) {
-						img.setFundingId(fundingId);
-						imageService.insertImageUrl(img);
-					} else {
-						String newFileName = imageService.moveImageFromTemp(imageUrl);
-						img.setFundingId(fundingId);
-						img.setImageUrl(newFileName);
-						imageService.insertImageUrl(img);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		    for (ImageDTO img : funding.getImages()) {
+		        try {
+		            String imageUrl = img.getImageUrl();
+		            System.out.println("📷 이미지 ID: " + img.getImageId());
+		            System.out.println("🖼️ 이미지 URL: " + imageUrl);
+
+		            if (img.getImageId() != null) {
+		                // ✅ 기존 이미지일 경우: fundingId만 update
+		                imageService.updateFundingIdByImageId(img.getImageId(), fundingId);
+		            } else if (imageUrl != null) {
+		                img.setFundingId(fundingId);
+
+		                // ✅ 새 이미지이고 /image/tmp/ 경로인 경우 이동 처리
+		                if (imageUrl.startsWith("/image/tmp/")) {
+		                    String fileName = imageUrl.substring("/image/tmp/".length());
+		                    String newFileName = imageService.moveImageFromTemp(fileName);
+
+		                    // prefix 붙이기
+		                    if (!newFileName.startsWith("/image/")) {
+		                        newFileName = "/image/" + newFileName;
+		                    }
+
+		                    img.setImageUrl(newFileName);
+		                    imageService.insertImageUrl(img);
+		                }
+		                // ✅ 새 이미지인데 경로가 이미 /image/인 경우 그대로 insert
+		                else if (imageUrl.startsWith("/image/")) {
+		                    imageService.insertImageUrl(img);
+		                }
+		                // 🔴 잘못된 경로인 경우 로그만 출력
+		                else {
+		                    System.err.println("🚫 잘못된 이미지 URL 형식: " + imageUrl);
+		                }
+		            }
+
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
 		}
 
+		// 태그 처리
 		for (String tagName : extractTags(keywords)) {
 			Integer tagId = tagService.getTagIdByName(tagName);
 			if (tagId == null) {
