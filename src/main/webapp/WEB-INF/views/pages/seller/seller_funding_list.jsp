@@ -7,6 +7,7 @@
 <%-- userId 값을 숨겨진 필드에 저장 --%>
 <input type="hidden" id="currentUserId"
 	value="${store != null ? store.userId : ''}">
+<input type="hidden" id="currentStoreId" value="${currentStore.storeId}" />
 <div class="seller-funding-content">
 	<div class="header-section">
 
@@ -16,15 +17,11 @@
 			사장님의 펀딩 현황
 		</h2>
 		<span class="page-description">보고 싶은 펀딩을 눌러보세요. 자세한 내용을 확인할 수
-			있습니다.</span><br> <span class="funding-status-summary">${user.nickname}
-			사장님의 <strong id="currentFilterStatus">전체</strong> 펀딩은 <strong
+			있습니다.</span><br> <span class="funding-status-summary">${store.storeName} 가게의 
+			<strong id="currentFilterStatus">전체</strong> 펀딩은 <strong
 			id="currentFundingCount">${fn:length(fundingList)}</strong>개입니다.
 		</span>
 	</div>
-	<%-- <h3>
-	현재 상점 : ${store.storeName}
-	<button id="showStoresBtn">다른 지점 보기</button>
-</h3> --%>
 	<!-- 다른 지점 store 리스트 -->
 	<div id="storeListContainer" style="display: none;"></div>
 
@@ -84,6 +81,13 @@
 		</c:forEach>
 	</div>
 </div>
-
-<script src="${cpath}/resources/js/seller_funding_list.js"></script>
+<script src="${cpath}/resources/js/seller_funding_list.js">
+	const initialFundings = JSON
+			.parse('${fn:escapeXml(objectMapper.writeValueAsString(funding))}');
+	const storeList = JSON
+			.parse('${fn:escapeXml(objectMapper.writeValueAsString(userStores))}');
+	const currentStore = JSON
+			.parse('${fn:escapeXml(objectMapper.writeValueAsString(store))}');
+	const cpath = '${cpath}';
+</script>
 

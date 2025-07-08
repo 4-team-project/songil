@@ -294,31 +294,26 @@ public class StoreController {
 
 	// 상점 펀딩 현황 (초기 페이지 로드 시)
 	@GetMapping("/list")
-	public String findFundingByStoreId(@ModelAttribute("currentProcessingUserId") Integer userId, Model model) {
-		List<StoreDTO> userStore = storeService.selectStoreListByUserId(userId);
-
-		StoreDTO currentStore = null;
+	public String findFundingByStoreId(HttpSession session, Model model) {
+		UserDTO user = (UserDTO) session.getAttribute("loginUser");
+		StoreDTO currentStore = (StoreDTO) session.getAttribute("currentStore");
+		List<StoreDTO> userStore = storeService.selectStoreListByUserId(user.getUserId());
 		List<FundingDTO> funding = Collections.emptyList();
-
-		// 4. (선택적) 사용자가 소유한 상점 중 첫 번째 상점을 '기본' 상점으로 설정
-		if (userStore != null && !userStore.isEmpty()) {
-			currentStore = userStore.get(0); // 첫 번째 상점을 선택
-
-			// 5. 선택된 상점의 펀딩 리스트를 가져옴
+		if (currentStore == null && userStore != null && !userStore.isEmpty()) {
+			currentStore = userStore.get(0);
+			// 두 키 모두 설정
+			session.setAttribute("currentStore", currentStore);
+			session.setAttribute("store", currentStore);
+		}
+		if (currentStore != null) {
 			funding = fundingService.selectFudingListByStoreId(currentStore.getStoreId());
 		} else {
-			// 사용자가 상점을 하나도 소유하고 있지 않은 경우 처리
-			// 예를 들어, 메시지를 추가하거나 상점 등록 페이지로 유도
 			model.addAttribute("message", "등록된 상점이 없습니다. 새로운 상점을 등록해주세요.");
 		}
-
-		UserDTO user = userService.selectByUserId(userId);
-
-		// 6. 모델에 현재 상점과 펀딩 리스트 추가
 		model.addAttribute("userStores", userStore);
-		model.addAttribute("store", currentStore); // 현재 상점 정보 (JSP의 ${store.storeName} 등에 사용)
-		model.addAttribute("funding", funding); // 현재 상점의 펀딩 리스트
-		model.addAttribute("userId", userId);
+		model.addAttribute("store", currentStore);
+		model.addAttribute("funding", funding);
+		model.addAttribute("userId", user.getUserId());
 		model.addAttribute("user", user);
 		return "seller/list";
 	}
