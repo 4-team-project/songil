@@ -17,7 +17,6 @@ textarea::placeholder {
 	width: 100%;
 	max-width: 800px; /* 최대 너비 설정 (반응형) */
 	box-sizing: border-box;
-	padding-left: 20px;
 }
 
 /* 폼 제목 */
@@ -203,7 +202,6 @@ textarea::placeholder {
 	align-items: center;
 	width: 100%;
 	padding-top: 20px;
-	padding-left: 20px;
 }
 
 .btn {
