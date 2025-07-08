@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/init.jsp"%>
-<link rel="stylesheet" href="/resources/css/funding_edit.css" />
+<link rel="stylesheet" href="${cpath}/resources/css/funding_edit.css" />
 <c:set var="isNotReadyStatus"
 	value="${empty tempFunding.status || tempFunding.status ne '준비중'}" />
 <script>
@@ -67,9 +67,22 @@
 
 		<div class="form-group">
 			<label for="fundingDesc">펀딩에 대한 설명</label>
-			<textarea id="fundingDesc" name="fundingDesc" rows="15"
-				placeholder="상품 설명은 비워도 괜찮아요.&#13;&#10;꼭 작성하지 않아도 등록할 수 있어요."
-				${isNotReadyStatus ? 'disabled' : ''}>${tempFunding.fundingDesc}</textarea>
+			<c:choose>
+				<c:when test="${isNotReadyStatus}">
+					<!-- 수정 불가능한 경우: HTML 해석만 -->
+					<div class="funding-desc-readonly">
+						<c:out value="${tempFunding.fundingDesc}" escapeXml="false" />
+					</div>
+				</c:when>
+				<c:otherwise>
+					<!-- 수정 가능한 경우: contenteditable -->
+					<div id="fundingDescEditable" class="funding-desc-editable"
+						contenteditable="true">
+						<c:out value="${tempFunding.fundingDesc}" escapeXml="false" />
+					</div>
+					<input type="hidden" id="fundingDesc" name="fundingDesc" />
+				</c:otherwise>
+			</c:choose>
 		</div>
 
 		<c:if test="${!isNotReadyStatus}">
@@ -100,11 +113,11 @@
 </div>
 
 <div class="btn-container">
-			<button type="button"
-				onclick="location.href='${cpath}/seller/store/funding/stats?fundingId=${tempFunding.fundingId}'"
-				class="btn">이전</button>
-			<button type="button" class="btn" onclick="submitFunding()">다음</button>
-		</div>
+	<button type="button"
+		onclick="location.href='${cpath}/seller/store/funding/stats?fundingId=${tempFunding.fundingId}'"
+		class="btn">이전</button>
+	<button type="button" class="btn" onclick="submitFunding()">다음</button>
+</div>
 <script>
 let isDateConfirmed = false;
 const imageList = []; // { type: "file" | "url", value: File | string }
@@ -179,6 +192,8 @@ document.getElementById("inputPhoto").addEventListener("change", function () {
 
 
 async function submitFunding() {
+	document.getElementById("fundingDesc").value = document.getElementById("fundingDescEditable").innerHTML;
+
     const funding = {
         fundingId: parseInt(document.getElementById("fundingId").value),
         fundingName: document.getElementById("fundingName").value,
