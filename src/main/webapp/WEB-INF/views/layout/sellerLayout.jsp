@@ -18,7 +18,7 @@ input, textarea {
 }
 
 button, a, .btn, [style*="cursor: pointer"] {
-  cursor: url('${cpath}/resources/images/cursor_click.svg') 2 2, pointer !important;
+  cursor: url('${cpath}/resources/images/cursor_click.svg') 3 3, pointer !important;
 }
 
 </style>

@@ -39,7 +39,7 @@
 			
 			<!-- 핸드폰 번호 입력 -->
 			<div class="input-group">
-				<input type="text" name="phone" placeholder="휴대폰 번호 (숫자만 입력)"
+				<input type="text" id="phone" name="phone" placeholder="휴대폰 번호 (숫자만 입력)"
 					required class="form-input" />
 			</div>
 
@@ -69,3 +69,20 @@
 
 <!-- 모달 배경 -->
 <div id="modalBackdrop"></div>
+
+<script>
+document.getElementById('phone').addEventListener('input', function (e) {
+  let input = e.target.value.replace(/[^0-9]/g, ''); // 숫자만
+  let result = '';
+
+  if (input.length < 4) {
+    result = input;
+  } else if (input.length < 8) {
+    result = input.slice(0, 3) + '-' + input.slice(3);
+  } else {
+    result = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
+  }
+
+  e.target.value = result;
+});
+</script>

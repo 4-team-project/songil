@@ -20,6 +20,11 @@
 	}
 }
 
+.emptyBox {
+	width: 82px;
+	height: 110px;
+}
+
 .title {
 	width: 82px;
 	height: 20px;

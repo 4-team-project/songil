@@ -159,7 +159,7 @@
 			<div class="phone-input-row">
 				<strong>휴대폰번호(ID)</strong>
 				<div class="phone-auth-wrap">
-					<input type="text" name="phone" required class="modal-input"
+					<input type="text" id="phone" name="phone" required class="modal-input"
 						placeholder="숫자만 입력" />
 					<button type="button" class="auth-btn" id="sendAuthCodeBtn">본인인증</button>
 				</div>
@@ -202,7 +202,7 @@
 					type="radio" name="gender" value="여" /> 여</label>
 			</p>
 			<p>
-				<strong>생년월일</strong> <input type="text" name="birth" required
+				<strong>생년월일</strong> <input id="birth" type="text" name="birth" required
 					class="modal-input" placeholder="yyyy-mm-dd" />
 			</p>
 			<p>
@@ -272,3 +272,37 @@
 		});
 	</script>
 </c:if>
+
+<script>
+document.getElementById('phone').addEventListener('input', function (e) {
+  let input = e.target.value.replace(/[^0-9]/g, ''); // 숫자만
+  let result = '';
+
+  if (input.length < 4) {
+    result = input;
+  } else if (input.length < 8) {
+    result = input.slice(0, 3) + '-' + input.slice(3);
+  } else {
+    result = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
+  }
+
+  e.target.value = result;
+});
+</script>
+
+<script>
+document.getElementById('birth').addEventListener('input', function (e) {
+  let input = e.target.value.replace(/[^0-9]/g, '').slice(0, 8); // 숫자만, 최대 8자리
+  let formatted = '';
+
+  if (input.length < 5) {
+    formatted = input;
+  } else if (input.length < 7) {
+    formatted = input.slice(0, 4) + '-' + input.slice(4);
+  } else {
+    formatted = input.slice(0, 4) + '-' + input.slice(4, 6) + '-' + input.slice(6);
+  }
+
+  e.target.value = formatted;
+});
+</script>
