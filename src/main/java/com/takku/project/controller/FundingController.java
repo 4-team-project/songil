@@ -274,7 +274,7 @@ public class FundingController {
 
 		int totalReviews = reviewService.countByProductId(funding.getProductId());
 		int totalPages = (int) Math.ceil((double) totalReviews / size);
-		List<ReviewDTO> reviewList = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);
+		List<ReviewDTO> reviewList = reviewService.reviewByProductIdWithPaging(funding.getProductId(), page, size);		
 
 		return Map.of("reviewlist", reviewList, "totalPages", totalPages, "currentPage", page);
 

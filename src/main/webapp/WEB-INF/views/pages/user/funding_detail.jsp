@@ -198,7 +198,7 @@
 		              <div class="review-left">
 		                <div class="review-user">
 		                  <span class="user-icon">👤</span>
-		                  <strong>\${review.name}</strong>
+		                  <strong>\${review.nickname}</strong>
 		                  <span class="review-date">\${formatDate(review.createdAt)}</span>
 		                </div>
 		                <div class="review-rating">
@@ -253,7 +253,6 @@
 
 <p class="category">Home / ${store.categoryName}</p>
 <div class="product-detail-container">
-
 	<!-- funding 이미지 슬라이더 -->
 	<div class="image-carousel">
 		<img id="fundingMainImage" src="" alt="펀딩 이미지"
@@ -296,20 +295,12 @@
 
 		<div>
 			<p class="date">
-				<span class="label-text">남은 기간</span><br>
+				<span class="label-text"></span><br>
 				<c:set var="today" value="<%=new java.util.Date()%>" />
 				<c:set var="remaining"
 					value="${(funding.endDate.time - today.time) / (1000*60*60*24)}" />
-				<c:choose>
-					<c:when test="${remaining <= 0}">
-						<span class="remaining-day">종료됨</span>
-					</c:when>
-					<c:otherwise>
-						<span class="remaining-day"> <fmt:formatNumber
-								value="${remaining}" type="number" maxFractionDigits="0" /> 일
-						</span>
-					</c:otherwise>
-				</c:choose>
+				<span class="remaining-day">${funding.status}</span>
+					
 				<br> <span class="period">${funding.startDate}~${funding.endDate}</span>
 			</p>
 		</div>
