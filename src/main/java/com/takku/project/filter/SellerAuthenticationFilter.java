@@ -24,7 +24,6 @@ public class SellerAuthenticationFilter implements Filter {
 		String cpath = req.getContextPath();
 		String uri = req.getRequestURI();
 
-
 		// 1. 로그인 안 되어 있으면 로그인 페이지로
 		if (session == null || session.getAttribute("loginUser") == null) {
 			res.sendRedirect(cpath + "/auth/login?msg=needLogin");
@@ -39,9 +38,11 @@ public class SellerAuthenticationFilter implements Filter {
 			return;
 		}
 
-		// 3. 소상공인인데 store 정보가 없고 현재 uri가 /seller/home이 아니면 → /seller/home으로
+		// 3. 소상공인인데 store 정보가 없고 현재 uri가 /seller/home 또는 /seller/store/new가 아니면 →
+		// /seller/home으로
 		Object store = session.getAttribute("store");
-		if (store == null && !uri.endsWith("/seller/home")) {
+		if (store == null && !uri.endsWith("/seller/home") && !uri.endsWith("/seller/store/new")) {
+
 			res.sendRedirect(cpath + "/seller/home?msg=needStore");
 			return;
 		}
