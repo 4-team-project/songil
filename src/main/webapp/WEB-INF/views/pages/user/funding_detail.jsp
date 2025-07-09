@@ -325,8 +325,10 @@
 				</c:choose>
 			</div>
 			<c:choose>
-				<c:when test="${funding.targetQty == 0}">
-					<c:set var="percentInt" value="0" />
+				<c:when test="${funding.fundingType eq '한정'}">
+					<c:set var="percent" value="${(funding.currentQty * 100.0) / funding.maxQty}" />
+					<fmt:formatNumber value="${percent}" type="number"
+						maxFractionDigits="0" var="percentInt" />
 				</c:when>
 				<c:otherwise>
 					<c:set var="percent"
