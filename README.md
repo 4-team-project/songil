@@ -1,5 +1,7 @@
-# 📎 Takku (따쿠) 프로젝트 - 펀딩 기반 소상공인 쿠폰 플랫폼
 
+![chrome-capture-2025-07-09 (3)](https://github.com/user-attachments/assets/dedac5d9-a66a-4452-b021-b0b950d93080)
+
+# 📎 Takku (따쿠) 프로젝트 - 펀딩 기반 소상공인 쿠폰 플랫폼
 > “누구나 쉽게 펀딩 만들고, AI가 대신 홍보해드립니다.”
 > 
 > 
@@ -36,6 +38,7 @@
 **IT 비전문가도 쉽게 사용할 수 있는 UI**를 통해
 
 소상공인의 진입장벽을 낮추는 것을 목표로 합니다.
+![chrome-capture-2025-07-09](https://github.com/user-attachments/assets/af0291d6-cf8d-4f94-b02a-4303d3460c06)
 
 ---
 
