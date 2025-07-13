@@ -130,7 +130,7 @@
 		BY COUNT(*) DESC
 	</select>
 
-	<!-- 연령대 분포 / 성별 비율 / 연령대-성별별 인기 태그 -->
+	<!-- 플랫폼 기준 연령대 분포 / 성별 비율 / 연령대-성별별 인기 태그 -->
 	<select id="selectAgeDistribution"
 		resultType="com.takku.project.domain.stats.LabelValueDTO">
 		SELECT CASE
