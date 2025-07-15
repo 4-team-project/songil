@@ -326,7 +326,8 @@
 			</div>
 			<c:choose>
 				<c:when test="${funding.fundingType eq '한정'}">
-					<c:set var="percent" value="${(funding.currentQty * 100.0) / funding.maxQty}" />
+					<c:set var="percent"
+						value="${(funding.currentQty * 100.0) / funding.maxQty}" />
 					<fmt:formatNumber value="${percent}" type="number"
 						maxFractionDigits="0" var="percentInt" />
 				</c:when>
@@ -379,7 +380,7 @@
 <div id="tab-content">
 	<!-- 설명 탭 영역 -->
 	<div id="desc-tab">
-		<pre class="product-desc">${funding.fundingDesc}</pre>
+		<pre class="product-desc" style="all: unset;">${funding.fundingDesc}</pre>
 
 
 		<div class="product-image-carousel"
