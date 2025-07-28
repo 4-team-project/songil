@@ -4,15 +4,11 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
-           http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
-           http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<!-- Mapper 인터페이스 자동 스캔 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.takku.project.mapper" />
-	</bean>
-
+	<!-- ================== 공통 설정 ================== -->
 	<!-- properties 읽기 -->
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
@@ -21,18 +17,18 @@
 		<property name="fileEncoding" value="UTF-8" />
 	</bean>
 
-
 	<!-- component-scan -->
 	<context:component-scan
 		base-package="com.takku.project" />
 
+	<!-- 파일 업로드 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="maxUploadSize" value="5242880" /> <!-- 5MB -->
 	</bean>
 
-	<!-- DB Connection Pool -->
+	<!-- ================== 오라클 설정 ================== -->
 	<bean id="dataSourceOriginal"
 		class="org.apache.commons.dbcp2.BasicDataSource">
 		<property name="driverClassName"
@@ -58,7 +54,6 @@
 		class="org.apache.ibatis.session.Configuration">
 		<property name="mapUnderscoreToCamelCase" value="true" />
 	</bean>
-	<!-- MyBatis -->
 
 	<bean id="sqlSessionFactory"
 		class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -75,12 +70,52 @@
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 
-	<!-- 트랜잭션 -->
+	<!-- Oracle Mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.takku.project.mapper" />
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory" />
+	</bean>
+
+	<!-- ================== MySQL 설정 ================== -->
+	<bean id="mysqlDataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName"
+			value="${mysql.driverClassName}" />
+		<property name="url" value="${mysql.url}" />
+		<property name="username" value="${mysql.username}" />
+		<property name="password" value="${mysql.password}" />
+	</bean>
+
+	<bean id="mysqlSqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="mysqlDataSource" />
+		<property name="mapperLocations"
+			value="classpath:mybatis/mysql-mappers/*.xml" />
+		<property name="typeAliasesPackage"
+			value="com.takku.project.mysql.domain" />
+	</bean>
+
+	<bean id="mysqlSqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="mysqlSqlSessionFactory" />
+	</bean>
+
+	<!-- MySQL Mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.takku.project.mysql" />
+		<property name="sqlSessionFactoryBeanName"
+			value="mysqlSqlSessionFactory" />
+	</bean>
+
+
+	<!-- ================== 트랜잭션 ================== -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" /> <!-- 오라클 기준 -->
 	</bean>
 
 	<tx:annotation-driven
 		transaction-manager="transactionManager" />
+
 </beans>

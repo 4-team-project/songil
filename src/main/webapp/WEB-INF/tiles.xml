@@ -218,14 +218,14 @@
 			value="/WEB-INF/views/pages/seller/store/storeDetail.jsp" />
 		<put-attribute name="title" value="딱쿠" />
 	</definition>
-	
+
 	<!-- 상점 목록 -->
 	<definition name="seller.storeList" extends="sellerLayout">
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/store/storeList.jsp" />
 		<put-attribute name="title" value="딱쿠" />
 	</definition>
-	
+
 	<!-- 상품 목록 -->
 	<definition name="seller.productList" extends="sellerLayout">
 		<put-attribute name="body"
@@ -298,6 +298,12 @@
 		<put-attribute name="title" value="딱쿠" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/pages/seller/settlements.jsp" />
+	</definition>
+	
+	<definition name="mysql.test" extends="subLayout">
+		<put-attribute name="title" value="MySQL 테스트" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/pages/mysql/mysql.jsp" />
 	</definition>
 
 
